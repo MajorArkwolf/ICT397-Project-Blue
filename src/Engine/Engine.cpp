@@ -52,6 +52,7 @@ auto Engine::run() -> void {
  * @brief Game engine default constructor, sets up all variables and settings required for operation
  */
 Engine::Engine() {
+    getBasePath();
     // Start SDL.
     auto status = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 
@@ -118,8 +119,6 @@ Engine::Engine() {
     if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
         std::cout << "Failed to initialize GLAD" << std::endl;
     }
-
-    getBasePath();
 }
 
 /**
