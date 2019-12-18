@@ -1,10 +1,14 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
 #include <SDL2/SDL.h>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
+
+#include "GameStack.hpp"
+#include "BaseState.hpp"
 
 
 namespace BlueEngine {
@@ -40,6 +44,7 @@ namespace BlueEngine {
       public:
         Engine(Engine &&)      = default;
         Engine(const Engine &) = delete;
+        GameStack<BaseState *> gameStack;
         ~Engine();
 
         //This variable will hold the game stack

@@ -25,9 +25,9 @@ endif()
 # Define source files.
 set (SOURCES
     src/Main.cpp
-	src/Engine/Engine.cpp
+    src/Engine/Engine.cpp
     src/Renderer/Shader.cpp
-	src/View/GLDisplay.cpp
+    src/View/GLDisplay.cpp
 )
 
 # Define the executable.
@@ -42,7 +42,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 
 # Remove the default warning level from MSVC.
 if (MSVC)
-    #string(REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+    string(REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
 endif()
 
 # Set Clang compile flags.
@@ -59,11 +59,12 @@ target_compile_options(${PROJECT_NAME} PUBLIC $<$<CXX_COMPILER_ID:GNU>:
 target_compile_options(${PROJECT_NAME} PUBLIC $<$<CXX_COMPILER_ID:MSVC>:/W4>)
 
 # Enable Clang's address and memory sanitizers.
-target_compile_options(${PROJECT_NAME} PUBLIC
-    $<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:Clang>>:-fsanitize=address,undefined,leak>)
-target_link_libraries(${PROJECT_NAME} PUBLIC
-    $<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:Clang>>:-fsanitize=address,undefined,leak>)
-
+if (NOT MSVC)
+	target_compile_options(${PROJECT_NAME} PUBLIC
+		$<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:Clang>>:-fsanitize=address,undefined,leak>)
+	target_link_libraries(${PROJECT_NAME} PUBLIC
+		$<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:Clang>>:-fsanitize=address,undefined,leak>)
+endif()
 # Treat warnings as errors if enabled.
 if (WarningsAsErrors)
     target_compile_options(${PROJECT_NAME} PUBLIC
@@ -74,7 +75,7 @@ endif()
 
 # Fix an MSVC linker warning.
 if (MSVC)
-    set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "/NODEFAULTLIB:msvcrt.lib")
+    #set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "/NODEFAULTLIB:msvcrt.lib")
 endif()
 
 # Find dependencies.
@@ -84,11 +85,25 @@ find_package(SDL2_image REQUIRED)
 find_package(SDL2_ttf REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 find_package(glm REQUIRED)
+find_package(assimp REQUIRED)
+find_package(glad CONFIG REQUIRED)
 
 # Include project header files.
-target_include_directories(${PROJECT_NAME} PRIVATE src)
+target_include_directories(${PROJECT_NAME} PRIVATE src ${ASSIMP_INCLUDE_DIRS})
 
 # Include and link against dependencies.
 target_link_libraries(${PROJECT_NAME} PUBLIC OpenGL::GL OpenGL::GLU
-    SDL2::SDL2 SDL2::Image SDL2::TTF SDL2::Mixer glm)
+    SDL2::SDL2 SDL2::Image SDL2::TTF SDL2::Mixer glm glad::glad ${ASSIMP_LIBRARIES})
 
+# Symlink or copy the resources to the binary location.
+if (NOT DisablePostBuild)
+    if (NOT CopyResources)
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E create_symlink
+            ${CMAKE_SOURCE_DIR}/res $<TARGET_FILE_DIR:${PROJECT_NAME}>/res)
+    else()
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${CMAKE_SOURCE_DIR}/res $<TARGET_FILE_DIR:${PROJECT_NAME}>/res)
+    endif()
+endif()

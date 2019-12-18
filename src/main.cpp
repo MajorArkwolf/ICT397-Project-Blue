@@ -4,7 +4,7 @@
 #include "Engine/Engine.hpp"
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
-    SDLEngine::Engine::run();
+    BlueEngine::Engine::run();
 
     return EXIT_SUCCESS;
 }
