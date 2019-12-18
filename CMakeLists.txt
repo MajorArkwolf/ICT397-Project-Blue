@@ -26,8 +26,13 @@ endif()
 set (SOURCES
     src/Main.cpp
     src/Engine/Engine.cpp
+
+    src/Models/Mesh.cpp
+    src/Models/Model.cpp
+    src/Models/ModelManager.cpp
+
     src/Renderer/Shader.cpp
-    src/View/GLDisplay.cpp
+    src/Renderer/Renderer.cpp
 )
 
 # Define the executable.
