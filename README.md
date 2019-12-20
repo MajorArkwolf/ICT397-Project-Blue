@@ -16,11 +16,16 @@
 
 ### Dependencies
 * NOTE: `Linux and Mac dependences out of date`
-* macOS: `brew install cmake sdl2 sdl2_image sdl2_ttf sdl2_mixer glm`
 * Linux: `sudo apt-get install cmake libsdl2-dev libsdl2-image-dev
-    libsdl2-ttf-dev libsdl2-mixer-dev libglm-dev`
+    libsdl2-ttf-dev libsdl2-mixer-dev libglm-dev assimp-utils`
 * Windows: `.\vcpkg.exe install --triplet x64-windows sdl2 sdl2-image sdl2-ttf
     sdl2-mixer glm assimp glad`
+
+### GIT LFS
+Ensure you have GIT LFS installed.
+```
+git lfs install
+```
 
 ### Cloning
 ```
