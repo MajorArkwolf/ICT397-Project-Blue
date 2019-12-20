@@ -51,5 +51,5 @@ git checkout develop && git submodule update --init
         * [Visual Studio Code][clang-format-vsc]
 
 ## License
-This project is licensed under the MIT license. Please see the [`LICENSE.md`](LICENSE.md) file
+This project is licensed under the MIT license. Please see the [`LICENSE](LICENSE) file
 for details.
