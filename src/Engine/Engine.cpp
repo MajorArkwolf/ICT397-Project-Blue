@@ -86,7 +86,7 @@ Engine::Engine() {
 
     // Create window.
     this->window = Engine::Window{
-        SDL_CreateWindow("Demo", display.w / 4, display.h / 4, display.w / 2,
+        SDL_CreateWindow("Project-Blue", display.w / 4, display.h / 4, display.w / 2,
                          display.h / 2,
                          SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI |
                              SDL_WINDOW_FULLSCREEN_DESKTOP),
