@@ -8,6 +8,12 @@
 #include <SDL2/SDL.h>
 #include <glad/glad.h>
 
+#include "BaseState.hpp"
+#include "GameStack.hpp"
+
+// Game States
+#include "Game/Prototype/PrototypeScene.hpp"
+
 using BlueEngine::Engine;
 using std::runtime_error;
 using std::string;
@@ -16,23 +22,23 @@ using std::string;
  * @brief The game engine main loop
  */
 auto Engine::run() -> void {
-    auto &engine       = Engine::get();
-    
-    //Gamestack goes here
-    //engine.thegame     = new Game();
-    
+    auto &engine = Engine::get();
+
+    auto *prototype = new PrototypeScene();
+    engine.gameStack.AddToStack(prototype);
+
     auto frameCount    = 0l;
     auto lastFpsUpdate = 0.0;
 
-    auto time    = engine.getTime();
-    auto oldTime = 0.0;
-    // auto deltaTime = 0.0;
+    auto time      = engine.getTime();
+    auto oldTime   = 0.0;
+    auto deltaTime = 0.0;
 
     while (engine.getIsRunning()) {
         ++frameCount;
-        oldTime = time;
-        time    = engine.getTime();
-        // deltaTime = time - oldTime;
+        oldTime   = time;
+        time      = engine.getTime();
+        deltaTime = time - oldTime;
 
         if (time - lastFpsUpdate >= FPS_UPDATE_INTERVAL) {
             engine.fps    = frameCount / (time - lastFpsUpdate);
@@ -40,11 +46,14 @@ auto Engine::run() -> void {
             frameCount    = 0;
         }
 
-        //engine.thegame->time = oldTime;
+        // engine.thegame->time = oldTime;
 
-        //engine.processInput();
-        //engine.thegame->update();
-        //engine.thegame->draw();
+        // engine.processInput();
+        engine.processInput();
+        // engine.thegame->update();
+        engine.gameStack.getTop()->update(deltaTime);
+        // engine.thegame->draw();
+        engine.gameStack.getTop()->display();
     }
 }
 
@@ -86,10 +95,9 @@ Engine::Engine() {
 
     // Create window.
     this->window = Engine::Window{
-        SDL_CreateWindow("Project-Blue", display.w / 4, display.h / 4, display.w / 2,
-                         display.h / 2,
-                         SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI |
-                             SDL_WINDOW_FULLSCREEN_DESKTOP),
+        SDL_CreateWindow("Project-Blue", display.w / 4, display.h / 4,
+                         display.w / 2, display.h / 2,
+                         SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI),
         &SDL_DestroyWindow};
 
     if (this->window.get() == nullptr) {
@@ -140,12 +148,11 @@ auto Engine::get() -> Engine & {
 }
 
 auto Engine::processInput() -> void {
-    auto event        = SDL_Event{};
-    auto handledMouse = false;
+    auto event  = SDL_Event{};
+    auto handledMouse = true;
 
     while (SDL_PollEvent(&event)) {
-        //Pass this to the game stack
-        //this->thegame->handleInput(event);
+        gameStack.getTop()->handleInput(event);
     }
     if (!handledMouse) {
         this->mouse = {0.0f, 0.0f};

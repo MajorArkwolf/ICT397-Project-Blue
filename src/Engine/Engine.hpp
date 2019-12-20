@@ -35,6 +35,7 @@ namespace BlueEngine {
         auto getTime() const -> double;
 
       private:
+        GameStack<BaseState *> gameStack;
         bool isRunning = true;
 
         auto getBasePath() -> void;
@@ -44,7 +45,6 @@ namespace BlueEngine {
       public:
         Engine(Engine &&)      = default;
         Engine(const Engine &) = delete;
-        GameStack<BaseState *> gameStack;
         ~Engine();
 
         //This variable will hold the game stack

@@ -28,6 +28,7 @@ endif()
 set (SOURCES
     src/Main.cpp
     src/Engine/Engine.cpp
+    src/Engine/EulerCamera.cpp
 
     src/Models/Mesh.cpp
     src/Models/Model.cpp
@@ -35,9 +36,9 @@ set (SOURCES
 
     src/Renderer/Shader.cpp
     src/Renderer/Renderer.cpp
-    src/Game/Prototype/PrototypeScene.cpp
 
-)
+    src/Game/Prototype/PrototypeScene.cpp
+    )
 
 
 # Define the executable.
