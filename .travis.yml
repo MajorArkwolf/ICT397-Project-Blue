@@ -1,0 +1,43 @@
+language: cpp
+sudo: required
+
+git:
+  lfs_skip_smudge: true
+
+matrix:
+  include:
+  - name: "Linux: Clang 8"
+    os: linux
+    dist: bionic
+    compiler:
+      - clang
+    addons:
+      apt:
+        packages: [libsdl2-dev, libsdl2-image-dev, libsdl2-ttf-dev, 
+                   libsdl2-mixer-dev, libglm-dev, libgl1-mesa-dev,
+                   clang-8, libc++-dev, libc++abi-dev, assimp-utils]
+    env:
+      - CC=clang-8 CXX=clang++-8
+
+  - name: "Linux: GCC 8"
+    os: linux
+    dist: bionic
+    compiler:
+      - gcc
+    addons:
+      apt:
+        packages: [libsdl2-dev, libsdl2-image-dev, libsdl2-ttf-dev, 
+                   libsdl2-mixer-dev, libglm-dev, libgl1-mesa-dev,
+                   g++-8, assimp-utils]
+    env:
+      - CC=gcc-8 CXX=g++-8
+
+  - name: "Windows: Visual Studio 2017"
+    os: windows
+    env:
+    - VCPKG_ROOT=/c/vcpkg
+    - MSBUILD_PATH="/c/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/MSBuild/15.0/Bin"
+
+before_script: ./.travis/install-dependencies.sh
+script: ./.travis/build.sh
+after_failure: ./.travis/failure.sh
