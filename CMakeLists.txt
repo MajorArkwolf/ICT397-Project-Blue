@@ -29,6 +29,8 @@ set (SOURCES
     src/Main.cpp
     src/Engine/Engine.cpp
     src/Engine/EulerCamera.cpp
+    src/Engine/QuaternionCamera.cpp
+    src/Engine/InputManager.cpp
 
     src/Models/Mesh.cpp
     src/Models/Model.cpp
