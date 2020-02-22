@@ -4,7 +4,6 @@
 
 #include "QuaternionCamera.hpp"
 
-
 QuaternionCamera::QuaternionCamera() {
     deadZone        = 0.25;
     cameraUp        = glm::vec3(0, 0, 0);
@@ -80,5 +79,4 @@ void QuaternionCamera::Update(glm::vec3 inputVector, float deltaTime, float fps)
     }
 
     cameraEye = cameraPosition + cameraRotation;
-
 }
