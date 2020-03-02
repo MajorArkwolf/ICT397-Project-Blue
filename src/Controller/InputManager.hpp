@@ -15,8 +15,8 @@ namespace Controller {
         struct InputData{
             glm::vec2 mouseMotion  = {0, 0};
             float mouseWheelMotion = 0.f;
-            BLUE_Input input;
-            BLUE_InputType inputType;
+            enum BLUE_Input input;
+            enum BLUE_InputType inputType;
         } ;
 
         enum BLUE_Input {
