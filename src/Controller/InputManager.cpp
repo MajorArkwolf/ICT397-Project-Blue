@@ -3,8 +3,6 @@
 namespace Controller::Input {
 
     MethodResult InputManager::ProcessInput(SDL_Event &event) {
-
-        assert(!InputMap.empty());
         // Handle input data from event
         InputData inputEvent;
 
@@ -17,6 +15,8 @@ namespace Controller::Input {
             }; break;
             case SDL_MOUSEMOTION: {
                 inputEvent.inputType = MOUSE_MOTION;
+                inputEvent.mouseMotion.x = event.motion.xrel;
+                inputEvent.mouseMotion.y = event.motion.yrel;
             }; break;
             case SDL_MOUSEBUTTONDOWN: {
                 inputEvent.inputType = MOUSE_BUTTONDOWN;
@@ -26,17 +26,19 @@ namespace Controller::Input {
             }; break;
             case SDL_MOUSEWHEEL: {
                 inputEvent.inputType = MOUSE_WHEEL;
+                inputEvent.mouseWheelMotion = event.wheel.y;
             }; break;
         }
 
-        for (auto pair : InputMap) { //
+        for (auto pair : InputMap) { //Looks through input map for action match with pressed key
             if (pair.second == event.key.keysym.scancode) {
-                inputEvent.input = pair.first;
+                inputEvent.inputAction = pair.first;
                 break;
             }
         }
 
-        // Send to top of game stack
+
+        // Send inputEvent to top of game stack or whatever
 
         if (1 /*If data handled , return success*/) {
             return MethodResult::METHOD_SUCCESS;

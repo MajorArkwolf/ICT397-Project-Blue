@@ -13,9 +13,9 @@ namespace Controller {
         using Controller::MethodResult;
 
         struct InputData{
-            glm::vec2 mouseMotion  = {0, 0};
+            glm::ivec2 mouseMotion  = {0, 0};
             float mouseWheelMotion = 0.f;
-            enum BLUE_Input input;
+            enum BLUE_Input inputAction;
             enum BLUE_InputType inputType;
         } ;
 
@@ -37,6 +37,7 @@ namespace Controller {
         };
 
         enum BLUE_InputType {
+            DEFAULT,
             KEY_DOWN,
             KEY_RELEASE,
             MOUSE_MOTION,
