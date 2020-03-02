@@ -27,15 +27,15 @@ endif()
 # Define source files.
 set (SOURCES
     src/Main.cpp
-    src/Engine/Engine.cpp
-    src/Engine/EulerCamera.cpp
+    src/Controller/Engine/Engine.cpp
+    src/Controller/Engine/EulerCamera.cpp
 
-    src/Models/Mesh.cpp
-    src/Models/Model.cpp
-    src/Models/ModelManager.cpp
+    src/Model/Models/Mesh.cpp
+    src/Model/Models/Model.cpp
+    src/Model/Models/ModelManager.cpp
 
-    src/Renderer/Shader.cpp
-    src/Renderer/Renderer.cpp
+    src/View/Renderer/Shader.cpp
+    src/View/Renderer/Renderer.cpp
 
     src/Game/Prototype/PrototypeScene.cpp
     )
@@ -53,7 +53,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 
 # Remove the default warning level from MSVC.
 if (MSVC)
-    #string(REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+    string(REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
 endif()
 
 # Set Clang compile flags.
@@ -97,14 +97,14 @@ find_package(SDL2_image REQUIRED)
 find_package(SDL2_ttf REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 find_package(glm REQUIRED)
-find_package(assimp CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
+find_package(assimp CONFIG REQUIRED)
 
 # Include project header files.
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 
 # Include and link against dependencies.
-target_link_libraries(${PROJECT_NAME} PUBLIC OpenGL::GL OpenGL::GLU
+target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL OpenGL::GLU
         SDL2::SDL2 SDL2::Image SDL2::TTF SDL2::Mixer glm glad::glad assimp::assimp)
 
 # Symlink or copy the resources to the binary location.

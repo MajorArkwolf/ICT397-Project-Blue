@@ -10,7 +10,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Mesh.hpp"
-#include "Renderer/shader.hpp"
+#include "View/Renderer/shader.hpp"
 
 using std::string;
 using std::vector;
