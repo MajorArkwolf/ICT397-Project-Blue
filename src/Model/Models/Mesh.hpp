@@ -6,7 +6,7 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
-#include "Renderer/shader.hpp"
+#include "View/Renderer/shader.hpp"
 
 using std::vector, std::string;
 

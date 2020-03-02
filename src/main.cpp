@@ -1,7 +1,7 @@
 
 #include <cstddef>
 
-#include "Engine/Engine.hpp"
+#include "Controller/Engine/Engine.hpp"
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
     BlueEngine::Engine::run();

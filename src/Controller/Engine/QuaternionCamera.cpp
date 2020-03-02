@@ -27,7 +27,7 @@ void QuaternionCamera::CameraRotate(glm::vec3 rotationVector, glm::vec3 targetAx
                                 float inputDegree) {
 
     float radians = glm::radians(inputDegree);
-    glm::quat deltaQuaternion =
+    deltaQuaternion =
         glm::quat(0, rotationVector.x, rotationVector.y, rotationVector.z);
     glm::quat resultQuaternion = glm::rotate(deltaQuaternion, radians, targetAxis);
     cameraRotation =
