@@ -2,10 +2,12 @@
 // Created by becky on 28/12/2019.
 //
 
+
+
 #include "QuaternionCamera.hpp"
 
+
 QuaternionCamera::QuaternionCamera() {
-    deadZone        = 0.25;
     cameraUp        = glm::vec3(0, 0, 0);
     cameraPosition  = glm::vec3(0, 0, 0);
     cameraEye       = glm::vec3(0, 0, 0);
