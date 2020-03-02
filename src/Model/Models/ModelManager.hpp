@@ -2,7 +2,7 @@
 #include <vector>
 
 #include "Model.hpp"
-#include "Renderer/Shader.hpp"
+#include "View/Renderer/Shader.hpp"
 class ModelManager {
   public:
     static auto GetModelID(std::string filename) -> size_t;

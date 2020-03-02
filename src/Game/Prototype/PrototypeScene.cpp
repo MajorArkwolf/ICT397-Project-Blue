@@ -6,11 +6,11 @@
 
 #include <glm/glm.hpp>
 
-#include "Engine/Engine.hpp"
-#include "Engine/OpenGL.hpp"
-#include "Models/Model.hpp"
-#include "Models/ModelManager.hpp"
-#include "Renderer/Renderer.hpp"
+#include "Controller/Engine/Engine.hpp"
+#include "Controller/Engine/OpenGL.hpp"
+#include "Model/Models/Model.hpp"
+#include "Model/Models/ModelManager.hpp"
+#include "View/Renderer/Renderer.hpp"
 
 PrototypeScene::PrototypeScene() {
     softInit();

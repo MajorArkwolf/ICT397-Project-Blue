@@ -2,8 +2,8 @@
 
 #include <functional>
 
-#include "Engine/Engine.hpp"
-#include "Models/ModelManager.hpp"
+#include "Controller/Engine/Engine.hpp"
+#include "Model/Models/ModelManager.hpp"
 
 Renderer::Renderer() {
     auto &engine = BlueEngine::Engine::get();

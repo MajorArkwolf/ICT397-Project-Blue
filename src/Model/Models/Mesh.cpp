@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Engine/OpenGL.hpp"
+#include "Controller/Engine/OpenGL.hpp"
 
 Mesh::Mesh(vector<Vertex> newVerticies, vector<unsigned int> newIndicies,
            vector<Texture> newTextures) {
