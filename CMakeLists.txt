@@ -28,7 +28,7 @@ endif()
 set (SOURCES
     src/Main.cpp
     src/Controller/Engine/Engine.cpp
-    src/Controller/Engine/EulerCamera.cpp
+    src/View/EulerCamera.cpp
 
     src/Model/Models/Mesh.cpp
     src/Model/Models/Model.cpp

@@ -174,7 +174,7 @@ auto PrototypeScene::display() -> void {
         static_cast<double>(width) / static_cast<double>(height), 0.1, 100000.0);
     glm::mat4 view = camera.GetViewMatrix();
 
-    glm::mat4 model = glm::mat4(1.0f);
+    glm::mat4 model = glm::mat4(5.0f);
 
     Renderer::addToDraw(model, models[0]);
 

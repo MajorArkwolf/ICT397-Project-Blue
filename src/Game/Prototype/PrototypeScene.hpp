@@ -4,7 +4,7 @@
 
 #include "Controller/Engine/BaseState.hpp"
 #include "View/Renderer/Renderer.hpp"
-#include "COntroller/Engine/EulerCamera.hpp"
+#include "View/EulerCamera.hpp"
 
 
 class PrototypeScene : public BaseState {
