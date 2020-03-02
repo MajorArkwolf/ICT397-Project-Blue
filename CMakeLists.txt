@@ -36,6 +36,7 @@ set (SOURCES
 
     src/View/Renderer/Shader.cpp
     src/View/Renderer/Renderer.cpp
+    src/View/Renderer/OpenGLProxy.cpp
 
     src/Game/Prototype/PrototypeScene.cpp
     )

@@ -1,6 +1,4 @@
 #include <cstddef>
-#define STB_IMAGE_IMPLEMENTATION
-#include "View/Renderer/stb_image.h"
 
 #include "Controller/Engine/Engine.hpp"
 

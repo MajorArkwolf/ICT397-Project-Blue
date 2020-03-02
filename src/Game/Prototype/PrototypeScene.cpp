@@ -51,7 +51,7 @@ void PrototypeScene::hardInit() {
 
     camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
-    models.push_back(ModelManager::GetModelID("res/model/tank.obj"));
+    models.push_back(ModelManager::GetModelID("res/model/players/player_male.obj"));
 }
 
 void PrototypeScene::softInit() {
