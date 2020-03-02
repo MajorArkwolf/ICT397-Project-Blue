@@ -1,10 +1,4 @@
-//
-// Created by becky on 28/12/2019.
-//
-
-#ifndef PROJECT_BLUE_INPUTMANAGER_HPP
-#define PROJECT_BLUE_INPUTMANAGER_HPP
-
+#pragma  once
 #include <iostream>
 
 #include <SDL2/SDL.h>
@@ -55,9 +49,8 @@ class InputManager {
     glm::vec3 MouseHandler(float magnitude, int x, int y);
 
   private:
-    
+
     SDL_Window *game_window;
 
 };
 
-#endif // PROJECT_BLUE_INPUTMANAGER_HPP
