@@ -1,10 +1,4 @@
-//
-// Created by Arkwolf on 20/12/2019.
-//
-
-#ifndef PROJECT_BLUE_EULERCAMERA_HPP
-#define PROJECT_BLUE_EULERCAMERA_HPP
-
+#pragma once
 #include <vector>
 
 #include <glad/glad.h>
@@ -65,5 +59,3 @@ private:
     void updateCameraVectors();
 };
 
-
-#endif //PROJECT_BLUE_EULERCAMERA_HPP

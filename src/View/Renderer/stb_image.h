@@ -83,8 +83,8 @@ count for PNG & BMP 2.10  (2016-01-22) avoid warning introduced in 2.09 2.09
     Christopher Forseth (animated gif)     Daniel Gibson (16-bit TGA)
                                            socks-the-fox (16-bit PNG)
                                            Jeremy Sawicki (handle all ImageNet
-JPGs) Optimizations & bugfixes                  Mikhail Morozov (1-bit BMP) Fabian
-"ryg" Giesen                    Anael Seghezzi (is-16-bit query) Arseny
+JPGs) Optimizations & bugfixes                  Mikhail Morozov (1-bit BMP)
+Fabian "ryg" Giesen                    Anael Seghezzi (is-16-bit query) Arseny
 Kapoulkine John-Mark Allen Carmelo J Fdez-Aguera
 
  Bug & warning fixes
@@ -93,15 +93,15 @@ Mozeiko Christpher Lloyd        Jerry Jansson      Joseph Thomson     Phil
 Jordan Dave Moore              Roy Eltham         Hayaki Saito       Nathan Reed
     Won Chun                Luke Graham        Johan Duparc       Nick Verigakis
     the Horde3D community   Thomas Ruf         Ronny Chevalier    github:rlyeh
-    Janez Zemva             John Bartholomew   Michal Cichon github:romigrou Jonathan
-Blow           Ken Hamada         Tero Hanninen      github:svdijk Laurent
-Gomila          Cort Stratton      Sergio Gonzalez    github:snagar Aruelien
-Pocheville     Thibault Reuille   Cass Everitt       github:Zelex Ryamond
-Barbiero        Paul Du Bois       Engin Manap        github:grim210 Aldo
-Culquicondor       Philipp Wiesemann  Dale Weiler        github:sammyhw Oriol
-Ferrer Mesia      Josh Tobin         Matthew Gregan     github:phprus Julian
-Raschke          Gregory Mullen     Baldur Karlsson    github:poppolopoppo Christian
-Floisand      Kevin Schmidt      JR Smith           github:darealshinji Blazej
+    Janez Zemva             John Bartholomew   Michal Cichon github:romigrou
+Jonathan Blow           Ken Hamada         Tero Hanninen      github:svdijk
+Laurent Gomila          Cort Stratton      Sergio Gonzalez    github:snagar
+Aruelien Pocheville     Thibault Reuille   Cass Everitt       github:Zelex
+Ryamond Barbiero        Paul Du Bois       Engin Manap        github:grim210
+Aldo Culquicondor       Philipp Wiesemann  Dale Weiler        github:sammyhw
+Oriol Ferrer Mesia      Josh Tobin         Matthew Gregan     github:phprus
+Julian Raschke          Gregory Mullen     Baldur Karlsson github:poppolopoppo
+Christian Floisand      Kevin Schmidt      JR Smith github:darealshinji Blazej
 Dariusz Roszkowski                                     github:Michaelangel007
 */
 
@@ -7099,8 +7099,8 @@ static stbi_uc *stbi__gif_load_next(stbi__context *s, stbi__gif *g, int *comp,
 
         // image is treated as "transparent" at the start - ie, nothing
         // overwrites the current background; background colour is only used for
-        // pixels that are not rendered first frame, after that "background" color
-        // refers to the color that was there the previous frame.
+        // pixels that are not rendered first frame, after that "background"
+        // color refers to the color that was there the previous frame.
         memset(g->out, 0x00, 4 * pcount);
         memset(g->background, 0x00,
                4 * pcount); // state of the background (starts transparent)
@@ -8091,94 +8091,88 @@ STBIDEF int stbi_is_16_bit_from_callbacks(stbi_io_callbacks const *c, void *user
       2.01  (2015-01-17) fix various warnings; suppress SIMD on gcc 32-bit
    without -msse2 2.00b (2014-12-25) fix STBI_MALLOC in progressive JPEG 2.00
    (2014-12-25) optimize JPG, including x86 SSE2 & NEON SIMD (ryg) progressive
-   JPEG (stb) PGM/PPM support (Ken Miller) STBI_MALLOC,STBI_REALLOC,STBI_FREE GIF
-   bugfix -- seemingly never worked STBI_NO_*, STBI_ONLY_* 1.48  (2014-12-14)
+   JPEG (stb) PGM/PPM support (Ken Miller) STBI_MALLOC,STBI_REALLOC,STBI_FREE
+   GIF bugfix -- seemingly never worked STBI_NO_*, STBI_ONLY_* 1.48 (2014-12-14)
    fix incorrectly-named assert() 1.47  (2014-12-14) 1/2/4-bit PNG support, both
    direct and paletted (Omar Cornut & stb) optimize PNG (ryg) fix bug in
    interlaced PNG with user-specified channel count (stb) 1.46  (2014-08-26) fix
    broken tRNS chunk (colorkey-style transparency) in non-paletted PNG 1.45
    (2014-08-16) fix MSVC-ARM internal compiler error by wrapping malloc 1.44
-   (2014-08-07) various warning fixes from Ronny Chevalier 1.43  (2014-07-15) fix
-   MSVC-only compiler problem in code changed in 1.42 1.42  (2014-07-09) don't
-   define _CRT_SECURE_NO_WARNINGS (affects user code) fixes to
-   stbi__cleanup_jpeg path added STBI_ASSERT to avoid requiring assert.h 1.41
-   (2014-06-25) fix search&replace from 1.36 that messed up comments/error
-   messages 1.40  (2014-06-22) fix gcc struct-initialization warning 1.39
-   (2014-06-15) fix to TGA optimization when req_comp != number of components in
-   TGA; fix to GIF loading because BMP wasn't rewinding (whoops, no GIFs in my
-   test suite) add support for BMP version 5 (more ignored fields) 1.38
-   (2014-06-06) suppress MSVC warnings on integer casts truncating values fix
-   accidental rename of 'skip' field of I/O 1.37  (2014-06-04) remove duplicate
-   typedef 1.36  (2014-06-03) convert to header file single-file library if
-   de-iphone isn't set, load iphone images color-swapped instead of returning
-   NULL 1.35  (2014-05-27) various warnings fix broken STBI_SIMD path fix bug
-   where stbi_load_from_file no longer left file pointer in correct place fix
-   broken non-easy path for 32-bit BMP (possibly never used) TGA optimization by
-   Arseny Kapoulkine 1.34  (unknown) use STBI_NOTUSED in
-   stbi__resample_row_generic(), fix one more leak in tga failure case 1.33
-   (2011-07-14) make stbi_is_hdr work in STBI_NO_HDR (as specified), minor
-   compiler-friendly improvements 1.32  (2011-07-13) support for "info" function
-   for all supported filetypes (SpartanJ) 1.31  (2011-06-20) a few more leak
-   fixes, bug in PNG handling (SpartanJ) 1.30  (2011-06-11) added ability to
-   load files via callbacks to accomidate custom input streams (Ben Wenger) removed
-   deprecated format-specific test/load functions removed support for
-   installable file formats (stbi_loader) -- would have been broken for IO
-   callbacks anyway error cases in bmp and tga give messages and don't leak
-   (Raymond Barbiero, grisha) fix inefficiency in decoding 32-bit BMP (David
-   Woo) 1.29  (2010-08-16) various warning fixes from Aurelien Pocheville 1.28
-   (2010-08-01) fix bug in GIF palette transparency (SpartanJ) 1.27 (2010-08-01)
-              cast-to-stbi_uc to fix warnings
-      1.26  (2010-07-24)
-              fix bug in file buffering for PNG reported by SpartanJ
-      1.25  (2010-07-17)
-              refix trans_data warning (Won Chun)
-      1.24  (2010-07-12)
-              perf improvements reading from files on platforms with lock-heavy
-   fgetc() minor perf improvements for jpeg deprecated type-specific functions
-   so we'll get feedback if they're needed attempt to fix trans_data warning
-   (Won Chun) 1.23    fixed bug in iPhone support 1.22  (2010-07-10) removed
-   image *writing* support stbi_info support from Jetro Lauha GIF support from
-   Jean-Marc Lienher iPhone PNG-extensions from James Brown warning-fixes from
-   Nicolas Schulz and Janez Zemva (i.stbi__err. Janez (U+017D)emva) 1.21    fix
-   use of 'stbi_uc' in header (reported by jon blow) 1.20    added support for
-   Softimage PIC, by Tom Seddon 1.19    bug in interlaced PNG corruption check
-   (found by ryg) 1.18  (2008-08-02) fix a threading bug (local mutable static)
-      1.17    support interlaced PNG
-      1.16    major bugfix - stbi__convert_format converted one too many pixels
-      1.15    initialize some fields for thread safety
-      1.14    fix threadsafe conversion bug
-              header-file-only version (#define STBI_HEADER_FILE_ONLY before
-   including) 1.13    threadsafe 1.12    const qualifiers in the API 1.11
-   Support installable IDCT, colorspace conversion routines 1.10    Fixes for
-   64-bit (don't use "unsigned long") optimized upsampling by Fabian "ryg"
-   Giesen 1.09    Fix format-conversion for PSD code (bad global variables!) 1.08
-   Thatcher Ulrich's PSD code integrated by Nicolas Schulz 1.07    attempt to
-   fix C++ warning/errors again 1.06    attempt to fix C++ warning/errors again
-      1.05    fix TGA loading to return correct *comp and use good luminance
-   calc 1.04    default float alpha is 1, not 255; use 'void *' for
-   stbi_image_free 1.03    bugfixes to STBI_NO_STDIO, STBI_NO_HDR 1.02 support
-   for (subset of) HDR files, float interface for preferred access to them 1.01
-   fix bug: possible bug in handling right-side up bmps... not sure fix bug: the
-   stbi__bmp_load() and stbi__tga_load() functions didn't work at all 1.00
-   interface to zlib that skips zlib header 0.99    correct handling of alpha in
-   palette 0.98    TGA loader by lonesock; dynamically add loaders (untested) 0.97
-   jpeg errors on too large a file; also catch another malloc failure 0.96 fix
-   detection of invalid v value - particleman@mollyrocket forum 0.95    during
-   header scan, seek to markers in case of padding 0.94    STBI_NO_STDIO to
-   disable stdio usage; rename all #defines the same 0.93    handle jpegtran
-   output; verbose errors 0.92    read 4,8,16,24,32-bit BMP files of several
-   formats 0.91    output 24-bit Windows 3.0 BMP files 0.90    fix a few more
-   warnings; bump version number to approach 1.0 0.61    bugfixes due to Marc
-   LeBlanc, Christopher Lloyd 0.60    fix compiling as c++ 0.59    fix warnings:
-   merge Dave Moore's -Wall fixes 0.58    fix bug: zlib uncompressed mode
-   len/nlen was wrong endian 0.57    fix bug: jpg last huffman symbol before
-   marker was >9 bits but less than 16 available 0.56    fix bug: zlib
-   uncompressed mode len vs. nlen 0.55    fix bug: restart_interval not
-   initialized to 0 0.54    allow NULL for 'int *comp' 0.53    fix bug in png
-   3->4; speedup png decoding 0.52    png handles req_comp=3,4 directly; minor
-   cleanup; jpeg comments 0.51    obey req_comp requests, 1-component jpegs
-   return as 1-component, on 'test' only check type, not whether we support this
-   variant 0.50  (2006-11-19) first released version
+   (2014-08-07) various warning fixes from Ronny Chevalier 1.43  (2014-07-15)
+   fix MSVC-only compiler problem in code changed in 1.42 1.42  (2014-07-09)
+   don't define _CRT_SECURE_NO_WARNINGS (affects user code) fixes to stbi__cleanup_jpeg
+   path added STBI_ASSERT to avoid requiring assert.h 1.41 (2014-06-25) fix
+   search&replace from 1.36 that messed up comments/error messages 1.40
+   (2014-06-22) fix gcc struct-initialization warning 1.39 (2014-06-15) fix to
+   TGA optimization when req_comp != number of components in TGA; fix to GIF
+   loading because BMP wasn't rewinding (whoops, no GIFs in my test suite) add
+   support for BMP version 5 (more ignored fields) 1.38 (2014-06-06) suppress
+   MSVC warnings on integer casts truncating values fix accidental rename of
+   'skip' field of I/O 1.37  (2014-06-04) remove duplicate typedef 1.36
+   (2014-06-03) convert to header file single-file library if de-iphone isn't
+   set, load iphone images color-swapped instead of returning NULL 1.35
+   (2014-05-27) various warnings fix broken STBI_SIMD path fix bug where
+   stbi_load_from_file no longer left file pointer in correct place fix broken
+   non-easy path for 32-bit BMP (possibly never used) TGA optimization by Arseny
+   Kapoulkine 1.34  (unknown) use STBI_NOTUSED in stbi__resample_row_generic(),
+   fix one more leak in tga failure case 1.33 (2011-07-14) make stbi_is_hdr work
+   in STBI_NO_HDR (as specified), minor compiler-friendly improvements 1.32
+   (2011-07-13) support for "info" function for all supported filetypes
+   (SpartanJ) 1.31  (2011-06-20) a few more leak fixes, bug in PNG handling
+   (SpartanJ) 1.30  (2011-06-11) added ability to load files via callbacks to
+   accomidate custom input streams (Ben Wenger) removed deprecated
+   format-specific test/load functions removed support for installable file
+   formats (stbi_loader) -- would have been broken for IO callbacks anyway error
+   cases in bmp and tga give messages and don't leak (Raymond Barbiero, grisha)
+   fix inefficiency in decoding 32-bit BMP (David Woo) 1.29  (2010-08-16)
+   various warning fixes from Aurelien Pocheville 1.28 (2010-08-01) fix bug in
+   GIF palette transparency (SpartanJ) 1.27 (2010-08-01) cast-to-stbi_uc to fix
+   warnings 1.26  (2010-07-24) fix bug in file buffering for PNG reported by
+   SpartanJ 1.25  (2010-07-17) refix trans_data warning (Won Chun) 1.24
+   (2010-07-12) perf improvements reading from files on platforms with
+   lock-heavy fgetc() minor perf improvements for jpeg deprecated type-specific
+   functions so we'll get feedback if they're needed attempt to fix trans_data
+   warning (Won Chun) 1.23    fixed bug in iPhone support 1.22  (2010-07-10)
+   removed image *writing* support stbi_info support from Jetro Lauha GIF
+   support from Jean-Marc Lienher iPhone PNG-extensions from James Brown
+   warning-fixes from Nicolas Schulz and Janez Zemva (i.stbi__err. Janez
+   (U+017D)emva) 1.21    fix use of 'stbi_uc' in header (reported by jon
+   blow) 1.20    added support for Softimage PIC, by Tom Seddon 1.19    bug in
+   interlaced PNG corruption check (found by ryg) 1.18  (2008-08-02) fix a
+   threading bug (local mutable static) 1.17    support interlaced PNG 1.16
+   major bugfix - stbi__convert_format converted one too many pixels 1.15
+   initialize some fields for thread safety 1.14    fix threadsafe conversion
+   bug header-file-only version (#define STBI_HEADER_FILE_ONLY before including) 1.13
+   threadsafe 1.12    const qualifiers in the API 1.11 Support installable IDCT,
+   colorspace conversion routines 1.10    Fixes for 64-bit (don't use "unsigned
+   long") optimized upsampling by Fabian "ryg" Giesen 1.09    Fix
+   format-conversion for PSD code (bad global variables!) 1.08 Thatcher Ulrich's
+   PSD code integrated by Nicolas Schulz 1.07    attempt to fix C++
+   warning/errors again 1.06    attempt to fix C++ warning/errors again 1.05 fix
+   TGA loading to return correct *comp and use good luminance calc 1.04 default
+   float alpha is 1, not 255; use 'void *' for stbi_image_free 1.03    bugfixes
+   to STBI_NO_STDIO, STBI_NO_HDR 1.02 support for (subset of) HDR files, float
+   interface for preferred access to them 1.01 fix bug: possible bug in handling
+   right-side up bmps... not sure fix bug: the stbi__bmp_load() and
+   stbi__tga_load() functions didn't work at all 1.00 interface to zlib that
+   skips zlib header 0.99    correct handling of alpha in palette 0.98    TGA
+   loader by lonesock; dynamically add loaders (untested) 0.97 jpeg errors on
+   too large a file; also catch another malloc failure 0.96 fix detection of
+   invalid v value - particleman@mollyrocket forum 0.95    during header scan,
+   seek to markers in case of padding 0.94    STBI_NO_STDIO to disable stdio
+   usage; rename all #defines the same 0.93    handle jpegtran output; verbose
+   errors 0.92    read 4,8,16,24,32-bit BMP files of several formats 0.91 output
+   24-bit Windows 3.0 BMP files 0.90    fix a few more warnings; bump version
+   number to approach 1.0 0.61    bugfixes due to Marc LeBlanc, Christopher
+   Lloyd 0.60    fix compiling as c++ 0.59    fix warnings: merge Dave Moore's
+   -Wall fixes 0.58    fix bug: zlib uncompressed mode len/nlen was wrong endian
+   0.57    fix bug: jpg last huffman symbol before marker was >9 bits but less
+   than 16 available 0.56    fix bug: zlib uncompressed mode len vs. nlen 0.55
+   fix bug: restart_interval not initialized to 0 0.54    allow NULL for 'int
+   *comp' 0.53    fix bug in png 3->4; speedup png decoding 0.52    png handles
+   req_comp=3,4 directly; minor cleanup; jpeg comments 0.51    obey req_comp
+   requests, 1-component jpegs return as 1-component, on 'test' only check type,
+   not whether we support this variant 0.50  (2006-11-19) first released version
 */
 
 /*

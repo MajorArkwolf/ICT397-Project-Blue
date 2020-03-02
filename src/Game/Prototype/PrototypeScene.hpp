@@ -1,9 +1,4 @@
-//
-// Created by Arkwolf on 19/12/2019.
-//
-
-#ifndef PROJECT_BLUE_PROTOTYPESCENE_HPP
-#define PROJECT_BLUE_PROTOTYPESCENE_HPP
+#pragma once
 
 #include <vector>
 
@@ -49,6 +44,3 @@ private:
 
     double getDeltaTime();
 };
-
-
-#endif //PROJECT_BLUE_PROTOTYPESCENE_HPP

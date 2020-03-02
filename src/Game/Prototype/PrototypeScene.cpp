@@ -1,7 +1,3 @@
-#pragma once
-//
-// Created by Arkwolf on 19/12/2019.
-//
 #include "PrototypeScene.hpp"
 
 #include <glm/glm.hpp>

@@ -12,30 +12,21 @@
 #include "Mesh.hpp"
 #include "View/Renderer/shader.hpp"
 
-using std::string;
-using std::vector;
-
-unsigned int TextureFromFile(const char *path, const string &directory,
-                             bool gamma = false);
-
 class Model {
   public:
-    vector<Texture> textures_loaded; // Stores all textures, needs to be global
-    vector<Mesh> meshes;
-    string directory;
+    std::vector<Texture> textures_loaded; // Stores all textures, needs to be global
+    std::vector<Mesh> meshes;
+    std::string directory;
     bool gammaCorrection;
 
     Model(char *path, bool gamma);
-    Model(string path, bool gamma);
+    Model(std::string path, bool gamma);
     void Draw(Shader shader);
 
   private:
-    void loadModel(string const &path);
+    void loadModel(const std::string &path);
     void processNode(aiNode *node, const aiScene *scene);
     Mesh processMesh(aiMesh *mesh, const aiScene *scene);
-    vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type,
-                                         string typeName);
+    std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type,
+                                              std::string typeName);
 };
-
-unsigned int TextureFromFile(const char *path, const string &directory,
-                             [[maybe_unused]] bool gamma);

@@ -12,8 +12,6 @@ Mesh::Mesh(std::vector<Vertex> newVerticies, std::vector<unsigned int> newIndici
     this->indices  = newIndicies;
     this->textures = newTextures;
     BlueEngine::RenderCode::SetupMesh(VAO, VBO, EBO, this->vertices, this->indices);
-
-    //setupMesh();
 }
 
 void Mesh::Draw(Shader shader) {
