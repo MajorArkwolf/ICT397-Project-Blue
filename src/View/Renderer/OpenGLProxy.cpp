@@ -89,7 +89,7 @@ void BlueEngine::RenderCode::SetupMesh(unsigned int &VAO, unsigned int &VBO, uns
 }
 
 unsigned int BlueEngine::RenderCode::TextureFromFile(const char *path, const std::string &directory,
-                             [[maybe_used]] bool gamma) {
+                             [[maybe_unused]] bool gamma) {
     std::string filename = std::string(path);
     filename             = directory + '/' + filename;
 
