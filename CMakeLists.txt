@@ -19,6 +19,7 @@ set(CMAKE_DISABLE_SOURCE_CHANGES ON)
 # Set the cmake module paths.
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
 
+
 # Set build type to debug by default.
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)
@@ -26,18 +27,21 @@ endif()
 
 # Define source files.
 set (SOURCES
-    src/Main.cpp
-    src/Engine/Engine.cpp
-    src/Engine/EulerCamera.cpp
+        src/Main.cpp
+        src/Engine/Engine.cpp
+        src/Engine/EulerCamera.cpp
 
-    src/Models/Mesh.cpp
-    src/Models/Model.cpp
-    src/Models/ModelManager.cpp
+        src/Models/Mesh.cpp
+        src/Models/Model.cpp
+        src/Models/ModelManager.cpp
 
-    src/Renderer/Shader.cpp
-    src/Renderer/Renderer.cpp
+        src/Renderer/Shader.cpp
+        src/Renderer/Renderer.cpp
 
-    src/Game/Prototype/PrototypeScene.cpp
+        src/Game/Prototype/PrototypeScene.cpp
+        src/Engine/BcFloat.cpp
+        src/Engine/BcVector4.cpp
+        src/Engine/BcQuaternion.cpp
     )
 
 
@@ -99,13 +103,15 @@ find_package(SDL2_mixer REQUIRED)
 find_package(glm REQUIRED)
 find_package(assimp CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
+find_package(bullet CONFIG REQUIRED)
 
 # Include project header files.
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 
 # Include and link against dependencies.
 target_link_libraries(${PROJECT_NAME} PUBLIC OpenGL::GL OpenGL::GLU
-        SDL2::SDL2 SDL2::Image SDL2::TTF SDL2::Mixer glm glad::glad assimp::assimp)
+        SDL2::SDL2 SDL2::Image SDL2::TTF SDL2::Mixer glm glad::glad assimp::assimp
+        PRIVATE LinearMath Bullet3Common BulletDynamics BulletSoftBody)
 
 # Symlink or copy the resources to the binary location.
 if (NOT DisablePostBuild)

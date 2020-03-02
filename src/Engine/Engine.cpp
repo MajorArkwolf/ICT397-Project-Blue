@@ -74,8 +74,8 @@ Engine::Engine() {
     SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
                         SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4.3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
@@ -98,7 +98,7 @@ Engine::Engine() {
         SDL_CreateWindow("Project-Blue", display.w / 4, display.h / 4,
                          display.w / 2, display.h / 2,
                          SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI),
-        &SDL_DestroyWindow};
+                                &SDL_DestroyWindow};
 
     if (this->window.get() == nullptr) {
         throw runtime_error{string{"Unable to create window: "} + SDL_GetError()};
