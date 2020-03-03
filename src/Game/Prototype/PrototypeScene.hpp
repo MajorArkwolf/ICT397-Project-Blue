@@ -7,9 +7,9 @@
 
 #include <vector>
 
-#include <Engine/BaseState.hpp>
-#include "Renderer/Renderer.hpp"
-#include "Engine/EulerCamera.hpp"
+#include "Controller/Engine/BaseState.hpp"
+#include "View/Renderer/Renderer.hpp"
+#include "COntroller/Engine/EulerCamera.hpp"
 
 
 class PrototypeScene : public BaseState {

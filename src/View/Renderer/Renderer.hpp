@@ -2,7 +2,7 @@
 #include <utility>
 #include <vector>
 
-#include "Models/mesh.hpp"
+#include "Model/Models/mesh.hpp"
 #include "Shader.hpp"
 
 class Renderer {
