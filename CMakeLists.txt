@@ -27,8 +27,12 @@ endif()
 # Define source files.
 set (SOURCES
     src/Main.cpp
+
+    src/Controller/Engine/QuaternionCamera.cpp
+    src/Controller/Engine/InputManager.cpp
     src/Controller/Engine/Engine.cpp
     src/Controller/Engine/EulerCamera.cpp
+
 
     src/Model/Models/Mesh.cpp
     src/Model/Models/Model.cpp
