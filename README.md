@@ -36,7 +36,7 @@ git checkout develop && git submodule update --init
 ### Building
 * Unix:
     ```
-    cmake -S . -B build && cmake --build build && ./build/shays-world
+    cmake -S . -B build && cmake --build build && ./build/project-blue
     ```
 * Windows:
     * Open Visual Studio as Administrator (required to make symbolic links)
