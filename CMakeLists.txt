@@ -31,7 +31,7 @@ set (SOURCES
     src/Controller/Engine/QuaternionCamera.cpp
     src/Controller/Engine/InputManager.cpp
     src/Controller/Engine/Engine.cpp
-    src/Controller/Engine/EulerCamera.cpp
+    src/View/EulerCamera.cpp
 
 
     src/Model/Models/Mesh.cpp
@@ -40,6 +40,7 @@ set (SOURCES
 
     src/View/Renderer/Shader.cpp
     src/View/Renderer/Renderer.cpp
+    src/View/Renderer/OpenGLProxy.cpp
 
     src/Game/Prototype/PrototypeScene.cpp
     )

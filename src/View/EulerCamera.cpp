@@ -1,7 +1,4 @@
-//
-// Created by Arkwolf on 20/12/2019.
-//
-
+#pragma once
 #include "EulerCamera.hpp"
 
 

@@ -1,7 +1,3 @@
-#pragma once
-//
-// Created by Arkwolf on 19/12/2019.
-//
 #include "PrototypeScene.hpp"
 
 #include <glm/glm.hpp>
@@ -11,6 +7,7 @@
 #include "Model/Models/Model.hpp"
 #include "Model/Models/ModelManager.hpp"
 #include "View/Renderer/Renderer.hpp"
+#include "View/Renderer/OpenGLProxy.hpp"
 
 PrototypeScene::PrototypeScene() {
     softInit();
@@ -32,29 +29,8 @@ auto PrototypeScene::update(double dt) -> void {
 }
 
 void PrototypeScene::hardInit() {
-    glLoadIdentity();
-    glLineWidth(1);
-    auto &engine = BlueEngine::Engine::get();
-
-    SDL_GL_GetDrawableSize(engine.window.get(), &width, &height);
-    ratio = static_cast<double>(width) / static_cast<double>(height);
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glViewport(0, 0, width, height);
-    gluPerspective(60, ratio, 1, 300);
-    glMatrixMode(GL_MODELVIEW);
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glEnable(GL_DEPTH_TEST);
-    glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
-
+    BlueEngine::RenderCode::HardInit();
     camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
-
     models.push_back(ModelManager::GetModelID("res/model/bigboy/big.obj"));
 }
 
@@ -105,17 +81,7 @@ void PrototypeScene::handleWindowEvent(SDL_Event &event) {
     switch (event.window.event) {
         case SDL_WINDOWEVENT_SIZE_CHANGED:
         case SDL_WINDOWEVENT_RESIZED: {
-            auto &engine = BlueEngine::Engine::get();
-
-            SDL_GL_GetDrawableSize(engine.window.get(), &width, &height);
-            ratio = static_cast<double>(width) / static_cast<double>(height);
-
-            glMatrixMode(GL_PROJECTION);
-            glLoadIdentity();
-            glViewport(0, 0, width, height);
-            gluPerspective(60, ratio, 1, 150);
-            glMatrixMode(GL_MODELVIEW);
-
+            BlueEngine::RenderCode::ResizeWindow();
         } break;
         default: break;
     }
@@ -164,27 +130,21 @@ void PrototypeScene::handleKeyRelease(SDL_Event &event) {
 }
 
 auto PrototypeScene::display() -> void {
-    auto &engine = BlueEngine::Engine::get();
+    BlueEngine::RenderCode::Display();
     auto display = SDL_DisplayMode{};
     SDL_GetCurrentDisplayMode(0, &display);
-    // render
-    // ------
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     // view/projection transformations
     glm::mat4 projection = glm::perspective(
         glm::radians(camera.Zoom),
-        static_cast<double>(width) / static_cast<double>(height), 0.1, 100000.0);
+        static_cast<double>(display.w) / static_cast<double>(display.h), 0.1, 100000.0);
     glm::mat4 view = camera.GetViewMatrix();
 
-    glm::mat4 model = glm::mat4(1.0f);
+    glm::mat4 model = glm::mat4(5.0f);
 
     Renderer::addToDraw(model, models[0]);
 
-    renderer.draw(view, projection);
-
-    SDL_GL_SwapWindow(engine.window.get());
+    renderer.draw(view, projection); 
+    BlueEngine::RenderCode::EndDisplay();
 }
 
 void PrototypeScene::unInit() {}
