@@ -31,7 +31,7 @@ auto PrototypeScene::update(double dt) -> void {
 void PrototypeScene::hardInit() {
     BlueEngine::RenderCode::HardInit();
     camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
-    models.push_back(ModelManager::GetModelID("res/model/bigboy/big.obj"));
+    models.push_back(ModelManager::GetModelID("res/model/nanosuit/nanosuit.obj"));
 }
 
 void PrototypeScene::softInit() {
