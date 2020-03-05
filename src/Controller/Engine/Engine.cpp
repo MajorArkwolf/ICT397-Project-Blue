@@ -45,14 +45,8 @@ auto Engine::run() -> void {
             lastFpsUpdate = time;
             frameCount    = 0;
         }
-
-        // engine.thegame->time = oldTime;
-
-        // engine.processInput();
         engine.processInput();
-        // engine.thegame->update();
         engine.gameStack.getTop()->update(deltaTime);
-        // engine.thegame->draw();
         engine.gameStack.getTop()->display();
     }
 }

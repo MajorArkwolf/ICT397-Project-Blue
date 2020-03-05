@@ -33,10 +33,6 @@ private:
     void handleMouseMovement(SDL_Event &event);
     void handleMouseScroll(SDL_Event &event);
 
-    int width  = 0;
-    int height = 0;
-    int ratio  = 0;
-
     bool moveForward = false;
     bool moveBackward = false;
     bool moveLeft = false;

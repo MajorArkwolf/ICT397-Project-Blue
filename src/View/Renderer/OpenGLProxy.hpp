@@ -16,5 +16,10 @@ namespace BlueEngine {
 		
         unsigned int TextureFromFile(const char *path, const std::string &directory,
                                      bool gamma = false);
+
+        void HardInit(); 
+        void ResizeWindow();
+        void Display();
+        void EndDisplay();
 	}
 }

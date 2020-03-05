@@ -5,6 +5,7 @@
 #include <glm/vec3.hpp>
 #include "Controller/Engine/OpenGL.hpp"
 #include <glad/glad.h>
+#include "Controller/Engine/Engine.hpp"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
@@ -130,4 +131,61 @@ unsigned int BlueEngine::RenderCode::TextureFromFile(const char *path, const std
         stbi_image_free(data);
     }
     return textureID;
+
+}
+
+void BlueEngine::RenderCode::ResizeWindow() {
+    auto &engine = BlueEngine::Engine::get();
+
+    int width = 0;
+    int height = 0;
+    int ratio  = 0;
+
+    SDL_GL_GetDrawableSize(engine.window.get(), &width, &height);
+    ratio = static_cast<double>(width) / static_cast<double>(height);
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glViewport(0, 0, width, height);
+    gluPerspective(60, width/height, 1, 150);
+    glMatrixMode(GL_MODELVIEW);
+}
+
+void BlueEngine::RenderCode::HardInit() {
+    int width  = 0;
+    int height = 0;
+    int ratio  = 0;
+
+    glLoadIdentity();
+    glLineWidth(1);
+    auto &engine = BlueEngine::Engine::get();
+
+    SDL_GL_GetDrawableSize(engine.window.get(), &width, &height);
+    ratio = static_cast<double>(width) / static_cast<double>(height);
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glViewport(0, 0, width, height);
+    gluPerspective(60, ratio, 1, 300);
+    glMatrixMode(GL_MODELVIEW);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glEnable(GL_DEPTH_TEST);
+    glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+}
+
+void BlueEngine::RenderCode::Display() {
+    // render
+    // ------
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void BlueEngine::RenderCode::EndDisplay() {
+    auto &engine = BlueEngine::Engine::get();
+    SDL_GL_SwapWindow(engine.window.get());
 }
