@@ -105,12 +105,15 @@ find_package(glm REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_package(assimp CONFIG REQUIRED)
 
+# Build 3rd Party Liberaries
+add_subdirectory(lib)
+
 # Include project header files.
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 
 # Include and link against dependencies.
 target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL OpenGL::GLU
-        SDL2::SDL2 SDL2::Image SDL2::TTF SDL2::Mixer glm glad::glad assimp::assimp)
+        SDL2::SDL2 SDL2::Image SDL2::TTF SDL2::Mixer glm glad::glad assimp::assimp LuaBridge)
 
 # Symlink or copy the resources to the binary location.
 if (NOT DisablePostBuild)
