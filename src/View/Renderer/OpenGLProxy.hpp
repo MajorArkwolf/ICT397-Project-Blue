@@ -21,5 +21,7 @@ namespace BlueEngine {
         void ResizeWindow();
         void Display();
         void EndDisplay();
+        void gluPerspective(GLdouble fovy, GLdouble aspect, GLdouble zNear,
+                            GLdouble zFar);
 	}
 }

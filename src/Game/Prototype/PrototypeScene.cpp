@@ -3,7 +3,6 @@
 #include <glm/glm.hpp>
 
 #include "Controller/Engine/Engine.hpp"
-#include "Controller/Engine/OpenGL.hpp"
 #include "Model/Models/Model.hpp"
 #include "Model/Models/ModelManager.hpp"
 #include "View/Renderer/Renderer.hpp"
@@ -31,7 +30,7 @@ auto PrototypeScene::update(double dt) -> void {
 void PrototypeScene::hardInit() {
     BlueEngine::RenderCode::HardInit();
     camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
-    models.push_back(ModelManager::GetModelID("res/model/nanosuit/nanosuit.obj"));
+    models.push_back(ModelManager::GetModelID("res/model/players/player_male.obj"));
 }
 
 void PrototypeScene::softInit() {
