@@ -21,28 +21,33 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
 
 
 # Set build type to debug by default.
-if(NOT CMAKE_BUILD_TYPE)
+if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)
-endif()
+endif ()
 
 # Define source files.
-set (SOURCES
+set(SOURCES
         src/Main.cpp
-        src/Engine/Engine.cpp
-        src/Engine/EulerCamera.cpp
 
-        src/Models/Mesh.cpp
-        src/Models/Model.cpp
-        src/Models/ModelManager.cpp
+        src/Controller/Engine/QuaternionCamera.cpp
+        src/Controller/Engine/InputManager.cpp
+        src/Controller/Engine/Engine.cpp
+        src/View/EulerCamera.cpp
 
-        src/Renderer/Shader.cpp
-        src/Renderer/Renderer.cpp
+
+        src/Model/Models/Mesh.cpp
+        src/Model/Models/Model.cpp
+        src/Model/Models/ModelManager.cpp
+
+        src/View/Renderer/Shader.cpp
+        src/View/Renderer/Renderer.cpp
+        src/View/Renderer/OpenGLProxy.cpp
 
         src/Game/Prototype/PrototypeScene.cpp
         src/Engine/BcFloat.cpp
         src/Engine/BcVector4.cpp
         src/Engine/BcQuaternion.cpp
-    )
+        )
 
 
 # Define the executable.
@@ -57,8 +62,8 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 
 # Remove the default warning level from MSVC.
 if (MSVC)
-    #string(REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
-endif()
+    string(REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+endif ()
 
 # Set Clang compile flags.
 target_compile_options(${PROJECT_NAME} PUBLIC
@@ -80,19 +85,19 @@ if (NOT MSVC)
             $<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:Clang>>:-fsanitize=address,undefined,leak>)
     target_link_libraries(${PROJECT_NAME} PUBLIC
             $<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:Clang>>:-fsanitize=address,undefined,leak>)
-endif()
+endif ()
 # Treat warnings as errors if enabled.
 if (WarningsAsErrors)
     target_compile_options(${PROJECT_NAME} PUBLIC
             $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:
             -Werror>)
     target_compile_options(${PROJECT_NAME} PUBLIC $<$<CXX_COMPILER_ID:MSVC>:/WX>)
-endif()
+endif ()
 
 # Fix an MSVC linker warning.
 if (MSVC)
     #set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "/NODEFAULTLIB:msvcrt.lib")
-endif()
+endif ()
 
 # Find dependencies.
 find_package(OpenGL REQUIRED COMPONENTS OpenGL)
@@ -101,27 +106,31 @@ find_package(SDL2_image REQUIRED)
 find_package(SDL2_ttf REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 find_package(glm REQUIRED)
-find_package(assimp CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_package(bullet CONFIG REQUIRED)
+find_package(assimp CONFIG REQUIRED)
+
+# Build 3rd Party Liberaries
+add_subdirectory(lib)
+
 
 # Include project header files.
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 
 # Include and link against dependencies.
 target_link_libraries(${PROJECT_NAME} PUBLIC OpenGL::GL OpenGL::GLU
-        SDL2::SDL2 SDL2::Image SDL2::TTF SDL2::Mixer glm glad::glad assimp::assimp
-        PRIVATE LinearMath Bullet3Common BulletDynamics BulletSoftBody)
+SDL2::SDL2 SDL2::Image SDL2::TTF SDL2::Mixer glm glad::glad assimp::assimp
+PRIVATE LinearMath Bullet3Common BulletDynamics BulletSoftBody LuaBridge)
 
 # Symlink or copy the resources to the binary location.
 if (NOT DisablePostBuild)
-    if (NOT CopyResources)
-        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-                COMMAND ${CMAKE_COMMAND} -E create_symlink
-                ${CMAKE_SOURCE_DIR}/res $<TARGET_FILE_DIR:${PROJECT_NAME}>/res)
-    else()
-        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-                COMMAND ${CMAKE_COMMAND} -E copy_directory
-                ${CMAKE_SOURCE_DIR}/res $<TARGET_FILE_DIR:${PROJECT_NAME}>/res)
-    endif()
+if (NOT CopyResources)
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+COMMAND ${CMAKE_COMMAND} -E create_symlink
+${CMAKE_SOURCE_DIR}/res $<TARGET_FILE_DIR:${PROJECT_NAME}>/res)
+else()
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+COMMAND ${CMAKE_COMMAND} -E copy_directory
+${CMAKE_SOURCE_DIR}/res $<TARGET_FILE_DIR:${PROJECT_NAME}>/res)
+endif()
 endif()

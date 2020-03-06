@@ -1,4 +1,4 @@
-#include "Engine/Engine.hpp"
+#include "Controller/Engine/Engine.hpp"
 
 #include <iomanip>
 #include <iostream>
@@ -45,14 +45,8 @@ auto Engine::run() -> void {
             lastFpsUpdate = time;
             frameCount    = 0;
         }
-
-        // engine.thegame->time = oldTime;
-
-        // engine.processInput();
         engine.processInput();
-        // engine.thegame->update();
         engine.gameStack.getTop()->update(deltaTime);
-        // engine.thegame->draw();
         engine.gameStack.getTop()->display();
     }
 }
@@ -74,7 +68,7 @@ Engine::Engine() {
     SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
                         SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4.3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);

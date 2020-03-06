@@ -1,10 +1,4 @@
-//
-// Created by Arkwolf on 20/12/2019.
-//
-
-#ifndef PROJECT_BLUE_EULERCAMERA_HPP
-#define PROJECT_BLUE_EULERCAMERA_HPP
-
+#pragma once
 #include <vector>
 
 #include <glad/glad.h>
@@ -17,7 +11,7 @@ enum Camera_Movement { FORWARD, BACKWARD, LEFT, RIGHT };
 // Default camera values
 const double YAW         = -90.0;
 const double PITCH       = 0.0;
-const double SPEED       = 0.5;
+const double SPEED       = 0.05;
 const double SENSITIVITY = 0.1;
 const double ZOOM        = 45.0;
 
@@ -65,5 +59,3 @@ private:
     void updateCameraVectors();
 };
 
-
-#endif //PROJECT_BLUE_EULERCAMERA_HPP
