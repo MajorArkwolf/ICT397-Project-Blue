@@ -1,13 +1,14 @@
 #include "OpenGLProxy.hpp"
-
 #include <iostream>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
-#include "Controller/Engine/OpenGL.hpp"
 #include <glad/glad.h>
 #include "Controller/Engine/Engine.hpp"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+
+constexpr double M_PI = 3.14159265358979323846;
+constexpr float M_PI_F = static_cast<float>(M_PI);
 
 void BlueEngine::RenderCode::DrawModel(Shader shader, unsigned int &VAO,
                const std::vector<Texture> &textures,
@@ -139,34 +140,30 @@ void BlueEngine::RenderCode::ResizeWindow() {
 
     int width = 0;
     int height = 0;
-    int ratio  = 0;
 
     SDL_GL_GetDrawableSize(engine.window.get(), &width, &height);
-    ratio = static_cast<double>(width) / static_cast<double>(height);
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glViewport(0, 0, width, height);
-    gluPerspective(60, width/height, 1, 150);
+    gluPerspective(60, width/height, 1, 300);
     glMatrixMode(GL_MODELVIEW);
 }
 
 void BlueEngine::RenderCode::HardInit() {
     int width  = 0;
     int height = 0;
-    int ratio  = 0;
 
     glLoadIdentity();
     glLineWidth(1);
     auto &engine = BlueEngine::Engine::get();
 
     SDL_GL_GetDrawableSize(engine.window.get(), &width, &height);
-    ratio = static_cast<double>(width) / static_cast<double>(height);
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glViewport(0, 0, width, height);
-    gluPerspective(60, ratio, 1, 300);
+    gluPerspective(60, width / height, 1, 300);
     glMatrixMode(GL_MODELVIEW);
 
     glEnable(GL_BLEND);
@@ -189,3 +186,15 @@ void BlueEngine::RenderCode::EndDisplay() {
     auto &engine = BlueEngine::Engine::get();
     SDL_GL_SwapWindow(engine.window.get());
 }
+
+void BlueEngine::RenderCode::gluPerspective(GLdouble fovy, GLdouble aspect, GLdouble zNear, GLdouble zFar) {
+    GLdouble xmin, xmax, ymin, ymax;
+
+    ymax = zNear * tan(fovy * M_PI / 360.0);
+    ymin = -ymax;
+    xmin = ymin * aspect;
+    xmax = ymax * aspect;
+
+    glFrustum(xmin, xmax, ymin, ymax, zNear, zFar);
+}
+

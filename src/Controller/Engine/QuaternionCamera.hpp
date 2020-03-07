@@ -3,19 +3,18 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
-#include <SDL2/SDL_opengl.h>
 
 #include "InputManager.hpp"
 
 class QuaternionCamera {
-  public:
-
+  private:
     glm::vec3 cameraUp;
     glm::vec3 cameraPosition;
     glm::vec3 cameraEye;
     glm::vec3 cameraRotation;
     glm::quat deltaQuaternion;
 
+  public:
     /**
      *  @brief default camera constructor
      *  @param
@@ -61,8 +60,5 @@ class QuaternionCamera {
     *  @return void
     */
     void Update(glm::vec3 inputVector, float deltaTime, float fps);
-
-  private:
-
 };
 

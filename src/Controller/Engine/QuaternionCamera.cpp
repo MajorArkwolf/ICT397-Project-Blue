@@ -1,6 +1,4 @@
-
 #include "QuaternionCamera.hpp"
-
 
 QuaternionCamera::QuaternionCamera() {
     cameraUp        = glm::vec3(0, 0, 0);
@@ -39,38 +37,30 @@ void QuaternionCamera::CameraMove(InputManager::keyStates direction,
 
     if (direction == InputManager::Forward) {
         cameraPosition += unitRotation * scalar;
-        std::cout << "cameraPosition x: " << cameraPosition.x << " y: " << cameraPosition.y << " z: " << cameraPosition.z << std::endl;
     }
 
     if (direction == InputManager::Backward) {
         cameraPosition -= unitRotation * scalar;
-        std::cout << "cameraPosition x: " << cameraPosition.x << " y: " << cameraPosition.y << " z: " << cameraPosition.z << std::endl;
     }
 
     if (direction == InputManager::Right) {
-        glm::vec3 tempRotation = glm::cross(cameraUp, unitRotation);
-        tempRotation           = glm::normalize(tempRotation);
-
-        cameraPosition += tempRotation * scalar;
-        std::cout << "cameraPosition x: " << cameraPosition.x << " y: " << cameraPosition.y << " z: " << cameraPosition.z << std::endl;
+        cameraPosition +=
+            glm::normalize(glm::cross(cameraUp, unitRotation)) * scalar;
     }
 
     if (direction == InputManager::Left) {
-        glm::vec3 tempRotation = glm::cross(cameraUp, unitRotation);
-        tempRotation           = glm::normalize(tempRotation);
-
-        cameraPosition -= tempRotation * scalar;
-        std::cout << "cameraPosition x: " << cameraPosition.x << " y: " << cameraPosition.y << " z: " << cameraPosition.z << std::endl;
-    }
+        cameraPosition -=
+            glm::normalize(glm::cross(cameraUp, unitRotation)) * scalar;
+     }
 }
 
 void QuaternionCamera::Update(glm::vec3 inputVector, float deltaTime, float fps) {
     // calculate pitch axis for rotating, therefore the orthogonal between the
     // forward and up assuming righthandedness
     if (abs(inputVector.length()) > 0) {
-        glm::vec3 pitchAxis = glm::normalize(glm::cross(cameraUp, cameraRotation));
-
-        CameraRotate(cameraRotation, pitchAxis, inputVector.y);
+        CameraRotate(cameraRotation,
+                     glm::normalize(glm::cross(cameraUp, cameraRotation)),
+                     inputVector.y);
         CameraRotate(cameraRotation, cameraUp, inputVector.x);
 
     }
