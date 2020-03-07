@@ -44,9 +44,10 @@ set(SOURCES
         src/View/Renderer/OpenGLProxy.cpp
 
         src/Game/Prototype/PrototypeScene.cpp
-        src/Engine/BcFloat.cpp
-        src/Engine/BcVector4.cpp
-        src/Engine/BcQuaternion.cpp
+        src/View/BcFloat.cpp
+        src/View/BcVector4.cpp
+        src/View/BcQuaternion.cpp
+        src/View/BcVector3.cpp
         )
 
 
@@ -118,7 +119,7 @@ add_subdirectory(lib)
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 
 # Include and link against dependencies.
-target_link_libraries(${PROJECT_NAME} PUBLIC OpenGL::GL OpenGL::GLU
+target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL OpenGL::GLU
 SDL2::SDL2 SDL2::Image SDL2::TTF SDL2::Mixer glm glad::glad assimp::assimp
 PRIVATE LinearMath Bullet3Common BulletDynamics BulletSoftBody LuaBridge)
 
