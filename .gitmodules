@@ -7,3 +7,6 @@
 [submodule "lib/react"]
 	path = lib/react
 	url = https://github.com/DanielChappuis/reactphysics3d.git
+[submodule "lib/imgui"]
+	path = lib/imgui
+	url = https://github.com/opeik/imgui.git
