@@ -111,9 +111,13 @@ add_subdirectory(lib)
 # Include project header files.
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 
+# DLL's were a mistake.
+set_target_properties(reactphysics3d PROPERTIES ENABLE_EXPORTS ON)
+set_target_properties(reactphysics3d PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
 # Include and link against dependencies.
 target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL OpenGL::GLU
-        SDL2::SDL2 SDL2::Image SDL2::TTF SDL2::Mixer glm glad::glad assimp::assimp LuaBridge)
+        SDL2::SDL2 SDL2::Image SDL2::TTF SDL2::Mixer glm glad::glad assimp::assimp LuaBridge reactphysics3d ImGui)
 
 # Symlink or copy the resources to the binary location.
 if (NOT DisablePostBuild)

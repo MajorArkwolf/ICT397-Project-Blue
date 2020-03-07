@@ -4,3 +4,9 @@
 [submodule "lib/luabridge"]
 	path = lib/luabridge
 	url = https://github.com/vinniefalco/LuaBridge
+[submodule "lib/react"]
+	path = lib/react
+	url = https://github.com/DanielChappuis/reactphysics3d.git
+[submodule "lib/imgui"]
+	path = lib/imgui
+	url = https://github.com/ocornut/imgui.git
