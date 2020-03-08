@@ -10,3 +10,6 @@
 [submodule "lib/imgui"]
 	path = lib/imgui
 	url = https://github.com/opeik/imgui.git
+[submodule "lib/lua"]
+	path = lib/lua
+	url = https://github.com/opeik/lua-cmake.git
