@@ -45,5 +45,5 @@ class BaseState {
      * @brief Virtual update function for updating physics within a gamestate
      * @param dt Delta time since last frame
      */
-    virtual void update(double dt) = 0;
+    virtual void update(double t, double dt) = 0;
 };

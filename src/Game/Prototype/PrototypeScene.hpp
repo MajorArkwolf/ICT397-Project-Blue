@@ -13,7 +13,7 @@ public:
     ~PrototypeScene() override = default;
 
     auto display() -> void override;
-    auto update(double dt) -> void override;
+    auto update(double t, double dt) -> void override;
 
     void Init() override;
     void unInit() override;
