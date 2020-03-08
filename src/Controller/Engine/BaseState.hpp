@@ -17,16 +17,10 @@ class BaseState {
     bool relativeMouse = 1;
 
     /**
-     * @brief Virtual hard initialisation function for a gamestate
-     * Used to load in memory objects and other things that should only be done once
-     */
-    virtual void hardInit() = 0;
-
-    /**
-     * @brief Virtual soft initialisation function for a gamestate
+     * @brief Virtual initialisation function for a gamestate
      * Used seperately from a hard init to reset variables needed for gamestate function
      */
-    virtual void softInit() = 0;
+    virtual void Init() = 0;
 
     /**
      * @brief Virtual soft initialisation function for a gamestate

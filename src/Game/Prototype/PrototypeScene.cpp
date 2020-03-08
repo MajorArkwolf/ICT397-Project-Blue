@@ -9,7 +9,7 @@
 #include "View/Renderer/OpenGLProxy.hpp"
 
 PrototypeScene::PrototypeScene() {
-    softInit();
+    Init();
 }
 
 auto PrototypeScene::update(double dt) -> void {
@@ -27,14 +27,10 @@ auto PrototypeScene::update(double dt) -> void {
     }
 }
 
-void PrototypeScene::hardInit() {
+void PrototypeScene::Init() {
     BlueEngine::RenderCode::HardInit();
     camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
     models.push_back(ModelManager::GetModelID("res/model/players/player_male.obj"));
-}
-
-void PrototypeScene::softInit() {
-    hardInit();
 }
 
 void PrototypeScene::handleInput(SDL_Event &event) {
