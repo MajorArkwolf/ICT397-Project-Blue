@@ -13,12 +13,6 @@ class BaseState {
      */
     virtual ~BaseState() = default;
 
-    /// Window width
-    int width = 0;
-    /// Window height
-    int height = 0;
-    /// Window aspect ratio
-    double ratio = 0;
     /// Whether mouse is set to relative mode (reset to center of window each frame)
     bool relativeMouse = 1;
 

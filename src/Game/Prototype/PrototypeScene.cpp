@@ -3,7 +3,6 @@
 #include <glm/glm.hpp>
 
 #include "Controller/Engine/Engine.hpp"
-#include "Controller/Engine/OpenGL.hpp"
 #include "Model/Models/Model.hpp"
 #include "Model/Models/ModelManager.hpp"
 #include "View/Renderer/Renderer.hpp"
@@ -32,7 +31,6 @@ void PrototypeScene::hardInit() {
     BlueEngine::RenderCode::HardInit();
     camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
     models.push_back(ModelManager::GetModelID("res/model/Test/city_residential_03.obj"));
-
 }
 
 void PrototypeScene::softInit() {
