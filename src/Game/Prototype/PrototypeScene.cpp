@@ -12,7 +12,7 @@ PrototypeScene::PrototypeScene() {
     Init();
 }
 
-auto PrototypeScene::update(double dt) -> void {
+auto PrototypeScene::update(double t, double dt) -> void {
     if (moveForward) {
         camera.ProcessKeyboard(FORWARD, dt);
     }
@@ -30,7 +30,7 @@ auto PrototypeScene::update(double dt) -> void {
 void PrototypeScene::Init() {
     BlueEngine::RenderCode::HardInit();
     camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
-    models.push_back(ModelManager::GetModelID("res/model/players/player_male.obj"));
+    models.push_back(ModelManager::GetModelID("res/model/bigboy/big.obj"));
 }
 
 void PrototypeScene::handleInput(SDL_Event &event) {
