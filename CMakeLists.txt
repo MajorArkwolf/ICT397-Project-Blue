@@ -26,29 +26,35 @@ if (NOT CMAKE_BUILD_TYPE)
 endif ()
 
 # Define source files.
-set(SOURCES
-        src/Main.cpp
+set (SOURCES
+    src/Main.cpp
+    
 
-        src/Controller/Engine/QuaternionCamera.cpp
-        src/Controller/Engine/InputManager.cpp
-        src/Controller/Engine/Engine.cpp
-        src/View/EulerCamera.cpp
+    # Controller
+    src/Controller/Engine/QuaternionCamera.cpp
+    src/Controller/Engine/InputManager.cpp
+    src/Controller/Engine/Engine.cpp
+    src/Controller/Engine/CollisionBody.cpp
+    src/Controller/Engine/CollisionWorld.cpp
+    src/Controller/Engine/Quaternion.cpp
+    src/Controller/Engine/Vector3.cpp
+    src/Controller/Engine/Transform.cpp
+    
+    # Model
+    src/Model/Models/Mesh.cpp
+    src/Model/Models/Model.cpp
+    src/Model/Models/ModelManager.cpp
 
+    # View
+    src/View/Renderer/Shader.cpp
+    src/View/EulerCamera.cpp
+    src/View/Renderer/Renderer.cpp
+    src/View/Renderer/OpenGLProxy.cpp
 
-        src/Model/Models/Mesh.cpp
-        src/Model/Models/Model.cpp
-        src/Model/Models/ModelManager.cpp
-
-        src/View/Renderer/Shader.cpp
-        src/View/Renderer/Renderer.cpp
-        src/View/Renderer/OpenGLProxy.cpp
-
-        src/Game/Prototype/PrototypeScene.cpp
-        src/View/BcFloat.cpp
-        src/View/BcVector4.cpp
-        src/View/BcQuaternion.cpp
-        src/View/BcVector3.cpp
-        )
+    # Game
+    src/Game/SceneManager.cpp
+    src/Game/Prototype/PrototypeScene.cpp    
+    )
 
 
 # Define the executable.
@@ -124,7 +130,7 @@ set_target_properties(reactphysics3d PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 # Include and link against dependencies.
 target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL OpenGL::GLU
-        SDL2::SDL2 SDL2::Image SDL2::TTF SDL2::Mixer glm glad::glad assimp::assimp LuaBridge reactphysics3d ImGui)
+        SDL2::SDL2 SDL2::Image SDL2::TTF SDL2::Mixer glm glad::glad assimp::assimp LuaBridge reactphysics3d ImGui lua)
 
 
 # Symlink or copy the resources to the binary location.

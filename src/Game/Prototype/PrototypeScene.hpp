@@ -15,8 +15,7 @@ public:
     auto display() -> void override;
     auto update(double dt) -> void override;
 
-    void hardInit() override;
-    void softInit() override;
+    void Init() override;
     void unInit() override;
     void handleInput(SDL_Event &event) override;
 
