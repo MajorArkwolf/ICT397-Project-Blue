@@ -30,13 +30,13 @@ git lfs install
 ### Cloning
 ```
 git clone --recurse-submodules https://github.com/MajorArkwolf/ICT397-Project-Blue.git
-git checkout develop && git submodule update --init
+git checkout develop && git submodule update --init --recursive --depth 1
 ```
 
 ### Building
 * Unix:
     ```
-    cmake -S . -B build && cmake --build build && ./build/shays-world
+    cmake -S . -B build && cmake --build build && ./build/project-blue
     ```
 * Windows:
     * Open Visual Studio as Administrator (required to make symbolic links)

@@ -27,18 +27,29 @@ endif()
 # Define source files.
 set (SOURCES
     src/Main.cpp
+    
+
+    # Controller
+    src/Controller/Engine/QuaternionCamera.cpp
+    src/Controller/Engine/InputManager.cpp
     src/Controller/Engine/Engine.cpp
     src/Controller/Engine/EulerCamera.cpp
     src/Controller/InputManager.cpp
-
+    
+    # Model
     src/Model/Models/Mesh.cpp
     src/Model/Models/Model.cpp
     src/Model/Models/ModelManager.cpp
 
+    # View
     src/View/Renderer/Shader.cpp
+    src/View/EulerCamera.cpp
     src/View/Renderer/Renderer.cpp
+    src/View/Renderer/OpenGLProxy.cpp
 
-    src/Game/Prototype/PrototypeScene.cpp
+    # Game
+    src/Game/SceneManager.cpp
+    src/Game/Prototype/PrototypeScene.cpp    
     )
 
 
@@ -101,12 +112,19 @@ find_package(glm REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_package(assimp CONFIG REQUIRED)
 
+# Build 3rd Party Liberaries
+add_subdirectory(lib)
+
 # Include project header files.
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 
+# DLL's were a mistake.
+set_target_properties(reactphysics3d PROPERTIES ENABLE_EXPORTS ON)
+set_target_properties(reactphysics3d PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
 # Include and link against dependencies.
 target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL OpenGL::GLU
-        SDL2::SDL2 SDL2::Image SDL2::TTF SDL2::Mixer glm glad::glad assimp::assimp)
+        SDL2::SDL2 SDL2::Image SDL2::TTF SDL2::Mixer glm glad::glad assimp::assimp LuaBridge reactphysics3d ImGui lua)
 
 # Symlink or copy the resources to the binary location.
 if (NOT DisablePostBuild)

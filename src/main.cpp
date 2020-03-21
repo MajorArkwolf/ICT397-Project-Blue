@@ -1,4 +1,3 @@
-
 #include <cstddef>
 
 #include "Controller/Engine/Engine.hpp"

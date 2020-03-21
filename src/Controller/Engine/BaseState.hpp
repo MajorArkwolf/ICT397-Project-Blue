@@ -13,26 +13,14 @@ class BaseState {
      */
     virtual ~BaseState() = default;
 
-    /// Window width
-    int width = 0;
-    /// Window height
-    int height = 0;
-    /// Window aspect ratio
-    double ratio = 0;
     /// Whether mouse is set to relative mode (reset to center of window each frame)
     bool relativeMouse = 1;
 
     /**
-     * @brief Virtual hard initialisation function for a gamestate
-     * Used to load in memory objects and other things that should only be done once
-     */
-    virtual void hardInit() = 0;
-
-    /**
-     * @brief Virtual soft initialisation function for a gamestate
+     * @brief Virtual initialisation function for a gamestate
      * Used seperately from a hard init to reset variables needed for gamestate function
      */
-    virtual void softInit() = 0;
+    virtual void Init() = 0;
 
     /**
      * @brief Virtual soft initialisation function for a gamestate
@@ -57,5 +45,5 @@ class BaseState {
      * @brief Virtual update function for updating physics within a gamestate
      * @param dt Delta time since last frame
      */
-    virtual void update(double dt) = 0;
+    virtual void update(double t, double dt) = 0;
 };
