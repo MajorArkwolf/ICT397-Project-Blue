@@ -1,4 +1,5 @@
 #include "Controller/InputManager.hpp"
+#include <iostream>
 
 namespace Controller::Input {
 
@@ -32,6 +33,7 @@ namespace Controller::Input {
             }; break;
         }
 
+        inputEvent.inputAction;
         // for (auto pair : InputMap) {
         //    // Looks through input map for action match with pressed key
         //    if (pair.second == event.key.keysym.scancode) {
@@ -44,10 +46,9 @@ namespace Controller::Input {
     }
 
     void InputManager::ReadBindings() {
-        auto &engine    = BlueEngine::Engine::get();
-        auto baseBath   = engine.getBasePath();
-        auto luaState   = engine.getLuaState();
-        auto scriptPath = baseBath + "scripts/InputBindings.lua";
+        auto &LuaManager    = LuaManager::getInstance();
+        auto luaState   = LuaManager.getLuaState();
+        std::string scriptPath = "scripts/InputBindings.lua";
         if (luaL_dofile(luaState, scriptPath.c_str()) ||
             lua_pcall(luaState, 0, 0, 0)) {
             std::cout << "No script file found at '" << scriptPath
@@ -60,30 +61,41 @@ namespace Controller::Input {
         if (!table.isNil()) {
             readLuaInputTable(table);
         }
+
+        std::cout << int(InputMap.at(BLUE_InputAction::INPUT_JUMP)) << std::endl;
     }
 
     BLUE_InputDevice InputManager::hashInputValue(const std::string &value) {
         if (value == "LSHIFT") {
             return BLUE_InputDevice::KEY_LSHIFT;
         }
+        if (value == "SPACE") {
+            return BLUE_InputDevice::KEY_SPACE;
+        }
+        if (value == "A") {
+            return BLUE_InputDevice::KEY_A;
+        }
+
         return BLUE_InputDevice::UNKNOWN;
+
+        // TODO Populate this list with value enum pairs
     }
 
-    void InputManager::bindKey(BLUE_InputAction action, luabridge::LuaRef &inputTable, std::string value) {
+    void InputManager::bindKey(BLUE_InputAction action,
+                               luabridge::LuaRef &inputTable, std::string value) {
 
         luabridge::LuaRef inputRef = inputTable[value];
 
         if (inputRef.isString()) {
-
-            std::string input = inputRef.cast<std::string>();
+            std::string input   = inputRef.cast<std::string>();
             InputMap.at(action) = hashInputValue(input);
-            
         }
     }
 
     void InputManager::readLuaInputTable(luabridge::LuaRef inputTable) {
 
         bindKey(BLUE_InputAction::INPUT_JUMP, inputTable, "JUMP");
+        bindKey(BLUE_InputAction::INPUT_SPRINT, inputTable, "SPRINT");
     }
 
     void InputManager::DefaultInputMap() {

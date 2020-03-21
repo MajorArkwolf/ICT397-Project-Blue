@@ -1,5 +1,5 @@
 
-#include "InputManager.hpp"
+#include "InputManagerDep.hpp"
 
 InputManager::InputManager() {
     game_window = nullptr;

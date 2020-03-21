@@ -7,7 +7,8 @@
 
 #include "Enums.hpp"
 #include "glm/vec2.hpp"
-#include "Engine/Engine.hpp"
+#include <map>
+#include "Controller/Engine/LuaManager.hpp"
 
 namespace Controller {
     namespace Input {
@@ -24,9 +25,9 @@ namespace Controller {
 
         class InputManager {
           public:
-            static InputManager *getInstance() {
+            static InputManager &getInstance() {
                 static InputManager instance;
-                return &instance;
+                return instance;
             }
             void ProcessInput(SDL_Event &event);
             void ReadBindings();

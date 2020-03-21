@@ -31,7 +31,9 @@ set (SOURCES
 
     # Controller
     src/Controller/Engine/Engine.cpp
+    src/Controller/Engine/InputManagerDep.cpp
     src/Controller/InputManager.cpp
+    src/Controller/Engine/LuaManager.cpp
     
     # Model
     src/Model/Models/Mesh.cpp

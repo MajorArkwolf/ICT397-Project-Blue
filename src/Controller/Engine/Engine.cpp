@@ -1,5 +1,4 @@
 #include "Controller/Engine/Engine.hpp"
-#include "Controller/InputManager.hpp"
 
 #include <iomanip>
 #include <iostream>
@@ -12,13 +11,19 @@
 #include "BaseState.hpp"
 #include "GameStack.hpp"
 
+#include "Controller/InputManager.hpp"
+
 // Game States
 #include "Game/Prototype/PrototypeScene.hpp"
 
 using BlueEngine::Engine;
 using std::runtime_error;
 using std::string;
-
+namespace Controller {
+    namespace Input {
+        class InputManager;
+    }
+}
 /**
  * @brief The game engine main loop
  */
@@ -59,6 +64,7 @@ double t  = 0.0;
 
         engine.gameStack.getTop()->display();
     }
+    Controller::Input::InputManager::getInstance().ReadBindings();
 }
 
 /**
@@ -131,7 +137,7 @@ Engine::Engine() {
         std::cout << "Failed to initialize GLAD" << std::endl;
     }
 
-    luaState = luaL_newstate();
+
 }
 
 /**
@@ -142,14 +148,7 @@ Engine::~Engine() {
     SDL_Quit();
 }
 
-auto BlueEngine::Engine::getLuaState() -> lua_State* {
-    if (luaState != nullptr) {
-        return luaState;
-    } else {
-        luaState = luaL_newstate();
-        return luaState;
-    }
-}
+
 
 /**
  * @brief Returns the current instance of the engine
