@@ -7,8 +7,8 @@
 
 Renderer::Renderer() {
     auto &engine = BlueEngine::Engine::get();
-    string vs    = engine.basepath + "/res/shader/vertshader.vs";
-    string fs    = engine.basepath + "/res/shader/fragshader.fs";
+    string vs    = engine.getBasePath() + "/res/shader/vertshader.vs";
+    string fs    = engine.getBasePath() + "/res/shader/fragshader.fs";
     shader       = new Shader(vs.c_str(), fs.c_str());
 }
 Renderer::~Renderer() = default;

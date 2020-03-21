@@ -1,4 +1,5 @@
 #include "Controller/Engine/Engine.hpp"
+#include "Controller/InputManager.hpp"
 
 #include <iomanip>
 #include <iostream>
@@ -64,7 +65,6 @@ double t  = 0.0;
  * @brief Game engine default constructor, sets up all variables and settings required for operation
  */
 Engine::Engine() {
-    getBasePath();
     // Start SDL.
     auto status = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 
@@ -130,6 +130,8 @@ Engine::Engine() {
     if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
         std::cout << "Failed to initialize GLAD" << std::endl;
     }
+
+    luaState = luaL_newstate();
 }
 
 /**
@@ -138,6 +140,15 @@ Engine::Engine() {
  */
 Engine::~Engine() {
     SDL_Quit();
+}
+
+auto BlueEngine::Engine::getLuaState() -> lua_State* {
+    if (luaState != nullptr) {
+        return luaState;
+    } else {
+        luaState = luaL_newstate();
+        return luaState;
+    }
 }
 
 /**
@@ -179,8 +190,12 @@ auto Engine::getTime() const -> double {
            static_cast<double>(SDL_GetPerformanceFrequency());
 }
 
-auto Engine::getBasePath() -> void {
-    char *base_path = SDL_GetBasePath();
-    basepath        = std::string(base_path);
-    SDL_free(base_path);
+auto Engine::getBasePath() -> std::string {
+    if (basepath == "") {
+        char *base_path = SDL_GetBasePath();
+        basepath        = std::string(base_path);
+        SDL_free(base_path);
+    }
+    return basepath;
+
 }

@@ -1,11 +1,13 @@
 #pragma once
 
+#include <string>
 #include <vector>
 
 #include <SDL2/SDL.h>
 
 #include "Enums.hpp"
 #include "glm/vec2.hpp"
+#include "Engine/Engine.hpp"
 
 namespace Controller {
     namespace Input {
@@ -16,25 +18,27 @@ namespace Controller {
             glm::ivec2 mouseMotionRelative = {0, 0};
             glm::ivec2 mouseMotionAbsolute = {0, 0};
             float mouseWheelMotion         = 0.f;
-            enum BLUE_Input inputAction;
-            enum BLUE_InputType inputType;
+            BLUE_InputAction inputAction;
+            BLUE_InputType inputType;
         };
 
         class InputManager {
           public:
-
             static InputManager *getInstance() {
                 static InputManager instance;
                 return &instance;
             }
-            MethodResult ProcessInput(SDL_Event &event);
-
-            MethodResult
-            MapInputs(std::vector<std::pair<BLUE_Input, SDL_Scancode>> &mappings);
+            void ProcessInput(SDL_Event &event);
+            void ReadBindings();
+            void DefaultInputMap();
 
           private:
-            std::vector<std::pair<BLUE_Input, SDL_Scancode>>
-                InputMap; // A vector of pairs linking a BLUE_Input and an SDL_Keycode, vector index corresponds to BLUE_Input enum number.
+            std::map<BLUE_InputAction, BLUE_InputDevice> InputMap;
+            void readLuaInputTable(luabridge::LuaRef inputTable);
+            void bindKey(BLUE_InputAction, luabridge::LuaRef &inputTable,
+                    std::string value);
+            BLUE_InputDevice hashInputValue(const std::string &value);
+
             InputManager();
             ~InputManager();
             InputManager(const InputManager &other) = delete;

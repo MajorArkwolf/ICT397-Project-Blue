@@ -30,10 +30,7 @@ set (SOURCES
     
 
     # Controller
-    src/Controller/Engine/QuaternionCamera.cpp
-    src/Controller/Engine/InputManager.cpp
     src/Controller/Engine/Engine.cpp
-    src/Controller/Engine/EulerCamera.cpp
     src/Controller/InputManager.cpp
     
     # Model

@@ -9,6 +9,12 @@
 
 #include "GameStack.hpp"
 #include "BaseState.hpp"
+extern "C" {
+	#include "lauxlib.h"
+	#include "lua.h"
+	#include "lualib.h"
+}
+#include "LuaBridge/LuaBridge.h"
 
 
 namespace BlueEngine {
@@ -30,15 +36,18 @@ namespace BlueEngine {
          * @brief The current FPS
          */
         double fps           = 0.0;
-        std::string basepath = "";
+
 
         auto getTime() const -> double;
+        
+        auto getBasePath() -> std::string;
 
       private:
+        lua_State *luaState = nullptr;
         GameStack<BaseState *> gameStack;
         bool isRunning = true;
+        std::string basepath = "";
 
-        auto getBasePath() -> void;
 
         Engine();
 
@@ -47,6 +56,7 @@ namespace BlueEngine {
         Engine(const Engine &) = delete;
         ~Engine();
 
+        lua_State *getLuaState();
         //This variable will hold the game stack
         //Game *thegame = nullptr;
 
