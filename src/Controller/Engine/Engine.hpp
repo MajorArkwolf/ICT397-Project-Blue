@@ -3,7 +3,7 @@
 #include <memory>
 #include <string>
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
