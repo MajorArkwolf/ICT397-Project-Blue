@@ -34,11 +34,11 @@ set (SOURCES
     src/Controller/Engine/QuaternionCamera.cpp
     src/Controller/Engine/InputManager.cpp
     src/Controller/Engine/Engine.cpp
-    src/Controller/Engine/CollisionBody.cpp
-    src/Controller/Engine/CollisionWorld.cpp
-    src/Controller/Engine/Quaternion.cpp
-    src/Controller/Engine/Vector3.cpp
-    src/Controller/Engine/Transform.cpp
+        src/Controller/Physics/BeCollisionBody.cpp
+        src/Controller/Physics/BeCollisionWorld.cpp
+        src/Controller/Physics/BeQuaternion.cpp
+        src/Controller/Physics/BeVector3.cpp
+        src/Controller/Physics/BeTransform.cpp
     
     # Model
     src/Model/Models/Mesh.cpp

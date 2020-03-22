@@ -1,25 +1,24 @@
-#include "Vector3.hpp"
+#include "BeVector3.hpp"
 
-Vector3::Vector3(){
+BeVector3::BeVector3(){
     x = 0;
     y = 0;
     z = 0;
     vector3 = new rp3d::Vector3(0, 0, 0);
 }
 
-
-Vector3::Vector3(scalar inputX, scalar inputY, scalar inputZ) {
+BeVector3::BeVector3(beScalar inputX, beScalar inputY, beScalar inputZ) {
    vector3 = new rp3d::Vector3(inputX, inputY, inputZ);
 }
 
-Vector3::Vector3(const Vector3 &inputVector) {
+BeVector3::BeVector3(const BeVector3 &inputVector) {
     x = inputVector.x;
     y = inputVector.y;
     z = inputVector.z;
     vector3 = new rp3d::Vector3(inputVector.x, inputVector.y, inputVector.z);
 }
 
-Vector3::Vector3(const rp3d::Vector3 &inputVector)
+BeVector3::BeVector3(const rp3d::Vector3 &inputVector)
 {
     x = inputVector.x;
     y = inputVector.y;
@@ -29,11 +28,11 @@ Vector3::Vector3(const rp3d::Vector3 &inputVector)
     vector3->z = inputVector.z;
 }
 
-Vector3::~Vector3(){
+BeVector3::~BeVector3(){
     delete vector3;
 }
 
-void Vector3::SetAllValues(scalar inputX, scalar inputY, scalar inputZ) {
+void BeVector3::SetAllValues(beScalar inputX, beScalar inputY, beScalar inputZ) const {
     x = inputX;
     y = inputY;
     z = inputZ;
@@ -42,74 +41,74 @@ void Vector3::SetAllValues(scalar inputX, scalar inputY, scalar inputZ) {
     vector3->z = z;
 }
 
-scalar Vector3::GetX() {
+beScalar BeVector3::GetX() const{
     return x;
 }
 
-scalar Vector3::GetY() {
+beScalar BeVector3::GetY() const{
     return y;
 }
 
-scalar Vector3::GetZ() {
+beScalar BeVector3::GetZ() const{
     return z;
 }
 
-scalar Vector3::GetLength() {
+beScalar BeVector3::GetLength() {
     return vector3->length();
 }
 
-scalar Vector3::GetLengthSquared() {
+beScalar BeVector3::GetLengthSquared() {
     return vector3->lengthSquare();
 }
 
-Vector3 Vector3::GetUnit() const{
-    Vector3 result = Vector3(vector3->getUnit());
+BeVector3 BeVector3::GetUnit() const{
+    BeVector3 result = BeVector3(vector3->getUnit());
     return result;
 }
 
-Vector3 Vector3::GetOrthogonal() {
-    Vector3 result = Vector3(vector3->getOneUnitOrthogonalVector());
+BeVector3 BeVector3::GetOrthogonal() {
+    BeVector3 result = BeVector3(vector3->getOneUnitOrthogonalVector());
     return result;
 }
 
-bool Vector3::IsUnit() const {
+bool BeVector3::IsUnit() const {
     return vector3->isUnit();
 }
 
-bool Vector3::IsZero() const {
+bool BeVector3::IsZero() const {
     return vector3->isZero();
 }
 
-double Vector3::Dot(const Vector3 &rhs) const {
+double BeVector3::Dot(const BeVector3 &rhs) const {
     rp3d::Vector3 target = rp3d::Vector3(rhs.x, rhs.y, rhs.z);
     return vector3->dot(target);
 }
 
-Vector3 Vector3::Cross(const Vector3 &rhs) const {
+BeVector3 BeVector3::Cross(const BeVector3 &rhs) const {
     rp3d::Vector3 target = rp3d::Vector3(rhs.x, rhs.y, rhs.z);
     rp3d::Vector3 result =  vector3->cross(target);
-    Vector3 myResult = Vector3(result);
+    BeVector3 myResult = BeVector3(result);
     return myResult;
 }
 
-void Vector3::Normalise() {
+void BeVector3::Normalise() {
     vector3->normalize();
     x = vector3->x;
     y = vector3->y;
     z = vector3->z;
 }
 
-Vector3 Vector3::GetAbsoluteVector() const {
-    Vector3 result = Vector3(vector3->getAbsoluteVector());
+BeVector3 BeVector3::GetAbsoluteVector() const {
+    BeVector3 result = BeVector3(vector3->getAbsoluteVector());
     return result;
 }
 
-bool Vector3::operator==(const Vector3 &rhs) {
+bool BeVector3::operator==(const BeVector3 &rhs) {
     rp3d::Vector3 target = rp3d::Vector3(rhs.x, rhs.y, rhs.z);
     return *vector3 == target;
 }
 
-bool Vector3::operator!=(const Vector3 &rhs) {
+bool BeVector3::operator!=(const BeVector3 &rhs) {
     rp3d::Vector3 target = rp3d::Vector3(rhs.x, rhs.y, rhs.z);
     return *vector3 != target;
 }

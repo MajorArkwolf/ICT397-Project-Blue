@@ -1,6 +1,6 @@
-#include "Quaternion.hpp"
+#include "BeQuaternion.hpp"
 
-Quaternion::Quaternion() {
+BeQuaternion::BeQuaternion() {
     x = 0;
     y = 0;
     z = 0;
@@ -8,8 +8,8 @@ Quaternion::Quaternion() {
     quaternion = new rp3d::Quaternion(0,0,0,0);
 }
 
-Quaternion::Quaternion(scalar inputX, scalar inputY, scalar inputZ,
-                               scalar inputW) {
+BeQuaternion::BeQuaternion(beScalar inputX, beScalar inputY, beScalar inputZ,
+                           beScalar inputW) {
     x = inputX;
     y = inputY;
     z = inputZ;
@@ -17,7 +17,7 @@ Quaternion::Quaternion(scalar inputX, scalar inputY, scalar inputZ,
     quaternion = new rp3d::Quaternion(inputX, inputY, inputZ, inputW);
 }
 
-Quaternion::Quaternion(Vector3 inputVector, scalar inputW) {
+BeQuaternion::BeQuaternion(BeVector3 inputVector, beScalar inputW) {
     x = inputVector.GetX();
     y = inputVector.GetY();
     z = inputVector.GetZ();
@@ -27,7 +27,7 @@ Quaternion::Quaternion(Vector3 inputVector, scalar inputW) {
     quaternion = new rp3d::Quaternion(rhs, inputW);
 }
 
-Quaternion::Quaternion(const rp3d::Quaternion &rhs){
+BeQuaternion::BeQuaternion(const rp3d::Quaternion &rhs){
     *quaternion = rhs;
     x = quaternion->x;
     y = quaternion->y;
@@ -35,39 +35,39 @@ Quaternion::Quaternion(const rp3d::Quaternion &rhs){
     w = quaternion->w;
 }
 
-void Quaternion::SetX(scalar inputX) {
+void BeQuaternion::SetX(beScalar inputX) {
     x = inputX;
 }
 
-scalar Quaternion::GetX() {
+beScalar BeQuaternion::GetX() const{
     return x;
 }
 
-void Quaternion::SetY(scalar inputY) {
+void BeQuaternion::SetY(beScalar inputY) {
     y = inputY;
 }
 
-scalar Quaternion::GetY() {
+beScalar BeQuaternion::GetY() const{
     return y;
 }
 
-void Quaternion::SetZ(scalar inputZ) {
+void BeQuaternion::SetZ(beScalar inputZ) {
     z = inputZ;
 }
 
-scalar Quaternion::GetZ() {
+beScalar BeQuaternion::GetZ() const{
     return z;
 }
 
-void Quaternion::SetW(scalar inputW) {
+void BeQuaternion::SetW(beScalar inputW) {
     w = inputW;
 }
 
-scalar Quaternion::GetW() {
+beScalar BeQuaternion::GetW() const{
     return w;
 }
 
-void Quaternion::SetToZero() {
+void BeQuaternion::SetToZero() {
     quaternion->setToZero();
     x = quaternion->x;
     y = quaternion->y;
@@ -75,7 +75,7 @@ void Quaternion::SetToZero() {
     w = quaternion->w;
 }
 
-void Quaternion::SetToIdentity() {
+void BeQuaternion::SetToIdentity() {
     quaternion->setToIdentity();
     x = quaternion->x;
     y = quaternion->y;
@@ -83,21 +83,21 @@ void Quaternion::SetToIdentity() {
     w = quaternion->w;
 }
 
-Vector3 Quaternion::GetVector() {
+BeVector3 BeQuaternion::GetVector() {
     rp3d::Vector3 target = quaternion->getVectorV();
-    Vector3 result = Vector3(target);
+    BeVector3 result = BeVector3(target);
     return result;
 }
 
-scalar Quaternion::GetLength() {
+beScalar BeQuaternion::GetLength() {
     return quaternion->length();
 }
 
-scalar Quaternion::LengthSquared() {
+beScalar BeQuaternion::LengthSquared() {
     return  quaternion->lengthSquare();
 }
 
-void Quaternion::Normalised() {
+void BeQuaternion::Normalised() {
     quaternion->normalize();
     x = quaternion->x;
     y = quaternion->y;
@@ -105,7 +105,7 @@ void Quaternion::Normalised() {
     w = quaternion->w;
 }
 
-void Quaternion::Inverse() {
+void BeQuaternion::Inverse() {
     quaternion->inverse();
     x = quaternion->x;
     y = quaternion->y;
@@ -113,22 +113,22 @@ void Quaternion::Inverse() {
     w = quaternion->w;
 }
 
-Quaternion Quaternion::GetUnit() const{
-    Quaternion result = Quaternion(quaternion->getUnit());
+BeQuaternion BeQuaternion::GetUnit() const{
+    BeQuaternion result = BeQuaternion(quaternion->getUnit());
     return result;
 }
 
-Quaternion Quaternion::GetConjugate() const{
-    Quaternion result = Quaternion(quaternion->getConjugate());
+BeQuaternion BeQuaternion::GetConjugate() const{
+    BeQuaternion result = BeQuaternion(quaternion->getConjugate());
     return result;
 }
 
-Quaternion Quaternion::GetInverse() const{
-    Quaternion result = Quaternion(quaternion->getInverse());
+BeQuaternion BeQuaternion::GetInverse() const{
+    BeQuaternion result = BeQuaternion(quaternion->getInverse());
     return result;
 }
 
-void Quaternion::Identity() {
+void BeQuaternion::Identity() {
     quaternion->identity();
     x = quaternion->identity().x;
     y = quaternion->identity().y;
@@ -136,20 +136,20 @@ void Quaternion::Identity() {
     w = quaternion->identity().w;
 }
 
-Quaternion Quaternion::FromEulerAngles(Vector3 inputVector) {
+BeQuaternion BeQuaternion::FromEulerAngles(BeVector3 inputVector) {
     rp3d::Vector3 target = rp3d::Vector3(inputVector.GetX(), inputVector.GetY(), inputVector.GetZ());
-    Quaternion result = Quaternion(quaternion->fromEulerAngles(target));
+    BeQuaternion result = BeQuaternion(quaternion->fromEulerAngles(target));
     return result;
 }
 
-scalar Quaternion::Dot(Quaternion rhs) {
+beScalar BeQuaternion::Dot(BeQuaternion rhs) {
     rp3d::Quaternion target = rp3d::Quaternion(rhs.x, rhs.y, rhs.z, rhs.w);
-    scalar result = quaternion->dot(target);
+    beScalar result = quaternion->dot(target);
 
     return result;
 }
 
-void Quaternion::AngleAxis(scalar radianInput, Vector3 axisInput) {
+void BeQuaternion::AngleAxis(beScalar radianInput, BeVector3 axisInput) {
     rp3d::Vector3 target = rp3d::Vector3(axisInput.GetX(), axisInput.GetY(), axisInput.GetZ());
     quaternion->getRotationAngleAxis(radianInput, target);
     x = quaternion->x;
@@ -158,20 +158,31 @@ void Quaternion::AngleAxis(scalar radianInput, Vector3 axisInput) {
     w = quaternion->w;
 }
 
-Quaternion Quaternion::Slerp(const Quaternion &target1, const Quaternion &target2, scalar interval) const{
+BeQuaternion BeQuaternion::Slerp(const BeQuaternion &target1, const BeQuaternion &target2,
+                                 beScalar interval) const{
     rp3d::Quaternion targetOne = rp3d::Quaternion(target1.x, target1.y, target1.z, target1.w);
     rp3d::Quaternion targetTwo = rp3d::Quaternion(target2.x, target2.y, target2.z, target2.w);
-    Quaternion result = Quaternion(rp3d::Quaternion::slerp(targetOne, targetTwo, interval));
+    BeQuaternion result =
+        BeQuaternion(rp3d::Quaternion::slerp(targetOne, targetTwo, interval));
     return result;
 }
 
-Quaternion& Quaternion::operator=(Quaternion rhs){
-    std::swap(x, rhs.x);
-    std::swap(y, rhs.y);
-    std::swap(z, rhs.z);
-    std::swap(w, rhs.w);
-    rp3d::Quaternion *temp = new rp3d::Quaternion(rhs.x, rhs.y, rhs.z, rhs.w);
+BeQuaternion &BeQuaternion::operator=(const BeQuaternion &rhs){
+
+    if(&rhs == this)
+    {
+        return *this;
+    }
+
+    x = rhs.x;
+    y = rhs.y;
+    z = rhs.z;
+    w = rhs.w;
+
+    auto *temp = new rp3d::Quaternion(rhs.x, rhs.y, rhs.z, rhs.w);
     quaternion = temp;
+
+    return *this;
 }
 
 
