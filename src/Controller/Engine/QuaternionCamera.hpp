@@ -1,10 +1,9 @@
-
 #pragma once
 
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
-#include "InputManager.hpp"
+#include "Controller/InputManager.hpp"
 
 class QuaternionCamera {
   private:

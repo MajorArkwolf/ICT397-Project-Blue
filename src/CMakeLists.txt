@@ -5,7 +5,8 @@ target_sources(${PROJECT_NAME} PRIVATE
 
     # Controller
     Controller/Engine/QuaternionCamera.cpp
-    Controller/Engine/InputManager.cpp
+    Controller/Engine/LuaManager.cpp
+    Controller/InputManager.cpp
     Controller/Engine/Engine.cpp
     
     # Model

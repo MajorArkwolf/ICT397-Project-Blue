@@ -7,9 +7,8 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
-#include "GameStack.hpp"
 #include "BaseState.hpp"
-
+#include "GameStack.hpp"
 
 namespace BlueEngine {
     class Engine {
@@ -47,8 +46,8 @@ namespace BlueEngine {
         Engine(const Engine &) = delete;
         ~Engine();
 
-        //This variable will hold the game stack
-        //Game *thegame = nullptr;
+        // This variable will hold the game stack
+        // Game *thegame = nullptr;
 
         static auto get() -> Engine &;
         static auto run() -> void;

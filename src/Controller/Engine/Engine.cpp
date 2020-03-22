@@ -11,6 +11,8 @@
 #include "BaseState.hpp"
 #include "GameStack.hpp"
 
+#include "Controller/InputManager.hpp"
+
 // Game States
 #include "Game/Prototype/PrototypeScene.hpp"
 
@@ -24,18 +26,19 @@ using std::string;
 auto Engine::run() -> void {
     auto &engine = Engine::get();
 
+
     auto *prototype = new PrototypeScene();
     engine.gameStack.AddToStack(prototype);
 
-double t  = 0.0;
+    double t  = 0.0;
     double dt = 0.01;
 
     double currentTime = engine.getTime();
     double accumulator = 0.0;
 
-    //State previous;
-    //State current;
-    //State state;
+    // State previous;
+    // State current;
+    // State state;
 
     while (engine.getIsRunning()) {
         double newTime   = engine.getTime();
@@ -47,14 +50,14 @@ double t  = 0.0;
         accumulator += frameTime;
 
         while (accumulator >= dt) {
-            //previousState = currentState;
+            // previousState = currentState;
             engine.processInput();
             engine.gameStack.getTop()->update(t, dt);
             t += dt;
             accumulator -= dt;
         }
         const double alpha = accumulator / dt;
-        //state = currentState * alpha + previousState * (1.0 - alpha);
+        // state = currentState * alpha + previousState * (1.0 - alpha);
 
         engine.gameStack.getTop()->display();
     }
@@ -130,6 +133,8 @@ Engine::Engine() {
     if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
         std::cout << "Failed to initialize GLAD" << std::endl;
     }
+
+
 }
 
 /**
@@ -151,10 +156,12 @@ auto Engine::get() -> Engine & {
 }
 
 auto Engine::processInput() -> void {
-    auto event  = SDL_Event{};
+    auto event        = SDL_Event{};
     auto handledMouse = true;
+    auto &inputManager = Controller::Input::InputManager::getInstance();
 
     while (SDL_PollEvent(&event)) {
+        //gameStack.getTop()->handleInputData(inputManager.ProcessInput(event));
         gameStack.getTop()->handleInput(event);
     }
     if (!handledMouse) {

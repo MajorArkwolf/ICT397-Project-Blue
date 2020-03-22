@@ -27,6 +27,7 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)
 endif()
 
+<<<<<<< HEAD
 # Add Linux flag.
 if(UNIX AND NOT APPLE)
     set(LINUX TRUE)
@@ -36,6 +37,34 @@ endif()
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
+=======
+# Define source files.
+set (SOURCES
+    src/Main.cpp
+    
+
+    # Controller
+    src/Controller/Engine/Engine.cpp
+    src/Controller/Engine/InputManagerDep.cpp
+    src/Controller/InputManager.cpp
+    src/Controller/Engine/LuaManager.cpp
+    
+    # Model
+    src/Model/Models/Mesh.cpp
+    src/Model/Models/Model.cpp
+    src/Model/Models/ModelManager.cpp
+
+    # View
+    src/View/Renderer/Shader.cpp
+    src/View/EulerCamera.cpp
+    src/View/Renderer/Renderer.cpp
+    src/View/Renderer/OpenGLProxy.cpp
+
+    # Game
+    src/Game/SceneManager.cpp
+    src/Game/Prototype/PrototypeScene.cpp    
+    )
+>>>>>>> develop
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG    ${PROJECT_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE  ${PROJECT_BINARY_DIR})
