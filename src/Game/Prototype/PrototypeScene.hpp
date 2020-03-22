@@ -17,20 +17,16 @@ public:
 
     void Init() override;
     void unInit() override;
-    void handleInput(SDL_Event &event) override;
 
     double time = 0;
+    void handleInputData(Controller::Input::InputData inputData);
 
 private:
     std::vector<size_t> models;
     Renderer renderer;
     Camera camera;
-    void handleInputData(Controller::Input::InputData inputData);
-    void handleKeyRelease(SDL_Event &event);
-    void handleKeyPress(SDL_Event &event);
+
     void handleWindowEvent(SDL_Event &event);
-    void handleMouseMovement(SDL_Event &event);
-    void handleMouseScroll(SDL_Event &event);
 
     bool moveForward = false;
     bool moveBackward = false;

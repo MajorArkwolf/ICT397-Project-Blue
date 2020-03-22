@@ -1,5 +1,7 @@
-#include <iostream>
 #include "Controller/InputManager.hpp"
+
+#include <iostream>
+
 #include "Controller/Engine/Engine.hpp"
 
 namespace Controller::Input {
@@ -65,7 +67,6 @@ namespace Controller::Input {
 
         return inputEvent;
 
-        // Send inputEvent to top of game stack or whatever
     }
 
     void InputManager::ReadBindings() {
@@ -82,7 +83,7 @@ namespace Controller::Input {
         auto &LuaManager = LuaManager::getInstance();
 
         auto luaState          = LuaManager.getLuaState();
-        std::string scriptPath = basePath + "scripts/InputBindings.lua";
+        std::string scriptPath = basePath + "scripts//InputBindings.lua";
         if (luaL_dofile(luaState, scriptPath.c_str())) {
             std::cout << "No script file found at '" << scriptPath
                       << "', aborting input binding." << std::endl;
@@ -97,28 +98,104 @@ namespace Controller::Input {
     }
 
     SDL_Scancode InputManager::hashInputValue(const std::string &value) {
-        if (value == "LSHIFT") {
-            return SDL_SCANCODE_LSHIFT;
-        }
-        if (value == "SPACE") {
-            return SDL_SCANCODE_SPACE;
-        }
-        if (value == "W") {
-            return SDL_SCANCODE_W;
-        }
         if (value == "A") {
             return SDL_SCANCODE_A;
         }
-        if (value == "S") {
-            return SDL_SCANCODE_S;
+        if (value == "B") {
+            return SDL_SCANCODE_B;
+        }
+        if (value == "C") {
+            return SDL_SCANCODE_C;
         }
         if (value == "D") {
             return SDL_SCANCODE_D;
         }
-
+        if (value == "E") {
+            return SDL_SCANCODE_E;
+        }
+        if (value == "F") {
+            return SDL_SCANCODE_F;
+        }
+        if (value == "G") {
+            return SDL_SCANCODE_G;
+        }
+        if (value == "H") {
+            return SDL_SCANCODE_H;
+        }
+        if (value == "I") {
+            return SDL_SCANCODE_I;
+        }
+        if (value == "J") {
+            return SDL_SCANCODE_J;
+        }
+        if (value == "K") {
+            return SDL_SCANCODE_K;
+        }
+        if (value == "L") {
+            return SDL_SCANCODE_L;
+        }
+        if (value == "M") {
+            return SDL_SCANCODE_M;
+        }
+        if (value == "N") {
+            return SDL_SCANCODE_N;
+        }
+        if (value == "O") {
+            return SDL_SCANCODE_O;
+        }
+        if (value == "P") {
+            return SDL_SCANCODE_P;
+        }
+        if (value == "Q") {
+            return SDL_SCANCODE_Q;
+        }
+        if (value == "R") {
+            return SDL_SCANCODE_R;
+        }
+        if (value == "S") {
+            return SDL_SCANCODE_S;
+        }
+        if (value == "T") {
+            return SDL_SCANCODE_T;
+        }
+        if (value == "U") {
+            return SDL_SCANCODE_U;
+        }
+        if (value == "V") {
+            return SDL_SCANCODE_V;
+        }
+        if (value == "W") {
+            return SDL_SCANCODE_W;
+        }
+        if (value == "X") {
+            return SDL_SCANCODE_X;
+        }
+        if (value == "Y") {
+            return SDL_SCANCODE_Y;
+        }
+        if (value == "Z") {
+            return SDL_SCANCODE_Z;
+        }
+        if (value == "SPACE") {
+            return SDL_SCANCODE_SPACE;
+        }
+        if (value == "LSHIFT") {
+            return SDL_SCANCODE_LSHIFT;
+        }
+        if (value == "LCTRL") {
+            return SDL_SCANCODE_LCTRL;
+        }
+        if (value == "TAB") {
+            return SDL_SCANCODE_TAB;
+        }
+        if (value == "LALT") {
+            return SDL_SCANCODE_LALT;
+        }
+        if (value == "ESCAPE") {
+            return SDL_SCANCODE_ESCAPE;
+        }
         return SDL_SCANCODE_UNKNOWN;
 
-        // TODO Populate this list with value enum pairs
     }
 
     void InputManager::bindKey(BLUE_InputAction action,
@@ -156,10 +233,11 @@ namespace Controller::Input {
         InputMap.at(BLUE_InputAction::INPUT_ACTION_2)      = SDL_SCANCODE_R;
         InputMap.at(BLUE_InputAction::INPUT_SPRINT) = SDL_SCANCODE_LSHIFT;
         InputMap.at(BLUE_InputAction::INPUT_CROUCH) = SDL_SCANCODE_LCTRL;
+        InputMap.at(BLUE_InputAction::INPUT_ESCAPE) = SDL_SCANCODE_ESCAPE;
     }
 
     InputManager::~InputManager() {}
-    void InputManager::populateInputMap() {
+    void InputManager::populateInputMap() { // Populates Input map with all actions to allow mapping inputs to them
         InputMap.insert(std::pair<BLUE_InputAction, SDL_Scancode>(
             BLUE_InputAction::INPUT_DEFAULT, SDL_SCANCODE_UNKNOWN));
         InputMap.insert(std::pair<BLUE_InputAction, SDL_Scancode>(
@@ -192,6 +270,8 @@ namespace Controller::Input {
             BLUE_InputAction::INPUT_ACTION_3, SDL_SCANCODE_UNKNOWN));
         InputMap.insert(std::pair<BLUE_InputAction, SDL_Scancode>(
             BLUE_InputAction::INPUT_ACTION_4, SDL_SCANCODE_UNKNOWN));
+        InputMap.insert(std::pair<BLUE_InputAction, SDL_Scancode>(
+            BLUE_InputAction::INPUT_ESCAPE, SDL_SCANCODE_UNKNOWN));
     }
 
     InputManager::InputManager() {
