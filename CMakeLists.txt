@@ -30,9 +30,10 @@ set (SOURCES
     
 
     # Controller
-    src/Controller/Engine/QuaternionCamera.cpp
-    src/Controller/Engine/InputManager.cpp
     src/Controller/Engine/Engine.cpp
+    src/Controller/Engine/InputManagerDep.cpp
+    src/Controller/InputManager.cpp
+    src/Controller/Engine/LuaManager.cpp
     
     # Model
     src/Model/Models/Mesh.cpp
@@ -130,9 +131,15 @@ if (NOT DisablePostBuild)
         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                 COMMAND ${CMAKE_COMMAND} -E create_symlink
                 ${CMAKE_SOURCE_DIR}/res $<TARGET_FILE_DIR:${PROJECT_NAME}>/res)
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E create_symlink
+                ${CMAKE_SOURCE_DIR}/scripts $<TARGET_FILE_DIR:${PROJECT_NAME}>/scripts)
     else()
         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                 COMMAND ${CMAKE_COMMAND} -E copy_directory
                 ${CMAKE_SOURCE_DIR}/res $<TARGET_FILE_DIR:${PROJECT_NAME}>/res)
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy_directory
+                ${CMAKE_SOURCE_DIR}/scripts $<TARGET_FILE_DIR:${PROJECT_NAME}>/scripts)
     endif()
 endif()
