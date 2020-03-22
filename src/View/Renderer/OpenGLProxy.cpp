@@ -7,8 +7,8 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-constexpr double M_PI = 3.14159265358979323846;
-constexpr float M_PI_F = static_cast<float>(M_PI);
+//constexpr double M_PI = 3.14159265358979323846;
+//constexpr float M_PI_F = static_cast<float>(M_PI);
 
 void BlueEngine::RenderCode::DrawModel(Shader shader, unsigned int &VAO,
                const std::vector<Texture> &textures,

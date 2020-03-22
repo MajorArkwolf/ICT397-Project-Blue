@@ -1,8 +1,6 @@
-#include "Controller/InputManager.hpp"
-
 #include <iostream>
-
-#include <Controller/Engine/Engine.hpp>
+#include "Controller/InputManager.hpp"
+#include "Controller/Engine/Engine.hpp"
 
 namespace Controller::Input {
     InputManager &InputManager::getInstance() {

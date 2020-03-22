@@ -2,12 +2,11 @@
 
 #include <string>
 #include <vector>
-
-#include <SDL2/SDL.h>
-
-#include "Enums.hpp"
-#include "glm/vec2.hpp"
+#include <SDL.h>
+#include <glm/vec2.hpp>
 #include <map>
+
+#include "Controller/Enums.hpp"
 #include "Controller/Engine/LuaManager.hpp"
 
 namespace Controller {
