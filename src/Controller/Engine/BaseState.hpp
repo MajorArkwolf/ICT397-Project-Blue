@@ -36,13 +36,6 @@ class BaseState {
     virtual void unInit() = 0;
 
     /**
-     * @brief Virtual function for handling input events encased within an SDL event
-     * All input events will be sent to the current gamestate at the top of the stack
-     * @param event The SDL event that contains the user input
-     */
-    virtual void handleInput(SDL_Event &event) = 0;
-
-    /**
      * @brief Virtual function for handling input events encased within a a custom Input Event
      * All input events will be sent to the current gamestate at the top of the stack
      * @param inputData The InputData event that contains the user input
