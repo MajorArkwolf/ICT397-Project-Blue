@@ -7,10 +7,8 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
-#include "GameStack.hpp"
 #include "BaseState.hpp"
-
-
+#include "GameStack.hpp"
 
 namespace BlueEngine {
     class Engine {
@@ -31,18 +29,15 @@ namespace BlueEngine {
          * @brief The current FPS
          */
         double fps           = 0.0;
-
-
-        auto getTime() const -> double;
-        
-        auto getBasePath() -> std::string;
-
-      private:
-
-        GameStack<BaseState *> gameStack;
-        bool isRunning = true;
         std::string basepath = "";
 
+        auto getTime() const -> double;
+
+      private:
+        GameStack<BaseState *> gameStack;
+        bool isRunning = true;
+
+        auto getBasePath() -> void;
 
         Engine();
 
@@ -51,9 +46,8 @@ namespace BlueEngine {
         Engine(const Engine &) = delete;
         ~Engine();
 
-
-        //This variable will hold the game stack
-        //Game *thegame = nullptr;
+        // This variable will hold the game stack
+        // Game *thegame = nullptr;
 
         static auto get() -> Engine &;
         static auto run() -> void;

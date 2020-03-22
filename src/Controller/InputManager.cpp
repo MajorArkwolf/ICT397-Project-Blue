@@ -1,8 +1,15 @@
 #include "Controller/InputManager.hpp"
+
 #include <iostream>
 
-namespace Controller::Input {
+#include <Controller/Engine/Engine.hpp>
 
+namespace Controller::Input {
+    InputManager &InputManager::getInstance() {
+        static auto instance = InputManager{};
+
+        return instance;
+    }
     void InputManager::ProcessInput(SDL_Event &event) {
         // Handle input data from event
         InputData inputEvent;
@@ -34,6 +41,10 @@ namespace Controller::Input {
         }
 
         inputEvent.inputAction;
+
+        for (auto itr : InputMap) {
+            std::cout << int(itr.first) << ',' << int(itr.second) << std::endl;
+        }
         // for (auto pair : InputMap) {
         //    // Looks through input map for action match with pressed key
         //    if (pair.second == event.key.keysym.scancode) {
@@ -46,23 +57,32 @@ namespace Controller::Input {
     }
 
     void InputManager::ReadBindings() {
-        auto &LuaManager    = LuaManager::getInstance();
-        auto luaState   = LuaManager.getLuaState();
-        std::string scriptPath = "scripts/InputBindings.lua";
-        if (luaL_dofile(luaState, scriptPath.c_str()) ||
-            lua_pcall(luaState, 0, 0, 0)) {
+        std::string basePath = "";
+
+        char *base_path = SDL_GetBasePath();
+        if (base_path) {
+            basePath = std::string(base_path);
+        } else {
+            basePath = SDL_strdup("./");
+        }
+
+        SDL_free(base_path);
+        auto &LuaManager = LuaManager::getInstance();
+
+        auto luaState          = LuaManager.getLuaState();
+        std::string scriptPath = basePath + "scripts/InputBindings.lua";
+        if (luaL_dofile(luaState, scriptPath.c_str())) {
             std::cout << "No script file found at '" << scriptPath
-                      << "', aborting binding." << std::endl;
+                      << "', aborting input binding." << std::endl;
+        } else {
+            lua_pcall(luaState, 0, 0, 0);
+            luaL_openlibs(luaState);
+            luabridge::LuaRef table =
+                luabridge::getGlobal(luaState, "InputBindings");
+            if (!table.isNil()) {
+                readLuaInputTable(table);
+            }
         }
-
-        luaL_openlibs(luaState);
-        luabridge::LuaRef table =
-            luabridge::getGlobal(luaState, "InputBindings");
-        if (!table.isNil()) {
-            readLuaInputTable(table);
-        }
-
-        std::cout << int(InputMap.at(BLUE_InputAction::INPUT_JUMP)) << std::endl;
     }
 
     BLUE_InputDevice InputManager::hashInputValue(const std::string &value) {
@@ -81,16 +101,142 @@ namespace Controller::Input {
         // TODO Populate this list with value enum pairs
     }
 
+    BLUE_InputDevice InputManager::SDLEventToBLUE(SDL_Event &event) {
+        switch (event.type) {
+
+            case SDL_MOUSEMOTION: {
+
+            }; break;
+            case SDL_KEYDOWN:
+            case SDL_KEYUP: {
+                switch (event.key.keysym.scancode) {
+                    case SDL_SCANCODE_0: {
+                        return BLUE_InputDevice::KEY_0;
+                    } break;
+                    case SDL_SCANCODE_1: {
+                        return BLUE_InputDevice::KEY_1;
+                    } break;
+                    case SDL_SCANCODE_2: {
+                        return BLUE_InputDevice::KEY_2;
+                    } break;
+                    case SDL_SCANCODE_3: {
+                        return BLUE_InputDevice::KEY_3;
+                    } break;
+                    case SDL_SCANCODE_4: {
+                        return BLUE_InputDevice::KEY_4;
+                    } break;
+                    case SDL_SCANCODE_5: {
+                        return BLUE_InputDevice::KEY_5;
+                    } break;
+                    case SDL_SCANCODE_6: {
+                        return BLUE_InputDevice::KEY_6;
+                    } break;
+                    case SDL_SCANCODE_7: {
+                        return BLUE_InputDevice::KEY_7;
+                    } break;
+                    case SDL_SCANCODE_8: {
+                        return BLUE_InputDevice::KEY_8;
+                    } break;
+                    case SDL_SCANCODE_9: {
+                        return BLUE_InputDevice::KEY_9;
+                    } break;
+                    case SDL_SCANCODE_A: {
+                        return BLUE_InputDevice::KEY_A;
+                    } break;
+                    case SDL_SCANCODE_B: {
+                        return BLUE_InputDevice::KEY_B;
+                    } break;
+                    case SDL_SCANCODE_C: {
+                        return BLUE_InputDevice::KEY_C;
+                    } break;
+                    case SDL_SCANCODE_D: {
+                        return BLUE_InputDevice::KEY_D;
+                    } break;
+                    case SDL_SCANCODE_E: {
+                        return BLUE_InputDevice::KEY_E;
+                    } break;
+                    case SDL_SCANCODE_F: {
+                        return BLUE_InputDevice::KEY_F;
+                    } break;
+                    case SDL_SCANCODE_G: {
+                        return BLUE_InputDevice::KEY_G;
+                    } break;
+                    case SDL_SCANCODE_H: {
+                        return BLUE_InputDevice::KEY_H;
+                    } break;
+                    case SDL_SCANCODE_I: {
+                        return BLUE_InputDevice::KEY_I;
+                    } break;
+                    case SDL_SCANCODE_J: {
+                        return BLUE_InputDevice::KEY_J;
+                    } break;
+                    case SDL_SCANCODE_K: {
+                        return BLUE_InputDevice::KEY_K;
+                    } break;
+                    case SDL_SCANCODE_L: {
+                        return BLUE_InputDevice::KEY_L;
+                    } break;
+                    case SDL_SCANCODE_M: {
+                        return BLUE_InputDevice::KEY_L;
+                    } break;
+                    case SDL_SCANCODE_N: {
+                        return BLUE_InputDevice::KEY_L;
+                    } break;
+                    case SDL_SCANCODE_O: {
+                        return BLUE_InputDevice::KEY_L;
+                    } break;
+                    case SDL_SCANCODE_P: {
+                        return BLUE_InputDevice::KEY_L;
+                    } break;
+                    case SDL_SCANCODE_Q: {
+                        return BLUE_InputDevice::KEY_L;
+                    } break;
+                    case SDL_SCANCODE_R: {
+                        return BLUE_InputDevice::KEY_L;
+                    } break;
+                    case SDL_SCANCODE_S: {
+                        return BLUE_InputDevice::KEY_L;
+                    } break;
+                    case SDL_SCANCODE_T: {
+                        return BLUE_InputDevice::KEY_L;
+                    } break;
+                    case SDL_SCANCODE_U: {
+                        return BLUE_InputDevice::KEY_L;
+                    } break;
+                    case SDL_SCANCODE_V: {
+                        return BLUE_InputDevice::KEY_L;
+                    } break;
+                    case SDL_SCANCODE_W: {
+                        return BLUE_InputDevice::KEY_L;
+                    } break;
+                    case SDL_SCANCODE_X: {
+                        return BLUE_InputDevice::KEY_L;
+                    } break;
+
+                }
+            } break;
+            case SDL_MOUSEBUTTONDOWN:
+            case SDL_MOUSEBUTTONUP:
+            case SDL_MOUSEWHEEL: {
+
+            }; break;
+        }
+    }
+
     void InputManager::bindKey(BLUE_InputAction action,
                                luabridge::LuaRef &inputTable, std::string value) {
 
         luabridge::LuaRef inputRef = inputTable[value];
 
         if (inputRef.isString()) {
-            std::string input   = inputRef.cast<std::string>();
-            InputMap.at(action) = hashInputValue(input);
+            std::string input = inputRef.cast<std::string>();
+            std::cout << input << std::endl;
+            InputMap.insert(std::pair<BLUE_InputAction, BLUE_InputDevice>(
+                action, hashInputValue(input)));
         }
     }
+
+    void InputManager::bindKey(BLUE_InputAction, BLUE_InputDevice) {}
 
     void InputManager::readLuaInputTable(luabridge::LuaRef inputTable) {
 
@@ -112,4 +258,5 @@ namespace Controller::Input {
     }
 
     InputManager::~InputManager() {}
+    InputManager::InputManager() {}
 }

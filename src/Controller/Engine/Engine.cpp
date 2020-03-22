@@ -19,11 +19,7 @@
 using BlueEngine::Engine;
 using std::runtime_error;
 using std::string;
-namespace Controller {
-    namespace Input {
-        class InputManager;
-    }
-}
+
 /**
  * @brief The game engine main loop
  */
@@ -33,15 +29,15 @@ auto Engine::run() -> void {
     auto *prototype = new PrototypeScene();
     engine.gameStack.AddToStack(prototype);
 
-double t  = 0.0;
+    double t  = 0.0;
     double dt = 0.01;
 
     double currentTime = engine.getTime();
     double accumulator = 0.0;
 
-    //State previous;
-    //State current;
-    //State state;
+    // State previous;
+    // State current;
+    // State state;
 
     while (engine.getIsRunning()) {
         double newTime   = engine.getTime();
@@ -53,24 +49,24 @@ double t  = 0.0;
         accumulator += frameTime;
 
         while (accumulator >= dt) {
-            //previousState = currentState;
+            // previousState = currentState;
             engine.processInput();
             engine.gameStack.getTop()->update(t, dt);
             t += dt;
             accumulator -= dt;
         }
         const double alpha = accumulator / dt;
-        //state = currentState * alpha + previousState * (1.0 - alpha);
+        // state = currentState * alpha + previousState * (1.0 - alpha);
 
         engine.gameStack.getTop()->display();
     }
-    Controller::Input::InputManager::getInstance().ReadBindings();
 }
 
 /**
  * @brief Game engine default constructor, sets up all variables and settings required for operation
  */
 Engine::Engine() {
+    getBasePath();
     // Start SDL.
     auto status = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 
@@ -137,7 +133,7 @@ Engine::Engine() {
         std::cout << "Failed to initialize GLAD" << std::endl;
     }
 
-
+    Controller::Input::InputManager::getInstance().ReadBindings();
 }
 
 /**
@@ -147,8 +143,6 @@ Engine::Engine() {
 Engine::~Engine() {
     SDL_Quit();
 }
-
-
 
 /**
  * @brief Returns the current instance of the engine
@@ -161,10 +155,12 @@ auto Engine::get() -> Engine & {
 }
 
 auto Engine::processInput() -> void {
-    auto event  = SDL_Event{};
+    auto event        = SDL_Event{};
     auto handledMouse = true;
+    auto &inputManager = Controller::Input::InputManager::getInstance();
 
     while (SDL_PollEvent(&event)) {
+        inputManager.ProcessInput(event);
         gameStack.getTop()->handleInput(event);
     }
     if (!handledMouse) {
@@ -189,12 +185,8 @@ auto Engine::getTime() const -> double {
            static_cast<double>(SDL_GetPerformanceFrequency());
 }
 
-auto Engine::getBasePath() -> std::string {
-    if (basepath == "") {
-        char *base_path = SDL_GetBasePath();
-        basepath        = std::string(base_path);
-        SDL_free(base_path);
-    }
-    return basepath;
-
+auto Engine::getBasePath() -> void {
+    char *base_path = SDL_GetBasePath();
+    basepath        = std::string(base_path);
+    SDL_free(base_path);
 }

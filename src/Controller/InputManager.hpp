@@ -25,10 +25,7 @@ namespace Controller {
 
         class InputManager {
           public:
-            static InputManager &getInstance() {
-                static InputManager instance;
-                return instance;
-            }
+            static InputManager &getInstance();
             void ProcessInput(SDL_Event &event);
             void ReadBindings();
             void DefaultInputMap();
@@ -38,7 +35,9 @@ namespace Controller {
             void readLuaInputTable(luabridge::LuaRef inputTable);
             void bindKey(BLUE_InputAction, luabridge::LuaRef &inputTable,
                     std::string value);
+            void bindKey(BLUE_InputAction, BLUE_InputDevice);
             BLUE_InputDevice hashInputValue(const std::string &value);
+            BLUE_InputDevice SDLEventToBLUE(SDL_Event &event);
 
             InputManager();
             ~InputManager();
