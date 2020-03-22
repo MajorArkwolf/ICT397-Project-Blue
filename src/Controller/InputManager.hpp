@@ -6,7 +6,7 @@
 #include <glm/vec2.hpp>
 #include <map>
 
-#include "Enums.hpp"
+#include "Controller/Enums.hpp"
 #include "Controller/Engine/LuaManager.hpp"
 
 namespace Controller {

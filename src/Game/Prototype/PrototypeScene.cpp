@@ -33,7 +33,7 @@ auto PrototypeScene::update(double t, double dt) -> void {
 void PrototypeScene::Init() {
     BlueEngine::RenderCode::HardInit();
     camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
-    models.push_back(ModelManager::GetModelID("res/model/IronMan/IronMan.obj"));
+    models.push_back(ModelManager::GetModelID("res/model/bigboy/big.obj"));
 }
 
 void PrototypeScene::handleInput(SDL_Event &event) {
