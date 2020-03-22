@@ -5,7 +5,7 @@
 #include "Controller/Engine/BaseState.hpp"
 #include "View/Renderer/Renderer.hpp"
 #include "View/EulerCamera.hpp"
-
+#include "Controller/InputManager.hpp"
 
 class PrototypeScene : public BaseState {
 public:
@@ -25,7 +25,7 @@ private:
     std::vector<size_t> models;
     Renderer renderer;
     Camera camera;
-
+    void handleInputData(Controller::Input::InputData inputData);
     void handleKeyRelease(SDL_Event &event);
     void handleKeyPress(SDL_Event &event);
     void handleWindowEvent(SDL_Event &event);

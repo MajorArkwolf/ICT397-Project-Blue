@@ -26,6 +26,7 @@ using std::string;
 auto Engine::run() -> void {
     auto &engine = Engine::get();
 
+
     auto *prototype = new PrototypeScene();
     engine.gameStack.AddToStack(prototype);
 
@@ -133,7 +134,7 @@ Engine::Engine() {
         std::cout << "Failed to initialize GLAD" << std::endl;
     }
 
-    Controller::Input::InputManager::getInstance().ReadBindings();
+
 }
 
 /**
@@ -160,7 +161,7 @@ auto Engine::processInput() -> void {
     auto &inputManager = Controller::Input::InputManager::getInstance();
 
     while (SDL_PollEvent(&event)) {
-        inputManager.ProcessInput(event);
+        //gameStack.getTop()->handleInputData(inputManager.ProcessInput(event));
         gameStack.getTop()->handleInput(event);
     }
     if (!handledMouse) {

@@ -54,11 +54,9 @@ namespace Controller::Input {
             case BLUE_InputType::MOUSE_BUTTONUP: {
                 if (event.button.button == SDL_BUTTON_LEFT) {
                     inputEvent.inputAction = BLUE_InputAction::INPUT_ACTION_1;
-                }
-                else if(event.button.button == SDL_BUTTON_RIGHT) {
+                } else if (event.button.button == SDL_BUTTON_RIGHT) {
                     inputEvent.inputAction = BLUE_InputAction::INPUT_ACTION_2;
-                }
-                else if(event.button.button == SDL_BUTTON_MIDDLE) {
+                } else if (event.button.button == SDL_BUTTON_MIDDLE) {
                     inputEvent.inputAction = BLUE_InputAction::INPUT_ACTION_3;
                 }
             } break;
@@ -67,10 +65,6 @@ namespace Controller::Input {
             } break;
         }
 
-
-        for (auto itr : InputMap) {
-            std::cout << int(itr.first) << ',' << int(itr.second) << std::endl;
-        }
         return inputEvent;
 
         // Send inputEvent to top of game stack or whatever
@@ -201,6 +195,7 @@ namespace Controller::Input {
         InputMap.insert(std::pair<BLUE_InputAction, SDL_Scancode>(
             BLUE_InputAction::INPUT_ACTION_4, SDL_SCANCODE_UNKNOWN));
     }
+
     InputManager::InputManager() {
         populateInputMap();
         DefaultInputMap();
