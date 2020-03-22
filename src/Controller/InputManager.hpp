@@ -26,23 +26,23 @@ namespace Controller {
         class InputManager {
           public:
             static InputManager &getInstance();
-            void ProcessInput(SDL_Event &event);
+            InputData ProcessInput(SDL_Event &event);
             void ReadBindings();
             void DefaultInputMap();
 
           private:
-            std::map<BLUE_InputAction, BLUE_InputDevice> InputMap;
+            std::map<BLUE_InputAction, SDL_Scancode> InputMap;
             void readLuaInputTable(luabridge::LuaRef inputTable);
             void bindKey(BLUE_InputAction, luabridge::LuaRef &inputTable,
                     std::string value);
-            void bindKey(BLUE_InputAction, BLUE_InputDevice);
-            BLUE_InputDevice hashInputValue(const std::string &value);
-            BLUE_InputDevice SDLEventToBLUE(SDL_Event &event);
+            void bindKey(BLUE_InputAction, SDL_Scancode);
+            SDL_Scancode hashInputValue(const std::string &value);
 
             InputManager();
             ~InputManager();
             InputManager(const InputManager &other) = delete;
             InputManager operator=(InputManager &rhs) = delete;
+            void populateInputMap();
         };
     }
 }
