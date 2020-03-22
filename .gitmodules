@@ -13,3 +13,15 @@
 [submodule "lib/lua"]
 	path = lib/lua
 	url = https://github.com/opeik/lua-cmake.git
+[submodule "lib/sdl2"]
+	path = lib/sdl2
+	url = https://github.com/spurious/SDL-mirror.git
+[submodule "lib/glm"]
+	path = lib/glm
+	url = https://github.com/g-truc/glm.git
+[submodule "lib/glad"]
+	path = lib/glad
+	url = https://github.com/Dav1dde/glad.git
+[submodule "lib/assimp"]
+	path = lib/assimp
+	url = https://github.com/assimp/assimp.git
