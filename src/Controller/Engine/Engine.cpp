@@ -161,8 +161,7 @@ auto Engine::processInput() -> void {
     auto &inputManager = Controller::Input::InputManager::getInstance();
 
     while (SDL_PollEvent(&event)) {
-        //gameStack.getTop()->handleInputData(inputManager.ProcessInput(event));
-        gameStack.getTop()->handleInput(event);
+        gameStack.getTop()->handleInputData(inputManager.ProcessInput(event));
     }
     if (!handledMouse) {
         this->mouse = {0.0f, 0.0f};

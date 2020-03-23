@@ -5,11 +5,11 @@
 #include "Controller/Engine/Engine.hpp"
 #include "Model/Models/Model.hpp"
 #include "Model/Models/ModelManager.hpp"
-#include "View/Renderer/Renderer.hpp"
 #include "View/Renderer/OpenGLProxy.hpp"
+#include "View/Renderer/Renderer.hpp"
 
-using Controller::Input::BLUE_InputType;
 using Controller::Input::BLUE_InputAction;
+using Controller::Input::BLUE_InputType;
 
 PrototypeScene::PrototypeScene() {
     Init();
@@ -33,6 +33,7 @@ auto PrototypeScene::update(double t, double dt) -> void {
 void PrototypeScene::Init() {
     BlueEngine::RenderCode::HardInit();
     camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
+<<<<<<< HEAD
     models.push_back(ModelManager::GetModelID("res/model/Test/city_residential_03.obj"));
 
 }
@@ -74,6 +75,9 @@ void PrototypeScene::handleMouseMovement(SDL_Event &event) {
     auto y = static_cast<float>(event.motion.yrel);
     y      = y * -1;
     camera.ProcessMouseMovement(x, y);
+=======
+    models.push_back(ModelManager::GetModelID("res/model/IronMan/IronMan.obj"));
+>>>>>>> ec82a548c2956d39d32aa88be00674ebefbb028a
 }
 
 void PrototypeScene::handleWindowEvent(SDL_Event &event) {
@@ -86,31 +90,10 @@ void PrototypeScene::handleWindowEvent(SDL_Event &event) {
     }
 }
 
-void PrototypeScene::handleKeyPress(SDL_Event &event) {
-
-    switch (event.key.keysym.scancode) {
-        case SDL_SCANCODE_W: {
-            moveForward = true;
-        } break;
-        case SDL_SCANCODE_S: {
-            moveBackward = true;
-        } break;
-        case SDL_SCANCODE_A: {
-            moveLeft = true;
-        } break;
-        case SDL_SCANCODE_D: {
-            moveRight = true;
-        } break;
-        case SDL_SCANCODE_ESCAPE: {
-            auto &engine = BlueEngine::Engine::get();
-            engine.endEngine();
-        } break;
-    }
-}
-
 void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
-
-    switch (inputData.inputType) { 
+    auto &engine      = BlueEngine::Engine::get();
+    auto handledMouse = false;
+    switch (inputData.inputType) {
         case BLUE_InputType::KEY_PRESS: { //  Key Press events
 
             switch (inputData.inputAction) {
@@ -126,7 +109,10 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
                 case BLUE_InputAction::INPUT_MOVE_RIGHT: {
                     moveRight = true;
                 } break;
-
+                case BLUE_InputAction::INPUT_ESCAPE: {
+                    auto &engine = BlueEngine::Engine::get();
+                    engine.endEngine();
+                } break;
             }
 
         } break;
@@ -146,27 +132,20 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
                 } break;
             }
         } break;
+        case BLUE_InputType::MOUSE_MOTION: { // Mouse motion event
+            auto x = static_cast<float>(inputData.mouseMotionRelative.x);
+            auto y = static_cast<float>(inputData.mouseMotionRelative.y);
+            y      = y * -1.0f;
+            camera.ProcessMouseMovement(x, y);
+            handledMouse = true;
+        } break;
+        case BLUE_InputType::MOUSE_WHEEL: { // Mouse Wheel event
+            int amountScrolledY = inputData.mouseWheelMotion;
+            camera.ProcessMouseScroll(amountScrolledY);
+        }
     }
-
-}
-
-void PrototypeScene::handleKeyRelease(SDL_Event &event) {
-    switch (event.key.keysym.scancode) {
-        case SDL_SCANCODE_W: {
-            moveForward = false;
-        } break;
-        case SDL_SCANCODE_S: {
-            moveBackward = false;
-        } break;
-        case SDL_SCANCODE_A: {
-            moveLeft = false;
-        } break;
-        case SDL_SCANCODE_D: {
-            moveRight = false;
-        } break;
-        case SDL_SCANCODE_ESCAPE: {
-
-        } break;
+    if (!handledMouse) {
+        engine.mouse = {0.0f, 0.0f};
     }
 }
 
@@ -175,16 +154,17 @@ auto PrototypeScene::display() -> void {
     auto display = SDL_DisplayMode{};
     SDL_GetCurrentDisplayMode(0, &display);
     // view/projection transformations
-    glm::mat4 projection = glm::perspective(
-        glm::radians(camera.Zoom),
-        static_cast<double>(display.w) / static_cast<double>(display.h), 0.1, 100000.0);
-    glm::mat4 view = camera.GetViewMatrix();
+    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom),
+                                            static_cast<double>(display.w) /
+                                                static_cast<double>(display.h),
+                                            0.1, 100000.0);
+    glm::mat4 view       = camera.GetViewMatrix();
 
     glm::mat4 model = glm::mat4(5.0f);
 
     Renderer::addToDraw(model, models[0]);
 
-    renderer.draw(view, projection); 
+    renderer.draw(view, projection);
     BlueEngine::RenderCode::EndDisplay();
 }
 
