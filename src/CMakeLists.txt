@@ -1,0 +1,35 @@
+
+# Add source files.
+target_sources(${PROJECT_NAME} PRIVATE
+    Main.cpp   
+
+    # Controller
+    # Controller/Engine/QuaternionCamera.cpp Not used, needs to be updated
+    Controller/Engine/LuaManager.cpp
+    Controller/InputManager.cpp
+    Controller/Engine/Engine.cpp
+    Controller/Physics/BeBody.cpp
+    Controller/Physics/BeCollisionBody.cpp
+    Controller/Physics/BeCollisionWorld.cpp
+    Controller/Physics/BeQuaternion.cpp
+    Controller/Physics/BeTransform.cpp
+    Controller/Physics/BeVector3.cpp
+    
+    # Model
+    Model/Models/Mesh.cpp
+    Model/Models/Model.cpp
+    Model/Models/ModelManager.cpp
+
+    # View
+    View/Renderer/Shader.cpp
+    View/EulerCamera.cpp
+    View/Renderer/Renderer.cpp
+    View/Renderer/OpenGLProxy.cpp
+
+    # Game
+    Game/SceneManager.cpp
+    Game/Prototype/PrototypeScene.cpp  
+)
+
+# Include project header files.
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})

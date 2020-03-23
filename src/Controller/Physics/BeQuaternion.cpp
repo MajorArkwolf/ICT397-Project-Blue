@@ -167,7 +167,7 @@ BeQuaternion BeQuaternion::Slerp(const BeQuaternion &target1, const BeQuaternion
     return result;
 }
 
-BeQuaternion &BeQuaternion::operator=(const BeQuaternion &rhs){
+BeQuaternion &BeQuaternion::operator=(BeQuaternion rhs){
 
     if(&rhs == this)
     {

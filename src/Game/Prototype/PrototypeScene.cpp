@@ -8,11 +8,14 @@
 #include "View/Renderer/Renderer.hpp"
 #include "View/Renderer/OpenGLProxy.hpp"
 
+using Controller::Input::BLUE_InputType;
+using Controller::Input::BLUE_InputAction;
+
 PrototypeScene::PrototypeScene() {
     Init();
 }
 
-auto PrototypeScene::update(double dt) -> void {
+auto PrototypeScene::update(double t, double dt) -> void {
     if (moveForward) {
         camera.ProcessKeyboard(FORWARD, dt);
     }
@@ -31,6 +34,7 @@ void PrototypeScene::Init() {
     BlueEngine::RenderCode::HardInit();
     camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
     models.push_back(ModelManager::GetModelID("res/model/Test/city_residential_03.obj"));
+
 }
 
 void PrototypeScene::handleInput(SDL_Event &event) {
@@ -102,6 +106,48 @@ void PrototypeScene::handleKeyPress(SDL_Event &event) {
             engine.endEngine();
         } break;
     }
+}
+
+void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
+
+    switch (inputData.inputType) { 
+        case BLUE_InputType::KEY_PRESS: { //  Key Press events
+
+            switch (inputData.inputAction) {
+                case BLUE_InputAction::INPUT_MOVE_FORWARD: {
+                    moveForward = true;
+                } break;
+                case BLUE_InputAction::INPUT_MOVE_BACKWARD: {
+                    moveBackward = true;
+                } break;
+                case BLUE_InputAction::INPUT_MOVE_LEFT: {
+                    moveLeft = true;
+                } break;
+                case BLUE_InputAction::INPUT_MOVE_RIGHT: {
+                    moveRight = true;
+                } break;
+
+            }
+
+        } break;
+        case BLUE_InputType::KEY_RELEASE: { // Key Release events
+            switch (inputData.inputAction) {
+                case BLUE_InputAction::INPUT_MOVE_FORWARD: {
+                    moveForward = false;
+                } break;
+                case BLUE_InputAction::INPUT_MOVE_BACKWARD: {
+                    moveBackward = false;
+                } break;
+                case BLUE_InputAction::INPUT_MOVE_LEFT: {
+                    moveLeft = false;
+                } break;
+                case BLUE_InputAction::INPUT_MOVE_RIGHT: {
+                    moveRight = false;
+                } break;
+            }
+        } break;
+    }
+
 }
 
 void PrototypeScene::handleKeyRelease(SDL_Event &event) {

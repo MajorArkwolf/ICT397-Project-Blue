@@ -1,6 +1,7 @@
 #pragma once
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
+#include "Controller/InputManager.hpp"
 
 /**
  * @class BaseState
@@ -42,8 +43,15 @@ class BaseState {
     virtual void handleInput(SDL_Event &event) = 0;
 
     /**
+     * @brief Virtual function for handling input events encased within a a custom Input Event
+     * All input events will be sent to the current gamestate at the top of the stack
+     * @param inputData The InputData event that contains the user input
+     */
+    virtual void handleInputData(Controller::Input::InputData inputData) = 0;
+
+    /**
      * @brief Virtual update function for updating physics within a gamestate
      * @param dt Delta time since last frame
      */
-    virtual void update(double dt) = 0;
+    virtual void update(double t, double dt) = 0;
 };

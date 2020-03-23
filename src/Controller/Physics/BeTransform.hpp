@@ -13,7 +13,7 @@ class BeTransform {
     BeTransform(const rp3d::Transform &inputTransform);
     ~BeTransform();
     void SetOrientation(BeQuaternion inputOrientation);
-    BeQuaternion GetOrientation() const;
+    BeQuaternion GetOrientation();
     void SetPosition(const BeVector3 &inputPosition);
     BeVector3 GetPosition() const;
     void SetToIdentity();
@@ -22,8 +22,8 @@ class BeTransform {
 
 
   private:
-    BeQuaternion *orientation;
-    BeVector3 *position;
+    BeQuaternion orientation;
+    BeVector3 position;
 
-    rp3d::Transform *transform;
+    rp3d::Transform transform;
 };

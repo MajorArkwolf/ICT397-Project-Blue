@@ -7,7 +7,7 @@
 
 class BeCollisionBody {
   public:
-    BeCollisionBody(const BeTransform &targetTransform, const BeCollisionWorld &targetWorld, beBodyId targetId);
+    //BeCollisionBody(const BeTransform &targetTransform, const BeCollisionWorld &targetWorld, beBodyId targetId);
 
     void SetTransform(const BeTransform &targetTransform);
     BeTransform GetTransform();
@@ -15,7 +15,7 @@ class BeCollisionBody {
 
   private:
     BeTransform transform;
-    rp3d::CollisionBody beCollisionBody;
+    //rp3d::CollisionBody beCollisionBody;
 
 
 };

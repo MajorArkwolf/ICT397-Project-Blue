@@ -5,11 +5,13 @@
 #include <stdexcept>
 #include <string>
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <glad/glad.h>
 
 #include "BaseState.hpp"
 #include "GameStack.hpp"
+
+#include "Controller/InputManager.hpp"
 
 // Game States
 #include "Game/Prototype/PrototypeScene.hpp"
@@ -24,29 +26,39 @@ using std::string;
 auto Engine::run() -> void {
     auto &engine = Engine::get();
 
+
     auto *prototype = new PrototypeScene();
     engine.gameStack.AddToStack(prototype);
 
-    auto frameCount    = 0l;
-    auto lastFpsUpdate = 0.0;
+    double t  = 0.0;
+    double dt = 0.01;
 
-    auto time      = engine.getTime();
-    auto oldTime   = 0.0;
-    auto deltaTime = 0.0;
+    double currentTime = engine.getTime();
+    double accumulator = 0.0;
+
+    // State previous;
+    // State current;
+    // State state;
 
     while (engine.getIsRunning()) {
-        ++frameCount;
-        oldTime   = time;
-        time      = engine.getTime();
-        deltaTime = time - oldTime;
+        double newTime   = engine.getTime();
+        double frameTime = newTime - currentTime;
+        if (frameTime > 0.25)
+            frameTime = 0.25;
+        currentTime = newTime;
 
-        if (time - lastFpsUpdate >= FPS_UPDATE_INTERVAL) {
-            engine.fps    = frameCount / (time - lastFpsUpdate);
-            lastFpsUpdate = time;
-            frameCount    = 0;
+        accumulator += frameTime;
+
+        while (accumulator >= dt) {
+            // previousState = currentState;
+            engine.processInput();
+            engine.gameStack.getTop()->update(t, dt);
+            t += dt;
+            accumulator -= dt;
         }
-        engine.processInput();
-        engine.gameStack.getTop()->update(deltaTime);
+        const double alpha = accumulator / dt;
+        // state = currentState * alpha + previousState * (1.0 - alpha);
+
         engine.gameStack.getTop()->display();
     }
 }
@@ -121,6 +133,8 @@ Engine::Engine() {
     if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
         std::cout << "Failed to initialize GLAD" << std::endl;
     }
+
+
 }
 
 /**
@@ -142,10 +156,12 @@ auto Engine::get() -> Engine & {
 }
 
 auto Engine::processInput() -> void {
-    auto event  = SDL_Event{};
+    auto event        = SDL_Event{};
     auto handledMouse = true;
+    auto &inputManager = Controller::Input::InputManager::getInstance();
 
     while (SDL_PollEvent(&event)) {
+        //gameStack.getTop()->handleInputData(inputManager.ProcessInput(event));
         gameStack.getTop()->handleInput(event);
     }
     if (!handledMouse) {

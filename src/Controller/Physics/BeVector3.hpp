@@ -11,7 +11,7 @@ class BeVector3 {
     BeVector3(const BeVector3 &inputVector);
     BeVector3(const rp3d::Vector3 &inputVector);
     ~BeVector3();
-    void SetAllValues(beScalar inputX, beScalar inputY, beScalar inputZ) const;
+    void SetAllValues(beScalar inputX, beScalar inputY, beScalar inputZ);
     beScalar GetX() const;
     beScalar GetY() const;
     beScalar GetZ() const;

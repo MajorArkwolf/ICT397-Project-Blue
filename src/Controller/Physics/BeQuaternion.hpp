@@ -46,7 +46,7 @@ class BeQuaternion {
     void AngleAxis(beScalar radianInput, BeVector3 axisInput);
     BeQuaternion Slerp(const BeQuaternion &target1, const BeQuaternion &target2,
                        beScalar interval) const;
-    BeQuaternion & operator=(const BeQuaternion &rhs);
+    BeQuaternion & operator=(BeQuaternion rhs);
 
 
   private:

@@ -32,7 +32,7 @@ BeVector3::~BeVector3(){
     delete vector3;
 }
 
-void BeVector3::SetAllValues(beScalar inputX, beScalar inputY, beScalar inputZ) const {
+void BeVector3::SetAllValues(beScalar inputX, beScalar inputY, beScalar inputZ) {
     x = inputX;
     y = inputY;
     z = inputZ;
