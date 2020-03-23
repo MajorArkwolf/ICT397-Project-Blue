@@ -33,51 +33,7 @@ auto PrototypeScene::update(double t, double dt) -> void {
 void PrototypeScene::Init() {
     BlueEngine::RenderCode::HardInit();
     camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
-<<<<<<< HEAD
-    models.push_back(ModelManager::GetModelID("res/model/Test/city_residential_03.obj"));
-
-}
-
-void PrototypeScene::handleInput(SDL_Event &event) {
-    auto &engine      = BlueEngine::Engine::get();
-    auto handledMouse = false;
-    switch (event.type) {
-        case SDL_WINDOWEVENT: {
-            this->handleWindowEvent(event);
-        } break;
-        case SDL_KEYDOWN: {
-            this->handleKeyPress(event);
-        } break;
-        case SDL_KEYUP: {
-            this->handleKeyRelease(event);
-        } break;
-        case SDL_MOUSEMOTION: {
-            this->handleMouseMovement(event);
-            handledMouse = true;
-        } break;
-        case SDL_MOUSEWHEEL: {
-            this->handleMouseScroll(event);
-        } break;
-        default: break;
-    }
-    if (!handledMouse) {
-        engine.mouse = {0.0f, 0.0f};
-    }
-}
-
-void PrototypeScene::handleMouseScroll(SDL_Event &event) {
-    int amountScrolledY = event.wheel.y;
-    camera.ProcessMouseScroll(amountScrolledY);
-}
-
-void PrototypeScene::handleMouseMovement(SDL_Event &event) {
-    auto x = static_cast<float>(event.motion.xrel);
-    auto y = static_cast<float>(event.motion.yrel);
-    y      = y * -1;
-    camera.ProcessMouseMovement(x, y);
-=======
-    models.push_back(ModelManager::GetModelID("res/model/IronMan/IronMan.obj"));
->>>>>>> ec82a548c2956d39d32aa88be00674ebefbb028a
+    models.push_back( ModelManager::GetModelID("res/model/Test/city_residential_03.obj"));
 }
 
 void PrototypeScene::handleWindowEvent(SDL_Event &event) {
