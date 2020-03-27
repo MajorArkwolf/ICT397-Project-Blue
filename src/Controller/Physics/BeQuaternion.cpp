@@ -185,5 +185,13 @@ BeQuaternion &BeQuaternion::operator=(BeQuaternion rhs){
     return *this;
 }
 
+BeQuaternion &BeQuaternion::operator*(BeQuaternion rhs) {
+    rp3d::Quaternion target = rp3d::Quaternion(rhs.GetX(), rhs.GetY(), rhs.GetZ(), rhs.GetW());
+    rp3d::Quaternion temp = *quaternion * target;
+    quaternion = &temp;
+    BeQuaternion result = BeQuaternion(temp);
+    return result;
+}
+
 
 

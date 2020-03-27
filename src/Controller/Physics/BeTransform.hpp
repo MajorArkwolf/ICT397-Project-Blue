@@ -18,7 +18,8 @@ class BeTransform {
     BeVector3 GetPosition() const;
     void SetToIdentity();
     BeTransform GetInverse();
-    BeTransform operator*(const BeTransform &rhs);
+    BeTransform &operator=(const BeTransform &rhs);
+    BeTransform &operator*(const BeTransform &rhs);
 
 
   private:

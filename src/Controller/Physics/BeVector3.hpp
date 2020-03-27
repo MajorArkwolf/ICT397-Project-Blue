@@ -25,9 +25,10 @@ class BeVector3 {
     BeVector3 Cross(const BeVector3 &rhs) const;
     void Normalise();
     BeVector3 GetAbsoluteVector() const;
-    BeVector3 operator=(BeVector3 rhs) const;
+    BeVector3 operator=(BeVector3 rhs);
     bool operator==(const BeVector3 &rhs);
     bool operator!=(const BeVector3 &rhs);
+    BeVector3 operator*(BeVector3 rhs);
 
 
 
@@ -36,6 +37,4 @@ class BeVector3 {
     beScalar y;
     beScalar z;
     rp3d::Vector3 *vector3;
-
-
 };

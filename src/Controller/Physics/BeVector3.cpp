@@ -112,3 +112,26 @@ bool BeVector3::operator!=(const BeVector3 &rhs) {
     rp3d::Vector3 target = rp3d::Vector3(rhs.x, rhs.y, rhs.z);
     return *vector3 != target;
 }
+
+BeVector3 BeVector3::operator=(BeVector3 rhs) {
+    if(&rhs == this)
+    {
+        return *this;
+    }
+
+    x = rhs.x;
+    y = rhs.y;
+    z = rhs.z;
+
+    vector3 = new rp3d::Vector3(rhs.x, rhs.y, rhs.z);
+
+    return *this;
+}
+
+BeVector3 BeVector3::operator*(BeVector3 rhs) {
+    rp3d::Vector3 target = rp3d::Vector3(rhs.GetX(), rhs.GetY(), rhs.GetZ());
+    rp3d::Vector3 temp = *vector3 * target;
+    vector3 = &temp;
+    BeVector3 result = BeVector3(temp);
+    return result;
+}
