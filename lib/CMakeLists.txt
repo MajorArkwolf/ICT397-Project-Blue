@@ -30,6 +30,7 @@ set(SDL_DYNAMIC ON)
 set(SDL_SHARED ON)
 set(BUILD_SHARED_LIBS ON)
 add_subdirectory(sdl2)
+add_subdirectory(imgui)
 
 # DLL's were a mistake.
 set_target_properties(reactphysics3d PROPERTIES ENABLE_EXPORTS ON)
