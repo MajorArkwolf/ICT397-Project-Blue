@@ -1,11 +1,13 @@
 #include "BeTransform.hpp"
 
-BeTransform::BeTransform() {
+#include <glm/detail/type_quat.hpp>
+
+BeReact::BeTransform::BeTransform() {
     orientation = BeQuaternion(0, 0, 0, 0);
     position    = BeVector3(0, 0, 0);
 }
 
-BeTransform::BeTransform(BeVector3 position, BeQuaternion orientation) {
+BeReact::BeTransform::BeTransform(BeVector3 position, BeQuaternion orientation) {
     orientation = orientation;
     position    = position;
 
@@ -19,7 +21,21 @@ BeTransform::BeTransform(BeVector3 position, BeQuaternion orientation) {
     delete direction;
 }
 
-BeTransform::BeTransform(const BeTransform &inputTransform) {
+BeReact::BeTransform::BeTransform(glm::vec3 position, glm::quat orientation){
+    auto *pos =
+        new rp3d::Vector3(position.x, position.y, position.z);
+    auto *direction = new rp3d::Quaternion(orientation.x, orientation.y,
+                                           orientation.z, orientation.w);
+    transform       = rp3d::Transform(*pos, *direction);
+
+    delete pos;
+    delete direction;
+}
+
+
+
+
+BeReact::BeTransform::BeTransform(const BeReact::BeTransform &inputTransform) {
     position    = inputTransform.position;
     orientation = inputTransform.orientation;
 
@@ -37,7 +53,7 @@ BeTransform::BeTransform(const BeTransform &inputTransform) {
     delete direction;
 }
 
-BeTransform::BeTransform(const rp3d::Transform &inputTransform) {
+BeReact::BeTransform::BeTransform(const rp3d::Transform &inputTransform) {
     transform = inputTransform;
     position =
         BeVector3(inputTransform.getPosition().x, inputTransform.getPosition().y,
@@ -45,9 +61,9 @@ BeTransform::BeTransform(const rp3d::Transform &inputTransform) {
     orientation = BeQuaternion(transform.getOrientation());
 }
 
-BeTransform::~BeTransform() {}
+BeReact::BeTransform::~BeTransform() {}
 
-BeQuaternion BeTransform::GetOrientation() {
+BeQuaternion BeReact::BeTransform::GetOrientation() {
     orientation =
         BeQuaternion(transform.getOrientation().x, transform.getOrientation().y,
                      transform.getOrientation().z, transform.getOrientation().w);
@@ -55,7 +71,7 @@ BeQuaternion BeTransform::GetOrientation() {
     return orientation;
 }
 
-void BeTransform::SetOrientation(BeQuaternion inputOrientation) {
+void BeReact::BeTransform::SetOrientation(BeQuaternion inputOrientation) {
     orientation = inputOrientation;
 
     auto *dir =
@@ -65,7 +81,7 @@ void BeTransform::SetOrientation(BeQuaternion inputOrientation) {
     transform.setOrientation(*dir);
 }
 
-void BeTransform::SetPosition(const BeVector3 &inputPosition) {
+void BeReact::BeTransform::SetPosition(const BeVector3 &inputPosition) {
     position = inputPosition;
 
     auto *pos = new rp3d::Vector3(inputPosition.GetX(), inputPosition.GetY(),
@@ -74,7 +90,7 @@ void BeTransform::SetPosition(const BeVector3 &inputPosition) {
     transform.setPosition(*pos);
 }
 
-BeVector3 BeTransform::GetPosition() const {
+BeVector3 BeReact::BeTransform::GetPosition() const {
 
     BeVector3 pos = BeVector3(transform.getPosition().x, transform.getPosition().y,
                               transform.getPosition().z);
@@ -82,18 +98,18 @@ BeVector3 BeTransform::GetPosition() const {
     return pos;
 }
 
-void BeTransform::SetToIdentity() {
+void BeReact::BeTransform::SetToIdentity() {
     transform.setToIdentity();
     position    = BeVector3(transform.getPosition());
     orientation = BeQuaternion(transform.getOrientation());
 }
 
-BeTransform BeTransform::GetInverse() {
+BeReact::BeTransform BeReact::BeTransform::GetInverse() {
     BeTransform result = BeTransform(transform.getInverse());
     return result;
 }
 
-BeTransform &BeTransform::operator=(const BeTransform &rhs) {
+BeReact::BeTransform &BeReact::BeTransform::operator=(const BeReact::BeTransform &rhs) {
     orientation = rhs.orientation;
     position    = rhs.position;
     rp3d::Vector3 targetPosition =
@@ -106,11 +122,11 @@ BeTransform &BeTransform::operator=(const BeTransform &rhs) {
     return *this;
 }
 
-BeTransform &BeTransform::operator*(const BeTransform &rhs) {
+BeReact::BeTransform &BeReact::BeTransform::operator*(const BeReact::BeTransform &rhs) {
     BeVector3 posResult = position * rhs.position;
     BeQuaternion quatResult = orientation * rhs.orientation;
     rp3d::Vector3 posTemp = rp3d::Vector3(posResult.GetX(), posResult.GetY(), posResult.GetZ());
-    rp3d::Quaternion quatTemp = rp3d::(quatResult.GetX(), quatResult.GetY(), quatResult.GetZ(), quatResult.GetW());
+    rp3d::Quaternion quatTemp = rp3d::Quaternion(quatResult.GetX(), quatResult.GetY(), quatResult.GetZ(), quatResult.GetW());
     rp3d::Transform temp = rp3d::Transform(posTemp, quatTemp);
     transform = temp;
     BeTransform result = BeTransform(transform);

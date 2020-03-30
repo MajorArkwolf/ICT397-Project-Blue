@@ -1,14 +1,22 @@
 #pragma once
 
 #include <reactphysics3d.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 #include "BeQuaternion.hpp"
 #include "BeVector3.hpp"
 
-class BeTransform {
+namespace BeReact{
+    class BeTransform;
+}
+
+
+class BeReact::BeTransform {
   public:
     BeTransform();
     BeTransform(BeVector3 position, BeQuaternion orientation);
+    BeTransform(glm::vec3 position, glm::quat orientation);
     BeTransform(const BeTransform &inputTransform);
     BeTransform(const rp3d::Transform &inputTransform);
     ~BeTransform();

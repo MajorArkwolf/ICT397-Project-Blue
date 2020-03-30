@@ -1,21 +1,30 @@
 #pragma once
 
-#include <reactphysics3d.h>
-
 #include "BeTransform.hpp"
-#include "BeCollisionWorld.hpp"
 
-class BeCollisionBody {
-  public:
-    BeCollisionBody(BeTransform targetTransform, BeCollisionWorld targetWorld, beBodyId targetId);
+namespace BeReact {
+    class BeCollisionWorld;
 
-    void SetTransform(const BeTransform &targetTransform);
-    BeTransform GetTransform();
+    class BeCollisionBody {
+      public:
+        BeCollisionBody();
+        BeCollisionBody(BeTransform targetTransform,
+                        BeCollisionWorld *targetWorld, beBodyId targetId);
 
+        void SetTransform(const BeTransform &targetTransform);
+        BeTransform GetTransform();
 
-  private:
-    BeTransform transform;
-    rp3d::CollisionBody *beCollisionBody;
+        BeCollisionWorld GetWorld();
 
+        // void AddShape();
 
-};
+        beBodyId GetId();
+
+      private:
+        beBodyId id;
+        BeTransform transform;
+        BeCollisionWorld *world;
+        // rp3d::CollisionBody *beCollisionBody;
+        void *collisionBodyRaw;
+    };
+}

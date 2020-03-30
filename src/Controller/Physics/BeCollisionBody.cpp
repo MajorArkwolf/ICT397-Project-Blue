@@ -1,7 +1,11 @@
 #include "BeCollisionBody.hpp"
 
-BeCollisionBody::BeCollisionBody(BeTransform targetTransform,
-                                 BeCollisionWorld targetWorld,
+BeReact::BeCollisionBody::BeCollisionBody(){
+
+}
+
+BeReact::BeCollisionBody::BeCollisionBody(BeTransform targetTransform,
+                                 BeReact::BeCollisionWorld *targetWorld,
                                  beBodyId targetID) {
 
     rp3d::Vector3 pos = rp3d::Vector3(targetTransform.GetPosition().GetX(),
@@ -15,8 +19,27 @@ BeCollisionBody::BeCollisionBody(BeTransform targetTransform,
                          targetTransform.GetOrientation().GetW());
 
     rp3d::Transform currentTransform = rp3d::Transform(pos, orient);
+    world = *targetWorld;
+    rp3d::CollisionWorld currentWorld = rp3d::CollisionWorld(targetWorld->GetConfig().beSettings);
 
-    rp3d::CollisionWorld currentWorld = rp3d::CollisionWorld(targetWorld);
+    id = targetID;
 
-    beCollisionBody = new rp3d::CollisionBody(currentTransform, currentWorld, targetID);
+    collisionBodyRaw = new rp3d::CollisionBody(currentTransform, currentWorld, id);
 }
+
+void BeReact::BeCollisionBody::SetTransform(const BeTransform &targetTransform) {
+    transform = targetTransform;
+}
+
+BeReact::BeTransform BeReact::BeCollisionBody::GetTransform() {
+    return transform;
+}
+
+BeReact::BeCollisionWorld BeReact::BeCollisionBody::GetWorld() {
+    return world;
+}
+
+beBodyId BeReact::BeCollisionBody::GetId() {
+    return id;
+}
+

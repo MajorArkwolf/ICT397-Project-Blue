@@ -1,14 +1,27 @@
 #pragma once
 
 #include <reactphysics3d.h>
-#include "BeCollisionBody.hpp"
+#include "BeConfig.hpp"
 
-class BeCollisionWorld{
-  public:
-    BeCollisionWorld();
-    bool TestAABBOverlap(rp3d::CollisionBody target1, rp3d::CollisionBody target2);
-    
 
-  private:
-    rp3d::CollisionWorld beCollisionWorld;
-};
+namespace BeReact {
+    class BeCollisionBody;
+
+    class BeCollisionWorld {
+      public:
+        BeCollisionWorld();
+        BeCollisionWorld(const BeSettings &worldSettings);
+        BeSettings GetConfig();
+
+        bool TestAABBOverlap(BeReact::BeCollisionBody *target1,
+                             BeReact::BeCollisionBody *target2,
+                             BeSettings worldSettings);
+        bool TestOverLap(BeReact::BeCollisionBody target1,
+                         BeReact::BeCollisionBody target2,
+                         BeSettings worldSettings);
+
+      private:
+        BeSettings beConfig;
+        rp3d::CollisionWorld *beCollisionWorld;
+    };
+}
