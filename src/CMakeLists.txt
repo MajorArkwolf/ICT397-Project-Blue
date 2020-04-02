@@ -8,6 +8,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     Controller/Engine/LuaManager.cpp
     Controller/InputManager.cpp
     Controller/Engine/Engine.cpp
+    Controller/GUIManager.cpp
     
     # Model
     Model/Models/Mesh.cpp

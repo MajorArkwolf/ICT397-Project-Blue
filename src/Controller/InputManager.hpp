@@ -53,6 +53,49 @@ namespace Controller {
              */
             void DefaultInputMap();
 
+            /*
+             * @brief Returns a reference to the input map
+             * @return A const reference to the input map
+             */
+            std::map<BLUE_InputAction, SDL_Scancode> &getInputMap();
+
+            /*
+             * @brief Creates all pairings between strings and sdl scancodes, and strings and input actions
+             */
+            void createEnumStringPairs();
+
+            /*
+             * @brief Gets a const reference to the vector of pairs linking strings to scancodes
+             * @return A const reference to the vector of pairs linking strings to scancodes
+             */
+            const std::vector<std::pair<std::string, SDL_Scancode>> &getStringScancodePairs() const;
+            /*
+             * @brief Hashes an input string to an SDL_Scancode enum
+             * @param value  The string to convert to an SDL_Scancode enum if the equivalent exists
+             * @return An SDL scancode
+             */
+            SDL_Scancode hashStringToScancode(const std::string &value) const;
+
+            /*
+             * @brief Hashes an SDL scancode to a string
+             * @param value The SDL Scancode to convert to a string
+             * @return A string representing thethe SDL scancode
+             */
+            std::string hashScancodeToString(const SDL_Scancode &value) const;
+
+            /*
+             * @brief Hashes an input string to an SDL_Scancode enum
+             * @param value The string to convert to a BLUE_InputAction of one exists
+             * @return The equivalent InputAction
+             */
+            std::string hashInputActionToString(const BLUE_InputAction &value) const;
+
+            /*
+             * @brief Binds an action to a particular key given the action, the
+             * lua table to read from, and the text to search for.
+             */
+            void bindKey(BLUE_InputAction, SDL_Scancode);
+
           private:
             /// A map containing key value pairs between a game action and a particular key
             std::map<BLUE_InputAction, SDL_Scancode> InputMap;
@@ -67,20 +110,7 @@ namespace Controller {
              * @brief Binds an action to a particular key given the action, the
              * lua table to read from, and the text to search for.
              */
-            void bindKey(BLUE_InputAction, luabridge::LuaRef &inputTable,
-                         std::string value);
-
-            /*
-             * @brief Binds an action to a particular key given the action, the
-             * lua table to read from, and the text to search for.
-             */
-            void bindKey(BLUE_InputAction, SDL_Scancode);
-
-            /*
-             * @brief Hashes an input string to an SDL_Scancode enum
-             * @value The string to convert to an SDL_Scancode enum if the equivalent exists
-             */
-            SDL_Scancode hashInputValue(const std::string &value);
+            void bindKey(BLUE_InputAction, luabridge::LuaRef &inputTable, std::string value);
 
             /*
              * @brief Private default constructor
@@ -109,6 +139,11 @@ namespace Controller {
              * empty or does not have a full complement of action keys.
              */
             void populateInputMap();
+
+            /// A vector of pairs linking together a string and an SDL Scancode
+            std::vector<std::pair<std::string, SDL_Scancode>> stringScancodePairs;
+            /// A vector of pairs linking a string and an input action
+            std::vector<std::pair<std::string, BLUE_InputAction>> stringActionPairs;
         };
     }
 }
