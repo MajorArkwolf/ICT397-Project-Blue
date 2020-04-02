@@ -45,7 +45,7 @@ namespace Controller::Input {
         switch (inputEvent.inputType) {
             case BLUE_InputType::KEY_PRESS:
             case BLUE_InputType::KEY_RELEASE: {
-                for (auto itr : InputMap) {
+                for (auto &itr : InputMap) {
                     if (itr.second == event.key.keysym.scancode) {
                         inputEvent.inputAction = itr.first;
                     }
@@ -138,6 +138,11 @@ namespace Controller::Input {
     }
 
     void InputManager::bindKey(BLUE_InputAction action, SDL_Scancode scancode) {
+        for (auto &n : InputMap) {
+            if (n.second == scancode) {
+                n.second = SDL_SCANCODE_UNKNOWN;
+            }
+        }
         InputMap.at(action) = scancode;
     }
 

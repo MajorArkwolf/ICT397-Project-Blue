@@ -50,6 +50,7 @@ void PrototypeScene::handleWindowEvent(SDL_Event &event) {
 
 void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
     auto &engine      = BlueEngine::Engine::get();
+    auto &guiManager  = engine.getGuiManager();
     auto handledMouse = false;
     switch (inputData.inputType) {
         case BLUE_InputType::KEY_PRESS: { //  Key Press events
@@ -68,8 +69,7 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
                     moveRight = true;
                 } break;
                 case BLUE_InputAction::INPUT_ESCAPE: {
-                    auto &engine = BlueEngine::Engine::get();
-                    engine.endEngine();
+                    guiManager.toggleWindow("menu");
                 } break;
             }
 
@@ -117,6 +117,7 @@ auto PrototypeScene::display() -> void {
     ImGui_ImplSDL2_NewFrame(stonk.window.get());*/
     guiManager.startWindowFrame();
     guiManager.displayInputRebindWindow();
+    guiManager.displayEscapeMenu();
 
     BlueEngine::RenderCode::Display();
     auto display = SDL_DisplayMode{};
