@@ -169,8 +169,6 @@ namespace Controller::Input {
         InputMap.at(BLUE_InputAction::INPUT_ESCAPE)        = SDL_SCANCODE_ESCAPE;
     }
 
-    void InputManager::displayRebindWindow() {}
-
     std::map<BLUE_InputAction, SDL_Scancode> &InputManager::getInputMap() {
         return InputMap;
     }
