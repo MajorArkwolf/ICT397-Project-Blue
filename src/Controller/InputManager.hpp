@@ -10,6 +10,8 @@
 #include "Controller/Engine/LuaManager.hpp"
 #include "Controller/Enums.hpp"
 
+
+
 namespace Controller {
     namespace Input {
         /// Struct used to hold all input data required for a scene to handle
@@ -53,6 +55,26 @@ namespace Controller {
              */
             void DefaultInputMap();
 
+            void displayRebindWindow();
+
+            std::map<BLUE_InputAction, SDL_Scancode> &getInputMap();
+
+            void createEnumStringPairs();
+
+            const std::vector<std::pair<std::string, SDL_Scancode>> &getStringScancodePairs() const;
+            /*
+             * @brief Hashes an input string to an SDL_Scancode enum
+             * @value The string to convert to an SDL_Scancode enum if the equivalent exists
+             */
+            SDL_Scancode hashStringToScancode(const std::string &value) const;
+            std::string hashScancodeToString(const SDL_Scancode &value) const;
+            std::string hashInputActionToString(const BLUE_InputAction &value) const;
+            /*
+             * @brief Binds an action to a particular key given the action, the
+             * lua table to read from, and the text to search for.
+             */
+            void bindKey(BLUE_InputAction, SDL_Scancode);
+
           private:
             /// A map containing key value pairs between a game action and a particular key
             std::map<BLUE_InputAction, SDL_Scancode> InputMap;
@@ -70,17 +92,10 @@ namespace Controller {
             void bindKey(BLUE_InputAction, luabridge::LuaRef &inputTable,
                          std::string value);
 
-            /*
-             * @brief Binds an action to a particular key given the action, the
-             * lua table to read from, and the text to search for.
-             */
-            void bindKey(BLUE_InputAction, SDL_Scancode);
 
-            /*
-             * @brief Hashes an input string to an SDL_Scancode enum
-             * @value The string to convert to an SDL_Scancode enum if the equivalent exists
-             */
-            SDL_Scancode hashInputValue(const std::string &value);
+
+
+
 
             /*
              * @brief Private default constructor
@@ -109,6 +124,9 @@ namespace Controller {
              * empty or does not have a full complement of action keys.
              */
             void populateInputMap();
+
+            std::vector<std::pair<std::string, SDL_Scancode>> stringScancodePairs;
+            std::vector<std::pair<std::string, BLUE_InputAction>> stringActionPairs;
         };
     }
 }
