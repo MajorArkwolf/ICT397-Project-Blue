@@ -3,7 +3,6 @@
 #include <reactphysics3d.h>
 #include "BeConfig.hpp"
 
-
 namespace BeReact {
     class BeCollisionBody;
 
@@ -12,6 +11,8 @@ namespace BeReact {
         BeCollisionWorld();
         BeCollisionWorld(const BeSettings &worldSettings);
         BeSettings GetConfig();
+
+        BeCollisionBody *CreateCollisionBody(rp3d::Transform transform);
 
         bool TestAABBOverlap(BeReact::BeCollisionBody *target1,
                              BeReact::BeCollisionBody *target2,

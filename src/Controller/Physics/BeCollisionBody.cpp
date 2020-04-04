@@ -1,8 +1,14 @@
 #include "BeCollisionBody.hpp"
+#include "BeCollisionWorld.hpp"
 
 BeReact::BeCollisionBody::BeCollisionBody(){
 
 }
+
+BeReact::BeCollisionBody(rp3d::CollisionBody *body) {
+
+}
+
 
 BeReact::BeCollisionBody::BeCollisionBody(BeTransform targetTransform,
                                  BeReact::BeCollisionWorld *targetWorld,
@@ -19,7 +25,7 @@ BeReact::BeCollisionBody::BeCollisionBody(BeTransform targetTransform,
                          targetTransform.GetOrientation().GetW());
 
     rp3d::Transform currentTransform = rp3d::Transform(pos, orient);
-    world = *targetWorld;
+    world = targetWorld;
     rp3d::CollisionWorld currentWorld = rp3d::CollisionWorld(targetWorld->GetConfig().beSettings);
 
     id = targetID;
@@ -35,7 +41,7 @@ BeReact::BeTransform BeReact::BeCollisionBody::GetTransform() {
     return transform;
 }
 
-BeReact::BeCollisionWorld BeReact::BeCollisionBody::GetWorld() {
+BeReact::BeCollisionWorld *BeReact::BeCollisionBody::GetWorld() {
     return world;
 }
 
