@@ -1,17 +1,21 @@
 #pragma once
 
-#include <reactphysics3d.hpp>
+#include <reactphysics3d.h>
 
-#include "BeCollisionWorld.hpp"
-#include "BeCollisionBody.hpp"
+#include "BeScalar.hpp"
+#include "BeTransform.hpp"
 
-class BePhysicsAbstract{
+class BeCollisionWorld;
+
+class BeAbstractBody {
   public:
-    virtual  void CreateBody(glm::vec3 position, glm::quat rotation, BeCollisionWorld *world) = 0;
-    virtual BeCollisionBody *GetBody() = 0;
+    virtual rp3d::CollisionBody *GetBody()                            = 0;
+    virtual void SetTransform(glm::vec3 position, glm::quat rotation) = 0;
+    virtual BeTransform *GetTransform()                               = 0;
+    virtual beBodyId GetId()                                          = 0;
 
-  private:
+  protected:
+    rp3d::bodyindex bodyId;
+    rp3d::Transform transform;
     rp3d::CollisionBody *body;
-    rp3d::CollisionWorld *world;
-
 };

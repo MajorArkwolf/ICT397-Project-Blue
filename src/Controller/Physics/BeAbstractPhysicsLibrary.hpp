@@ -1,17 +1,20 @@
 #pragma once
 
-#include <reactphysics3d.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 #include "BeAbstractBody.hpp"
-#include "BeCollisionWorld.hpp"
-#include "BeConfig.hpp"
+#include "BeAbstractPhysicsFactory.hpp"
 
-class BeAbstractPhysicsFactory {
+class BeAbstractPhysicsLibrary {
   public:
-    // need to change shape into enum
-    virtual BeAbstractBody *CreateBody(glm::vec3 position, glm::quat rotation,
+    virtual BeAbstractBody *CreateBody(BeAbstractPhysicsFactory *targetFactory,
+                                       glm::vec3 position, glm::quat rotation,
                                        glm::vec3 extent, int width, int height,
                                        float radius, float capsuleHeight,
                                        BeCollisionWorld *world, float *terrain,
                                        ShapeType type, beBodyId targetId) = 0;
+
+  protected:
+    BeAbstractPhysicsFactory *factory;
 };

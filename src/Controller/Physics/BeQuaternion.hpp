@@ -8,13 +8,13 @@
 class BeQuaternion {
   public:
     /**
-    *  @brief default constructor
-    *  @param inputX euler coordinate
-    *  @param inputY euler coordinate
-    *  @param inputZ euler coordinate
-    *  @param inputW euler angle
-    *  @return void
-    */
+     *  @brief default constructor
+     *  @param inputX euler coordinate
+     *  @param inputY euler coordinate
+     *  @param inputZ euler coordinate
+     *  @param inputW euler angle
+     *  @return void
+     */
     BeQuaternion();
     BeQuaternion(beScalar inputX, beScalar inputY, beScalar inputZ, beScalar inputW);
     BeQuaternion(BeVector3 inputVector, beScalar inputW);
@@ -48,7 +48,6 @@ class BeQuaternion {
                        beScalar interval) const;
     BeQuaternion &operator=(BeQuaternion rhs);
     BeQuaternion &operator*(BeQuaternion rhs);
-
 
   private:
     beScalar x;

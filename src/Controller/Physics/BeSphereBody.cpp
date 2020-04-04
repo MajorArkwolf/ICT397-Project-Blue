@@ -1,36 +1,36 @@
-#include "BeBoxBody.hpp"
+#include "BeSphereBody.hpp"
 
 #include "BeCollisionWorld.hpp"
 
-BeBoxBody::BeBoxBody(glm::vec3 position, glm::quat rotation, glm::vec3 extent,
-                     BeCollisionWorld *world, beBodyId targetId) {
+BeSphereBody::BeSphereBody(glm::vec3 position, glm::quat rotation, float radius,
+                            BeCollisionWorld *world, beBodyId targetId) {
     rp3d::Vector3 pos = rp3d::Vector3(position.x, position.y, position.z);
     rp3d::Quaternion rot =
         rp3d::Quaternion(rotation.x, rotation.y, rotation.z, rotation.w);
     transform         = rp3d::Transform(pos, rot);
     body              = world->CreateCollisionBody(transform);
-    rp3d::Vector3 ext = rp3d::Vector3(extent.x, extent.y, extent.z);
-    shape             = new rp3d::BoxShape(ext);
+    rp3d::decimal rad = rp3d::decimal(radius);
+    shape             = new rp3d::SphereShape(rad);
     body->addCollisionShape(shape, transform);
     bodyId = targetId;
 }
 
-rp3d::CollisionBody *BeBoxBody::GetBody() {
+rp3d::CollisionBody *BeSphereBody::GetBody() {
     return body;
 }
 
-void BeBoxBody::SetTransform(glm::vec3 position, glm::quat rotation) {
+void BeSphereBody::SetTransform(glm::vec3 position, glm::quat rotation) {
     rp3d::Vector3 pos = rp3d::Vector3(position.x, position.y, position.z);
     rp3d::Quaternion rot =
         rp3d::Quaternion(rotation.x, rotation.y, rotation.z, rotation.w);
     transform = rp3d::Transform(pos, rot);
 }
 
-BeTransform *BeBoxBody::GetTransform() {
+BeTransform *BeSphereBody::GetTransform() {
     BeTransform *result = new BeTransform(transform);
     return result;
 }
 
-beBodyId BeBoxBody::GetId() {
+beBodyId BeSphereBody::GetId() {
     return bodyId;
 }

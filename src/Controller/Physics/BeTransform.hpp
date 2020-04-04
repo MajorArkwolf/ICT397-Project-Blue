@@ -1,18 +1,14 @@
 #pragma once
 
 #include <reactphysics3d.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
 #include "BeQuaternion.hpp"
 #include "BeVector3.hpp"
 
-namespace BeReact{
-    class BeTransform;
-}
-
-
-class BeReact::BeTransform {
+class BeTransform {
   public:
     BeTransform();
     BeTransform(BeVector3 position, BeQuaternion orientation);
@@ -28,7 +24,6 @@ class BeReact::BeTransform {
     BeTransform GetInverse();
     BeTransform &operator=(const BeTransform &rhs);
     BeTransform &operator*(const BeTransform &rhs);
-
 
   private:
     BeQuaternion orientation;

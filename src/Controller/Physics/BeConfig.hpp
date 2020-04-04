@@ -2,8 +2,9 @@
 
 #include <reactphysics3d.h>
 
-struct BeSettings{
+enum class ShapeType { Box, Height, Sphere, Capsule };
+
+struct BeSettings {
 
     rp3d::WorldSettings beSettings;
-
 };

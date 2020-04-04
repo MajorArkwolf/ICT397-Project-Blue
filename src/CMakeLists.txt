@@ -13,6 +13,12 @@ target_sources(${PROJECT_NAME} PRIVATE
     Controller/Physics/BeQuaternion.cpp
     Controller/Physics/BeTransform.cpp
     Controller/Physics/BeVector3.cpp
+    Controller/Physics/BeBoxBody.cpp
+    Controller/Physics/BeHeightBody.cpp
+    Controller/Physics/BeRP3DFactory.cpp
+    Controller/Physics/BePhysicsLibrary.cpp
+    Controller/Physics/BeCapsuleBody.cpp
+    Controller/Physics/BeSphereBody.cpp
     
     # Model
     Model/Models/Mesh.cpp

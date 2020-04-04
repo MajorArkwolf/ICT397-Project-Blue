@@ -30,8 +30,6 @@ class BeVector3 {
     bool operator!=(const BeVector3 &rhs);
     BeVector3 operator*(BeVector3 rhs);
 
-
-
   private:
     beScalar x;
     beScalar y;
