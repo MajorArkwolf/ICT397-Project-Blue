@@ -3,7 +3,7 @@
 #include "BeCollisionWorld.hpp"
 
 BeSphereBody::BeSphereBody(glm::vec3 position, glm::quat rotation, float radius,
-                            BeCollisionWorld *world, beBodyId targetId) {
+                           BeCollisionWorld *world, beBodyId targetId) {
     rp3d::Vector3 pos = rp3d::Vector3(position.x, position.y, position.z);
     rp3d::Quaternion rot =
         rp3d::Quaternion(rotation.x, rotation.y, rotation.z, rotation.w);

@@ -9,10 +9,33 @@ class BeCollisionWorld;
 
 class BeAbstractBody {
   public:
-    virtual rp3d::CollisionBody *GetBody()                            = 0;
+    /**
+     *  @brief abstract method for getting body
+     *  @return might be naughty returning a react physics body
+     */
+    virtual rp3d::CollisionBody *GetBody() = 0;
+
+    /**
+     *  @brief Setter ~ allows the collision body position to be updated
+     *  @param position the body's position
+     *  @param rotation the direction the body is facing
+     *  @return
+     */
     virtual void SetTransform(glm::vec3 position, glm::quat rotation) = 0;
-    virtual BeTransform *GetTransform()                               = 0;
-    virtual beBodyId GetId()                                          = 0;
+
+    /**
+     *  @brief Getter for the body's position
+     *  @param
+     *  @return BeTransform the facaded class for the react transform class
+     */
+    virtual BeTransform *GetTransform() = 0;
+
+    /**
+     *  @brief Getter for the body's id
+     *  @param
+     *  @return the body's id
+     */
+    virtual beBodyId GetId() = 0;
 
   protected:
     rp3d::bodyindex bodyId;
