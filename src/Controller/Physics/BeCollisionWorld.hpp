@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <reactphysics3d.h>
 
 #include "BeConfig.hpp"
@@ -40,21 +41,33 @@ class BeCollisionWorld {
      *  @brief AABB collision detector
      *  @param target1 collision body
      *  @param target2 collision body
-     *  @param worldSettings the world settings
      *  @return boolean of whether an object intersects with another
      */
-    bool TestAABBOverlap(BeAbstractBody *target1, BeAbstractBody *target2,
-                         BeSettings worldSettings);
+    bool TestAABBOverlap(rp3d::CollisionBody *body1, rp3d::CollisionBody *body2);
+
+    /**
+     *  @brief AABB collision detector
+     *  @param target1 collision body
+     *  @param target2 collision body
+     *  @return boolean of whether an object intersects with another
+     */
+    bool TestAABBOverlap(BeAbstractBody *target1, BeAbstractBody *target2);
 
     /**
      *  @brief collision detector
      *  @param target1 collision body
      *  @param target2 collision body
-     *  @param worldSettings the world settings
      *  @return boolean of whether an object intersects with another
      */
-    bool TestOverLap(BeAbstractBody *target1, BeAbstractBody *target2,
-                     BeSettings worldSettings);
+    bool TestOverLap(rp3d::CollisionBody *body1, rp3d::CollisionBody *body2);
+
+    /**
+     *  @brief collision detector
+     *  @param target1 collision body
+     *  @param target2 collision body
+     *  @return boolean of whether an object intersects with another
+     */
+    bool TestOverLap(BeAbstractBody *target1, BeAbstractBody *target2);
 
   private:
     BeSettings beConfig;

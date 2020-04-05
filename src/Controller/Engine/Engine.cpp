@@ -26,7 +26,6 @@ using std::string;
 auto Engine::run() -> void {
     auto &engine = Engine::get();
 
-
     auto *prototype = new PrototypeScene();
     engine.gameStack.AddToStack(prototype);
 

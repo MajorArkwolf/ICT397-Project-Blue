@@ -23,8 +23,7 @@ class BeAbstractPhysicsLibrary {
      *  @param targetId the body id
      *  @return BeAbstractBody the collision body
      */
-    virtual BeAbstractBody *CreateBody(BeAbstractPhysicsFactory *targetFactory,
-                                       glm::vec3 position, glm::quat rotation,
+    virtual BeAbstractBody *CreateBody(glm::vec3 position, glm::quat rotation,
                                        glm::vec3 extent, int width, int height,
                                        float radius, float capsuleHeight,
                                        BeCollisionWorld *world, float *terrain,

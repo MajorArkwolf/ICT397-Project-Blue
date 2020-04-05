@@ -15,6 +15,12 @@ PrototypeScene::PrototypeScene() {
     Init();
 }
 
+PrototypeScene::PrototypeScene(BeAbstractPhysicsLibrary *library){
+    Init();
+    //physics = library;
+}
+
+
 auto PrototypeScene::update(double t, double dt) -> void {
     if (moveForward) {
         camera.ProcessKeyboard(FORWARD, dt);
@@ -34,6 +40,17 @@ void PrototypeScene::Init() {
     BlueEngine::RenderCode::HardInit();
     camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
     models.push_back( ModelManager::GetModelID("res/model/Test/city_residential_03.obj"));
+
+
+    settings.beSettings.isSleepingEnabled = false;
+    settings.beSettings.defaultVelocitySolverNbIterations = 20;
+    world = new BeCollisionWorld(settings);
+    float *blah = new float[10];
+    factory = new BeRP3DFactory();
+    physics = new BePhysicsLibrary(factory);
+    cam = physics->CreateBody(camera.Position, glm::quat(1,0,0,1), glm::vec3(1,1,1),0, 0 ,0 ,0, world, blah, ShapeType::Box, 1);
+    body = physics->CreateBody(glm::vec3(0,0,0), glm::quat(1,0,0,1), glm::vec3(10,10,10), 0,0,0,0, world, blah, ShapeType::Box, 2);
+
 }
 
 void PrototypeScene::handleWindowEvent(SDL_Event &event) {
@@ -122,6 +139,9 @@ auto PrototypeScene::display() -> void {
 
     renderer.draw(view, projection);
     BlueEngine::RenderCode::EndDisplay();
+
+    cam->SetTransform(camera.Position, glm::quat(1,0,0,0));
+    bool test = world->TestAABBOverlap(cam->GetBody(), body->GetBody());
 }
 
 void PrototypeScene::unInit() {}

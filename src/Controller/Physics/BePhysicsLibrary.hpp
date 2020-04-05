@@ -1,8 +1,10 @@
 #pragma once
 
+#include <iostream>
+
 #include "BeAbstractPhysicsLibrary.hpp"
 
-class BePhysicsLibrary : BeAbstractPhysicsLibrary {
+class BePhysicsLibrary : public BeAbstractPhysicsLibrary {
   public:
     /**
      * @brief default constructor

@@ -5,6 +5,7 @@ BeAbstractBody *BeRP3DFactory::CreateBody(glm::vec3 position, glm::quat rotation
                                           float radius, float capsuleHeight,
                                           BeCollisionWorld *world, float *terrain,
                                           ShapeType type, beBodyId targetId) {
+
     switch (type) {
         case ShapeType::Box:
             return new BeBoxBody(position, rotation, extent, world, targetId);

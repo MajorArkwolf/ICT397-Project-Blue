@@ -6,10 +6,15 @@
 #include "View/Renderer/Renderer.hpp"
 #include "View/EulerCamera.hpp"
 #include "Controller/InputManager.hpp"
+#include "Controller/Physics/BeAbstractPhysicsLibrary.hpp"
+#include "Controller/Physics/BeConfig.hpp"
+#include "Controller/Physics/BeCollisionWorld.hpp"
+
 
 class PrototypeScene : public BaseState {
 public:
     PrototypeScene();
+    PrototypeScene(BeAbstractPhysicsLibrary *library);
     ~PrototypeScene() override = default;
 
     auto display() -> void override;
@@ -26,6 +31,7 @@ private:
     Renderer renderer;
     Camera camera;
 
+
     void handleWindowEvent(SDL_Event &event);
 
     bool moveForward = false;
@@ -34,4 +40,12 @@ private:
     bool moveRight = false;
 
     double getDeltaTime();
+
+    BeSettings settings;
+    BeCollisionWorld *world;
+    BeAbstractPhysicsFactory *factory;
+    BeAbstractPhysicsLibrary *physics;
+    BeAbstractBody *cam;
+    BeAbstractBody *body;
+
 };
