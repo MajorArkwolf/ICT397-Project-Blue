@@ -1,5 +1,5 @@
 # Set cmake minimum version.
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.14)
 
 # Set the project details.
 set(PROJECT_NAME Project-Blue)
@@ -48,7 +48,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE  ${PROJECT_BINARY_DIR}/lib)
 add_executable(${PROJECT_NAME})
 
 # Libraries for Win32 native and MinGW
-list(APPEND EXTRA_LIBS vcruntime user32 gdi32 winmm imm32 ole32 oleaut32 version uuid)
+#list(APPEND EXTRA_LIBS vcruntime user32 gdi32 winmm imm32 ole32 oleaut32 version uuid)
 
 # Set C++ standard.
 set_target_properties(${PROJECT_NAME} PROPERTIES
