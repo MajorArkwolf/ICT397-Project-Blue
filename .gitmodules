@@ -9,7 +9,10 @@
 	url = https://github.com/DanielChappuis/reactphysics3d.git
 [submodule "lib/imgui"]
 	path = lib/imgui
-	url = https://github.com/opeik/imgui.git
+	url = https://github.com/MajorArkwolf/imgui.git
+[submodule "lib/lua"]
+	path = lib/lua
+	url = https://github.com/MajorArkwolf/lua-cmake
 [submodule "lib/sdl2"]
 	path = lib/sdl2
 	url = https://github.com/spurious/SDL-mirror.git
