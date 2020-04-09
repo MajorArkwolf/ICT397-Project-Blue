@@ -53,8 +53,3 @@ target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
     lua/src
     luabridge/Source
 )
-
-#target_link_libraries(${PROJECT_NAME} ${ASSIMP_LIBRARIES})
-
-# Libraries for Win32 native and MinGW
-# list(APPEND EXTRA_LIBS user32 gdi32 winmm imm32 ole32 oleaut32 version uuid advapi32 shell32)
