@@ -13,6 +13,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     Model/Models/Mesh.cpp
     Model/Models/Model.cpp
     Model/Models/ModelManager.cpp
+    Model/GameObject/GameObject.cpp
 
     # View
     View/Renderer/Shader.cpp

@@ -3,6 +3,12 @@
 	/// System Dependencies
 #include <string>
 
+	/// External Dependencies
+#include <glm/glm.hpp>
+
+	/// Internal Dependencies
+#include "../Models/Model.hpp"
+
 	/*!
 	 * @author William Vlahos
 	 * @brief A virtual base GameObject class, used to define a polymorphic base structure.
@@ -12,10 +18,10 @@ class GameObject {
 	public:
 			/*!
 			 * @brief The default GameObject constructor.
-			 * @note Does nothing on its own.
+			 * @note Initialises the GameObject's position values.
 			 * @warning Must be extended by inheritors!
 			 */
-		GameObject() {};
+		GameObject();
 
 			/*!
 			 * @brief The virtual GameObject destructor.
@@ -31,8 +37,8 @@ class GameObject {
 
 			/*!
 			 * @brief Updates the contents of the GameObject relative to the time passed.
-			 * @param t The time elapsed since the engine started.
-			 * @param delta_t The time elapsed since the prior update (i.e. the delta time).
+			 * @param [in] t The time elapsed since the engine started.
+			 * @param [in] delta_t The time elapsed since the prior update (i.e. the delta time).
 			 * @note Provide an empty implementation to disable updating.
 			 * @warning Must be implemented by inheritors!
 			 */
@@ -53,4 +59,22 @@ class GameObject {
 			 * @warning Must be implemented by inheritors!
 			 */
 		virtual bool data_import(std::string file_path) = 0;
+
+			/*!
+			 * @brief Stores the current position of the GameObject in a 3D space.
+			 * @note Initial value of { 0.0f, 0.0f, 0.0f }.
+			 */
+		glm::vec3 position;
+
+			/*!
+			 * @brief Stores the direction that the GameObject is looking at in a 3D space.
+			 * @note Initial value of { 0.0f, 0.0f, 1.0f }.
+			 */
+		glm::vec3 look_at;
+
+			/*!
+			 * @brief Stores the direction that points up relative from the GameObject in a 3D space.
+			 * @note Initial value of { 0.0f, 1.0f, 0.0f }.
+			 */
+		glm::vec3 look_up;
 };
