@@ -13,6 +13,7 @@
 
 #include "Controller/InputManager.hpp"
 #include "Controller/GuiManager.hpp"
+#include "Controller/ResourceManager.hpp"
 
 
 // Game States
@@ -41,7 +42,7 @@ auto Engine::run() -> void {
     // State previous;
     // State current;
     // State state;
-
+    ResourceManager::loadResources();
     while (engine.getIsRunning()) {
         double newTime   = engine.getTime();
         double frameTime = newTime - currentTime;
@@ -173,6 +174,9 @@ auto Engine::processInput() -> void {
         if (event.key.keysym.scancode == SDL_SCANCODE_F11 && event.type == SDL_KEYDOWN) {
             relativeMouseMode = relativeMouseMode ? SDL_FALSE : SDL_TRUE;
             SDL_SetRelativeMouseMode(relativeMouseMode);
+        }
+        if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE) {
+            this->endEngine();
         }
         ImGui_ImplSDL2_ProcessEvent(&event);
         gameStack.getTop()->handleInputData(inputManager.ProcessInput(event));

@@ -227,8 +227,6 @@ namespace Controller::Input {
             std::pair<std::string, BLUE_InputAction>("Crouch", BLUE_InputAction::INPUT_CROUCH));
         stringActionPairs.push_back(
             std::pair<std::string, BLUE_InputAction>("Menu", BLUE_InputAction::INPUT_ESCAPE));
-        stringActionPairs.push_back(std::pair<std::string, BLUE_InputAction>(
-            "Move Forward", BLUE_InputAction::INPUT_MOVE_FORWARD));
         stringActionPairs.push_back(
             std::pair<std::string, BLUE_InputAction>("Action 1", BLUE_InputAction::INPUT_ACTION_1));
         stringActionPairs.push_back(

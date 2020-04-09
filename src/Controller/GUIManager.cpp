@@ -1,7 +1,8 @@
 #include "GUIManager.hpp"
 
-#include <Controller/Engine/Engine.hpp>
-#include <Controller/InputManager.hpp>
+#include "Controller/Engine/Engine.hpp""
+#include "Controller/InputManager.hpp"
+#include "Model/TextManager.hpp"
 
 GUIManager::GUIManager() {
     initialiseWindowOpenMap();
@@ -32,7 +33,7 @@ void GUIManager::displayInputRebindWindow() {
     // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
     if (windowOpen) {
     
-     ImGui::Begin("Controls", &windowOpenMap.at("controls"),
+     ImGui::Begin(TextManager::GetString("ControlMenu_title").c_str(), &windowOpenMap.at("controls"),
                      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
         ImGui::Text("Click on a button while holding a key to map an action to that key");
         ImGui::Separator();
@@ -74,7 +75,8 @@ void GUIManager::displayEscapeMenu() {
     bool &windowOpen = windowOpenMap.at("menu");
     // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
     if (windowOpen) {
-        ImGui::Begin("Menu", &windowOpen, ImGuiWindowFlags_NoCollapse);
+        ImGui::Begin(TextManager::GetString("OptionMenu_title").c_str(), &windowOpen,
+                     ImGuiWindowFlags_NoCollapse);
         if (ImGui::Button("Controls")) {
             auto &isControlsOpen = windowOpenMap.at("controls");
             isControlsOpen       = isControlsOpen ? false : true;
