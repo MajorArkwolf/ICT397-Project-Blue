@@ -72,7 +72,7 @@ Engine::Engine() {
     getBasePath();
     // Start SDL.
     if (!glfwInit()) {
-        // assert here
+        std::cerr << "GLFW FAILED TO INIT \n";
     }
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -161,6 +161,7 @@ auto Engine::getBasePath() -> void {
     //char *base_path = SDL_GetBasePath();
     //basepath        = std::string(base_path);
     //SDL_free(base_path);
+    basepath = ".";
 }
 
 void Engine::processInput(GLFWwindow *window) {

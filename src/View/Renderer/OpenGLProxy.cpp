@@ -139,31 +139,35 @@ void BlueEngine::RenderCode::ResizeWindow() {
     auto &engine = BlueEngine::Engine::get();
     
     //SDLFIX
-    int width = 800;
-    int height = 600;
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glViewport(0, 0, width, height);
-    gluPerspective(60, width/height, 1, 300);
-    glMatrixMode(GL_MODELVIEW);
+    //May no longer be needed here
+
+    //int width = 800;
+    //int height = 600;
+
+    //glMatrixMode(GL_PROJECTION);
+    //glLoadIdentity();
+    //glViewport(0, 0, width, height);
+    //gluPerspective(60, width/height, 1, 300);
+    //glMatrixMode(GL_MODELVIEW);
 }
 
 void BlueEngine::RenderCode::HardInit() {
-    int width  = 880;
-    int height = 660;
+    int width  = 0;
+    int height = 0;
 
-    glLoadIdentity();
-    glLineWidth(1);
+    //glLoadIdentity();
+    //glLineWidth(1);
     auto &engine = BlueEngine::Engine::get();
+    glfwGetWindowSize(engine.window, &width, &height);
     //SDLFIX
     //SDL_GL_GetDrawableSize(engine.window.get(), &width, &height);
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
+    //glMatrixMode(GL_PROJECTION);
+    //glLoadIdentity();
     glViewport(0, 0, width, height);
-    gluPerspective(60, width / height, 1, 300);
-    glMatrixMode(GL_MODELVIEW);
+    //gluPerspective(60, width / height, 1, 300);
+    //glMatrixMode(GL_MODELVIEW);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -194,6 +198,6 @@ void BlueEngine::RenderCode::gluPerspective(GLdouble fovy, GLdouble aspect, GLdo
     xmin = ymin * aspect;
     xmax = ymax * aspect;
 
-    glFrustum(xmin, xmax, ymin, ymax, zNear, zFar);
+    //glFrustum(xmin, xmax, ymin, ymax, zNear, zFar);
 }
 

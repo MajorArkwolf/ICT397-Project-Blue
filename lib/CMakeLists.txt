@@ -1,7 +1,7 @@
 # Library build options.
-#option(ASSIMP_BUILD_TESTS OFF)
-#option(ASSIMP_BUILD_ASSIMP_TOOLS OFF)
-#option(OPTION_BUILD_TESTS OFF)
+option(ASSIMP_BUILD_TESTS OFF)
+option(ASSIMP_BUILD_ASSIMP_TOOLS OFF)
+option(OPTION_BUILD_TESTS OFF)
 
 # Build libraries.
 string(REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")

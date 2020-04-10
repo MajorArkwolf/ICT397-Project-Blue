@@ -34,7 +34,7 @@ auto PrototypeScene::update(double t, double dt) -> void {
 void PrototypeScene::Init() {
     BlueEngine::RenderCode::HardInit();
     camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
-     models.push_back(ModelManager::GetModelID("res/model/SK_BR_Character_Troll_01.fbx"));
+     models.push_back(ModelManager::GetModelID("res/model/player_male.obj"));
 }
 
 void PrototypeScene::handleWindowEvent() {
@@ -109,6 +109,7 @@ void PrototypeScene::handleInputData() {
 auto PrototypeScene::display() -> void {
     //SDLFIX
     auto &engine = BlueEngine::Engine::get();
+    BlueEngine::RenderCode::Display();
     //auto &inputManager = Controller::Input::InputManager::getInstance();
     //auto &guiManager   = engine.getGuiManager();
 
