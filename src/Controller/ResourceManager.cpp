@@ -25,6 +25,22 @@ void ResourceManager::loadResources() {
 
 }
 
+auto ResourceManager::insertString(std::string key, std::string value) -> void {
+    TextManager::InsertString(key, value);
+}
+
+auto ResourceManager::getString(std::string key) -> std::string {
+    return TextManager::GetString(key);
+}
+
+auto ResourceManager::getModelID(std::string filename) -> size_t {
+    return ModelManager::GetModelID(filename);
+}
+
+auto ResourceManager::drawModel(size_t id, Shader *ourshader) -> void {
+    ModelManager::Draw(id, ourshader);
+}
+
 void ResourceManager::loadModel(const std::string &filePath) {
     ModelManager::GetModelID(filePath);
 }
@@ -36,16 +52,19 @@ void ResourceManager::loadString(const std::string key) {
     static luabridge::LuaRef stringTable(L);
 
     if (stringTable.isNil()) {
-        std::cout << "string table nil \n";
         stringTable = getGlobal(L, "Strings");
         if (stringTable.isNil()) {
+            std::cout << "Failed to load 'Strings' table from LoadResources.lua\n";
             assert(!stringTable.isNil(), "LoadResources.lua must contain a string table");
         }
 
     }
 
     LuaRef text = stringTable[key.c_str()];
+
     if (text.isString()) {
         TextManager::InsertString(key, text.cast<std::string>());
+    } else {
+        std::cout << "Failed to load string with id \"" << key << "\"\n";
     }
 }

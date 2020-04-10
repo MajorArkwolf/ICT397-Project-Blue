@@ -42,7 +42,7 @@ auto Engine::run() -> void {
     // State previous;
     // State current;
     // State state;
-    ResourceManager::loadResources();
+    ResourceManager::getInstance().loadResources();
     while (engine.getIsRunning()) {
         double newTime   = engine.getTime();
         double frameTime = newTime - currentTime;

@@ -15,10 +15,10 @@ resources.loadString("HelpMenu")
 
 Strings = {
 	WindowTitle = "ProjectBlue",
-	HelpMenu = "Do stuff to win",
 	OptionMenu_title = "Menu",
 	ControlMenu_title = "Controls",
-	ControlMenu_instructions = " ",
+	InstructionMenu_title = "Instructions",
+	InstructionMenu_instructions = "Do stuff to win",
 	Control_MoveForward_description = " ",
 	Control_MoveBackward_description = " ",
 	Control_MoveLeft_description = " ",
@@ -30,12 +30,21 @@ Strings = {
 	Control_Action2_description = " ",
 	Control_Action3_description = " ",
 	Control_Action4_description = " "
-
 }
 
-resources.loadString("HelpMenu")
+
 resources.loadString("WindowTitle")
 resources.loadString("OptionMenu_title")
 resources.loadString("ControlMenu_title")
+resources.loadString("InstructionMenu_title")
+resources.loadString("InstructionMenu_instructions")
 
-resources.loadModel("ironman.fbx")
+
+--[[ 
+Load all models by passing their file path in 'resources.loadString("filePath")' Must use forward slashes rather than back slashes
+
+resources.loadModel("res/models/ironman.obj")
+
+--]]
+
+resources.loadModel("res/model/IronMan/IronMan.obj")

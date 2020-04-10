@@ -33,9 +33,10 @@ auto PrototypeScene::update(double t, double dt) -> void {
 }
 
 void PrototypeScene::Init() {
+    auto &resManager = ResourceManager::getInstance();
     BlueEngine::RenderCode::HardInit();
     camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
-     models.push_back(ModelManager::GetModelID("res/model/IronMan/IronMan.obj"));
+     models.push_back(resManager.getModelID("res/model/IronMan/IronMan.obj"));
 }
 
 void PrototypeScene::handleWindowEvent(SDL_Event &event) {
@@ -118,6 +119,7 @@ auto PrototypeScene::display() -> void {
     guiManager.startWindowFrame();
     guiManager.displayInputRebindWindow();
     guiManager.displayEscapeMenu();
+    guiManager.displayInstructionMenu();
 
     BlueEngine::RenderCode::Display();
     auto display = SDL_DisplayMode{};

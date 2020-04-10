@@ -7,7 +7,7 @@ auto TextManager::InsertString(std::string key, std::string value) -> void {
     if (TextMap().find(key) == TextMap().end()) { // file not loaded yet
         TextManager::TextMap().insert(std::make_pair(key, value));
     } else {
-        return;
+        TextManager::TextMap().at(key) = value;
     }
 }
 

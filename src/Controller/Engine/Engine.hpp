@@ -1,15 +1,16 @@
 #pragma once
 
+#include <SDL.h>
 #include <memory>
 #include <string>
 
-#include <SDL.h>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
 #include "BaseState.hpp"
-#include "GameStack.hpp"
 #include "Controller/GUIManager.hpp"
+#include "Controller/ResourceManager.hpp"
+#include "GameStack.hpp"
 
 namespace BlueEngine {
     class Engine {
@@ -34,17 +35,6 @@ namespace BlueEngine {
 
         auto getTime() const -> double;
 
-      private:
-        GameStack<BaseState *> gameStack;
-        GUIManager guiManager;
-        bool isRunning = true;
-        SDL_bool relativeMouseMode = SDL_TRUE;
-
-        auto getBasePath() -> void;
-
-        Engine();
-
-      public:
         Engine(Engine &&)      = default;
         Engine(const Engine &) = delete;
         ~Engine();
@@ -55,7 +45,7 @@ namespace BlueEngine {
         static auto get() -> Engine &;
         static auto run() -> void;
 
-        GUIManager& getGuiManager();
+        GUIManager &getGuiManager();
         /**
          * @brief Overloaded assignment operator, set to default overload
          */
@@ -71,5 +61,15 @@ namespace BlueEngine {
         auto endEngine() -> void;
 
         auto processInput() -> void;
+
+      private:
+        GameStack<BaseState *> gameStack;
+        GUIManager guiManager;
+        bool isRunning             = true;
+        SDL_bool relativeMouseMode = SDL_TRUE;
+
+        auto getBasePath() -> void;
+
+        Engine();
     };
 }

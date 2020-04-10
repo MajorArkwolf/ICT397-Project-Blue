@@ -7,15 +7,18 @@
 
 class ResourceManager {
   public:
-    void loadResources();
+    auto loadResources() -> void;
+    auto insertString(std::string key, std::string value) -> void;
+    auto getString(std::string key) -> std::string;
+    auto getModelID(std::string filename) -> size_t;
+    auto drawModel(size_t id, Shader *ourshader) -> void;
 
+    static auto getInstance() -> ResourceManager &;
 
   private:
-    static auto getInstance() -> ResourceManager &;
     TextManager textManager;
     ModelManager modelManager;
     ResourceManager();
-    static void loadModel(const std::string &filePath);
-    static void loadString(const std::string key);
-
+    static auto loadModel(const std::string &filePath) -> void;
+    static auto loadString(const std::string key) -> void;
 };
