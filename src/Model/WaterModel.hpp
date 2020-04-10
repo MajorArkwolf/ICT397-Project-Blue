@@ -1,8 +1,8 @@
 #pragma once
 #include <glad/glad.h>
-#include "engine.hpp"
-#include "shader.hpp"
-#include "vertix.hpp"
+#include "Controller/Engine/Engine.hpp"
+#include "View/Renderer/Shader.hpp"
+#include "Model/Vertix.hpp"
 #include <vector>
 #include <memory>
 
@@ -19,7 +19,7 @@ namespace Model {
 		 */
 		void SetupModel();
 		glm::vec3 position = { 0, 105, 0 };
-		std::vector<Vertex> verticies = {};
+        std::vector<Blue::Vertex> verticies = {};
 		///Vector of indicies.
 		std::vector<unsigned int> indicies = {};
 		std::shared_ptr<Shader> shader = nullptr;

@@ -14,6 +14,7 @@ using Controller::Input::BLUE_InputType;
 
 PrototypeScene::PrototypeScene() {
     Init();
+    terrain.Init();
 }
 
 auto PrototypeScene::update(double t, double dt) -> void {
@@ -29,12 +30,14 @@ auto PrototypeScene::update(double t, double dt) -> void {
     if (moveRight) {
         camera.ProcessKeyboard(RIGHT, dt);
     }
+    
+    terrain.Update(glm::ivec2(static_cast<int>(camera.Position.x), static_cast<int>(camera.Position.y)));
 }
 
 void PrototypeScene::Init() {
     BlueEngine::RenderCode::HardInit();
     camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
-     models.push_back(ModelManager::GetModelID("res/model/IronMan/IronMan.obj"));
+    //models.push_back(ModelManager::GetModelID("res/model/IronMan/IronMan.obj"));
 }
 
 void PrototypeScene::handleWindowEvent(SDL_Event &event) {
@@ -128,11 +131,11 @@ auto PrototypeScene::display() -> void {
                                             0.1, 100000.0);
     glm::mat4 view       = camera.GetViewMatrix();
 
-    glm::mat4 model = glm::mat4(5.0f);
+    //glm::mat4 model = glm::mat4(5.0f);
 
-     Renderer::addToDraw(model, models[0]);
-
-    renderer.draw(view, projection);
+    //Renderer::addToDraw(model, models[0]);
+    terrain.Draw(projection, view, camera.Position);
+    //renderer.draw(view, projection);
 
     guiManager.endWindowFrame();
 

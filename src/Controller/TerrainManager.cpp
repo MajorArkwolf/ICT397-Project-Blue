@@ -7,7 +7,7 @@ Controller::TerrainManager::TerrainManager() {
 
 void Controller::TerrainManager::Init() {
 	factory.Init();
-	Key updateKey = {};
+    Blue::Key updateKey = {};
 	updateKey.first = 0;
 	updateKey.second = 0;
 }
@@ -18,15 +18,14 @@ void Controller::TerrainManager::Draw(const glm::mat4& projection, const glm::ma
 	}
 }
 
-float Controller::TerrainManager::Distance(const Key& left, const Key& right) const
-{
+float Controller::TerrainManager::Distance(const Blue::Key &left, const Blue::Key &right) const {
 	const float x_diff = left.first - right.first;
 	const float y_diff = left.second - right.second;
 	return std::sqrt(x_diff * x_diff + y_diff * y_diff);
 }
 
 void Controller::TerrainManager::Update(glm::ivec2 key) {
-	Key updateKey{};
+    Blue::Key updateKey{};
 	if (key.x < 0) {
 		updateKey.first = key.x / factory.GetChunkSize() - 1;
 	}
@@ -49,7 +48,7 @@ void Controller::TerrainManager::Update(glm::ivec2 key) {
 
 		for (int x = xlow; x <= xhigh; ++x) {
 			for (int z = zlow; z <= zhigh; ++z) {
-				Key newKey(x, z);
+                Blue::Key newKey(x, z);
 				if (abs(newKey.first) < maxKey && abs(newKey.second) < maxKey) {
 					float distance = Distance(updateKey, newKey);
 					if (radSize >= distance - 0.2f) {

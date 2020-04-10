@@ -3,8 +3,8 @@
 
 #include <vector>
 #include <memory>
-#include "shader.hpp"
-#include "vertix.hpp"
+#include "View/Renderer/Shader.hpp"
+#include "Model/Vertix.hpp"
 #include "Model/WaterModel.hpp"
 
 namespace Model {
@@ -49,7 +49,7 @@ namespace Model {
 		///The position that the chunk will be drawn at.
 		glm::vec3 position = {};
 		///Vector of verticies include positions and texture coordinates.
-		std::vector<Vertex> verticies = {};
+        std::vector<Blue::Vertex> verticies = {};
 		///Vector of indicies.
 		std::vector<unsigned int> indicies = {};
 		///A shared pointer to the shader that will be used.

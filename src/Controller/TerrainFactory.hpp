@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include "Model/TerrainModel.hpp"
+#include "Model/Vertix.hpp"
 
 namespace Controller {
 	/**
@@ -28,7 +29,7 @@ namespace Controller {
 		 * @param the z coordinate that will determine where the chunk sits.
 		 * @param They key to where the data will be mapped.
 		 */
-		void GenerateTerrain(Model::TerrainModel& newTerrain, int xcord, int zcord, const Key key);
+		void GenerateTerrain(Model::TerrainModel& newTerrain, int xcord, int zcord, const Blue::Key key);
 		/**
 		 * @brief Generates a perlin noise map instead of loading one in.
 		 * @param The size of the X dimensions.
@@ -47,31 +48,44 @@ namespace Controller {
 		/// Sets the max side of the play area
 		int maxSize = 4096;
 		/// Heightmap of floats used for terrain.
-		std::vector<std::vector<Perlin>> fValues = {};
+		std::vector<std::vector<Blue::Perlin>> fValues = {};
 		/// A pointer to the terrain shader.
 		std::shared_ptr<Shader> terrainShader = nullptr;
+        /// A pointer to the water shader.
 		std::shared_ptr<Shader> waterShader = nullptr;
+		/// Snow Texture ID
+        unsigned int snowTextureID = {};
+		/// Grass Texture ID
+        unsigned int grassTextureID = {};
+		/// Dirt Texture ID
+        unsigned int dirtTextureID = {};
+		/// Sand Texture ID
+        unsigned int sandTextureID = {};
+		/// Water Texture ID
+        unsigned int waterTextureID = {};
 
-		void GenerateWater(Model::Water& lake, int xcord, int zcord, const Key key);
+		void GenerateWater(Model::Water &lake, int xcord, int zcord, const Blue::Key key);
 		/**
 		 * @brief Generates texture coordinates.
 		 * @param reference to the terrain object.
 		 */
-		void GenerateTextureCords(std::vector<Vertex>& terrain);
+        void GenerateTextureCords(std::vector<Blue::Vertex> &terrain);
 		/**
 		 * @brief Generates verticies for terrains.
 		 * @param reference to the terrain object.
 		 * @param The max size across the x plane.
 		 * @param The max size across the z plane.
 		 */
-		void GenerateVerticies(std::vector<Vertex>& terrain, unsigned int xsize, unsigned int zsize);
+        void GenerateVerticies(std::vector<Blue::Vertex> &terrain, unsigned int xsize,
+                               unsigned int zsize);
 		/**
 		 * @brief Generates verticies for terrains.
 		 * @param reference to the terrain object.
 		 * @param the max size of the chunk.
 		 * @param The size of a chunk.
 		 */
-		void AddDetail(std::vector<Vertex>& terrain, const Key key, int maxSize, int chunkSize);
+        void AddDetail(std::vector<Blue::Vertex> &terrain, const Blue::Key key, int maxSize,
+                       int chunkSize);
 		/**
 		 * @brief Generates indicies for terrains.
 		 * @param reference to the terrain object.
@@ -89,6 +103,6 @@ namespace Controller {
 		 * @param the filename of the image of perlin noise.
 		 */
 		void LoadPerlinNoise(const string filename);
-		void GenerateNormals(std::vector<Vertex>& verticies, std::vector<unsigned int> indicies);
+        void GenerateNormals(std::vector<Blue::Vertex> &verticies, std::vector<unsigned int> indicies);
 	};
 }

@@ -6,7 +6,7 @@
 #include "Model/TerrainModel.hpp"
 #include "TerrainFactory.hpp"
 #include <string>
-#include "vertix.hpp"
+#include "Model/Vertix.hpp"
 #include <functional>
 
 namespace Controller {
@@ -58,11 +58,11 @@ namespace Controller {
 		/// The factory object that is used to generate terrain for the manager.
 		TerrainFactory factory = {};
 		/// The last position the camera was at.
-		Key lastPos = Key(999,999);
+        Blue::Key lastPos = Blue::Key(999, 999);
 		/// Draw list of chunks to be sent to the renderer.
 		std::vector<std::shared_ptr<Model::TerrainModel>> drawCircle = {};
 		/// Unordered map of shared pointers to terrain models for quick access.
-		std::unordered_map<Key, std::shared_ptr<Model::TerrainModel>, pair_hash> map = {};
+        std::unordered_map<Blue::Key, std::shared_ptr<Model::TerrainModel>, pair_hash> map = {};
 		
 		/**
 		 * @brief Pythatogrious function to determine the distance of 2 cartesian coordinates.
@@ -70,6 +70,6 @@ namespace Controller {
 		 * @param Key of the second square.
 		 * @return distance between the two keys.
 		 */
-		float Distance(const Key& left, const Key& right) const;
+        float Distance(const Blue::Key &left, const Blue::Key &right) const;
 	};
 }

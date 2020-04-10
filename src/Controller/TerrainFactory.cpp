@@ -10,10 +10,15 @@ void Controller::TerrainFactory::Init() {
     terrainShader = std::make_shared<Shader>("./shader/terrain_vert.vs", "./shader/terrain_frag.fs");
     waterShader = std::make_shared<Shader>("./shader/water_vert.vs", "./shader/water_frag.fs");
     LoadPerlinNoise(".//images//test2.jpg");
-    //lighting.GenerateLight(fValues);
+    this->tLoader.loadMaterialTextures("snow.jpg");
+    this->tLoader.loadMaterialTextures("grass2.png");
+    this->tLoader.loadMaterialTextures("dirt.jpg");
+    this->tLoader.loadMaterialTextures("sand.jpg");
+    this->tLoader.loadMaterialTextures("water.jpg");
 }
 
-void Controller::TerrainFactory::GenerateTerrain(Model::TerrainModel& newTerrain, int xcord, int zcord, const Key key) {
+void Controller::TerrainFactory::GenerateTerrain(Model::TerrainModel &newTerrain, int xcord,
+                                                 int zcord, const Blue::Key key) {
 
     int xsize = ChunkSize + 1;
     int zsize = ChunkSize + 1;
@@ -43,7 +48,8 @@ void Controller::TerrainFactory::GenerateTerrain(Model::TerrainModel& newTerrain
     CleanupChunk(newTerrain);
 }
 
-void Controller::TerrainFactory::GenerateWater(Model::Water& lake, int xcord, int zcord, const Key key) {
+void Controller::TerrainFactory::GenerateWater(Model::Water &lake, int xcord, int zcord,
+                                               const Blue::Key key) {
     int xsize = ChunkSize + 1;
     int zsize = ChunkSize + 1;
     GenerateVerticies(lake.verticies, xsize, zsize);
@@ -55,8 +61,9 @@ void Controller::TerrainFactory::GenerateWater(Model::Water& lake, int xcord, in
 
 }
 
-void Controller::TerrainFactory::GenerateVerticies(std::vector<Vertex>& terrain, unsigned int xsize, unsigned int zsize) {
-    Vertex vertex{};
+void Controller::TerrainFactory::GenerateVerticies(std::vector<Blue::Vertex> &terrain,
+                                                   unsigned int xsize, unsigned int zsize) {
+    Blue::Vertex vertex{};
     for (unsigned i = 0; i < xsize; ++i) {
         for (unsigned j = 0; j < zsize; ++j) {
             vertex.position.x = i;
@@ -80,7 +87,7 @@ void Controller::TerrainFactory::GenerateIndicies(std::vector<unsigned int>& ter
     }
 }
 
-void Controller::TerrainFactory::GenerateTextureCords(std::vector<Vertex>& terrain) {
+void Controller::TerrainFactory::GenerateTextureCords(std::vector<Blue::Vertex> &terrain) {
     unsigned int tracker = 0;
     unsigned int switcher = 0;
     float prevx = 0;
@@ -138,7 +145,8 @@ void Controller::TerrainFactory::GeneratePerlinNoise(int xsize, int zsize) {
     }
 }
 
-void Controller::TerrainFactory::AddDetail(std::vector<Vertex>& terrain, const Key key, int maxSize, int chunkSize) {
+void Controller::TerrainFactory::AddDetail(std::vector<Blue::Vertex> &terrain, const Blue::Key key,
+                                           int maxSize, int chunkSize) {
     int row = (maxSize / 2) + key.first * chunkSize;
     int max_row = row + chunkSize;
     int col = (maxSize / 2) + key.second * chunkSize;
@@ -200,13 +208,14 @@ int Controller::TerrainFactory::GetChunkSize() const {
     return this->ChunkSize;
 }
 
-void Controller::TerrainFactory::GenerateNormals(std::vector<Vertex>& verticies, std::vector<unsigned int> indicies) {
-    std::vector<Faces> faces;
+void Controller::TerrainFactory::GenerateNormals(std::vector<Blue::Vertex> &verticies,
+                                                 std::vector<unsigned int> indicies) {
+    std::vector<Blue::Faces> faces;
     using Pair = std::pair<unsigned int, size_t>;
     std::multimap<unsigned int, size_t> setFaces;
 
     for (size_t index = 0; index < indicies.size(); index += 3) {
-        faces.push_back(Faces{});
+        faces.push_back(Blue::Faces{});
         auto& face = faces.at(faces.size() - 1);
         face.indicies[0] = indicies.at(index);
         face.indicies[1] = indicies.at(index + 1);
