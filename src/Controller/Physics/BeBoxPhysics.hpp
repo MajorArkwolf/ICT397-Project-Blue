@@ -1,13 +1,14 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
 
-#include "BeAbstractCollision.hpp"
 #include "BeScalar.hpp"
 #include "BeTransform.hpp"
+#include "BeAbstractPhysics.hpp"
 
-class BeBoxBody : public BeAbstractCollision {
+class BeDynamicWorld;
+
+class BeBoxPhysics: public BeAbstractPhysics {
   public:
     /**
      *  @brief default constructor ~ creates a body
@@ -19,14 +20,14 @@ class BeBoxBody : public BeAbstractCollision {
      *  @param targetId the body id
      *  @return BeAbstractBody the collision body
      */
-    BeBoxBody(glm::vec3 position, glm::quat rotation, glm::vec3 extent,
-              BeCollisionWorld *world, beBodyId targetId);
+    BeBoxPhysics(glm::vec3 position, glm::quat rotation, glm::vec3 extent, beScalar mass,
+    BeDynamicWorld *world, beBodyId targetId);
 
     /**
      *  @brief concrete method for getting body
      *  @return might be naughty returning a react physics body
      */
-    rp3d::CollisionBody *GetBody() override;
+    rp3d::RigidBody *GetBody() override;
 
     /**
      *  @brief Setter ~ allows the collision body position to be updated
@@ -49,7 +50,6 @@ class BeBoxBody : public BeAbstractCollision {
      *  @return the body's id
      */
     beBodyId GetId() override;
-
   private:
     rp3d::BoxShape *shape;
 };

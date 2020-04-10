@@ -44,12 +44,13 @@ void PrototypeScene::Init() {
 
     settings.beSettings.isSleepingEnabled = false;
     settings.beSettings.defaultVelocitySolverNbIterations = 20;
-    world = new BeCollisionWorld(settings);
+    grav = glm::vec3(0, 9.11, 0);
+    world = new BeDynamicWorld(grav, settings);
     float *blah = new float[10];
     factory = new BeRP3DFactory();
     physics = new BePhysicsLibrary(factory);
-    cam = physics->CreateBody(camera.Position, glm::quat(1,0,0,1), glm::vec3(1,1,1),0, 0 ,0 ,0, world, blah, ShapeType::Box, 1);
-    body = physics->CreateBody(glm::vec3(0,0,0), glm::quat(1,0,0,1), glm::vec3(10,10,10), 0,0,0,0, world, blah, ShapeType::Box, 2);
+    cam = physics->CreateBody(camera.Position, glm::quat(1,0,0,1), glm::vec3(1,1,1), 1, 0, 0 ,0 ,0, world, blah, ShapeType::Box, 1);
+    body = physics->CreateBody(glm::vec3(0,0,0), glm::quat(1,0,0,1), glm::vec3(10,10,10), 1, 0,0,0,0, world, blah, ShapeType::Box, 2);
 
 }
 
@@ -142,6 +143,7 @@ auto PrototypeScene::display() -> void {
 
     cam->SetTransform(camera.Position, glm::quat(1,0,0,0));
     bool test = world->TestAABBOverlap(cam->GetBody(), body->GetBody());
+    std::cout << "Collision test: " << test << std::endl;
 }
 
 void PrototypeScene::unInit() {}

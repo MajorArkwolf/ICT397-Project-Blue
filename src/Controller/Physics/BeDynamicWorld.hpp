@@ -1,41 +1,45 @@
 #pragma once
 
-#include <iostream>
 #include <reactphysics3d.h>
+#include <glm/glm.hpp>
 
 #include "BeConfig.hpp"
 
-class BeAbstractCollision;
+class BeAbstractPhysics;
 
-class BeCollisionWorld {
+class BeDynamicWorld {
+
   public:
-    /**
-     *  @brief default constructor
-     *  @param
-     *  @return
-     */
-    BeCollisionWorld();
 
     /**
      *  @brief parameterised constructor
      *  @param worldSettings the settings of the world
      *  @return
      */
-    BeCollisionWorld(const BeSettings &worldSettings);
+    BeDynamicWorld();
 
     /**
-     *  @brief Getter for config
-     *  @param
-     *  @return settings for the world
+     *  @brief parameterised constructor
+     *  @param worldSettings the settings of the world
+     *  @return
      */
-    BeSettings GetConfig();
+    BeDynamicWorld(const glm::vec3 &gravity, const BeSettings &settings);
+
+
+    /**
+     *  @brief Getter for gravity
+     *  @param
+     *  @return gravity for the world
+     */
+    glm::vec3 GetGravity();
+
 
     /**
      *  @brief creates a collision body with the world's settings
      *  @param transform the position of the body
      *  @return a collision body
      */
-    rp3d::CollisionBody *CreateCollisionBody(rp3d::Transform transform);
+    rp3d::RigidBody *CreateRigidBody(rp3d::Transform transform);
 
     /**
      *  @brief AABB collision detector
@@ -43,7 +47,7 @@ class BeCollisionWorld {
      *  @param target2 collision body
      *  @return boolean of whether an object intersects with another
      */
-    bool TestAABBOverlap(rp3d::CollisionBody *body1, rp3d::CollisionBody *body2);
+    bool TestAABBOverlap(rp3d::RigidBody *body1, rp3d::RigidBody *body2);
 
     /**
      *  @brief AABB collision detector
@@ -51,7 +55,7 @@ class BeCollisionWorld {
      *  @param target2 collision body
      *  @return boolean of whether an object intersects with another
      */
-    bool TestAABBOverlap(BeAbstractCollision *target1, BeAbstractCollision *target2);
+    bool TestAABBOverlap(BeAbstractPhysics *target1, BeAbstractPhysics *target2);
 
     /**
      *  @brief collision detector
@@ -59,7 +63,7 @@ class BeCollisionWorld {
      *  @param target2 collision body
      *  @return boolean of whether an object intersects with another
      */
-    bool TestOverLap(rp3d::CollisionBody *body1, rp3d::CollisionBody *body2);
+    bool TestOverLap(rp3d::RigidBody *body1, rp3d::RigidBody *body2);
 
     /**
      *  @brief collision detector
@@ -67,9 +71,10 @@ class BeCollisionWorld {
      *  @param target2 collision body
      *  @return boolean of whether an object intersects with another
      */
-    bool TestOverLap(BeAbstractCollision *target1, BeAbstractCollision *target2);
+    bool TestOverLap(BeAbstractPhysics *target1, BeAbstractPhysics *target2);
 
   private:
-    BeSettings beConfig;
-    rp3d::CollisionWorld *beCollisionWorld;
+    BeSettings worldSettings;
+    rp3d::Vector3 *worldGravity;
+    rp3d::DynamicsWorld *bePhysicsWorld;
 };

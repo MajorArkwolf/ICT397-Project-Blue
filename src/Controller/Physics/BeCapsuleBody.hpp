@@ -3,9 +3,11 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
-#include "BeAbstractBody.hpp"
+#include "BeAbstractCollision.hpp"
 
-class BeCapsuleBody : public BeAbstractBody {
+class BeCollisionWorld;
+
+class BeCapsuleBody : public BeAbstractCollision {
   public:
     /**
      *  @brief default constructor ~ creates a body

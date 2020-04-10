@@ -1,32 +1,35 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
+#include <reactphysics3d.h>
 
-#include "BeAbstractCollision.hpp"
 #include "BeScalar.hpp"
 #include "BeTransform.hpp"
+#include "BeAbstractPhysics.hpp"
 
-class BeBoxBody : public BeAbstractCollision {
+class BeDynamicWorld;
+
+class BeSpherePhysics : public BeAbstractPhysics{
   public:
     /**
      *  @brief default constructor ~ creates a body
      *  @param position the position of the body
      *  @param rotation the orientation of the body
-     *  @param extent only used for BeBoxBody describes the size of the body
+     *  @param radius describes the radius of the sphere
      *  @param world the collision world
      *  @param type the type of body to be created
      *  @param targetId the body id
-     *  @return BeAbstractBody the collision body
+     *  @return
      */
-    BeBoxBody(glm::vec3 position, glm::quat rotation, glm::vec3 extent,
-              BeCollisionWorld *world, beBodyId targetId);
+    BeSpherePhysics(glm::vec3 position, glm::quat rotation, float mass, float radius,
+        BeDynamicWorld *world, beBodyId targetId);
 
     /**
-     *  @brief concrete method for getting body
-     *  @return might be naughty returning a react physics body
+     *  @brief Getter for config
+     *  @param
+     *  @return settings for the world
      */
-    rp3d::CollisionBody *GetBody() override;
+    rp3d::RigidBody *GetBody() override;
 
     /**
      *  @brief Setter ~ allows the collision body position to be updated
@@ -51,5 +54,5 @@ class BeBoxBody : public BeAbstractCollision {
     beBodyId GetId() override;
 
   private:
-    rp3d::BoxShape *shape;
+    rp3d::SphereShape *shape;
 };

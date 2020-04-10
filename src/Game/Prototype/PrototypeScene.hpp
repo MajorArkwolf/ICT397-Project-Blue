@@ -42,10 +42,11 @@ private:
     double getDeltaTime();
 
     BeSettings settings;
-    BeCollisionWorld *world;
+    glm::vec3  grav;
+    BeDynamicWorld *world;
     BeAbstractPhysicsFactory *factory;
     BeAbstractPhysicsLibrary *physics;
-    BeAbstractBody *cam;
-    BeAbstractBody *body;
+    BeAbstractPhysics *cam;
+    BeAbstractPhysics *body;
 
 };

@@ -1,32 +1,35 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
-
-#include "BeAbstractCollision.hpp"
 #include "BeScalar.hpp"
 #include "BeTransform.hpp"
+#include "BeAbstractPhysics.hpp"
 
-class BeBoxBody : public BeAbstractCollision {
+class BeDynamicWorld;
+
+class BeHeightPhysics : public BeAbstractPhysics{
   public:
     /**
      *  @brief default constructor ~ creates a body
      *  @param position the position of the body
      *  @param rotation the orientation of the body
-     *  @param extent only used for BeBoxBody describes the size of the body
+     *  @param width only used for BeHeightBody describes the width of the body
+     *  @param height describes the depth of the body
      *  @param world the collision world
+     *  @param terrain decribes the height of the body
      *  @param type the type of body to be created
      *  @param targetId the body id
-     *  @return BeAbstractBody the collision body
+     *  @return
      */
-    BeBoxBody(glm::vec3 position, glm::quat rotation, glm::vec3 extent,
-              BeCollisionWorld *world, beBodyId targetId);
+    BeHeightPhysics(glm::vec3 position, glm::quat rotation, float mass, int width, int height,
+        BeDynamicWorld *world, float *terrain, beBodyId targetId);
 
     /**
-     *  @brief concrete method for getting body
-     *  @return might be naughty returning a react physics body
+     *  @brief Getter for config
+     *  @param
+     *  @return settings for the world
      */
-    rp3d::CollisionBody *GetBody() override;
+    rp3d::RigidBody *GetBody() override;
 
     /**
      *  @brief Setter ~ allows the collision body position to be updated
@@ -51,5 +54,5 @@ class BeBoxBody : public BeAbstractCollision {
     beBodyId GetId() override;
 
   private:
-    rp3d::BoxShape *shape;
+    rp3d::HeightFieldShape *shape;
 };

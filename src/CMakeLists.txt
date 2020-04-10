@@ -8,7 +8,6 @@ target_sources(${PROJECT_NAME} PRIVATE
     Controller/Engine/LuaManager.cpp
     Controller/InputManager.cpp
     Controller/Engine/Engine.cpp
-    Controller/Physics/BeCollisionBody.cpp
     Controller/Physics/BeCollisionWorld.cpp
     Controller/Physics/BeQuaternion.cpp
     Controller/Physics/BeTransform.cpp
@@ -19,6 +18,11 @@ target_sources(${PROJECT_NAME} PRIVATE
     Controller/Physics/BePhysicsLibrary.cpp
     Controller/Physics/BeCapsuleBody.cpp
     Controller/Physics/BeSphereBody.cpp
+    Controller/Physics/BeDynamicWorld.cpp
+    Controller/Physics/BeBoxPhysics.cpp
+    Controller/Physics/BeCapsulePhysics.cpp
+    Controller/Physics/BeHeightPhysics.cpp
+    Controller/Physics/BeSpherePhysics.cpp
     
     # Model
     Model/Models/Mesh.cpp

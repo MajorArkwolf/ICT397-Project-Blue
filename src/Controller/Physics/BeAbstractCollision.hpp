@@ -7,7 +7,7 @@
 
 class BeCollisionWorld;
 
-class BeAbstractBody {
+class BeAbstractCollision {
   public:
     /**
      *  @brief abstract method for getting body

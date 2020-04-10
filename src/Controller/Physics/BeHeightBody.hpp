@@ -1,8 +1,8 @@
 #pragma once
 
-#include "BeAbstractBody.hpp"
+#include "BeAbstractCollision.hpp"
 
-class BeHeightBody : public BeAbstractBody {
+class BeHeightBody : public BeAbstractCollision {
   public:
     /**
      *  @brief default constructor ~ creates a body
