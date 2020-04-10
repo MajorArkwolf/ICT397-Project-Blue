@@ -4,17 +4,20 @@
 #include <glm/gtx/normal.hpp>
 #include <iostream>
 #include <map>
+#include <cassert>
 #include "stb_image.h"
+#include "View/Renderer/OpenGLProxy.hpp"
+
 
 void Controller::TerrainFactory::Init() {
     terrainShader = std::make_shared<Shader>("./shader/terrain_vert.vs", "./shader/terrain_frag.fs");
     waterShader = std::make_shared<Shader>("./shader/water_vert.vs", "./shader/water_frag.fs");
-    LoadPerlinNoise(".//images//test2.jpg");
-    this->tLoader.loadMaterialTextures("snow.jpg");
-    this->tLoader.loadMaterialTextures("grass2.png");
-    this->tLoader.loadMaterialTextures("dirt.jpg");
-    this->tLoader.loadMaterialTextures("sand.jpg");
-    this->tLoader.loadMaterialTextures("water.jpg");
+    LoadPerlinNoise(".//res//images//test2.jpg");
+    snowTextureID = BlueEngine::RenderCode::TextureFromFile("snow.jpg", "./res/images");
+    grassTextureID = BlueEngine::RenderCode::TextureFromFile("grass2.png", "./res/images");
+    dirtTextureID  = BlueEngine::RenderCode::TextureFromFile("dirt.jpg", "./res/images");
+    sandTextureID  = BlueEngine::RenderCode::TextureFromFile("sand.jpg", "./res/images");
+    waterTextureID = BlueEngine::RenderCode::TextureFromFile("water.jpg", "./res/images");
 }
 
 void Controller::TerrainFactory::GenerateTerrain(Model::TerrainModel &newTerrain, int xcord,
@@ -175,6 +178,7 @@ void Controller::TerrainFactory::CleanupChunk(Model::TerrainModel& terrain) {
 void Controller::TerrainFactory::LoadPerlinNoise(const string filename) {
     int width, height, nrComponents;
     const unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
+    assert(data != nullptr, "ERROR: Failed to LoadPerlinNoise from file\n");
     //Verify this frees
     stbi_image_free(0);
     fValues.resize(width + 1);
