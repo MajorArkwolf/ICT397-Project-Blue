@@ -5,9 +5,6 @@
 #include <stdexcept>
 #include <string>
 
-#include <SDL.h>
-#include <glad/glad.h>
-
 #include "BaseState.hpp"
 #include "GameStack.hpp"
 
@@ -28,22 +25,21 @@ using std::string;
 auto Engine::run() -> void {
     auto &engine = Engine::get();
 
-
     auto *prototype = new PrototypeScene();
     engine.gameStack.AddToStack(prototype);
 
     double t  = 0.0;
     double dt = 0.01;
 
-    double currentTime = engine.getTime();
+    double currentTime = glfwGetTime();
     double accumulator = 0.0;
 
     // State previous;
     // State current;
     // State state;
-
+    glfwFocusWindow(engine.window);
     while (engine.getIsRunning()) {
-        double newTime   = engine.getTime();
+        double newTime   = glfwGetTime();
         double frameTime = newTime - currentTime;
         if (frameTime > 0.25)
             frameTime = 0.25;
@@ -53,7 +49,7 @@ auto Engine::run() -> void {
 
         while (accumulator >= dt) {
             // previousState = currentState;
-            engine.processInput();
+            //engine.processInput();
             engine.gameStack.getTop()->update(t, dt);
             t += dt;
             accumulator -= dt;
@@ -65,9 +61,9 @@ auto Engine::run() -> void {
     }
 }
 
-GUIManager& BlueEngine::Engine::getGuiManager() {
-    return guiManager;
-}
+//GUIManager& BlueEngine::Engine::getGuiManager() {
+//    return guiManager;
+//}
 
 /**
  * @brief Game engine default constructor, sets up all variables and settings required for operation
@@ -75,72 +71,43 @@ GUIManager& BlueEngine::Engine::getGuiManager() {
 Engine::Engine() {
     getBasePath();
     // Start SDL.
-    auto status = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
-
-    if (status != 0) {
-        throw runtime_error{string{"Unable to initialize SDL: "} + SDL_GetError()};
+    if (!glfwInit()) {
+        // assert here
     }
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
+    glfwWindowHint(GLFW_FOCUS_ON_SHOW, GLFW_TRUE);
+    
 
-    // Set OpenGL settings.
-    SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
-    SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
-                        SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
-    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
-    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
-    SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
 #ifdef __APPLE__
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 32);
-#else
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,
+                   GL_TRUE); // uncomment this statement to fix compilation on OS X
 #endif
 
-    // Get display size.
-    auto display = SDL_DisplayMode{};
-    SDL_GetCurrentDisplayMode(0, &display);
-
-    // Create window.
-    this->window = Engine::Window{
-        SDL_CreateWindow("Project-Blue", display.w / 4, display.h / 4,
-                         display.w / 2, display.h / 2,
-                         SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI),
-        &SDL_DestroyWindow};
-
-    if (this->window.get() == nullptr) {
-        throw runtime_error{string{"Unable to create window: "} + SDL_GetError()};
+    // glfw window creation
+    // --------------------
+    window = glfwCreateWindow(800, 600, "Project Blue", NULL, NULL);
+    if (window == NULL) {
+        std::cout << "Failed to create GLFW window" << std::endl;
+        glfwTerminate();
     }
+    glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window, Engine::framebuffer_size_callback);
+    glfwSetCursorPosCallback(window, Engine::mouse_callback);
+    glfwSetScrollCallback(window, Engine::scroll_callback);
 
-    // Create OpenGL context.
-    this->context = Engine::Context{SDL_GL_CreateContext(this->window.get()),
-                                    &SDL_GL_DeleteContext};
+    // tell GLFW to capture our mouse
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    if (this->context.get() == nullptr) {
-        throw runtime_error{string{"Unable to create OpenGL context: "} +
-                            SDL_GetError()};
-    }
-
-    SDL_GL_MakeCurrent(this->window.get(), this->context.get());
-
-    // Enable Vsync.
-    constexpr auto ENABLE_VSYNC = 0;
-    SDL_GL_SetSwapInterval(ENABLE_VSYNC);
-
-    // Capture the mouse.
-    SDL_SetRelativeMouseMode(SDL_TRUE);
-
-    // Check OpenGL properties
-    // std::cout << "OpenGL loaded\n";
-    if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
+    // glad: load all OpenGL function pointers
+    // ---------------------------------------
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cout << "Failed to initialize GLAD" << std::endl;
     }
 
-    this->guiManager.initialiseImGUI(this->window.get(), this->context.get());
+    //this->guiManager.initialiseImGUI(this->window.get(), this->context.get());
 
 
 }
@@ -150,8 +117,7 @@ Engine::Engine() {
  * Safely closes Engine and frees memory
  */
 Engine::~Engine() {
-
-    SDL_Quit();
+    glfwTerminate();
 }
 
 /**
@@ -164,43 +130,86 @@ auto Engine::get() -> Engine & {
     return instance;
 }
 
-auto Engine::processInput() -> void {
-    auto event        = SDL_Event{};
-    auto handledMouse = true;
-    auto &inputManager = Controller::Input::InputManager::getInstance();
+//auto Engine::processInput() -> void {
+    //auto event        = SDL_Event{};
+    //auto handledMouse = true;
+    //auto &inputManager = Controller::Input::InputManager::getInstance();
 
-    while (SDL_PollEvent(&event)) {
-        if (event.key.keysym.scancode == SDL_SCANCODE_F11 && event.type == SDL_KEYDOWN) {
-            relativeMouseMode = relativeMouseMode ? SDL_FALSE : SDL_TRUE;
-            SDL_SetRelativeMouseMode(relativeMouseMode);
-        }
-        ImGui_ImplSDL2_ProcessEvent(&event);
-        gameStack.getTop()->handleInputData(inputManager.ProcessInput(event));
-    }
-    if (!handledMouse) {
-        this->mouse = {0.0f, 0.0f};
-    }
-}
+    //while (SDL_PollEvent(&event)) {
+    //    if (event.key.keysym.scancode == SDL_SCANCODE_F11 && event.type == SDL_KEYDOWN) {
+    //        relativeMouseMode = relativeMouseMode ? SDL_FALSE : SDL_TRUE;
+    //        SDL_SetRelativeMouseMode(relativeMouseMode);
+    //    }
+    //    ImGui_ImplSDL2_ProcessEvent(&event);
+    //    gameStack.getTop()->handleInputData(inputManager.ProcessInput(event));
+    //}
+    //if (!handledMouse) {
+    //    this->mouse = {0.0f, 0.0f};
+    //}
+//}
 
 auto Engine::getIsRunning() const -> bool {
     return this->isRunning;
 }
 
-auto Engine::endEngine() -> void {
+auto Engine::endEngine() -> void {    
+    glfwDestroyWindow(window);
     isRunning = false;
 }
 
-/**
- * @brief I DONT KNOW WHAT THIS DOES
- * @return What is this
- */
-auto Engine::getTime() const -> double {
-    return static_cast<double>(SDL_GetPerformanceCounter()) /
-           static_cast<double>(SDL_GetPerformanceFrequency());
+auto Engine::getBasePath() -> void {
+    //char *base_path = SDL_GetBasePath();
+    //basepath        = std::string(base_path);
+    //SDL_free(base_path);
 }
 
-auto Engine::getBasePath() -> void {
-    char *base_path = SDL_GetBasePath();
-    basepath        = std::string(base_path);
-    SDL_free(base_path);
+void Engine::processInput(GLFWwindow *window) {
+    auto &engine = BlueEngine::Engine::get();
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+        glfwSetWindowShouldClose(window, true);
+    }
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+        //camera.ProcessKeyboard(FORWARD, deltaTime);
+    }
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+        //camera.ProcessKeyboard(BACKWARD, deltaTime);
+    }
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+        //camera.ProcessKeyboard(LEFT, deltaTime);
+    }
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+        //camera.ProcessKeyboard(RIGHT, deltaTime);
+    }
+}
+
+// glfw: whenever the window size changed (by OS or user resize) this callback function executes
+// ---------------------------------------------------------------------------------------------
+void Engine::framebuffer_size_callback(GLFWwindow *window, int width, int height) {
+    // make sure the viewport matches the new window dimensions; note that width and
+    // height will be significantly larger than specified on retina displays.
+    glViewport(0, 0, width, height);
+}
+
+// glfw: whenever the mouse moves, this callback is called
+// -------------------------------------------------------
+void Engine::mouse_callback(GLFWwindow *window, double xpos, double ypos) {
+    auto &engine = BlueEngine::Engine::get();
+    if (engine.firstMouse) {
+        engine.lastX      = xpos;
+        engine.lastY      = ypos;
+        engine.firstMouse = false;
+    }
+
+    float xoffset = xpos - engine.lastX;
+    float yoffset = engine.lastY - ypos; // reversed since y-coordinates go from bottom to top
+
+    engine.lastX = xpos;
+    engine.lastY = ypos;
+    //camera.ProcessMouseMovement(xoffset, yoffset);
+}
+
+// glfw: whenever the mouse scroll wheel scrolls, this callback is called
+// ----------------------------------------------------------------------
+void Engine::scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
+    //camera.ProcessMouseScroll(yoffset);
 }

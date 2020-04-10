@@ -7,7 +7,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-//constexpr double M_PI = 3.14159265358979323846;
+constexpr double M_PI = 3.14159265358979323846;
 //constexpr float M_PI_F = static_cast<float>(M_PI);
 
 void BlueEngine::RenderCode::DrawModel(Shader shader, unsigned int &VAO,
@@ -137,11 +137,10 @@ unsigned int BlueEngine::RenderCode::TextureFromFile(const char *path, const std
 
 void BlueEngine::RenderCode::ResizeWindow() {
     auto &engine = BlueEngine::Engine::get();
-
-    int width = 0;
-    int height = 0;
-
-    SDL_GL_GetDrawableSize(engine.window.get(), &width, &height);
+    
+    //SDLFIX
+    int width = 800;
+    int height = 600;
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -151,14 +150,14 @@ void BlueEngine::RenderCode::ResizeWindow() {
 }
 
 void BlueEngine::RenderCode::HardInit() {
-    int width  = 0;
-    int height = 0;
+    int width  = 880;
+    int height = 660;
 
     glLoadIdentity();
     glLineWidth(1);
     auto &engine = BlueEngine::Engine::get();
-
-    SDL_GL_GetDrawableSize(engine.window.get(), &width, &height);
+    //SDLFIX
+    //SDL_GL_GetDrawableSize(engine.window.get(), &width, &height);
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -184,7 +183,7 @@ void BlueEngine::RenderCode::Display() {
 
 void BlueEngine::RenderCode::EndDisplay() {
     auto &engine = BlueEngine::Engine::get();
-    SDL_GL_SwapWindow(engine.window.get());
+    glfwSwapBuffers(engine.window);
 }
 
 void BlueEngine::RenderCode::gluPerspective(GLdouble fovy, GLdouble aspect, GLdouble zNear, GLdouble zFar) {

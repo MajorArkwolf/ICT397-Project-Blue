@@ -3,7 +3,9 @@
 #include <memory>
 #include <string>
 
-#include <SDL.h>
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
@@ -11,11 +13,13 @@
 #include "GameStack.hpp"
 #include "Controller/GUIManager.hpp"
 
+const unsigned int SCR_WIDTH  = 800;
+const unsigned int SCR_HEIGHT = 600;
+
 namespace BlueEngine {
     class Engine {
       public:
-        using Window  = std::shared_ptr<SDL_Window>;
-        using Context = std::shared_ptr<void>;
+        //using Window  = std::shared_ptr<SDL_Window>;
 
         static constexpr auto FPS_UPDATE_INTERVAL = 0.5;
 
@@ -23,8 +27,7 @@ namespace BlueEngine {
         glm::vec2 mouse = {};
 
         /* SDL handles. */
-        Window window   = nullptr;
-        Context context = nullptr;
+        GLFWwindow* window   = nullptr;
 
         /**
          * @brief The current FPS
@@ -32,17 +35,17 @@ namespace BlueEngine {
         double fps           = 0.0;
         std::string basepath = "";
 
-        auto getTime() const -> double;
-
       private:
         GameStack<BaseState *> gameStack;
-        GUIManager guiManager;
+        //GUIManager guiManager;
         bool isRunning = true;
-        SDL_bool relativeMouseMode = SDL_TRUE;
-
         auto getBasePath() -> void;
-
         Engine();
+
+        ///Testing values
+        float lastX     = SCR_WIDTH / 2.0f;
+        float lastY     = SCR_HEIGHT / 2.0f;
+        bool firstMouse = true;
 
       public:
         Engine(Engine &&)      = default;
@@ -55,7 +58,7 @@ namespace BlueEngine {
         static auto get() -> Engine &;
         static auto run() -> void;
 
-        GUIManager& getGuiManager();
+        //GUIManager& getGuiManager();
         /**
          * @brief Overloaded assignment operator, set to default overload
          */
@@ -70,6 +73,12 @@ namespace BlueEngine {
 
         auto endEngine() -> void;
 
-        auto processInput() -> void;
+        void processInput(GLFWwindow *window);
+
+        static void framebuffer_size_callback(GLFWwindow *window, int width, int height);
+
+        static void mouse_callback(GLFWwindow *window, double xpos, double ypos);
+
+        static void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
     };
 }

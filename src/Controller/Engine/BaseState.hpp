@@ -1,6 +1,5 @@
 #pragma once
 
-#include <SDL.h>
 #include "Controller/InputManager.hpp"
 
 /**
@@ -40,7 +39,7 @@ class BaseState {
      * All input events will be sent to the current gamestate at the top of the stack
      * @param inputData The InputData event that contains the user input
      */
-    virtual void handleInputData(Controller::Input::InputData inputData) = 0;
+    virtual void handleInputData() = 0;
 
     /**
      * @brief Virtual update function for updating physics within a gamestate
