@@ -75,10 +75,10 @@ namespace BlueEngine {
 
         void processInput(GLFWwindow *window);
 
-        static void framebuffer_size_callback(GLFWwindow *window, int width, int height);
+        static void framebuffer_size_callback(GLFWwindow *thisWindow, int width, int height);
 
-        static void mouse_callback(GLFWwindow *window, double xpos, double ypos);
+        static void mouse_callback(GLFWwindow *thisWindow, double xpos, double ypos);
 
-        static void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
+        static void scroll_callback(GLFWwindow *thisWindow, double xoffset, double yoffset);
     };
 }

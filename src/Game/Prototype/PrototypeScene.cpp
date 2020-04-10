@@ -16,7 +16,7 @@ PrototypeScene::PrototypeScene() {
     Init();
 }
 
-auto PrototypeScene::update(double t, double dt) -> void {
+auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
     if (moveForward) {
         camera.ProcessKeyboard(FORWARD, dt);
     }
@@ -140,7 +140,6 @@ auto PrototypeScene::display() -> void {
 void PrototypeScene::unInit() {}
 
 double PrototypeScene::getDeltaTime() {
-    auto &e      = BlueEngine::Engine::get();
     auto newTime = glfwGetTime();
     return (newTime - time);
 }

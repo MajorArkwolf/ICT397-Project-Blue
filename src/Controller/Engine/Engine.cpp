@@ -88,8 +88,8 @@ Engine::Engine() {
 
     // glfw window creation
     // --------------------
-    window = glfwCreateWindow(800, 600, "Project Blue", NULL, NULL);
-    if (window == NULL) {
+    window = glfwCreateWindow(800, 600, "Project Blue", nullptr, nullptr);
+    if (window == nullptr) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
     }
@@ -164,7 +164,7 @@ auto Engine::getBasePath() -> void {
     basepath = ".";
 }
 
-void Engine::processInput(GLFWwindow *window) {
+void Engine::processInput(GLFWwindow *thisWindow) {
     auto &engine = BlueEngine::Engine::get();
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
@@ -193,7 +193,7 @@ void Engine::framebuffer_size_callback(GLFWwindow *window, int width, int height
 
 // glfw: whenever the mouse moves, this callback is called
 // -------------------------------------------------------
-void Engine::mouse_callback(GLFWwindow *window, double xpos, double ypos) {
+void Engine::mouse_callback(GLFWwindow *thisWindow, double xpos, double ypos) {
     auto &engine = BlueEngine::Engine::get();
     if (engine.firstMouse) {
         engine.lastX      = xpos;
@@ -211,6 +211,6 @@ void Engine::mouse_callback(GLFWwindow *window, double xpos, double ypos) {
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
 // ----------------------------------------------------------------------
-void Engine::scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
+void Engine::scroll_callback(GLFWwindow *thisWindow, double xoffset, double yoffset) {
     //camera.ProcessMouseScroll(yoffset);
 }
