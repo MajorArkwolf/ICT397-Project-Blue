@@ -2,7 +2,7 @@
 
 #include <vector>
 #include "Model/Models/DataTypes.hpp"
-#include "View/Renderer/shader.hpp"
+#include "View/Renderer/Shader.hpp"
 
 namespace BlueEngine {
 	namespace RenderCode {

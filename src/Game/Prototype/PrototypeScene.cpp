@@ -1,7 +1,6 @@
 #include "PrototypeScene.hpp"
-
-#include <examples\imgui_impl_opengl3.cpp>
-#include <examples\imgui_impl_sdl.cpp>
+#include <examples/imgui_impl_opengl3.cpp>
+#include <examples/imgui_impl_sdl.cpp>
 #include <glm/glm.hpp>
 
 #include "Controller/Engine/Engine.hpp"

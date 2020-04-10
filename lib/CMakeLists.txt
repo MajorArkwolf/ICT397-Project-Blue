@@ -21,7 +21,7 @@ add_subdirectory(glm)
 add_subdirectory(glad)
 add_subdirectory(luabridge)
 add_subdirectory(react)
-set(ASSIMP_BUILD_TESTS off)
+set(ASSIMP_BUILD_TESTS OFF)
 add_subdirectory(assimp)
 # add_subdirectory(imgui)
 add_subdirectory(lua)
@@ -53,6 +53,3 @@ target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
     lua/src
     luabridge/Source
 )
-
-# Libraries for Win32 native and MinGW
-list(APPEND EXTRA_LIBS user32 gdi32 winmm imm32 ole32 oleaut32 version uuid advapi32 shell32)
