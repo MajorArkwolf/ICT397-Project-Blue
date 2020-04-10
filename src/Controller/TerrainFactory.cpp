@@ -10,8 +10,8 @@
 
 
 void Controller::TerrainFactory::Init() {
-    terrainShader = std::make_shared<Shader>("./shader/terrain_vert.vs", "./shader/terrain_frag.fs");
-    waterShader = std::make_shared<Shader>("./shader/water_vert.vs", "./shader/water_frag.fs");
+    terrainShader = std::make_shared<Shader>("./res/shader/terrain_vert.vs", "./res/shader/terrain_frag.fs");
+    waterShader = std::make_shared<Shader>("./res/shader/water_vert.vs", "./res/shader/water_frag.fs");
     LoadPerlinNoise(".//res//images//test2.jpg");
     snowTextureID = BlueEngine::RenderCode::TextureFromFile("snow.jpg", "./res/images");
     grassTextureID = BlueEngine::RenderCode::TextureFromFile("grass2.png", "./res/images");
