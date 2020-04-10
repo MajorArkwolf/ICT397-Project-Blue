@@ -12,7 +12,7 @@
 	url = https://github.com/MajorArkwolf/imgui.git
 [submodule "lib/lua"]
 	path = lib/lua
-	url = https://github.com/opeik/lua-cmake.git
+	url = https://github.com/MajorArkwolf/lua-cmake
 [submodule "lib/sdl2"]
 	path = lib/sdl2
 	url = https://github.com/spurious/SDL-mirror.git
