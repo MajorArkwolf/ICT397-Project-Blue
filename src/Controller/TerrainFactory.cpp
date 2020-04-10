@@ -14,7 +14,7 @@ void Controller::TerrainFactory::Init() {
     waterShader = std::make_shared<Shader>("./res/shader/water_vert.vs", "./res/shader/water_frag.fs");
     LoadPerlinNoise(".//res//images//test2.jpg");
     snowTextureID = BlueEngine::RenderCode::TextureFromFile("snow.jpg", "./res/images");
-    grassTextureID = BlueEngine::RenderCode::TextureFromFile("grass2.png", "./res/images");
+    grassTextureID = BlueEngine::RenderCode::TextureFromFile("grass.jpg", "./res/images");
     dirtTextureID  = BlueEngine::RenderCode::TextureFromFile("dirt.jpg", "./res/images");
     sandTextureID  = BlueEngine::RenderCode::TextureFromFile("sand.jpg", "./res/images");
     waterTextureID = BlueEngine::RenderCode::TextureFromFile("water.jpg", "./res/images");
@@ -46,7 +46,7 @@ void Controller::TerrainFactory::GenerateTerrain(Model::TerrainModel &newTerrain
     GenerateWater(newTerrain.water, xcord, zcord, key);
     newTerrain.water.position = glm::vec3{ xcord * ChunkSize , 105, zcord * ChunkSize };
     ///Load the textures for the model.
-    newTerrain.setTextures(1, 2, 3, 4);
+    newTerrain.setTextures(snowTextureID, grassTextureID, dirtTextureID, sandTextureID);
     ///Clean up the useless data to save room in ram.
     CleanupChunk(newTerrain);
 }
@@ -59,7 +59,7 @@ void Controller::TerrainFactory::GenerateWater(Model::Water &lake, int xcord, in
     GenerateIndicies(lake.indicies, xsize, zsize);
     GenerateTextureCords(lake.verticies);
     GenerateNormals(lake.verticies, lake.indicies);
-    lake.SetTexture(5);
+    lake.SetTexture(waterTextureID);
     lake.SetupModel();
 
 }

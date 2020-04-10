@@ -52,7 +52,7 @@ namespace Controller {
 		/// The max size a key can be to stop out of bound checks on the terrain.
 		size_t maxKey = 15;
 		/// How many chunks are rendered in a circle around a set position. Usually based on the camera.
-		int radSize = 99;
+		int radSize = 4;
 		/// How far the character can move inside the play area before a new chunk is laoded.
 		int reloadDistance = 1;
 		/// The factory object that is used to generate terrain for the manager.

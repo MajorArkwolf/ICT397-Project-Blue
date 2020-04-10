@@ -14,7 +14,6 @@ using Controller::Input::BLUE_InputType;
 
 PrototypeScene::PrototypeScene() {
     Init();
-    terrain.Init();
 }
 
 auto PrototypeScene::update(double t, double dt) -> void {
@@ -31,11 +30,13 @@ auto PrototypeScene::update(double t, double dt) -> void {
         camera.ProcessKeyboard(RIGHT, dt);
     }
     
-    terrain.Update(glm::ivec2(static_cast<int>(camera.Position.x), static_cast<int>(camera.Position.y)));
+    terrain.Update(camera.getLocation());
 }
 
 void PrototypeScene::Init() {
     BlueEngine::RenderCode::HardInit();
+    terrain.Init();
+    camera.Position.y = 100.0;
     camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
     //models.push_back(ModelManager::GetModelID("res/model/IronMan/IronMan.obj"));
 }
