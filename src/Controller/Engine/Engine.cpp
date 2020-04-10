@@ -12,6 +12,8 @@
 #include "GameStack.hpp"
 
 #include "Controller/InputManager.hpp"
+#include "Controller/GuiManager.hpp"
+
 
 // Game States
 #include "Game/Prototype/PrototypeScene.hpp"
@@ -60,6 +62,10 @@ auto Engine::run() -> void {
 
         engine.gameStack.getTop()->display();
     }
+}
+
+GUIManager& BlueEngine::Engine::getGuiManager() {
+    return guiManager;
 }
 
 /**
@@ -133,6 +139,8 @@ Engine::Engine() {
         std::cout << "Failed to initialize GLAD" << std::endl;
     }
 
+    this->guiManager.initialiseImGUI(this->window.get(), this->context.get());
+
 
 }
 
@@ -141,6 +149,7 @@ Engine::Engine() {
  * Safely closes Engine and frees memory
  */
 Engine::~Engine() {
+
     SDL_Quit();
 }
 
@@ -160,6 +169,11 @@ auto Engine::processInput() -> void {
     auto &inputManager = Controller::Input::InputManager::getInstance();
 
     while (SDL_PollEvent(&event)) {
+        if (event.key.keysym.scancode == SDL_SCANCODE_F11 && event.type == SDL_KEYDOWN) {
+            relativeMouseMode = relativeMouseMode ? SDL_FALSE : SDL_TRUE;
+            SDL_SetRelativeMouseMode(relativeMouseMode);
+        }
+        ImGui_ImplSDL2_ProcessEvent(&event);
         gameStack.getTop()->handleInputData(inputManager.ProcessInput(event));
     }
     if (!handledMouse) {

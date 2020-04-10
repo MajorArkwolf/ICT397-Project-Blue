@@ -1,5 +1,7 @@
 #include "PrototypeScene.hpp"
 
+#include <examples/imgui_impl_opengl3.cpp>
+#include <examples/imgui_impl_sdl.cpp>
 #include <glm/glm.hpp>
 
 #include "Controller/Engine/Engine.hpp"
@@ -41,7 +43,6 @@ void PrototypeScene::Init() {
     camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
     models.push_back( ModelManager::GetModelID("res/model/Test/city_residential_03.obj"));
 
-
     settings.beSettings.isSleepingEnabled = false;
     settings.beSettings.defaultVelocitySolverNbIterations = 20;
     grav = glm::vec3(0, 9.11, 0);
@@ -51,6 +52,7 @@ void PrototypeScene::Init() {
     physics = new BePhysicsLibrary(factory);
     cam = physics->CreateBody(camera.Position, glm::quat(1,0,0,1), glm::vec3(1,1,1), 1, 0, 0 ,0 ,0, world, blah, ShapeType::Box, 1);
     body = physics->CreateBody(glm::vec3(0,0,0), glm::quat(1,0,0,1), glm::vec3(10,10,10), 1, 0,0,0,0, world, blah, ShapeType::Box, 2);
+
 
 }
 
@@ -66,6 +68,7 @@ void PrototypeScene::handleWindowEvent(SDL_Event &event) {
 
 void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
     auto &engine      = BlueEngine::Engine::get();
+    auto &guiManager  = engine.getGuiManager();
     auto handledMouse = false;
     switch (inputData.inputType) {
         case BLUE_InputType::KEY_PRESS: { //  Key Press events
@@ -84,8 +87,7 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
                     moveRight = true;
                 } break;
                 case BLUE_InputAction::INPUT_ESCAPE: {
-                    auto &engine = BlueEngine::Engine::get();
-                    engine.endEngine();
+                    guiManager.toggleWindow("menu");
                 } break;
             }
 
@@ -124,6 +126,17 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
 }
 
 auto PrototypeScene::display() -> void {
+
+    auto &engine = BlueEngine::Engine::get();
+    auto &inputManager = Controller::Input::InputManager::getInstance();
+    auto &guiManager   = engine.getGuiManager();
+
+   /* ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplSDL2_NewFrame(stonk.window.get());*/
+    guiManager.startWindowFrame();
+    guiManager.displayInputRebindWindow();
+    guiManager.displayEscapeMenu();
+
     BlueEngine::RenderCode::Display();
     auto display = SDL_DisplayMode{};
     SDL_GetCurrentDisplayMode(0, &display);
@@ -136,9 +149,12 @@ auto PrototypeScene::display() -> void {
 
     glm::mat4 model = glm::mat4(5.0f);
 
-    Renderer::addToDraw(model, models[0]);
+     Renderer::addToDraw(model, models[0]);
 
     renderer.draw(view, projection);
+
+    guiManager.endWindowFrame();
+
     BlueEngine::RenderCode::EndDisplay();
 
     cam->SetTransform(camera.Position, glm::quat(1,0,0,0));

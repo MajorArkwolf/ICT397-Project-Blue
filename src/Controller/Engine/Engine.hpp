@@ -9,8 +9,11 @@
 
 #include "BaseState.hpp"
 #include "GameStack.hpp"
+
 #include "Controller/Physics/BeRP3DFactory.hpp"
 #include "Controller/Physics/BePhysicsLibrary.hpp"
+#include "Controller/GUIManager.hpp"
+
 
 namespace BlueEngine {
     class Engine {
@@ -37,7 +40,9 @@ namespace BlueEngine {
 
       private:
         GameStack<BaseState *> gameStack;
+        GUIManager guiManager;
         bool isRunning = true;
+        SDL_bool relativeMouseMode = SDL_TRUE;
 
         auto getBasePath() -> void;
 
@@ -54,6 +59,7 @@ namespace BlueEngine {
         static auto get() -> Engine &;
         static auto run() -> void;
 
+        GUIManager& getGuiManager();
         /**
          * @brief Overloaded assignment operator, set to default overload
          */

@@ -23,6 +23,8 @@ target_sources(${PROJECT_NAME} PRIVATE
     Controller/Physics/BeCapsulePhysics.cpp
     Controller/Physics/BeHeightPhysics.cpp
     Controller/Physics/BeSpherePhysics.cpp
+    Controller/GUIManager.cpp
+
     
     # Model
     Model/Models/Mesh.cpp

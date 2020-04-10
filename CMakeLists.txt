@@ -102,7 +102,7 @@ target_link_options(${PROJECT_NAME} PRIVATE
 )
 
 # Include and link against dependencies.
-target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL SDL2 SDL2main assimp glm glad lua LuaBridge reactphysics3d)
+target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL SDL2 SDL2main assimp glm glad lua LuaBridge reactphysics3d imgui)
 
 # ImGui OpenGL::GLU
 
