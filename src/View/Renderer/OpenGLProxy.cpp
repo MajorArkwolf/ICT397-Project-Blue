@@ -157,8 +157,6 @@ void BlueEngine::RenderCode::HardInit() {
     //glLineWidth(1);
     auto &engine = BlueEngine::Engine::get();
     glfwGetWindowSize(engine.window, &width, &height);
-    //SDLFIX
-    //SDL_GL_GetDrawableSize(engine.window.get(), &width, &height);
 
     //glMatrixMode(GL_PROJECTION);
     //glLoadIdentity();
