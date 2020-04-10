@@ -9,7 +9,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Mesh.hpp"
-#include "View/Renderer/shader.hpp"
+#include "View/Renderer/Shader.hpp"
 
 class Model {
   public:

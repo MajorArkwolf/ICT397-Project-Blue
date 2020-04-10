@@ -1,7 +1,7 @@
 
 # Add source files.
 target_sources(${PROJECT_NAME} PRIVATE
-    Main.cpp   
+    main.cpp
 
     # Controller
     # Controller/Engine/QuaternionCamera.cpp Not used, needs to be updated

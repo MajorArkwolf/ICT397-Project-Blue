@@ -7,7 +7,7 @@
 #include <glm/vec3.hpp>
 
 #include "Model/Models/DataTypes.hpp"
-#include "View/Renderer/shader.hpp"
+#include "View/Renderer/Shader.hpp"
 
 class Mesh {
   public:

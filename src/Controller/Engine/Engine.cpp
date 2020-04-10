@@ -12,7 +12,7 @@
 #include "GameStack.hpp"
 
 #include "Controller/InputManager.hpp"
-#include "Controller/GuiManager.hpp"
+#include "Controller/GUIManager.hpp"
 #include "Controller/ResourceManager.hpp"
 
 
