@@ -9,11 +9,15 @@ target_sources(${PROJECT_NAME} PRIVATE
     Controller/InputManager.cpp
     Controller/Engine/Engine.cpp
     Controller/GUIManager.cpp
+    Controller/TerrainFactory.cpp
+    Controller/TerrainManager.cpp
     
     # Model
     Model/Models/Mesh.cpp
     Model/Models/Model.cpp
     Model/Models/ModelManager.cpp
+    Model/TerrainModel.cpp
+    Model/WaterModel.cpp
 
     # View
     View/Renderer/Shader.cpp
