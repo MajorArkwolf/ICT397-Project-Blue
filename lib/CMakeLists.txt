@@ -25,7 +25,7 @@ option(GLFW_BUILD_DOCS OFF)
 option(GLFW_BUILD_TESTS OFF)
 option(GLFW_BUILD_EXAMPLES OFF)
 add_subdirectory(glfw)
-#add_subdirectory(imgui)
+add_subdirectory(imgui)
 
 # DLL's were a mistake.
 set_target_properties(reactphysics3d PROPERTIES ENABLE_EXPORTS ON)
