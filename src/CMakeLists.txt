@@ -3,7 +3,6 @@
 target_sources(${PROJECT_NAME} PRIVATE
     main.cpp
 
-    # Controller
     # Controller/Engine/QuaternionCamera.cpp Not used, needs to be updated
     Controller/Engine/LuaManager.cpp
     Controller/InputManager.cpp

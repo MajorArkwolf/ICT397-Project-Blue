@@ -69,7 +69,7 @@ add_subdirectory(src)
 if (MSVC)
     string(REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
     # Libraries for Win32 native and MinGW // Disabled as it breaks linux and is no longer needed
-    #list(APPEND EXTRA_LIBS vcruntime user32 gdi32 winmm imm32 ole32 oleaut32 version uuid)
+    # list(APPEND EXTRA_LIBS vcruntime user32 gdi32 winmm imm32 ole32 oleaut32 version uuid)
 endif()
 
 # Treat warnings as errors if enabled.
