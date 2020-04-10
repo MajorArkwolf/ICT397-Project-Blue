@@ -47,8 +47,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE  ${PROJECT_BINARY_DIR}/lib)
 # Define the executable.
 add_executable(${PROJECT_NAME})
 
-# Libraries for Win32 native and MinGW
-list(APPEND EXTRA_LIBS vcruntime user32 gdi32 winmm imm32 ole32 oleaut32 version uuid)
+
 
 # Set C++ standard.
 set_target_properties(${PROJECT_NAME} PROPERTIES
@@ -69,6 +68,8 @@ add_subdirectory(src)
 # Remove the default warning level from MSVC.
 if (MSVC)
     string(REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+    # Libraries for Win32 native and MinGW // Disabled as it breaks linux and is no longer needed
+    #list(APPEND EXTRA_LIBS vcruntime user32 gdi32 winmm imm32 ole32 oleaut32 version uuid)
 endif()
 
 # Treat warnings as errors if enabled.
@@ -102,9 +103,7 @@ target_link_options(${PROJECT_NAME} PRIVATE
 )
 
 # Include and link against dependencies.
-target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL SDL2 SDL2main assimp glm glad lua LuaBridge reactphysics3d)
-
-# ImGui OpenGL::GLU
+target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL SDL2 SDL2main assimp glm glad lua LuaBridge reactphysics3d imgui)
 
 # Symlink or copy the resources to the binary location.
 if (NOT DisablePostBuild)

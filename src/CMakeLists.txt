@@ -1,13 +1,14 @@
 
 # Add source files.
 target_sources(${PROJECT_NAME} PRIVATE
-    Main.cpp   
+    main.cpp
 
     # Controller
     # Controller/Engine/QuaternionCamera.cpp Not used, needs to be updated
     Controller/Engine/LuaManager.cpp
     Controller/InputManager.cpp
     Controller/Engine/Engine.cpp
+    Controller/GUIManager.cpp
     
     # Model
     Model/Models/Mesh.cpp
