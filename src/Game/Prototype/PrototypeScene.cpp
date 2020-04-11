@@ -1,4 +1,5 @@
 #include "PrototypeScene.hpp"
+
 #include <glm/glm.hpp>
 
 #include "Controller/Engine/Engine.hpp"
@@ -30,25 +31,22 @@ auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
 }
 
 void PrototypeScene::Init() {
+    auto &resManager = ResourceManager::getInstance();
     BlueEngine::RenderCode::HardInit();
     camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
-     models.push_back(ModelManager::GetModelID("res/model/player_male.obj"));
+    models.push_back(resManager.getModelID("res/model/player_male.obj"));
 }
 
 void PrototypeScene::handleWindowEvent() {
-    //switch (event.window.event) {
-    //    case SDL_WINDOWEVENT_SIZE_CHANGED:
-    //    case SDL_WINDOWEVENT_RESIZED: {
-    //        BlueEngine::RenderCode::ResizeWindow();
-    //    } break;
-    //    default: break;
-    //}
+    BlueEngine::RenderCode::ResizeWindow();
 }
-//SDLFIX
+
+// SDLFIX
 void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
     auto &engine      = BlueEngine::Engine::get();
     auto &guiManager  = engine.getGuiManager();
     auto handledMouse = false;
+
     switch (inputData.inputType) {
         case BLUE_InputType::KEY_PRESS: { //  Key Press events
 
@@ -68,6 +66,7 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
                 case BLUE_InputAction::INPUT_ESCAPE: {
                     guiManager.toggleWindow("menu");
                 } break;
+                default: break;
             }
 
         } break;
@@ -85,6 +84,7 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
                 case BLUE_InputAction::INPUT_MOVE_RIGHT: {
                     moveRight = false;
                 } break;
+                default: break;
             }
         } break;
         case BLUE_InputType::MOUSE_MOTION: { // Mouse motion event
@@ -98,9 +98,13 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
 
         } break;
         case BLUE_InputType::MOUSE_WHEEL: { // Mouse Wheel event
-            int amountScrolledY = inputData.mouseWheelMotion;
+            double amountScrolledY = static_cast<double>(inputData.mouseWheelMotion);
             camera.ProcessMouseScroll(amountScrolledY);
-        }
+        } break;
+        case BLUE_InputType::WINDOW_RESIZE: {
+            this->handleWindowEvent();
+        } break;
+        default: break;
     }
     if (!handledMouse) {
         engine.mouse = {0.0f, 0.0f};
@@ -108,28 +112,28 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
 }
 
 auto PrototypeScene::display() -> void {
-    //SDLFIX
+    // SDLFIX
     auto &engine = BlueEngine::Engine::get();
     BlueEngine::RenderCode::Display();
-    auto &inputManager = Controller::Input::InputManager::getInstance();
-    auto &guiManager   = engine.getGuiManager();
+    auto &guiManager = engine.getGuiManager();
 
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     guiManager.startWindowFrame();
     guiManager.displayInputRebindWindow();
     guiManager.displayEscapeMenu();
+    guiManager.displayInstructionMenu();
     int width = 0, height = 0;
     glfwGetWindowSize(engine.window, &width, &height);
     // view/projection transformations
-    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom),
-                         static_cast<double>(width) / static_cast<double>(height),
-                                            0.1, 100000.0);
-    glm::mat4 view       = camera.GetViewMatrix();
+    glm::mat4 projection =
+        glm::perspective(glm::radians(camera.Zoom),
+                         static_cast<double>(width) / static_cast<double>(height), 0.1, 100000.0);
+    glm::mat4 view = camera.GetViewMatrix();
 
     glm::mat4 model = glm::mat4(5.0f);
 
-     Renderer::addToDraw(model, models[0]);
+    Renderer::addToDraw(model, models[0]);
 
     renderer.draw(view, projection);
 
