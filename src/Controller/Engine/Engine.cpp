@@ -10,6 +10,7 @@
 
 #include "Controller/InputManager.hpp"
 #include "Controller/GUIManager.hpp"
+#include "Controller/ResourceManager.hpp"
 
 
 
@@ -39,6 +40,7 @@ auto Engine::run() -> void {
     // State current;
     // State state;
     glfwFocusWindow(engine.window);
+    ResourceManager::getInstance().loadResources();
     while (engine.getIsRunning()) {
         double newTime   = glfwGetTime();
         double frameTime = newTime - currentTime;
@@ -191,5 +193,5 @@ auto Engine::getBasePath() -> void {
     //char *base_path = SDL_GetBasePath();
     //basepath        = std::string(base_path);
     //SDL_free(base_path);
-    basepath = ".";
+    basepath = "./";
 }

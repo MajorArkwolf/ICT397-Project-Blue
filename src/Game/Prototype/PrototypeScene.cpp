@@ -30,9 +30,10 @@ auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
 }
 
 void PrototypeScene::Init() {
+    auto &resManager = ResourceManager::getInstance();
     BlueEngine::RenderCode::HardInit();
     camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
-     models.push_back(ModelManager::GetModelID("res/model/player_male.obj"));
+     models.push_back(resManager.getModelID("res/model/player_male.obj"));
 }
 
 void PrototypeScene::handleWindowEvent() {
@@ -119,6 +120,7 @@ auto PrototypeScene::display() -> void {
     guiManager.startWindowFrame();
     guiManager.displayInputRebindWindow();
     guiManager.displayEscapeMenu();
+    guiManager.displayInstructionMenu();
     int width = 0, height = 0;
     glfwGetWindowSize(engine.window, &width, &height);
     // view/projection transformations
