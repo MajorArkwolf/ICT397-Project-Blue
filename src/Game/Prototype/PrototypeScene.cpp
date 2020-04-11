@@ -1,6 +1,4 @@
 #include "PrototypeScene.hpp"
-#include <examples/imgui_impl_opengl3.cpp>
-#include <examples/imgui_impl_sdl.cpp>
 #include <glm/glm.hpp>
 
 #include "Controller/Engine/Engine.hpp"
@@ -16,7 +14,7 @@ PrototypeScene::PrototypeScene() {
     Init();
 }
 
-auto PrototypeScene::update(double t, double dt) -> void {
+auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
     if (moveForward) {
         camera.ProcessKeyboard(FORWARD, dt);
     }
@@ -38,19 +36,19 @@ void PrototypeScene::Init() {
     terrain.Init();
     camera.Position.y = 100.0;
     camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
-    //models.push_back(ModelManager::GetModelID("res/model/IronMan/IronMan.obj"));
+     models.push_back(ModelManager::GetModelID("res/model/player_male.obj"));
 }
 
-void PrototypeScene::handleWindowEvent(SDL_Event &event) {
-    switch (event.window.event) {
-        case SDL_WINDOWEVENT_SIZE_CHANGED:
-        case SDL_WINDOWEVENT_RESIZED: {
-            BlueEngine::RenderCode::ResizeWindow();
-        } break;
-        default: break;
-    }
+void PrototypeScene::handleWindowEvent() {
+    //switch (event.window.event) {
+    //    case SDL_WINDOWEVENT_SIZE_CHANGED:
+    //    case SDL_WINDOWEVENT_RESIZED: {
+    //        BlueEngine::RenderCode::ResizeWindow();
+    //    } break;
+    //    default: break;
+    //}
 }
-
+//SDLFIX
 void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
     auto &engine      = BlueEngine::Engine::get();
     auto &guiManager  = engine.getGuiManager();
@@ -94,11 +92,14 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
             }
         } break;
         case BLUE_InputType::MOUSE_MOTION: { // Mouse motion event
-            auto x = static_cast<float>(inputData.mouseMotionRelative.x);
-            auto y = static_cast<float>(inputData.mouseMotionRelative.y);
-            y      = y * -1.0f;
-            camera.ProcessMouseMovement(x, y);
-            handledMouse = true;
+            if (engine.getMouseMode() == false) {
+                auto x = static_cast<float>(inputData.mouseMotionRelative.x);
+                auto y = static_cast<float>(inputData.mouseMotionRelative.y);
+                y      = y * -1.0f;
+                camera.ProcessMouseMovement(x, y);
+                handledMouse = true;
+            }
+
         } break;
         case BLUE_InputType::MOUSE_WHEEL: { // Mouse Wheel event
             int amountScrolledY = inputData.mouseWheelMotion;
@@ -111,24 +112,22 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
 }
 
 auto PrototypeScene::display() -> void {
-
+    //SDLFIX
     auto &engine = BlueEngine::Engine::get();
+    BlueEngine::RenderCode::Display();
     auto &inputManager = Controller::Input::InputManager::getInstance();
     auto &guiManager   = engine.getGuiManager();
 
-   /* ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplSDL2_NewFrame(stonk.window.get());*/
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
     guiManager.startWindowFrame();
     guiManager.displayInputRebindWindow();
     guiManager.displayEscapeMenu();
-
-    BlueEngine::RenderCode::Display();
-    auto display = SDL_DisplayMode{};
-    SDL_GetCurrentDisplayMode(0, &display);
+    int width = 0, height = 0;
+    glfwGetWindowSize(engine.window, &width, &height);
     // view/projection transformations
     glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom),
-                                            static_cast<double>(display.w) /
-                                                static_cast<double>(display.h),
+                         static_cast<double>(width) / static_cast<double>(height),
                                             0.1, 100000.0);
     glm::mat4 view       = camera.GetViewMatrix();
 
@@ -146,7 +145,6 @@ auto PrototypeScene::display() -> void {
 void PrototypeScene::unInit() {}
 
 double PrototypeScene::getDeltaTime() {
-    auto &e      = BlueEngine::Engine::get();
-    auto newTime = e.getTime();
+    auto newTime = glfwGetTime();
     return (newTime - time);
 }

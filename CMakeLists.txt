@@ -47,8 +47,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE  ${PROJECT_BINARY_DIR}/lib)
 # Define the executable.
 add_executable(${PROJECT_NAME})
 
-
-
 # Set C++ standard.
 set_target_properties(${PROJECT_NAME} PROPERTIES
     CXX_STANDARD 17
@@ -57,7 +55,8 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 # Find dependencies.
-find_package(OpenGL REQUIRED COMPONENTS OpenGL)
+# find_package(OpenGL REQUIRED COMPONENTS OpenGL)
+find_package(OpenGL REQUIRED)
 
 # Build 3rd Party Liberaries
 add_subdirectory(lib)
@@ -103,7 +102,8 @@ target_link_options(${PROJECT_NAME} PRIVATE
 )
 
 # Include and link against dependencies.
-target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL SDL2 SDL2main assimp glm glad lua LuaBridge reactphysics3d imgui)
+target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL glfw assimp glm lua LuaBridge reactphysics3d glad imgui)
+#  ${GLFW_LIBRARIES}
 
 # Symlink or copy the resources to the binary location.
 if (NOT DisablePostBuild)
@@ -111,15 +111,9 @@ if (NOT DisablePostBuild)
         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                 COMMAND ${CMAKE_COMMAND} -E create_symlink
                 ${CMAKE_SOURCE_DIR}/res $<TARGET_FILE_DIR:${PROJECT_NAME}>/res)
-        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-                COMMAND ${CMAKE_COMMAND} -E create_symlink
-                ${CMAKE_SOURCE_DIR}/scripts $<TARGET_FILE_DIR:${PROJECT_NAME}>/scripts)
     else()
         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                 COMMAND ${CMAKE_COMMAND} -E copy_directory
                 ${CMAKE_SOURCE_DIR}/res $<TARGET_FILE_DIR:${PROJECT_NAME}>/res)
-        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-                COMMAND ${CMAKE_COMMAND} -E copy_directory
-                ${CMAKE_SOURCE_DIR}/scripts $<TARGET_FILE_DIR:${PROJECT_NAME}>/scripts)
     endif()
 endif()

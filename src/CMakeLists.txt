@@ -26,7 +26,13 @@ target_sources(${PROJECT_NAME} PRIVATE
 
     # Game
     Game/SceneManager.cpp
-    Game/Prototype/PrototypeScene.cpp  
+    Game/Prototype/PrototypeScene.cpp
+
+
+
+    #IMGUI
+    View/ImGui/imgui_impl_glfw.cpp
+    View/ImGui/imgui_impl_opengl3.cpp
 )
 
 # Include project header files.
