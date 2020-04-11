@@ -1,6 +1,4 @@
 #include "PrototypeScene.hpp"
-//#include <examples/imgui_impl_opengl3.cpp>
-//#include <examples/imgui_impl_glfw.cpp>
 #include <glm/glm.hpp>
 
 #include "Controller/Engine/Engine.hpp"
@@ -90,11 +88,14 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
             }
         } break;
         case BLUE_InputType::MOUSE_MOTION: { // Mouse motion event
-            auto x = static_cast<float>(inputData.mouseMotionRelative.x);
-            auto y = static_cast<float>(inputData.mouseMotionRelative.y);
-            y      = y * -1.0f;
-            camera.ProcessMouseMovement(x, y);
-            handledMouse = true;
+            if (engine.getMouseMode() == false) {
+                auto x = static_cast<float>(inputData.mouseMotionRelative.x);
+                auto y = static_cast<float>(inputData.mouseMotionRelative.y);
+                y      = y * -1.0f;
+                camera.ProcessMouseMovement(x, y);
+                handledMouse = true;
+            }
+
         } break;
         case BLUE_InputType::MOUSE_WHEEL: { // Mouse Wheel event
             int amountScrolledY = inputData.mouseWheelMotion;

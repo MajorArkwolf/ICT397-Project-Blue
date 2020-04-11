@@ -4,18 +4,18 @@
 #include <string>
 
 #include <glad/glad.h>
+//
 #include <GLFW/glfw3.h>
 
 #define GLEQ_IMPLEMENTATION
 #define GLEQ_STATIC
-#include "gleq.h"
-
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
 #include "BaseState.hpp"
-#include "GameStack.hpp"
 #include "Controller/GUIManager.hpp"
+#include "GameStack.hpp"
+#include "gleq.h"
 
 const unsigned int SCR_WIDTH  = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -29,7 +29,7 @@ namespace BlueEngine {
         glm::vec2 mouse = {};
 
         /* GLFW handles. */
-        GLFWwindow* window   = nullptr;
+        GLFWwindow *window = nullptr;
 
         /**
          * @brief The current FPS
@@ -44,7 +44,7 @@ namespace BlueEngine {
         auto getBasePath() -> void;
         Engine();
 
-        ///Testing values
+        /// Testing values
         float lastX     = SCR_WIDTH / 2.0f;
         float lastY     = SCR_HEIGHT / 2.0f;
         bool firstMouse = true;
@@ -64,7 +64,7 @@ namespace BlueEngine {
          */
         static auto run() -> void;
 
-        GUIManager& getGuiManager();
+        GUIManager &getGuiManager();
         /**
          * @brief Overloaded assignment operator, set to default overload
          */
@@ -80,5 +80,9 @@ namespace BlueEngine {
         auto endEngine() -> void;
 
         void processInput();
+
+        bool getMouseMode();
+
+        void setMouseMode(bool mode);
     };
 }

@@ -13,8 +13,16 @@ namespace Controller::Input {
     }
 
     InputData InputManager::ProcessInput(GLEQevent &event) {
+        auto &engine = BlueEngine::Engine::get();
         // Handle input data from event
         InputData inputEvent;
+        int width, height;
+        glfwGetWindowSize(engine.window, &width, &height);
+
+
+        static glm::vec2 currentMousePos{width/2,height/2};
+
+
 
         switch (event.type) {
             case GLEQ_KEY_PRESSED: {
@@ -23,13 +31,18 @@ namespace Controller::Input {
             case GLEQ_KEY_RELEASED: {
                 inputEvent.inputType = BLUE_InputType::KEY_RELEASE;
             } break;
-            /*case SDL_MOUSEMOTION: {
+            case GLEQ_CURSOR_MOVED: {
+                glm::vec2 prevMousePos{currentMousePos};
+
+                currentMousePos.x = event.pos.x;
+                currentMousePos.y = event.pos.y;
+
                 inputEvent.inputType             = BLUE_InputType::MOUSE_MOTION;
-                inputEvent.mouseMotionRelative.x = event.motion.xrel;
-                inputEvent.mouseMotionRelative.y = event.motion.yrel;
-                inputEvent.mouseMotionAbsolute.x = event.motion.x;
-                inputEvent.mouseMotionAbsolute.y = event.motion.y;
-            } break;*/
+                inputEvent.mouseMotionRelative.x = currentMousePos.x - prevMousePos.x;
+                inputEvent.mouseMotionRelative.y = currentMousePos.y - prevMousePos.y;
+                inputEvent.mouseMotionAbsolute.x = event.pos.x;
+                inputEvent.mouseMotionAbsolute.y = event.pos.y;
+            } break;
             case GLEQ_BUTTON_PRESSED: {
                 inputEvent.inputType = BLUE_InputType::MOUSE_BUTTONDOWN;
             } break;

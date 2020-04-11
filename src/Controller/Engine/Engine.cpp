@@ -100,7 +100,7 @@ Engine::Engine() {
     glfwMakeContextCurrent(window);
     
     // tell GLFW to capture our mouse
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
@@ -139,17 +139,13 @@ auto Engine::processInput() -> void {
     while (gleqNextEvent(&event)) {
         switch (event.type) {
             case GLEQ_KEY_PRESSED: {
-                std::cout << event.keyboard.key << ' ' << GLFW_KEY_F11;
                 if (event.keyboard.key == GLFW_KEY_F11) {
- 
                     auto mouseMode = glfwGetInputMode(window, GLFW_CURSOR);
-
                     if (mouseMode == GLFW_CURSOR_NORMAL) {
                         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
                     } else {
                         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
                     }                     
-
                 }
             } break;
             case GLEQ_WINDOW_CLOSED: {
@@ -157,16 +153,28 @@ auto Engine::processInput() -> void {
             }
         }
 
-        //if (event.key.keysym.scancode == SDL_SCANCODE_F11 && event.type == SDL_KEYDOWN) {
-        //    relativeMouseMode = relativeMouseMode ? SDL_FALSE : SDL_TRUE;
-        //    SDL_SetRelativeMouseMode(relativeMouseMode);
-        //}
-        //ImGui_ImplSDL2_ProcessEvent(&event);
         gameStack.getTop()->handleInputData(inputManager.ProcessInput(event));
         gleqFreeEvent(&event);
     }
     if (!handledMouse) {
         this->mouse = {0.0f, 0.0f};
+    }
+}
+
+bool BlueEngine::Engine::getMouseMode() {
+    auto mouseMode = glfwGetInputMode(window, GLFW_CURSOR);
+    if (mouseMode == GLFW_CURSOR_NORMAL) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+void BlueEngine::Engine::setMouseMode(bool mode) {
+    if (mode == true) {
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    } else {
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 }
 
