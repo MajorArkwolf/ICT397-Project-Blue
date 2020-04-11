@@ -56,7 +56,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 
 # Find dependencies.
 # find_package(OpenGL REQUIRED COMPONENTS OpenGL)
-find_package(OpenGL REQUIRED)
+#find_package(OpenGL REQUIRED)
 
 # Build 3rd Party Liberaries
 add_subdirectory(lib)
@@ -102,7 +102,7 @@ target_link_options(${PROJECT_NAME} PRIVATE
 )
 
 # Include and link against dependencies.
-target_link_libraries(${PROJECT_NAME} PUBLIC OpenGL::GL glfw assimp glm lua LuaBridge reactphysics3d glad imgui)
+target_link_libraries(${PROJECT_NAME} PRIVATE glfw assimp glm lua LuaBridge reactphysics3d glad imgui)
 #  ${GLFW_LIBRARIES}
 
 # Symlink or copy the resources to the binary location.
