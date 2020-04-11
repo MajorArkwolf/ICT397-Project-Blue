@@ -7,9 +7,6 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-//constexpr double M_PI = 3.14159265358979323846;
-//constexpr float M_PI_F = static_cast<float>(M_PI);
-
 void BlueEngine::RenderCode::DrawModel(Shader shader, unsigned int &VAO,
                const std::vector<Texture> &textures,
                const std::vector<unsigned int> &indices) {
@@ -41,7 +38,7 @@ void BlueEngine::RenderCode::DrawModel(Shader shader, unsigned int &VAO,
 
     // draw mesh
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, static_cast<int>(indices.size()), GL_UNSIGNED_INT, nullptr);
     glBindVertexArray(0);
 
     // always good practice to set everything back to defaults once configured.
@@ -59,33 +56,33 @@ void BlueEngine::RenderCode::SetupMesh(unsigned int &VAO, unsigned int &VBO, uns
     // load data into vertex buffers
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex),
+    glBufferData(GL_ARRAY_BUFFER, static_cast<unsigned int>(vertices.size()) * sizeof(Vertex),
                  &vertices[0], GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int),
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<unsigned int>(indices.size()) * sizeof(unsigned int),
                  &indices[0], GL_STATIC_DRAW);
 
     // set the vertex attribute pointers
     // vertex Positions
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void *>(0));
     // vertex normals
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          (void *)offsetof(Vertex, Normal));
+                          reinterpret_cast<void*>(offsetof(Vertex, Normal)));
     // vertex texture coords
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          (void *)offsetof(Vertex, TexCoords));
+                          reinterpret_cast<void *>(offsetof(Vertex, TexCoords)));
     // vertex tangent
     glEnableVertexAttribArray(3);
     glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          (void *)offsetof(Vertex, Tangent));
+                          reinterpret_cast<void *>(offsetof(Vertex, Tangent)));
     // vertex bitangent
     glEnableVertexAttribArray(4);
     glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          (void *)offsetof(Vertex, Bitangent));
+                          reinterpret_cast<void *>(offsetof(Vertex, Bitangent)));
 
     glBindVertexArray(0);
 }
@@ -136,35 +133,36 @@ unsigned int BlueEngine::RenderCode::TextureFromFile(const char *path, const std
 }
 
 void BlueEngine::RenderCode::ResizeWindow() {
-    auto &engine = BlueEngine::Engine::get();
+    //auto &engine = BlueEngine::Engine::get();
+    
+    //SDLFIX
 
-    int width = 0;
-    int height = 0;
+    //May no longer be needed here
 
-    SDL_GL_GetDrawableSize(engine.window.get(), &width, &height);
+    //int width = 800;
+    //int height = 600;
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glViewport(0, 0, width, height);
-    gluPerspective(60, width/height, 1, 300);
-    glMatrixMode(GL_MODELVIEW);
+    //glMatrixMode(GL_PROJECTION);
+    //glLoadIdentity();
+    //glViewport(0, 0, width, height);
+    //gluPerspective(60, width/height, 1, 300);
+    //glMatrixMode(GL_MODELVIEW);
 }
 
 void BlueEngine::RenderCode::HardInit() {
     int width  = 0;
     int height = 0;
 
-    glLoadIdentity();
-    glLineWidth(1);
+    //glLoadIdentity();
+    //glLineWidth(1);
     auto &engine = BlueEngine::Engine::get();
+    glfwGetWindowSize(engine.window, &width, &height);
 
-    SDL_GL_GetDrawableSize(engine.window.get(), &width, &height);
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
+    //glMatrixMode(GL_PROJECTION);
+    //glLoadIdentity();
     glViewport(0, 0, width, height);
-    gluPerspective(60, width / height, 1, 300);
-    glMatrixMode(GL_MODELVIEW);
+    //gluPerspective(60, width / height, 1, 300);
+    //glMatrixMode(GL_MODELVIEW);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -184,17 +182,8 @@ void BlueEngine::RenderCode::Display() {
 
 void BlueEngine::RenderCode::EndDisplay() {
     auto &engine = BlueEngine::Engine::get();
-    SDL_GL_SwapWindow(engine.window.get());
+    glfwSwapBuffers(engine.window);
 }
 
-void BlueEngine::RenderCode::gluPerspective(GLdouble fovy, GLdouble aspect, GLdouble zNear, GLdouble zFar) {
-    GLdouble xmin, xmax, ymin, ymax;
 
-    ymax = zNear * tan(fovy * M_PI / 360.0);
-    ymin = -ymax;
-    xmin = ymin * aspect;
-    xmax = ymax * aspect;
-
-    glFrustum(xmin, xmax, ymin, ymax, zNear, zFar);
-}
 

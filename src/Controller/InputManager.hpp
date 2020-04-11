@@ -1,9 +1,14 @@
 #pragma once
 
-#include <SDL.h>
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
 #include <map>
 #include <string>
 #include <vector>
+
+#define GLEQ_IMPLEMENTATION
+#define GLEQ_STATIC
+#include "gleq.h"
 
 #include <glm/vec2.hpp>
 
@@ -41,7 +46,7 @@ namespace Controller {
              * @return An InputData struct containing the information required to act on user input for a scene
              */
 
-            InputData ProcessInput(SDL_Event &event);
+            InputData ProcessInput(GLEQevent &event);
 
             /*
              * @brief Reads the lua script that can be used to map particular keys to particular actions
@@ -57,7 +62,7 @@ namespace Controller {
              * @brief Returns a reference to the input map
              * @return A const reference to the input map
              */
-            std::map<BLUE_InputAction, SDL_Scancode> &getInputMap();
+            std::map<BLUE_InputAction, int> &getInputMap();
 
             /*
              * @brief Creates all pairings between strings and sdl scancodes, and strings and input actions
@@ -68,20 +73,20 @@ namespace Controller {
              * @brief Gets a const reference to the vector of pairs linking strings to scancodes
              * @return A const reference to the vector of pairs linking strings to scancodes
              */
-            const std::vector<std::pair<std::string, SDL_Scancode>> &getStringScancodePairs() const;
+            const std::vector<std::pair<std::string, int>> &getStringScancodePairs() const;
             /*
              * @brief Hashes an input string to an SDL_Scancode enum
              * @param value  The string to convert to an SDL_Scancode enum if the equivalent exists
              * @return An SDL scancode
              */
-            SDL_Scancode hashStringToScancode(const std::string &value) const;
+            int hashStringToGLFWKey(const std::string &value) const;
 
             /*
              * @brief Hashes an SDL scancode to a string
              * @param value The SDL Scancode to convert to a string
              * @return A string representing thethe SDL scancode
              */
-            std::string hashScancodeToString(const SDL_Scancode &value) const;
+            std::string hashGLFWKeyToString(const int value) const;
 
             /*
              * @brief Hashes an input string to an SDL_Scancode enum
@@ -94,11 +99,11 @@ namespace Controller {
              * @brief Binds an action to a particular key given the action, the
              * lua table to read from, and the text to search for.
              */
-            void bindKey(BLUE_InputAction, SDL_Scancode);
+            void bindKey(BLUE_InputAction action, int key);
 
           private:
             /// A map containing key value pairs between a game action and a particular key
-            std::map<BLUE_InputAction, SDL_Scancode> InputMap;
+            std::map<BLUE_InputAction, int> InputMap;
 
             /*
              * @brief Reads the lua table containing the input mappings
@@ -140,8 +145,8 @@ namespace Controller {
              */
             void populateInputMap();
 
-            /// A vector of pairs linking together a string and an SDL Scancode
-            std::vector<std::pair<std::string, SDL_Scancode>> stringScancodePairs;
+            /// A vector of pairs linking together a string and a GLFW key
+            std::vector<std::pair<std::string, int>> stringScancodePairs;
             /// A vector of pairs linking a string and an input action
             std::vector<std::pair<std::string, BLUE_InputAction>> stringActionPairs;
         };
