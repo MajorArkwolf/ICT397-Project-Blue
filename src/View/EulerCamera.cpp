@@ -86,3 +86,7 @@ void Camera::updateCameraVectors() {
     // closer to 0 the more you look up or down which results in slower movement.
     Up = glm::normalize(glm::cross(Right, Front));
 }
+
+glm::ivec2 Camera::getLocation() {
+    return glm::ivec2(static_cast<int>(Position.x), static_cast<int>(Position.z));
+}

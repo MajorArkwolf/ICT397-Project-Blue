@@ -6,6 +6,7 @@
 #include "View/Renderer/Renderer.hpp"
 #include "View/EulerCamera.hpp"
 #include "Controller/InputManager.hpp"
+#include "Controller/TerrainManager.hpp"
 
 class PrototypeScene : public BaseState {
 public:
@@ -26,6 +27,7 @@ public:
 private:
     std::vector<size_t> models;
     Renderer renderer;
+    Controller::TerrainManager terrain = {};
 
     //SDLFIX SDL_Event &event
     void handleWindowEvent();
