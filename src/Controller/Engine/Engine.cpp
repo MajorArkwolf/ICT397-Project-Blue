@@ -145,7 +145,7 @@ auto Engine::processInput() -> void {
         }
         switch (event.type) {
             case GLEQ_KEY_PRESSED: {
-                if (event.keyboard.key == GLFW_KEY_F11) {
+                if (event.keyboard.key == GLFW_KEY_F1) {
                     auto mouseMode = glfwGetInputMode(window, GLFW_CURSOR);
                     if (mouseMode == GLFW_CURSOR_NORMAL) {
                         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
