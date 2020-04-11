@@ -70,10 +70,10 @@ auto Engine::run() -> void {
  */
 Engine::Engine() {
     getBasePath();
-    // Start SDL.
     if (!glfwInit()) {
         std::cerr << "GLFW FAILED TO INIT \n";
     }
+    gleqInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -93,11 +93,9 @@ Engine::Engine() {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
     }
+    gleqTrackWindow(window);
     glfwMakeContextCurrent(window);
-    glfwSetFramebufferSizeCallback(window, Engine::framebuffer_size_callback);
-    glfwSetCursorPosCallback(window, Engine::mouse_callback);
-    glfwSetScrollCallback(window, Engine::scroll_callback);
-
+    
     // tell GLFW to capture our mouse
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -162,55 +160,4 @@ auto Engine::getBasePath() -> void {
     //basepath        = std::string(base_path);
     //SDL_free(base_path);
     basepath = ".";
-}
-
-void Engine::processInput(GLFWwindow *thisWindow) {
-    auto &engine = BlueEngine::Engine::get();
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-        glfwSetWindowShouldClose(window, true);
-    }
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-        //camera.ProcessKeyboard(FORWARD, deltaTime);
-    }
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-        //camera.ProcessKeyboard(BACKWARD, deltaTime);
-    }
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-        //camera.ProcessKeyboard(LEFT, deltaTime);
-    }
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-        //camera.ProcessKeyboard(RIGHT, deltaTime);
-    }
-}
-
-// glfw: whenever the window size changed (by OS or user resize) this callback function executes
-// ---------------------------------------------------------------------------------------------
-void Engine::framebuffer_size_callback(GLFWwindow *window, int width, int height) {
-    // make sure the viewport matches the new window dimensions; note that width and
-    // height will be significantly larger than specified on retina displays.
-    glViewport(0, 0, width, height);
-}
-
-// glfw: whenever the mouse moves, this callback is called
-// -------------------------------------------------------
-void Engine::mouse_callback(GLFWwindow *thisWindow, double xpos, double ypos) {
-    auto &engine = BlueEngine::Engine::get();
-    if (engine.firstMouse) {
-        engine.lastX      = xpos;
-        engine.lastY      = ypos;
-        engine.firstMouse = false;
-    }
-
-    float xoffset = xpos - engine.lastX;
-    float yoffset = engine.lastY - ypos; // reversed since y-coordinates go from bottom to top
-
-    engine.lastX = xpos;
-    engine.lastY = ypos;
-    //camera.ProcessMouseMovement(xoffset, yoffset);
-}
-
-// glfw: whenever the mouse scroll wheel scrolls, this callback is called
-// ----------------------------------------------------------------------
-void Engine::scroll_callback(GLFWwindow *thisWindow, double xoffset, double yoffset) {
-    //camera.ProcessMouseScroll(yoffset);
 }

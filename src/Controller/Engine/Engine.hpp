@@ -5,6 +5,9 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#define GLEQ_IMPLEMENTATION
+#define GLEQ_STATIC
+#include "gleq.h"
 
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
@@ -19,14 +22,12 @@ const unsigned int SCR_HEIGHT = 600;
 namespace BlueEngine {
     class Engine {
       public:
-        //using Window  = std::shared_ptr<SDL_Window>;
-
         static constexpr auto FPS_UPDATE_INTERVAL = 0.5;
 
         /* Mouse movement. */
         glm::vec2 mouse = {};
 
-        /* SDL handles. */
+        /* GLFW handles. */
         GLFWwindow* window   = nullptr;
 
         /**
@@ -74,11 +75,5 @@ namespace BlueEngine {
         auto endEngine() -> void;
 
         void processInput(GLFWwindow *window);
-
-        static void framebuffer_size_callback(GLFWwindow *thisWindow, int width, int height);
-
-        static void mouse_callback(GLFWwindow *thisWindow, double xpos, double ypos);
-
-        static void scroll_callback(GLFWwindow *thisWindow, double xoffset, double yoffset);
     };
 }
