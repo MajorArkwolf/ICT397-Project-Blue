@@ -54,6 +54,10 @@ namespace Controller::Input {
                 inputEvent.mouseWheelMotion = event.scroll.y;
                 
             } break;
+            case GLEQ_WINDOW_RESIZED: {
+                inputEvent.inputType = BLUE_InputType::WINDOW_RESIZE;
+            }
+            default: break;
         }
 
         switch (inputEvent.inputType) {

@@ -152,6 +152,9 @@ auto Engine::processInput() -> void {
             } break;
             case GLEQ_WINDOW_CLOSED: {
                 this->endEngine();
+            } break;
+            case GLEQ_WINDOW_RESIZED: {
+
             }
         }
 
