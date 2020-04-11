@@ -24,5 +24,5 @@ class GameObj_Static : virtual public GameObject_Base {
 			 * @see GameObject_Base
 			 */
 		GameObj_Static(std::string path, glm::vec3 position, glm::vec3 look_at, glm::vec3 look_up)
-			: GameObject_Base(path);
+			: GameObject_Base(path, position, look_at, look_up);
 };

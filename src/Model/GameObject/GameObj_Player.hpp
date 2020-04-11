@@ -26,7 +26,8 @@ class GameObj_Player : virtual public GameObject_Base {
 			 * @param [in] look_up The point where GameObject is looking up, relative to its position.
 			 * @see GameObject_Base
 			 */
-		GameObj_Player(std::string path, glm::vec3 position, glm::vec3 look_at, glm::vec3 look_up) : GameObject_Base(path);
+		GameObj_Player(std::string path, glm::vec3 position, glm::vec3 look_at, glm::vec3 look_up)
+			: GameObject_Base(path, position, look_at, look_up);
 
 			/*!
 			 * @brief Assigns a status (with a value) to the player.
