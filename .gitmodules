@@ -7,9 +7,6 @@
 [submodule "lib/imgui"]
 	path = lib/imgui
 	url = https://github.com/MajorArkwolf/imgui.git
-[submodule "lib/lua"]
-	path = lib/lua
-	url = https://github.com/MajorArkwolf/lua-cmake.git
 [submodule "lib/glm"]
 	path = lib/glm
 	url = https://github.com/g-truc/glm.git
