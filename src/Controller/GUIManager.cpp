@@ -29,6 +29,7 @@ void GUIManager::displayInputRebindWindow() {
     auto &inputMap     = inputManager.getInputMap();
     bool &windowOpen   = windowOpenMap.at("controls");
     auto &resManager   = ResourceManager::getInstance();
+    auto *state        = inputManager.getKeyStates();
 
     if (windowOpen) {
     
@@ -54,10 +55,10 @@ void GUIManager::displayInputRebindWindow() {
                     if (ImGui::Button(scancodeString.c_str())) {
                         auto &scancodePairs = inputManager.getStringScancodePairs();
                         for (auto &i : scancodePairs) {
-                            /*if (state[i.second]) {
+                            if (state[i.second]) {
                                 inputManager.bindKey(n.first, i.second);
                                 break;
-                            }*/
+                            }
                         }
                     }
 
