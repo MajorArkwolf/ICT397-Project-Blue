@@ -37,3 +37,18 @@ std::size_t GameObject_Base::gameObj_getModel() {
 	// Return a copy of the stored path
 	return model_path;
 }
+
+GameObjectType GameObject_Base::registerTypeID() {
+	// Keep track of the IDs already assigned
+	static GameObjectType idCount = std::numeric_limits<GameObjectType>::min();
+
+	// Catch the overflow of the tracked IDs
+	if (idCount == std::numeric_limits<GameObjectType>::max())
+	{
+		// Return the minimum ID value to indicate an error
+		return std::numeric_limits<GameObjectType>::min();
+	}
+
+	// Generate the ID
+	return ++idCount;
+}

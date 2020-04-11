@@ -9,6 +9,14 @@ GameObj_Player::GameObj_Player(std::string path, glm::vec3 position, glm::vec3 l
 	// GameObj_Player has no unique attributes to initialise yet
 }
 
+GameObjectType GameObj_Player::gameObj_getType() const {
+	// Keep track of this class's identifier for its type
+	static const GameObjectType classID = gameObj_getType();
+
+	// Return a copy of the tracked id
+	return classID;
+}
+
 GameObj_Player::status_assign(std::string key, float value) {
 	// Perform the operation on the map
 	player_statuses[key] = value;

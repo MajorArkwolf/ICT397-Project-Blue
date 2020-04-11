@@ -6,6 +6,9 @@
 	/// External Dependencies
 #include <glm/glm.hpp>
 
+	//! Declaration of the type for identifying different GameObject classes.
+using GameObjectType = unsigned int;
+
 	//! The parent class for all child GameObjects.
 class GameObject_Base
 {
@@ -60,4 +63,11 @@ private:
 		 * @note Defaults to the lowest possible value for the ID type.
 		 */
 	std::size_t gameObj_modelId;
+
+		/*!
+		 * @brief Registers an identifying value for the GameObject's class.
+		 * @return A unique value of GameObjectType, or the lowest possible value of GameObjectType on error.
+		 * @warning Should only be called by an inheritor's gameObj_getType()!
+		 */
+	static GameObjectType registerTypeID();
 };

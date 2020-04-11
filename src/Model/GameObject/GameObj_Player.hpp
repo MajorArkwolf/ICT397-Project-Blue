@@ -30,6 +30,12 @@ class GameObj_Player : virtual public GameObject_Base {
 			: GameObject_Base(path, position, look_at, look_up);
 
 			/*!
+			 * @brief Identifies the GameObject's type.
+			 * @return A unique identifying value for the GameObj_Player class.
+			 */
+		static GameObjectType gameObj_getType() const;
+
+			/*!
 			 * @brief Assigns a status (with a value) to the player.
 			 * @param [in] key The string to identify the status by.
 			 * @param [in] value The value to assign to the status.

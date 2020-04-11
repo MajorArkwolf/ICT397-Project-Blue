@@ -10,13 +10,13 @@ GameAssetFactory::GameObject(std::string type) {
 	// Process the provided type key
 	switch (type)
 	{
-	case (Constants::GAMEOBJ_STATIC):
+	case (GameObj_Static::gameObj_getType()):
 		return new GameObj_Static();
 
-	case (Constants::GAMEOBJ_PLAYER):
-		return new GameObj_Static();
+	case (GameObj_Player::gameObj_getType()):
+		return new GameObj_Player();
 
-	case (Constants::GAMEOBJ_OBJ):
+	case (GameObj_NPC::gameObj_getType()):
 		return new GameObj_NPC();
 
 	default:
