@@ -15,21 +15,16 @@ add_compile_options(
     # Visual Studio
     $<$<CXX_COMPILER_ID:MSVC>:/W0>
 )
-
-
 add_subdirectory(glm)
-add_subdirectory(glad)
+add_subdirectory(lua)
 add_subdirectory(luabridge)
 add_subdirectory(react)
-set(ASSIMP_BUILD_TESTS OFF)
 add_subdirectory(assimp)
-# add_subdirectory(imgui)
-add_subdirectory(lua)
-set(SDL_STATIC OFF)
-set(SDL_DYNAMIC ON)
-set(SDL_SHARED ON)
-set(BUILD_SHARED_LIBS ON)
-add_subdirectory(sdl2)
+add_subdirectory(glad)
+option(GLFW_BUILD_DOCS OFF)
+option(GLFW_BUILD_TESTS OFF)
+option(GLFW_BUILD_EXAMPLES OFF)
+add_subdirectory(glfw)
 add_subdirectory(imgui)
 
 # DLL's were a mistake.
@@ -40,16 +35,17 @@ set_target_properties(reactphysics3d PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
 set_target_properties(assimp PROPERTIES DEBUG_POSTFIX "")
 set_target_properties(glad PROPERTIES DEBUG_POSTFIX "")
 set_target_properties(reactphysics3d PROPERTIES DEBUG_POSTFIX "")
-set_target_properties(SDL2 PROPERTIES DEBUG_POSTFIX "")
-set_target_properties(SDL2main PROPERTIES DEBUG_POSTFIX "")
+set_target_properties(glfw PROPERTIES DEBUG_POSTFIX "")
+
 
 # Ignore warnings from library headers.
 target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
-    sdl2/include
-    sdl2/src
+    glfw/include
+    glfw/src
     assimp/include
     react/src
     glad/include
+    glad/src
     lua/src
     luabridge/Source
 )

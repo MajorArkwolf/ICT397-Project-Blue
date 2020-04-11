@@ -19,14 +19,16 @@ public:
     void unInit() override;
 
     double time = 0;
+    
     void handleInputData(Controller::Input::InputData inputData);
+    Camera camera;
 
 private:
     std::vector<size_t> models;
     Renderer renderer;
-    Camera camera;
 
-    void handleWindowEvent(SDL_Event &event);
+    //SDLFIX SDL_Event &event
+    void handleWindowEvent();
 
     bool moveForward = false;
     bool moveBackward = false;
