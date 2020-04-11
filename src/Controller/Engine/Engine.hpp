@@ -53,10 +53,14 @@ namespace BlueEngine {
         Engine(const Engine &) = delete;
         ~Engine();
 
-        // This variable will hold the game stack
-        // Game *thegame = nullptr;
-
+        /**
+         * @brief Getter to the engine variables.
+         * @return Engine by reference
+         */
         static auto get() -> Engine &;
+        /**
+         * @brief The game engine main loop
+         */
         static auto run() -> void;
 
         //GUIManager& getGuiManager();
