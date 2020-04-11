@@ -61,6 +61,6 @@ namespace Model {
 		/// Texture ID's
 		unsigned int textureID = 0, textureID2 = 0, textureID3 = 0, textureID4 = 0;
 		/// Water
-		Model::Water water = {};
+		Water water = {};
 	};
 }

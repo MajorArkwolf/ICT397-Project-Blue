@@ -1,8 +1,8 @@
 #include "GUIManager.hpp"
 
-#include <Controller/Engine/Engine.hpp>
-#include <Controller/InputManager.hpp>
-#include <Controller/Enums.hpp>
+#include "Controller/Engine/Engine.hpp""
+#include "Controller/InputManager.hpp"
+#include "Model/TextManager.hpp"
 
 GUIManager::GUIManager() {
     initialiseWindowOpenMap();
@@ -27,13 +27,12 @@ void GUIManager::initialiseImGUI(GLFWwindow *window) {
 void GUIManager::displayInputRebindWindow() {
     auto &inputManager = Controller::Input::InputManager::getInstance();
     auto &inputMap     = inputManager.getInputMap();
-    //const Uint8 *state = SDL_GetKeyboardState(NULL);
     bool &windowOpen   = windowOpenMap.at("controls");
+    auto &resManager   = ResourceManager::getInstance();
 
-    // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
     if (windowOpen) {
     
-     ImGui::Begin("Controls", &windowOpenMap.at("controls"),
+     ImGui::Begin(resManager.getString("ControlMenu_title").c_str(), &windowOpenMap.at("controls"),
                      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
         ImGui::Text("Click on a button while holding a key to map an action to that key");
         ImGui::Separator();
@@ -72,18 +71,38 @@ void GUIManager::displayInputRebindWindow() {
 }
 
 void GUIManager::displayEscapeMenu() {
-    bool &windowOpen = windowOpenMap.at("menu");
     // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
+    bool &windowOpen = windowOpenMap.at("menu");
+    auto &resManager = ResourceManager::getInstance();
+
     if (windowOpen) {
-        ImGui::Begin("Menu", &windowOpen, ImGuiWindowFlags_NoCollapse);
+        ImGui::SetNextWindowPos(ImVec2(0.5,0.5), ImGuiCond_Always, ImVec2(-0.5,-0.5));
+        ImGui::Begin(resManager.getString("OptionMenu_title").c_str(), &windowOpen,
+                     ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize);
         if (ImGui::Button("Controls")) {
             auto &isControlsOpen = windowOpenMap.at("controls");
+            isControlsOpen       = isControlsOpen ? false : true;
+        }
+        if (ImGui::Button("Instructions")) {
+            auto &isControlsOpen = windowOpenMap.at("instructions");
             isControlsOpen       = isControlsOpen ? false : true;
         }
         if (ImGui::Button("Exit")) {
             auto &engine = BlueEngine::Engine::get();
             engine.endEngine();
         }
+        ImGui::End();
+    }
+}
+
+void GUIManager::displayInstructionMenu() {
+    auto &resManager = ResourceManager::getInstance();
+    // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
+    bool &windowOpen = windowOpenMap.at("instructions");
+    if (windowOpen) {
+        ImGui::Begin(resManager.getString("InstructionMenu_title").c_str(), &windowOpen,
+                     ImGuiWindowFlags_NoCollapse);
+        ImGui::Text(resManager.getString("InstructionMenu_instructions").c_str());
         ImGui::End();
     }
 }
@@ -109,4 +128,5 @@ void GUIManager::toggleWindow(std::string windowName) {
 void GUIManager::initialiseWindowOpenMap() {
     windowOpenMap.insert(std::make_pair(std::string("menu"), true));
     windowOpenMap.insert(std::make_pair(std::string("controls"), false));
+    windowOpenMap.insert(std::make_pair(std::string("instructions"), false));
 }

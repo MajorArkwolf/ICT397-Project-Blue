@@ -40,6 +40,11 @@ class GUIManager {
     void displayEscapeMenu();
 
     /**
+     * @brief Displays the instruction menu
+     */
+    void displayInstructionMenu();
+
+    /**
      * @brief Starts an Imgui Window frame, must be called at the beginning of a display loop
      */
     void startWindowFrame();

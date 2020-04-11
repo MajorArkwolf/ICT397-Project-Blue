@@ -8,6 +8,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     Controller/InputManager.cpp
     Controller/Engine/Engine.cpp
     Controller/GUIManager.cpp
+    Controller/ResourceManager.cpp
     Controller/TerrainFactory.cpp
     Controller/TerrainManager.cpp
     
@@ -17,6 +18,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     Model/Models/ModelManager.cpp
     Model/TerrainModel.cpp
     Model/WaterModel.cpp
+    Model/TextManager.cpp
 
     # View
     View/Renderer/Shader.cpp
