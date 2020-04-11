@@ -19,8 +19,8 @@ public:
     void unInit() override;
 
     double time = 0;
-    //SDLFIX Controller::Input::InputData inputData
-    void handleInputData();
+    
+    void handleInputData(Controller::Input::InputData inputData);
     Camera camera;
 
 private:

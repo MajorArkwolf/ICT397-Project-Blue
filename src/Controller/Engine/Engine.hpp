@@ -6,7 +6,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-
+#define GLEQ_IMPLEMENTATION
+#define GLEQ_STATIC
+#include "gleq.h"
 
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
@@ -37,7 +39,7 @@ namespace BlueEngine {
 
       private:
         GameStack<BaseState *> gameStack;
-        //GUIManager guiManager;
+        GUIManager guiManager;
         bool isRunning = true;
         auto getBasePath() -> void;
         Engine();
@@ -62,7 +64,7 @@ namespace BlueEngine {
          */
         static auto run() -> void;
 
-        //GUIManager& getGuiManager();
+        GUIManager& getGuiManager();
         /**
          * @brief Overloaded assignment operator, set to default overload
          */

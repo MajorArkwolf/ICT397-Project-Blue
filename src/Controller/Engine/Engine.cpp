@@ -11,9 +11,7 @@
 #include "Controller/InputManager.hpp"
 #include "Controller/GUIManager.hpp"
 
-#define GLEQ_IMPLEMENTATION
-#define GLEQ_STATIC
-#include "gleq.h"
+
 
 // Game States
 #include "Game/Prototype/PrototypeScene.hpp"
@@ -52,6 +50,7 @@ auto Engine::run() -> void {
 
         while (accumulator >= dt) {
             // previousState = currentState;
+            glfwPollEvents();
             engine.processInput();
             engine.gameStack.getTop()->update(t, dt);
             t += dt;
@@ -62,11 +61,12 @@ auto Engine::run() -> void {
 
         engine.gameStack.getTop()->display();
     }
+    glfwDestroyWindow(engine.window);
 }
 
-//GUIManager& BlueEngine::Engine::getGuiManager() {
-//    return guiManager;
-//}
+GUIManager& BlueEngine::Engine::getGuiManager() {
+    return guiManager;
+}
 
 /**
  * @brief Game engine default constructor, sets up all variables and settings required for operation
@@ -100,7 +100,7 @@ Engine::Engine() {
     glfwMakeContextCurrent(window);
     
     // tell GLFW to capture our mouse
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
@@ -108,7 +108,7 @@ Engine::Engine() {
         std::cout << "Failed to initialize GLAD" << std::endl;
     }
 
-    //this->guiManager.initialiseImGUI(this->window.get(), this->context.get());
+    this->guiManager.initialiseImGUI(window);
 
 
 }
@@ -132,17 +132,38 @@ auto Engine::get() -> Engine & {
 }
 
 auto Engine::processInput() -> void {
-    auto event        = GLEQevent{};
+    GLEQevent event;
     auto handledMouse = true;
-    //auto &inputManager = Controller::Input::InputManager::getInstance();
+    auto &inputManager = Controller::Input::InputManager::getInstance();
 
     while (gleqNextEvent(&event)) {
+        switch (event.type) {
+            case GLEQ_KEY_PRESSED: {
+                std::cout << event.keyboard.key << ' ' << GLFW_KEY_F11;
+                if (event.keyboard.key == GLFW_KEY_F11) {
+ 
+                    auto mouseMode = glfwGetInputMode(window, GLFW_CURSOR);
+
+                    if (mouseMode == GLFW_CURSOR_NORMAL) {
+                        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+                    } else {
+                        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+                    }                     
+
+                }
+            } break;
+            case GLEQ_WINDOW_CLOSED: {
+                this->endEngine();
+            }
+        }
+
         //if (event.key.keysym.scancode == SDL_SCANCODE_F11 && event.type == SDL_KEYDOWN) {
         //    relativeMouseMode = relativeMouseMode ? SDL_FALSE : SDL_TRUE;
         //    SDL_SetRelativeMouseMode(relativeMouseMode);
         //}
         //ImGui_ImplSDL2_ProcessEvent(&event);
-        //gameStack.getTop()->handleInputData(inputManager.ProcessInput(event));
+        gameStack.getTop()->handleInputData(inputManager.ProcessInput(event));
+        gleqFreeEvent(&event);
     }
     if (!handledMouse) {
         this->mouse = {0.0f, 0.0f};
@@ -154,8 +175,8 @@ auto Engine::getIsRunning() const -> bool {
 }
 
 auto Engine::endEngine() -> void {    
-    glfwDestroyWindow(window);
     isRunning = false;
+
 }
 
 auto Engine::getBasePath() -> void {

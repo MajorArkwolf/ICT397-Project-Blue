@@ -1,5 +1,6 @@
 #pragma once
 
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
 #include <map>
@@ -26,7 +27,7 @@ class GUIManager {
      * @param window The SDL window to draw the gui in
      * @param context The SDL context to draw the window in
      */
-    void initialiseImGUI(GLFWwindow *window, void *context);
+    void initialiseImGUI(GLFWwindow *window);
 
     /**
      * @brief Displays the input rebind menu that allows inputs to be rebound on the fly

@@ -14,19 +14,19 @@ GUIManager::~GUIManager() {
     ImGui::DestroyContext();
 }
 
-void GUIManager::initialiseImGUI(GLFWwindow *window, void *context) {
+void GUIManager::initialiseImGUI(GLFWwindow *window) {
 
     // Setup ImGui.
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGui::StyleColorsDark();
-    ImGui_ImplGlfw_InitForOpenGL(window, context);
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init();
 }
 
 void GUIManager::displayInputRebindWindow() {
-    //auto &inputManager = Controller::Input::InputManager::getInstance();
-    //auto &inputMap     = inputManager.getInputMap();
+    auto &inputManager = Controller::Input::InputManager::getInstance();
+    auto &inputMap     = inputManager.getInputMap();
     //const Uint8 *state = SDL_GetKeyboardState(NULL);
     bool &windowOpen   = windowOpenMap.at("controls");
 
@@ -38,33 +38,33 @@ void GUIManager::displayInputRebindWindow() {
         ImGui::Text("Click on a button while holding a key to map an action to that key");
         ImGui::Separator();
 
-        //for (auto &n : inputMap) {
-        //    switch (n.first) {
-        //        case Controller::Input::BLUE_InputAction::INPUT_DEFAULT:
-        //        case Controller::Input::BLUE_InputAction::INPUT_LOOK_UP:
-        //        case Controller::Input::BLUE_InputAction::INPUT_LOOK_DOWN:
-        //        case Controller::Input::BLUE_InputAction::INPUT_LOOK_LEFT:
-        //        case Controller::Input::BLUE_InputAction::INPUT_LOOK_RIGHT: {
-        //        } break;
-        //        default: {
-        //            auto scancodeString = inputManager.hashScancodeToString(n.second);
-        //            auto actionString   = inputManager.hashInputActionToString(n.first);
-        //            ImGui::Text(actionString.c_str());
-        //            ImGui::SameLine(ImGui::GetWindowWidth() - 80);
+        for (auto &n : inputMap) {
+            switch (n.first) {
+                case Controller::Input::BLUE_InputAction::INPUT_DEFAULT:
+                case Controller::Input::BLUE_InputAction::INPUT_LOOK_UP:
+                case Controller::Input::BLUE_InputAction::INPUT_LOOK_DOWN:
+                case Controller::Input::BLUE_InputAction::INPUT_LOOK_LEFT:
+                case Controller::Input::BLUE_InputAction::INPUT_LOOK_RIGHT: {
+                } break;
+                default: {
+                    auto scancodeString = inputManager.hashGLFWKeyToString(n.second);
+                    auto actionString   = inputManager.hashInputActionToString(n.first);
+                    ImGui::Text(actionString.c_str());
+                    ImGui::SameLine(ImGui::GetWindowWidth() - 80);
 
-        //            if (ImGui::Button(scancodeString.c_str())) {
-        //                auto &scancodePairs = inputManager.getStringScancodePairs();
-        //                for (auto &i : scancodePairs) {
-        //                    if (state[i.second]) {
-        //                        inputManager.bindKey(n.first, i.second);
-        //                        break;
-        //                    }
-        //                }
-        //            }
+                    if (ImGui::Button(scancodeString.c_str())) {
+                        auto &scancodePairs = inputManager.getStringScancodePairs();
+                        for (auto &i : scancodePairs) {
+                            /*if (state[i.second]) {
+                                inputManager.bindKey(n.first, i.second);
+                                break;
+                            }*/
+                        }
+                    }
 
-        //        } break;
-        //    }
-        //}
+                } break;
+            }
+        }
 
         ImGui::End();
     }
@@ -81,8 +81,8 @@ void GUIManager::displayEscapeMenu() {
             isControlsOpen       = isControlsOpen ? false : true;
         }
         if (ImGui::Button("Exit")) {
-            /*auto &engine = BlueEngine::Engine::get();
-            engine.endEngine();*/
+            auto &engine = BlueEngine::Engine::get();
+            engine.endEngine();
         }
         ImGui::End();
     }
@@ -107,6 +107,6 @@ void GUIManager::toggleWindow(std::string windowName) {
 }
 
 void GUIManager::initialiseWindowOpenMap() {
-    windowOpenMap.insert(std::make_pair(std::string("menu"), false));
+    windowOpenMap.insert(std::make_pair(std::string("menu"), true));
     windowOpenMap.insert(std::make_pair(std::string("controls"), false));
 }

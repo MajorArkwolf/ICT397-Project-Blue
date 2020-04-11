@@ -9,8 +9,8 @@
 #include "View/Renderer/OpenGLProxy.hpp"
 #include "View/Renderer/Renderer.hpp"
 
-//using Controller::Input::BLUE_InputAction;
-//using Controller::Input::BLUE_InputType;
+using Controller::Input::BLUE_InputAction;
+using Controller::Input::BLUE_InputType;
 
 PrototypeScene::PrototypeScene() {
     Init();
@@ -47,60 +47,60 @@ void PrototypeScene::handleWindowEvent() {
     //}
 }
 //SDLFIX
-void PrototypeScene::handleInputData() {
+void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
     auto &engine      = BlueEngine::Engine::get();
-    //auto &guiManager  = engine.getGuiManager();
+    auto &guiManager  = engine.getGuiManager();
     auto handledMouse = false;
-    //switch (inputData.inputType) {
-    //    case BLUE_InputType::KEY_PRESS: { //  Key Press events
+    switch (inputData.inputType) {
+        case BLUE_InputType::KEY_PRESS: { //  Key Press events
 
-    //        switch (inputData.inputAction) {
-    //            case BLUE_InputAction::INPUT_MOVE_FORWARD: {
-    //                moveForward = true;
-    //            } break;
-    //            case BLUE_InputAction::INPUT_MOVE_BACKWARD: {
-    //                moveBackward = true;
-    //            } break;
-    //            case BLUE_InputAction::INPUT_MOVE_LEFT: {
-    //                moveLeft = true;
-    //            } break;
-    //            case BLUE_InputAction::INPUT_MOVE_RIGHT: {
-    //                moveRight = true;
-    //            } break;
-    //            case BLUE_InputAction::INPUT_ESCAPE: {
-    //                guiManager.toggleWindow("menu");
-    //            } break;
-    //        }
+            switch (inputData.inputAction) {
+                case BLUE_InputAction::INPUT_MOVE_FORWARD: {
+                    moveForward = true;
+                } break;
+                case BLUE_InputAction::INPUT_MOVE_BACKWARD: {
+                    moveBackward = true;
+                } break;
+                case BLUE_InputAction::INPUT_MOVE_LEFT: {
+                    moveLeft = true;
+                } break;
+                case BLUE_InputAction::INPUT_MOVE_RIGHT: {
+                    moveRight = true;
+                } break;
+                case BLUE_InputAction::INPUT_ESCAPE: {
+                    guiManager.toggleWindow("menu");
+                } break;
+            }
 
-    //    } break;
-    //    case BLUE_InputType::KEY_RELEASE: { // Key Release events
-    //        switch (inputData.inputAction) {
-    //            case BLUE_InputAction::INPUT_MOVE_FORWARD: {
-    //                moveForward = false;
-    //            } break;
-    //            case BLUE_InputAction::INPUT_MOVE_BACKWARD: {
-    //                moveBackward = false;
-    //            } break;
-    //            case BLUE_InputAction::INPUT_MOVE_LEFT: {
-    //                moveLeft = false;
-    //            } break;
-    //            case BLUE_InputAction::INPUT_MOVE_RIGHT: {
-    //                moveRight = false;
-    //            } break;
-    //        }
-    //    } break;
-    //    case BLUE_InputType::MOUSE_MOTION: { // Mouse motion event
-    //        auto x = static_cast<float>(inputData.mouseMotionRelative.x);
-    //        auto y = static_cast<float>(inputData.mouseMotionRelative.y);
-    //        y      = y * -1.0f;
-    //        camera.ProcessMouseMovement(x, y);
-    //        handledMouse = true;
-    //    } break;
-    //    case BLUE_InputType::MOUSE_WHEEL: { // Mouse Wheel event
-    //        int amountScrolledY = inputData.mouseWheelMotion;
-    //        camera.ProcessMouseScroll(amountScrolledY);
-    //    }
-    //}
+        } break;
+        case BLUE_InputType::KEY_RELEASE: { // Key Release events
+            switch (inputData.inputAction) {
+                case BLUE_InputAction::INPUT_MOVE_FORWARD: {
+                    moveForward = false;
+                } break;
+                case BLUE_InputAction::INPUT_MOVE_BACKWARD: {
+                    moveBackward = false;
+                } break;
+                case BLUE_InputAction::INPUT_MOVE_LEFT: {
+                    moveLeft = false;
+                } break;
+                case BLUE_InputAction::INPUT_MOVE_RIGHT: {
+                    moveRight = false;
+                } break;
+            }
+        } break;
+        case BLUE_InputType::MOUSE_MOTION: { // Mouse motion event
+            auto x = static_cast<float>(inputData.mouseMotionRelative.x);
+            auto y = static_cast<float>(inputData.mouseMotionRelative.y);
+            y      = y * -1.0f;
+            camera.ProcessMouseMovement(x, y);
+            handledMouse = true;
+        } break;
+        case BLUE_InputType::MOUSE_WHEEL: { // Mouse Wheel event
+            int amountScrolledY = inputData.mouseWheelMotion;
+            camera.ProcessMouseScroll(amountScrolledY);
+        }
+    }
     if (!handledMouse) {
         engine.mouse = {0.0f, 0.0f};
     }
@@ -110,14 +110,14 @@ auto PrototypeScene::display() -> void {
     //SDLFIX
     auto &engine = BlueEngine::Engine::get();
     BlueEngine::RenderCode::Display();
-    //auto &inputManager = Controller::Input::InputManager::getInstance();
-    //auto &guiManager   = engine.getGuiManager();
+    auto &inputManager = Controller::Input::InputManager::getInstance();
+    auto &guiManager   = engine.getGuiManager();
 
-    /* ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplSDL2_NewFrame(stonk.window.get());*/
-    //guiManager.startWindowFrame();
-    //guiManager.displayInputRebindWindow();
-    //guiManager.displayEscapeMenu();
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    guiManager.startWindowFrame();
+    guiManager.displayInputRebindWindow();
+    guiManager.displayEscapeMenu();
     int width = 0, height = 0;
     glfwGetWindowSize(engine.window, &width, &height);
     // view/projection transformations
@@ -132,7 +132,7 @@ auto PrototypeScene::display() -> void {
 
     renderer.draw(view, projection);
 
-    //guiManager.endWindowFrame();
+    guiManager.endWindowFrame();
 
     BlueEngine::RenderCode::EndDisplay();
 }
