@@ -1,11 +1,4 @@
 #include "PrototypeScene.hpp"
-<<<<<<< Updated upstream
-=======
-
-#include <examples/imgui_impl_opengl3.cpp>
-#include <examples/imgui_impl_sdl.cpp>
-
->>>>>>> Stashed changes
 #include <glm/glm.hpp>
 
 #include "Controller/Engine/Engine.hpp"
@@ -21,13 +14,7 @@ PrototypeScene::PrototypeScene() {
     Init();
 }
 
-PrototypeScene::PrototypeScene(BeAbstractPhysicsLibrary *library){
-    Init();
-    //physics = library;
-}
-
-
-auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
+auto PrototypeScene::update(double t, double dt) -> void {
     if (moveForward) {
         camera.ProcessKeyboard(FORWARD, dt);
     }
@@ -45,31 +32,19 @@ auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
 void PrototypeScene::Init() {
     BlueEngine::RenderCode::HardInit();
     camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
-    models.push_back( ModelManager::GetModelID("res/model/Test/city_residential_03.obj"));
-
-    settings.beSettings.isSleepingEnabled = false;
-    settings.beSettings.defaultVelocitySolverNbIterations = 20;
-    grav = glm::vec3(0, 9.11, 0);
-    world = new BeDynamicWorld(grav, settings);
-    float *blah = new float[10];
-    factory = new BeRP3DFactory();
-    physics = new BePhysicsLibrary(factory);
-    cam = physics->CreateBody(camera.Position, glm::quat(1,0,0,1), glm::vec3(1,1,1), 1, 0, 0 ,0 ,0, world, blah, ShapeType::Box, 1);
-    body = physics->CreateBody(glm::vec3(0,0,0), glm::quat(1,0,0,1), glm::vec3(10,10,10), 1, 0,0,0,0, world, blah, ShapeType::Box, 2);
-
-
+     models.push_back(ModelManager::GetModelID("res/model/IronMan/IronMan.obj"));
 }
 
-void PrototypeScene::handleWindowEvent() {
-    //switch (event.window.event) {
-    //    case SDL_WINDOWEVENT_SIZE_CHANGED:
-    //    case SDL_WINDOWEVENT_RESIZED: {
-    //        BlueEngine::RenderCode::ResizeWindow();
-    //    } break;
-    //    default: break;
-    //}
+void PrototypeScene::handleWindowEvent(SDL_Event &event) {
+    switch (event.window.event) {
+        case SDL_WINDOWEVENT_SIZE_CHANGED:
+        case SDL_WINDOWEVENT_RESIZED: {
+            BlueEngine::RenderCode::ResizeWindow();
+        } break;
+        default: break;
+    }
 }
-//SDLFIX
+
 void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
     auto &engine      = BlueEngine::Engine::get();
     auto &guiManager  = engine.getGuiManager();
