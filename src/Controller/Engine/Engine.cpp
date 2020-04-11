@@ -11,6 +11,9 @@
 #include "Controller/InputManager.hpp"
 #include "Controller/GUIManager.hpp"
 
+#define GLEQ_IMPLEMENTATION
+#define GLEQ_STATIC
+#include "gleq.h"
 
 // Game States
 #include "Game/Prototype/PrototypeScene.hpp"
@@ -49,7 +52,7 @@ auto Engine::run() -> void {
 
         while (accumulator >= dt) {
             // previousState = currentState;
-            //engine.processInput();
+            engine.processInput();
             engine.gameStack.getTop()->update(t, dt);
             t += dt;
             accumulator -= dt;
@@ -128,23 +131,23 @@ auto Engine::get() -> Engine & {
     return instance;
 }
 
-//auto Engine::processInput() -> void {
-    //auto event        = SDL_Event{};
-    //auto handledMouse = true;
+auto Engine::processInput() -> void {
+    auto event        = GLEQevent{};
+    auto handledMouse = true;
     //auto &inputManager = Controller::Input::InputManager::getInstance();
 
-    //while (SDL_PollEvent(&event)) {
-    //    if (event.key.keysym.scancode == SDL_SCANCODE_F11 && event.type == SDL_KEYDOWN) {
-    //        relativeMouseMode = relativeMouseMode ? SDL_FALSE : SDL_TRUE;
-    //        SDL_SetRelativeMouseMode(relativeMouseMode);
-    //    }
-    //    ImGui_ImplSDL2_ProcessEvent(&event);
-    //    gameStack.getTop()->handleInputData(inputManager.ProcessInput(event));
-    //}
-    //if (!handledMouse) {
-    //    this->mouse = {0.0f, 0.0f};
-    //}
-//}
+    while (gleqNextEvent(&event)) {
+        //if (event.key.keysym.scancode == SDL_SCANCODE_F11 && event.type == SDL_KEYDOWN) {
+        //    relativeMouseMode = relativeMouseMode ? SDL_FALSE : SDL_TRUE;
+        //    SDL_SetRelativeMouseMode(relativeMouseMode);
+        //}
+        //ImGui_ImplSDL2_ProcessEvent(&event);
+        //gameStack.getTop()->handleInputData(inputManager.ProcessInput(event));
+    }
+    if (!handledMouse) {
+        this->mouse = {0.0f, 0.0f};
+    }
+}
 
 auto Engine::getIsRunning() const -> bool {
     return this->isRunning;

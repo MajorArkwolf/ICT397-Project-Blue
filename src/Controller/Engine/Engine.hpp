@@ -5,9 +5,8 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#define GLEQ_IMPLEMENTATION
-#define GLEQ_STATIC
-#include "gleq.h"
+
+
 
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
@@ -78,6 +77,6 @@ namespace BlueEngine {
 
         auto endEngine() -> void;
 
-        void processInput(GLFWwindow *window);
+        void processInput();
     };
 }
