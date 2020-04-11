@@ -80,12 +80,12 @@ void Controller::TerrainFactory::GenerateVerticies(std::vector<Blue::Vertex> &te
 void Controller::TerrainFactory::GenerateIndicies(std::vector<unsigned int>& terrain, unsigned int xsize, unsigned int zsize) {
     for (unsigned int x = 0; x < xsize - 1; ++x) {
         for (unsigned int y = 0; y < zsize - 1; ++y) {
-            terrain.push_back(unsigned int(x * zsize + y)); // 0
-            terrain.push_back(unsigned int((x * zsize + 1) + y)); // 1
-            terrain.push_back(unsigned int(((x + 1) * zsize) + y)); // 3
-            terrain.push_back(unsigned int((x * zsize + 1) + y)); // 1
-            terrain.push_back(unsigned int((x + 1) * zsize) + (y + 1)); // 2
-            terrain.push_back(unsigned int(((x + 1) * zsize) + y)); // 3
+            terrain.push_back((x * zsize + y)); // 0
+            terrain.push_back(((x * zsize + 1) + y)); // 1
+            terrain.push_back((((x + 1) * zsize) + y)); // 3
+            terrain.push_back(((x * zsize + 1) + y)); // 1
+            terrain.push_back(((x + 1) * zsize) + (y + 1)); // 2
+            terrain.push_back((((x + 1) * zsize) + y)); // 3
         }
     }
 }
@@ -178,7 +178,7 @@ void Controller::TerrainFactory::CleanupChunk(Model::TerrainModel& terrain) {
 void Controller::TerrainFactory::LoadPerlinNoise(const string filename) {
     int width, height, nrComponents;
     const unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
-    assert(data != nullptr, "ERROR: Failed to LoadPerlinNoise from file\n");
+    assert(data != nullptr);
     //Verify this frees
     stbi_image_free(0);
     fValues.resize(width + 1);

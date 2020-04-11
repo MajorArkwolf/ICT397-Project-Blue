@@ -27,6 +27,7 @@ public:
 private:
     std::vector<size_t> models;
     Renderer renderer;
+    Controller::TerrainManager terrain = {};
 
     //SDLFIX SDL_Event &event
     void handleWindowEvent();
