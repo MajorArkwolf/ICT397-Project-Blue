@@ -126,7 +126,7 @@ void GUIManager::toggleWindow(std::string windowName) {
 }
 
 void GUIManager::initialiseWindowOpenMap() {
-    windowOpenMap.insert(std::make_pair(std::string("menu"), true));
+    windowOpenMap.insert(std::make_pair(std::string("menu"), false));
     windowOpenMap.insert(std::make_pair(std::string("controls"), false));
     windowOpenMap.insert(std::make_pair(std::string("instructions"), false));
 }
