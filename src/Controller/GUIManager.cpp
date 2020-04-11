@@ -2,6 +2,7 @@
 
 #include <Controller/Engine/Engine.hpp>
 #include <Controller/InputManager.hpp>
+#include <Controller/Enums.hpp>
 
 GUIManager::GUIManager() {
     initialiseWindowOpenMap();
@@ -9,24 +10,24 @@ GUIManager::GUIManager() {
 
 GUIManager::~GUIManager() {
     ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplSDL2_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 }
 
-void GUIManager::initialiseImGUI(SDL_Window *window, void *context) {
+void GUIManager::initialiseImGUI(GLFWwindow *window) {
 
     // Setup ImGui.
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGui::StyleColorsDark();
-    ImGui_ImplSDL2_InitForOpenGL(window, context);
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init();
 }
 
 void GUIManager::displayInputRebindWindow() {
     auto &inputManager = Controller::Input::InputManager::getInstance();
     auto &inputMap     = inputManager.getInputMap();
-    const Uint8 *state = SDL_GetKeyboardState(NULL);
+    //const Uint8 *state = SDL_GetKeyboardState(NULL);
     bool &windowOpen   = windowOpenMap.at("controls");
 
     // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
@@ -46,7 +47,7 @@ void GUIManager::displayInputRebindWindow() {
                 case Controller::Input::BLUE_InputAction::INPUT_LOOK_RIGHT: {
                 } break;
                 default: {
-                    auto scancodeString = inputManager.hashScancodeToString(n.second);
+                    auto scancodeString = inputManager.hashGLFWKeyToString(n.second);
                     auto actionString   = inputManager.hashInputActionToString(n.first);
                     ImGui::Text(actionString.c_str());
                     ImGui::SameLine(ImGui::GetWindowWidth() - 80);
@@ -54,10 +55,10 @@ void GUIManager::displayInputRebindWindow() {
                     if (ImGui::Button(scancodeString.c_str())) {
                         auto &scancodePairs = inputManager.getStringScancodePairs();
                         for (auto &i : scancodePairs) {
-                            if (state[i.second]) {
+                            /*if (state[i.second]) {
                                 inputManager.bindKey(n.first, i.second);
                                 break;
-                            }
+                            }*/
                         }
                     }
 
@@ -88,9 +89,9 @@ void GUIManager::displayEscapeMenu() {
 }
 
 void GUIManager::startWindowFrame() {
-    auto &engine = BlueEngine::Engine::get();
+
     ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplSDL2_NewFrame(engine.window.get());
+    ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 }
 
@@ -106,6 +107,6 @@ void GUIManager::toggleWindow(std::string windowName) {
 }
 
 void GUIManager::initialiseWindowOpenMap() {
-    windowOpenMap.insert(std::make_pair(std::string("menu"), false));
+    windowOpenMap.insert(std::make_pair(std::string("menu"), true));
     windowOpenMap.insert(std::make_pair(std::string("controls"), false));
 }

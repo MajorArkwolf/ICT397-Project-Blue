@@ -3,32 +3,36 @@
 #include <memory>
 #include <string>
 
-#include <SDL.h>
+#include <glad/glad.h>
+//
+#include <GLFW/glfw3.h>
+
+#define GLEQ_IMPLEMENTATION
+#define GLEQ_STATIC
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
 #include "BaseState.hpp"
-#include "GameStack.hpp"
 
 #include "Controller/Physics/BeRP3DFactory.hpp"
 #include "Controller/Physics/BePhysicsLibrary.hpp"
 #include "Controller/GUIManager.hpp"
+#include "GameStack.hpp"
+#include "gleq.h"
 
+const unsigned int SCR_WIDTH  = 800;
+const unsigned int SCR_HEIGHT = 600;
 
 namespace BlueEngine {
     class Engine {
       public:
-        using Window  = std::shared_ptr<SDL_Window>;
-        using Context = std::shared_ptr<void>;
-
         static constexpr auto FPS_UPDATE_INTERVAL = 0.5;
 
         /* Mouse movement. */
         glm::vec2 mouse = {};
 
-        /* SDL handles. */
-        Window window   = nullptr;
-        Context context = nullptr;
+        /* GLFW handles. */
+        GLFWwindow *window = nullptr;
 
         /**
          * @brief The current FPS
@@ -36,30 +40,34 @@ namespace BlueEngine {
         double fps           = 0.0;
         std::string basepath = "";
 
-        auto getTime() const -> double;
-
       private:
         GameStack<BaseState *> gameStack;
         GUIManager guiManager;
         bool isRunning = true;
-        SDL_bool relativeMouseMode = SDL_TRUE;
-
         auto getBasePath() -> void;
-
         Engine();
+
+        /// Testing values
+        float lastX     = SCR_WIDTH / 2.0f;
+        float lastY     = SCR_HEIGHT / 2.0f;
+        bool firstMouse = true;
 
       public:
         Engine(Engine &&)      = default;
         Engine(const Engine &) = delete;
         ~Engine();
 
-        // This variable will hold the game stack
-        // Game *thegame = nullptr;
-
+        /**
+         * @brief Getter to the engine variables.
+         * @return Engine by reference
+         */
         static auto get() -> Engine &;
+        /**
+         * @brief The game engine main loop
+         */
         static auto run() -> void;
 
-        GUIManager& getGuiManager();
+        GUIManager &getGuiManager();
         /**
          * @brief Overloaded assignment operator, set to default overload
          */
@@ -74,8 +82,10 @@ namespace BlueEngine {
 
         auto endEngine() -> void;
 
-        auto processInput() -> void;
+        void processInput();
 
+        bool getMouseMode();
 
+        void setMouseMode(bool mode);
     };
 }
