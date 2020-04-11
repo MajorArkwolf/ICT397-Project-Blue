@@ -140,7 +140,8 @@ auto PrototypeScene::display() -> void {
 	//Renderer::addToDraw(model, models[0]);
 	terrain.Draw(projection, view, camera.Position);
 	//renderer.draw(view, projection);
-
+    glm::mat4 skyboxView = glm::mat4(glm::mat3(camera.GetViewMatrix()));
+    skybox.draw(skyboxView, projection);
 	guiManager.endWindowFrame();
 
 	BlueEngine::RenderCode::EndDisplay();

@@ -7,6 +7,7 @@
 #include "View/EulerCamera.hpp"
 #include "Controller/InputManager.hpp"
 #include "Controller/TerrainManager.hpp"
+#include "View/Renderer/Skybox.hpp"
 
 class PrototypeScene : public BaseState {
 public:
@@ -28,6 +29,7 @@ private:
     std::vector<size_t> models;
     Renderer renderer;
     Controller::TerrainManager terrain = {};
+    Skybox skybox                      = {};
 
     //SDLFIX SDL_Event &event
     void handleWindowEvent();

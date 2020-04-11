@@ -29,16 +29,16 @@ void Model::TerrainModel::SetupModel() {
 
     // Vertex Positions
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Blue::Vertex), (void *)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Blue::Vertex), nullptr);
 
     // TexCords
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Blue::Vertex),
-                          (void *)offsetof(Blue::Vertex, texCoords));
+                          reinterpret_cast<void *>(offsetof(Blue::Vertex, texCoords)));
 
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Blue::Vertex),
-                          (void *)offsetof(Blue::Vertex, normals));
+                          reinterpret_cast<void *>(offsetof(Blue::Vertex, normals)));
     glBindVertexArray(0);
 }
 
@@ -73,7 +73,7 @@ void Model::TerrainModel::Draw(glm::mat4 projection, glm::mat4 view, const glm::
     terrainShader->setMat4("view", view);
     terrainShader->setMat4("model", glm::translate(model, position));   
     terrainShader->setVec3("lightColor", 1.0f, 1.0f, 1.0f);
-    terrainShader->setVec3("lightPos", 1.0f, 200.0f, 1.0f);
+    terrainShader->setVec3("lightPos", 1.0f, 400.0f, 1.0f);
     terrainShader->setVec3("viewPos", cameraPos);
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indicie_size, GL_UNSIGNED_INT, nullptr);

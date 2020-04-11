@@ -57,7 +57,7 @@ void Model::Water::Draw(const glm::mat4& projection, const glm::mat4& view, cons
     shader->setMat4("w_view", view);
     shader->setMat4("w_model", temp);
     shader->setVec3("lightColor", 1.0f, 1.0f, 1.0f);
-    shader->setVec3("lightPos", 1.0f, 200.0f, 1.0f);
+    shader->setVec3("lightPos", 1.0f, 400.0f, 1.0f);
     shader->setVec3("viewPos", cameraPos);
     
     glBindVertexArray(VAO);

@@ -25,6 +25,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     View/EulerCamera.cpp
     View/Renderer/Renderer.cpp
     View/Renderer/OpenGLProxy.cpp
+    View/Renderer/Skybox.cpp
 
     # Game
     Game/SceneManager.cpp
