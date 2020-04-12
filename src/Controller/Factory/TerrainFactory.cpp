@@ -20,6 +20,18 @@ void Controller::TerrainFactory::Init() {
     waterTextureID = BlueEngine::RenderCode::TextureFromFile("water.jpg", "./res/images");
 }
 
+void LoadLua() {
+    // Lua needs the following parameters
+    // Chunksize
+    // LoadPerlin -> Boolean to determine if its going to load an image or generate the noise
+    // perlinSize -> Only if the above is false
+    // snowtexture
+    // grasstexture
+    // dusttexture
+    // sandtexture
+    // watertexture
+}
+
 void Controller::TerrainFactory::GenerateTerrain(Model::TerrainModel &newTerrain, int xcord,
                                                  int zcord, const Blue::Key key) {
 

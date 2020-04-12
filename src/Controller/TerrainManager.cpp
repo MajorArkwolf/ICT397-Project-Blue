@@ -1,12 +1,12 @@
 #include "TerrainManager.hpp"
 #include <cmath>
 #include <cstdlib>
+#include "Factory/GameAssetFactory.hpp"
 Controller::TerrainManager::TerrainManager() {
 
 }
 
 void Controller::TerrainManager::Init() {
-	factory.Init();
     Blue::Key updateKey = {};
 	updateKey.first = 0;
 	updateKey.second = 0;
@@ -25,6 +25,7 @@ float Controller::TerrainManager::Distance(const Blue::Key &left, const Blue::Ke
 }
 
 void Controller::TerrainManager::Update(glm::ivec2 key) {
+    auto &factory = Controller::Factory::get().terrain;
     Blue::Key updateKey{};
 	if (key.x < 0) {
 		updateKey.first = key.x / factory.GetChunkSize() - 1;
