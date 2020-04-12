@@ -29,6 +29,7 @@ void GUIManager::displayInputRebindWindow() {
     auto &inputMap     = inputManager.getInputMap();
     bool &windowOpen   = windowOpenMap.at("controls");
     auto &resManager   = ResourceManager::getInstance();
+    auto *state        = inputManager.getKeyStates();
 
     if (windowOpen) {
     
@@ -54,10 +55,10 @@ void GUIManager::displayInputRebindWindow() {
                     if (ImGui::Button(scancodeString.c_str())) {
                         auto &scancodePairs = inputManager.getStringScancodePairs();
                         for (auto &i : scancodePairs) {
-                            /*if (state[i.second]) {
+                            if (state[i.second]) {
                                 inputManager.bindKey(n.first, i.second);
                                 break;
-                            }*/
+                            }
                         }
                     }
 
@@ -126,7 +127,7 @@ void GUIManager::toggleWindow(std::string windowName) {
 }
 
 void GUIManager::initialiseWindowOpenMap() {
-    windowOpenMap.insert(std::make_pair(std::string("menu"), true));
+    windowOpenMap.insert(std::make_pair(std::string("menu"), false));
     windowOpenMap.insert(std::make_pair(std::string("controls"), false));
     windowOpenMap.insert(std::make_pair(std::string("instructions"), false));
 }

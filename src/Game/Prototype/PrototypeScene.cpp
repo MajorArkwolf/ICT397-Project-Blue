@@ -93,9 +93,9 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
 	} break;
 	case BLUE_InputType::MOUSE_MOTION: { // Mouse motion event
 		if (engine.getMouseMode() == false) {
-			auto x = static_cast<float>(inputData.mouseMotionRelative.x);
-			auto y = static_cast<float>(inputData.mouseMotionRelative.y);
-			y = y * -1.0f;
+			auto x = static_cast<double>(inputData.mouseMotionRelative.x);
+			auto y = static_cast<double>(inputData.mouseMotionRelative.y);
+			y = y * -1.0;
 			camera.ProcessMouseMovement(x, y);
 			handledMouse = true;
 		}
