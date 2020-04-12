@@ -1,25 +1,23 @@
 #include "Model.hpp"
 
 #include <iostream>
+#include "View/Renderer/OpenGLProxy.hpp"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-
-Model::Model(char *path, bool gamma = false) : gammaCorrection(gamma) {
+Model::Model::Model(char *path, bool gamma = false) : gammaCorrection(gamma) {
     loadModel(path);
 }
 
-Model::Model(string path, bool gamma = false) : gammaCorrection(gamma) {
+Model::Model::Model(string path, bool gamma = false) : gammaCorrection(gamma) {
     loadModel(path.c_str());
 }
 
-void Model::Draw(Shader shader) {
+void Model::Model::Draw(Shader shader) {
     for (unsigned int i = 0; i < meshes.size(); i++) {
         meshes[i].Draw(shader);
     }
 }
 
-void Model::loadModel(string const &path) {
+void Model::Model::loadModel(string const &path) {
     // read file via ASSIMP
     Assimp::Importer importer;
     const aiScene *scene =
@@ -40,7 +38,7 @@ void Model::loadModel(string const &path) {
     processNode(scene->mRootNode, scene);
 }
 
-void Model::processNode(aiNode *node, const aiScene *scene) {
+void Model::Model::processNode(aiNode *node, const aiScene *scene) {
     // process each mesh located at the current node
     for (unsigned int i = 0; i < node->mNumMeshes; i++) {
         // the node object only contains indices to index the actual objects in the scene.
@@ -54,11 +52,11 @@ void Model::processNode(aiNode *node, const aiScene *scene) {
     }
 }
 
-Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
+Mesh Model::Model::processMesh(aiMesh *mesh, const aiScene *scene) {
     // data to fill
-    vector<Vertex> vertices;
-    vector<unsigned int> indices;
-    vector<Texture> textures;
+    std::vector<Vertex> vertices;
+    std::vector<unsigned int> indices;
+    std::vector<Texture> textures;
 
     // Walk through each of the mesh's vertices
     for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
@@ -123,11 +121,11 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
     // specular: texture_specularN normal: texture_normalN
 
     // 1. diffuse maps
-    vector<Texture> diffuseMaps =
+    std::vector<Texture> diffuseMaps =
         loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
     textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
     // 2. specular maps
-    vector<Texture> specularMaps =
+    std::vector<Texture> specularMaps =
         loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
     textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
     // 3. normal maps
@@ -143,9 +141,9 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
     return Mesh(vertices, indices, textures);
 }
 
-vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type,
+std::vector<Texture> Model::Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type,
                                             string typeName) {
-    vector<Texture> textures;
+    std::vector<Texture> textures;
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
         aiString str;
         mat->GetTexture(type, i, &str);
@@ -160,7 +158,7 @@ vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type,
         }
         if (!skip) { // if texture hasn't been loaded already, load it
             Texture texture;
-            texture.id   = TextureFromFile(str.C_Str(), this->directory);
+            texture.id   = BlueEngine::RenderCode::TextureFromFile(str.C_Str(), this->directory);
             texture.type = typeName;
             texture.path = str.C_Str();
             textures.push_back(texture);
@@ -169,49 +167,4 @@ vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type,
         }
     }
     return textures;
-}
-
-unsigned int TextureFromFile(const char *path, const string &directory,
-                             [[maybe_unused]] bool gamma) {
-    string filename = string(path);
-    filename        = directory + '/' + filename;
-
-    unsigned int textureID;
-    glGenTextures(1, &textureID);
-
-    int width, height, nrComponents;
-    unsigned char *data =
-        stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
-    if (data) {
-        GLenum format = 1;
-        if (nrComponents == 1)
-            format = GL_RED;
-        else if (nrComponents == 3)
-            format = GL_RGB;
-        else if (nrComponents == 4)
-            format = GL_RGBA;
-
-        glBindTexture(GL_TEXTURE_2D, textureID);
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format,
-                     GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-
-        // Enable should you need alpha, this will clamp textures to the edge to
-        // ensure that weird stuff doesnt happen.
-        // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                        GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        stbi_image_free(data);
-    } else {
-        std::cout << "Texture failed to load at path: " << path << std::endl;
-        stbi_image_free(data);
-    }
-
-    return textureID;
 }

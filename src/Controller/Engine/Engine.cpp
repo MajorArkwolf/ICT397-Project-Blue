@@ -5,11 +5,14 @@
 #include <stdexcept>
 #include <string>
 
-#include <SDL2/SDL.h>
-#include <glad/glad.h>
-
 #include "BaseState.hpp"
 #include "GameStack.hpp"
+
+#include "Controller/InputManager.hpp"
+#include "Controller/GUIManager.hpp"
+#include "Controller/ResourceManager.hpp"
+
+
 
 // Game States
 #include "Game/Prototype/PrototypeScene.hpp"
@@ -27,34 +30,44 @@ auto Engine::run() -> void {
     auto *prototype = new PrototypeScene();
     engine.gameStack.AddToStack(prototype);
 
-    auto frameCount    = 0l;
-    auto lastFpsUpdate = 0.0;
+    double t  = 0.0;
+    double dt = 0.01;
 
-    auto time      = engine.getTime();
-    auto oldTime   = 0.0;
-    auto deltaTime = 0.0;
+    double currentTime = glfwGetTime();
+    double accumulator = 0.0;
 
+    // State previous;
+    // State current;
+    // State state;
+    glfwFocusWindow(engine.window);
+    ResourceManager::getInstance().loadResources();
     while (engine.getIsRunning()) {
-        ++frameCount;
-        oldTime   = time;
-        time      = engine.getTime();
-        deltaTime = time - oldTime;
+        double newTime   = glfwGetTime();
+        double frameTime = newTime - currentTime;
+        if (frameTime > 0.25)
+            frameTime = 0.25;
+        currentTime = newTime;
 
-        if (time - lastFpsUpdate >= FPS_UPDATE_INTERVAL) {
-            engine.fps    = frameCount / (time - lastFpsUpdate);
-            lastFpsUpdate = time;
-            frameCount    = 0;
+        accumulator += frameTime;
+
+        while (accumulator >= dt) {
+            // previousState = currentState;
+            glfwPollEvents();
+            engine.processInput();
+            engine.gameStack.getTop()->update(t, dt);
+            t += dt;
+            accumulator -= dt;
         }
+        const double alpha = accumulator / dt;
+        // state = currentState * alpha + previousState * (1.0 - alpha);
 
-        // engine.thegame->time = oldTime;
-
-        // engine.processInput();
-        engine.processInput();
-        // engine.thegame->update();
-        engine.gameStack.getTop()->update(deltaTime);
-        // engine.thegame->draw();
         engine.gameStack.getTop()->display();
     }
+    glfwDestroyWindow(engine.window);
+}
+
+GUIManager& BlueEngine::Engine::getGuiManager() {
+    return guiManager;
 }
 
 /**
@@ -62,71 +75,44 @@ auto Engine::run() -> void {
  */
 Engine::Engine() {
     getBasePath();
-    // Start SDL.
-    auto status = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
-
-    if (status != 0) {
-        throw runtime_error{string{"Unable to initialize SDL: "} + SDL_GetError()};
+    if (!glfwInit()) {
+        std::cerr << "GLFW FAILED TO INIT \n";
     }
+    gleqInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
+    glfwWindowHint(GLFW_FOCUS_ON_SHOW, GLFW_TRUE);
+    
 
-    // Set OpenGL settings.
-    SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
-    SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
-                        SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
-    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
-    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
-    SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
 #ifdef __APPLE__
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 32);
-#else
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,
+                   GL_TRUE); // uncomment this statement to fix compilation on OS X
 #endif
 
-    // Get display size.
-    auto display = SDL_DisplayMode{};
-    SDL_GetCurrentDisplayMode(0, &display);
-
-    // Create window.
-    this->window = Engine::Window{
-        SDL_CreateWindow("Project-Blue", display.w / 4, display.h / 4,
-                         display.w / 2, display.h / 2,
-                         SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI),
-        &SDL_DestroyWindow};
-
-    if (this->window.get() == nullptr) {
-        throw runtime_error{string{"Unable to create window: "} + SDL_GetError()};
+    // glfw window creation
+    // --------------------
+    window = glfwCreateWindow(800, 600, "Project Blue", nullptr, nullptr);
+    if (window == nullptr) {
+        std::cout << "Failed to create GLFW window" << std::endl;
+        glfwTerminate();
     }
+    gleqTrackWindow(window);
+    glfwMakeContextCurrent(window);
+    
+    // tell GLFW to capture our mouse
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    // Create OpenGL context.
-    this->context = Engine::Context{SDL_GL_CreateContext(this->window.get()),
-                                    &SDL_GL_DeleteContext};
-
-    if (this->context.get() == nullptr) {
-        throw runtime_error{string{"Unable to create OpenGL context: "} +
-                            SDL_GetError()};
-    }
-
-    SDL_GL_MakeCurrent(this->window.get(), this->context.get());
-
-    // Enable Vsync.
-    constexpr auto ENABLE_VSYNC = 0;
-    SDL_GL_SetSwapInterval(ENABLE_VSYNC);
-
-    // Capture the mouse.
-    SDL_SetRelativeMouseMode(SDL_TRUE);
-
-    // Check OpenGL properties
-    // std::cout << "OpenGL loaded\n";
-    if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
+    // glad: load all OpenGL function pointers
+    // ---------------------------------------
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cout << "Failed to initialize GLAD" << std::endl;
     }
+
+    this->guiManager.initialiseImGUI(window);
+
+
 }
 
 /**
@@ -134,7 +120,7 @@ Engine::Engine() {
  * Safely closes Engine and frees memory
  */
 Engine::~Engine() {
-    SDL_Quit();
+    glfwTerminate();
 }
 
 /**
@@ -148,14 +134,54 @@ auto Engine::get() -> Engine & {
 }
 
 auto Engine::processInput() -> void {
-    auto event  = SDL_Event{};
+    GLEQevent event;
     auto handledMouse = true;
+    auto &inputManager = Controller::Input::InputManager::getInstance();
 
-    while (SDL_PollEvent(&event)) {
-        gameStack.getTop()->handleInput(event);
+
+    while (gleqNextEvent(&event)) {
+        if (event.type == GLEQ_KEY_PRESSED || event.type == GLEQ_KEY_RELEASED) {
+            inputManager.recordKeyStates(event);
+        }
+        switch (event.type) {
+            case GLEQ_KEY_PRESSED: {
+                if (event.keyboard.key == GLFW_KEY_F1) {
+                    auto mouseMode = glfwGetInputMode(window, GLFW_CURSOR);
+                    if (mouseMode == GLFW_CURSOR_NORMAL) {
+                        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+                    } else {
+                        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+                    }                     
+                }
+            } break;
+            case GLEQ_WINDOW_CLOSED: {
+                this->endEngine();
+            } break;
+            default: break;
+        }
+
+        gameStack.getTop()->handleInputData(inputManager.ProcessInput(event));
+        gleqFreeEvent(&event);
     }
     if (!handledMouse) {
         this->mouse = {0.0f, 0.0f};
+    }
+}
+
+bool BlueEngine::Engine::getMouseMode() {
+    auto mouseMode = glfwGetInputMode(window, GLFW_CURSOR);
+    if (mouseMode == GLFW_CURSOR_NORMAL) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+void BlueEngine::Engine::setMouseMode(bool mode) {
+    if (mode == true) {
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    } else {
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 }
 
@@ -163,21 +189,14 @@ auto Engine::getIsRunning() const -> bool {
     return this->isRunning;
 }
 
-auto Engine::endEngine() -> void {
+auto Engine::endEngine() -> void {    
     isRunning = false;
-}
 
-/**
- * @brief I DONT KNOW WHAT THIS DOES
- * @return What is this
- */
-auto Engine::getTime() const -> double {
-    return static_cast<double>(SDL_GetPerformanceCounter()) /
-           static_cast<double>(SDL_GetPerformanceFrequency());
 }
 
 auto Engine::getBasePath() -> void {
-    char *base_path = SDL_GetBasePath();
-    basepath        = std::string(base_path);
-    SDL_free(base_path);
+    //char *base_path = SDL_GetBasePath();
+    //basepath        = std::string(base_path);
+    //SDL_free(base_path);
+    basepath = "./";
 }

@@ -1,5 +1,5 @@
 # Set cmake minimum version.
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.15)
 
 # Set the project details.
 set(PROJECT_NAME Project-Blue)
@@ -7,8 +7,11 @@ project(${PROJECT_NAME} LANGUAGES CXX)
 
 # If enabled, the post build symlink will copy instead.
 option(CopyResources "CopyResources" OFF)
-# Disables any post build steps.
-option(DisablePostBuild "DisablePostBuild" OFF)
+
+# Clang sanitizer settings.
+set(SANITIZER_OS "Darwin,Linux")
+set(SANITIZER_FLAGS "-fsanitize=address,undefined,leak")
+
 # Treat warnings as errors.
 option(WarningsAsErrors "WarningsAsErrors" OFF)
 
@@ -16,96 +19,91 @@ option(WarningsAsErrors "WarningsAsErrors" OFF)
 set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
 set(CMAKE_DISABLE_SOURCE_CHANGES ON)
 
-# Set the cmake module paths.
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
+# Disable debug library postfix.
+set(CMAKE_DEBUG_POSTFIX "")
 
 # Set build type to debug by default.
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)
 endif()
 
-# Define source files.
-set (SOURCES
-    src/Main.cpp
-    src/Controller/Engine/Engine.cpp
-    src/Controller/Engine/EulerCamera.cpp
+# Add Linux flag.
+if(UNIX AND NOT APPLE)
+    set(LINUX TRUE)
+endif()
 
-    src/Model/Models/Mesh.cpp
-    src/Model/Models/Model.cpp
-    src/Model/Models/ModelManager.cpp
+# Set build output directories.
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 
-    src/View/Renderer/Shader.cpp
-    src/View/Renderer/Renderer.cpp
-
-    src/Game/Prototype/PrototypeScene.cpp
-    )
-
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG    ${PROJECT_BINARY_DIR})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE  ${PROJECT_BINARY_DIR})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG    ${PROJECT_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE  ${PROJECT_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG    ${PROJECT_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE  ${PROJECT_BINARY_DIR}/lib)
 
 # Define the executable.
-add_executable(${PROJECT_NAME} ${SOURCES})
+add_executable(${PROJECT_NAME})
 
 # Set C++ standard.
 set_target_properties(${PROJECT_NAME} PROPERTIES
-        CXX_STANDARD 17
-        CXX_STANDARD_REQUIRED ON
-        CXX_EXTENSIONS OFF
-        )
+    CXX_STANDARD 17
+    CXX_STANDARD_REQUIRED ON
+    CXX_EXTENSIONS OFF
+)
+
+# Find dependencies.
+# find_package(OpenGL REQUIRED COMPONENTS OpenGL)
+find_package(OpenGL REQUIRED)
+
+# Build 3rd Party Liberaries
+add_subdirectory(lib)
+
+# Define source files.
+add_subdirectory(src)
 
 # Remove the default warning level from MSVC.
 if (MSVC)
-    string(REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+    string(REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+    # Libraries for Win32 native and MinGW // Disabled as it breaks linux and is no longer needed
+    # list(APPEND EXTRA_LIBS vcruntime user32 gdi32 winmm imm32 ole32 oleaut32 version uuid)
 endif()
 
-# Set Clang compile flags.
-target_compile_options(${PROJECT_NAME} PUBLIC
-        $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:
-        -Weverything -fcolor-diagnostics
-        # These warnings are not useful.
-        -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded
-        -Wno-deprecated-declarations -Wno-exit-time-destructors -Wno-switch-enum
-        -Wno-weak-vtables>)
-# Set GCC compile flags.
-target_compile_options(${PROJECT_NAME} PUBLIC $<$<CXX_COMPILER_ID:GNU>:
-        -Wall -Wextra -Wpedantic -fdiagnostics-color=always>)
-# Set MSVC compile flags.
-target_compile_options(${PROJECT_NAME} PUBLIC $<$<CXX_COMPILER_ID:MSVC>:/W4>)
-
-# Enable Clang's address and memory sanitizers.
-if (NOT MSVC)
-    target_compile_options(${PROJECT_NAME} PUBLIC
-            $<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:Clang>>:-fsanitize=address,undefined,leak>)
-    target_link_libraries(${PROJECT_NAME} PUBLIC
-            $<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:Clang>>:-fsanitize=address,undefined,leak>)
-endif()
 # Treat warnings as errors if enabled.
 if (WarningsAsErrors)
-    target_compile_options(${PROJECT_NAME} PUBLIC
-            $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:
-            -Werror>)
-    target_compile_options(${PROJECT_NAME} PUBLIC $<$<CXX_COMPILER_ID:MSVC>:/WX>)
+    target_compile_options(${PROJECT_NAME} PRIVATE
+        $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:-Werror>
+        $<$<CXX_COMPILER_ID:MSVC>:/WX>
+    )
 endif()
 
-# Fix an MSVC linker warning.
-if (MSVC)
-    #set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "/NODEFAULTLIB:msvcrt.lib")
-endif()
+# Set compile flags.
+target_compile_options(${PROJECT_NAME} PRIVATE
+    # Clang
+    $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:
+        -Weverything -fcolor-diagnostics
+        # Disable specific warnings.
+        -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded
+        -Wno-deprecated-declarations -Wno-exit-time-destructors
+        -Wno-switch-enum -Wno-weak-vtables -Wno-global-constructors>
+    # GCC
+    $<$<CXX_COMPILER_ID:GNU>:-Wall -Wextra -Wpedantic -fdiagnostics-color=always>
+    # Visual Studio
+    $<$<CXX_COMPILER_ID:MSVC>:/W4>
+    # Enable the clang sanitizer.
+    $<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:Clang>,$<PLATFORM_ID:${SANITIZER_OS}>>:${SANITIZER_FLAGS}>
+)
 
-# Find dependencies.
-find_package(OpenGL REQUIRED COMPONENTS OpenGL)
-find_package(SDL2 REQUIRED)
-find_package(SDL2_image REQUIRED)
-find_package(SDL2_ttf REQUIRED)
-find_package(SDL2_mixer REQUIRED)
-find_package(glm REQUIRED)
-find_package(glad CONFIG REQUIRED)
-find_package(assimp CONFIG REQUIRED)
-
-# Include project header files.
-target_include_directories(${PROJECT_NAME} PRIVATE src)
+# Link against the clang sanitizer.
+target_link_options(${PROJECT_NAME} PRIVATE
+    $<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:Clang>,$<PLATFORM_ID:${SANITIZER_OS}>>:${SANITIZER_FLAGS}>
+)
 
 # Include and link against dependencies.
-target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL OpenGL::GLU
-        SDL2::SDL2 SDL2::Image SDL2::TTF SDL2::Mixer glm glad::glad assimp::assimp)
+target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL glfw assimp glm lua LuaBridge reactphysics3d glad imgui)
+#  ${GLFW_LIBRARIES}
 
 # Symlink or copy the resources to the binary location.
 if (NOT DisablePostBuild)

@@ -1,3 +1,21 @@
-[submodule "cmake/sdl2"]
-	path = cmake/sdl2
-	url = https://github.com/opeik/cmake-modern-findsdl2
+[submodule "lib/luabridge"]
+	path = lib/luabridge
+	url = https://github.com/vinniefalco/LuaBridge
+[submodule "lib/react"]
+	path = lib/react
+	url = https://github.com/DanielChappuis/reactphysics3d.git
+[submodule "lib/imgui"]
+	path = lib/imgui
+	url = https://github.com/MajorArkwolf/imgui.git
+[submodule "lib/glm"]
+	path = lib/glm
+	url = https://github.com/g-truc/glm.git
+[submodule "lib/assimp"]
+	path = lib/assimp
+	url = https://github.com/assimp/assimp.git
+[submodule "lib/glfw"]
+	path = lib/glfw
+	url = https://github.com/glfw/glfw.git
+[submodule "lib/lua"]
+	path = lib/lua
+	url = https://github.com/MajorArkwolf/lua-cmake.git

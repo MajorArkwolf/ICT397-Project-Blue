@@ -1,196 +1,154 @@
-#pragma once
-//
-// Created by Arkwolf on 19/12/2019.
-//
 #include "PrototypeScene.hpp"
 
 #include <glm/glm.hpp>
 
 #include "Controller/Engine/Engine.hpp"
-#include "Controller/Engine/OpenGL.hpp"
 #include "Model/Models/Model.hpp"
 #include "Model/Models/ModelManager.hpp"
+#include "View/Renderer/OpenGLProxy.hpp"
 #include "View/Renderer/Renderer.hpp"
 
+using Controller::Input::BLUE_InputAction;
+using Controller::Input::BLUE_InputType;
+
 PrototypeScene::PrototypeScene() {
-    softInit();
+	Init();
 }
 
-auto PrototypeScene::update(double dt) -> void {
-    if (moveForward) {
-        camera.ProcessKeyboard(FORWARD, dt);
-    }
-    if (moveBackward) {
-        camera.ProcessKeyboard(BACKWARD, dt);
-    }
-    if (moveLeft) {
-        camera.ProcessKeyboard(LEFT, dt);
-    }
-    if (moveRight) {
-        camera.ProcessKeyboard(RIGHT, dt);
-    }
+auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
+	if (moveForward) {
+		camera.ProcessKeyboard(FORWARD, dt);
+	}
+	if (moveBackward) {
+		camera.ProcessKeyboard(BACKWARD, dt);
+	}
+	if (moveLeft) {
+		camera.ProcessKeyboard(LEFT, dt);
+	}
+	if (moveRight) {
+		camera.ProcessKeyboard(RIGHT, dt);
+	}
+
+	terrain.Update(camera.getLocation());
 }
 
-void PrototypeScene::hardInit() {
-    glLoadIdentity();
-    glLineWidth(1);
-    auto &engine = BlueEngine::Engine::get();
-
-    SDL_GL_GetDrawableSize(engine.window.get(), &width, &height);
-    ratio = static_cast<double>(width) / static_cast<double>(height);
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glViewport(0, 0, width, height);
-    gluPerspective(60, ratio, 1, 300);
-    glMatrixMode(GL_MODELVIEW);
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glEnable(GL_DEPTH_TEST);
-    glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
-
-    camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
-
-    models.push_back(ModelManager::GetModelID("res/model/bigboy/big.obj"));
+void PrototypeScene::Init() {
+	auto& resManager = ResourceManager::getInstance();
+	BlueEngine::RenderCode::HardInit();
+	terrain.Init();
+	camera.Position.y = 100.0;
+	camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
+	models.push_back(resManager.getModelID("res/model/player_male.obj"));
 }
 
-void PrototypeScene::softInit() {
-    hardInit();
+void PrototypeScene::handleWindowEvent() {
+	BlueEngine::RenderCode::ResizeWindow();
 }
 
-void PrototypeScene::handleInput(SDL_Event &event) {
-    auto &engine      = BlueEngine::Engine::get();
-    auto handledMouse = false;
-    switch (event.type) {
-        case SDL_WINDOWEVENT: {
-            this->handleWindowEvent(event);
-        } break;
-        case SDL_KEYDOWN: {
-            this->handleKeyPress(event);
-        } break;
-        case SDL_KEYUP: {
-            this->handleKeyRelease(event);
-        } break;
-        case SDL_MOUSEMOTION: {
-            this->handleMouseMovement(event);
-            handledMouse = true;
-        } break;
-        case SDL_MOUSEWHEEL: {
-            this->handleMouseScroll(event);
-        } break;
-        default: break;
-    }
-    if (!handledMouse) {
-        engine.mouse = {0.0f, 0.0f};
-    }
-}
+// SDLFIX
+void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
+	auto& engine = BlueEngine::Engine::get();
+	auto& guiManager = engine.getGuiManager();
+	auto handledMouse = false;
 
-void PrototypeScene::handleMouseScroll(SDL_Event &event) {
-    int amountScrolledY = event.wheel.y;
-    camera.ProcessMouseScroll(amountScrolledY);
-}
+	switch (inputData.inputType) {
+	case BLUE_InputType::KEY_PRESS: { //  Key Press events
 
-void PrototypeScene::handleMouseMovement(SDL_Event &event) {
-    auto x = static_cast<float>(event.motion.xrel);
-    auto y = static_cast<float>(event.motion.yrel);
-    y      = y * -1;
-    camera.ProcessMouseMovement(x, y);
-}
+		switch (inputData.inputAction) {
+		case BLUE_InputAction::INPUT_MOVE_FORWARD: {
+			moveForward = true;
+		} break;
+		case BLUE_InputAction::INPUT_MOVE_BACKWARD: {
+			moveBackward = true;
+		} break;
+		case BLUE_InputAction::INPUT_MOVE_LEFT: {
+			moveLeft = true;
+		} break;
+		case BLUE_InputAction::INPUT_MOVE_RIGHT: {
+			moveRight = true;
+		} break;
+		case BLUE_InputAction::INPUT_ESCAPE: {
+			guiManager.toggleWindow("menu");
+		} break;
+		default: break;
+		}
 
-void PrototypeScene::handleWindowEvent(SDL_Event &event) {
-    switch (event.window.event) {
-        case SDL_WINDOWEVENT_SIZE_CHANGED:
-        case SDL_WINDOWEVENT_RESIZED: {
-            auto &engine = BlueEngine::Engine::get();
+	} break;
+	case BLUE_InputType::KEY_RELEASE: { // Key Release events
+		switch (inputData.inputAction) {
+		case BLUE_InputAction::INPUT_MOVE_FORWARD: {
+			moveForward = false;
+		} break;
+		case BLUE_InputAction::INPUT_MOVE_BACKWARD: {
+			moveBackward = false;
+		} break;
+		case BLUE_InputAction::INPUT_MOVE_LEFT: {
+			moveLeft = false;
+		} break;
+		case BLUE_InputAction::INPUT_MOVE_RIGHT: {
+			moveRight = false;
+		} break;
+		default: break;
+		}
+	} break;
+	case BLUE_InputType::MOUSE_MOTION: { // Mouse motion event
+		if (engine.getMouseMode() == false) {
+			auto x = static_cast<double>(inputData.mouseMotionRelative.x);
+			auto y = static_cast<double>(inputData.mouseMotionRelative.y);
+			y = y * -1.0;
+			camera.ProcessMouseMovement(x, y);
+			handledMouse = true;
+		}
 
-            SDL_GL_GetDrawableSize(engine.window.get(), &width, &height);
-            ratio = static_cast<double>(width) / static_cast<double>(height);
-
-            glMatrixMode(GL_PROJECTION);
-            glLoadIdentity();
-            glViewport(0, 0, width, height);
-            gluPerspective(60, ratio, 1, 150);
-            glMatrixMode(GL_MODELVIEW);
-
-        } break;
-        default: break;
-    }
-}
-
-void PrototypeScene::handleKeyPress(SDL_Event &event) {
-
-    switch (event.key.keysym.scancode) {
-        case SDL_SCANCODE_W: {
-            moveForward = true;
-        } break;
-        case SDL_SCANCODE_S: {
-            moveBackward = true;
-        } break;
-        case SDL_SCANCODE_A: {
-            moveLeft = true;
-        } break;
-        case SDL_SCANCODE_D: {
-            moveRight = true;
-        } break;
-        case SDL_SCANCODE_ESCAPE: {
-            auto &engine = BlueEngine::Engine::get();
-            engine.endEngine();
-        } break;
-    }
-}
-
-void PrototypeScene::handleKeyRelease(SDL_Event &event) {
-    switch (event.key.keysym.scancode) {
-        case SDL_SCANCODE_W: {
-            moveForward = false;
-        } break;
-        case SDL_SCANCODE_S: {
-            moveBackward = false;
-        } break;
-        case SDL_SCANCODE_A: {
-            moveLeft = false;
-        } break;
-        case SDL_SCANCODE_D: {
-            moveRight = false;
-        } break;
-        case SDL_SCANCODE_ESCAPE: {
-
-        } break;
-    }
+	} break;
+	case BLUE_InputType::MOUSE_WHEEL: { // Mouse Wheel event
+		double amountScrolledY = static_cast<double>(inputData.mouseWheelMotion);
+		camera.ProcessMouseScroll(amountScrolledY);
+	} break;
+	case BLUE_InputType::WINDOW_RESIZE: {
+		this->handleWindowEvent();
+	} break;
+	default: break;
+	}
+	if (!handledMouse) {
+		engine.mouse = { 0.0f, 0.0f };
+	}
 }
 
 auto PrototypeScene::display() -> void {
-    auto &engine = BlueEngine::Engine::get();
-    auto display = SDL_DisplayMode{};
-    SDL_GetCurrentDisplayMode(0, &display);
-    // render
-    // ------
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	// SDLFIX
+	auto& engine = BlueEngine::Engine::get();
+	BlueEngine::RenderCode::Display();
+	auto& guiManager = engine.getGuiManager();
 
-    // view/projection transformations
-    glm::mat4 projection = glm::perspective(
-        glm::radians(camera.Zoom),
-        static_cast<double>(width) / static_cast<double>(height), 0.1, 100000.0);
-    glm::mat4 view = camera.GetViewMatrix();
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplGlfw_NewFrame();
+	guiManager.startWindowFrame();
+	guiManager.displayInputRebindWindow();
+	guiManager.displayEscapeMenu();
+	guiManager.displayInstructionMenu();
+	int width = 0, height = 0;
+	glfwGetWindowSize(engine.window, &width, &height);
+	// view/projection transformations
+	glm::mat4 projection =
+		glm::perspective(glm::radians(camera.Zoom),
+			static_cast<double>(width) / static_cast<double>(height), 0.1, 100000.0);
+	glm::mat4 view = camera.GetViewMatrix();
 
-    glm::mat4 model = glm::mat4(1.0f);
+	//glm::mat4 model = glm::mat4(5.0f);
 
-    Renderer::addToDraw(model, models[0]);
+	//Renderer::addToDraw(model, models[0]);
+	terrain.Draw(projection, view, camera.Position);
+	//renderer.draw(view, projection);
 
-    renderer.draw(view, projection);
+	guiManager.endWindowFrame();
 
-    SDL_GL_SwapWindow(engine.window.get());
+	BlueEngine::RenderCode::EndDisplay();
 }
 
 void PrototypeScene::unInit() {}
 
 double PrototypeScene::getDeltaTime() {
-    auto &e      = BlueEngine::Engine::get();
-    auto newTime = e.getTime();
-    return (newTime - time);
+	auto newTime = glfwGetTime();
+	return (newTime - time);
 }

@@ -18,8 +18,7 @@
 * NOTE: `Linux and Mac dependences out of date`
 * Linux: `sudo apt-get install cmake libsdl2-dev libsdl2-image-dev
     libsdl2-ttf-dev libsdl2-mixer-dev libglm-dev assimp-utils`
-* Windows: `.\vcpkg.exe install --triplet x64-windows sdl2 sdl2-image sdl2-ttf
-    sdl2-mixer glm assimp glad`
+* Windows: `None` 
 
 ### GIT LFS
 Ensure you have GIT LFS installed.
@@ -29,19 +28,21 @@ git lfs install
 
 ### Cloning
 ```
-git clone --recurse-submodules https://github.com/MajorArkwolf/ICT397-Project-Blue.git
-git checkout develop && git submodule update --init
+git clone https://github.com/MajorArkwolf/ICT397-Project-Blue.git
+cd ICT397-Project-Blue
+git checkout develop 
+git submodule update --init --recursive --depth 1
 ```
 
 ### Building
 * Unix:
     ```
-    cmake -S . -B build && cmake --build build && ./build/shays-world
+    cmake -S . -B build && cmake --build build && ./build/project-blue
     ```
 * Windows:
     * Open Visual Studio as Administrator (required to make symbolic links)
     * In Visual Studio, select Open → CMake, select `CMakeLists.txt`
-    * From the "Select Startup Item" menu, select `shays-world.exe`
+    * From the "Select Startup Item" menu, select `Project-Blue.exe`
 
 ## Contributing
 * Ensure your editor uses Unix line endings

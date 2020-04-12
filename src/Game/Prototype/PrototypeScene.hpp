@@ -1,16 +1,12 @@
-//
-// Created by Arkwolf on 19/12/2019.
-//
-
-#ifndef PROJECT_BLUE_PROTOTYPESCENE_HPP
-#define PROJECT_BLUE_PROTOTYPESCENE_HPP
+#pragma once
 
 #include <vector>
 
 #include "Controller/Engine/BaseState.hpp"
 #include "View/Renderer/Renderer.hpp"
-#include "COntroller/Engine/EulerCamera.hpp"
-
+#include "View/EulerCamera.hpp"
+#include "Controller/InputManager.hpp"
+#include "Controller/TerrainManager.hpp"
 
 class PrototypeScene : public BaseState {
 public:
@@ -18,29 +14,23 @@ public:
     ~PrototypeScene() override = default;
 
     auto display() -> void override;
-    auto update(double dt) -> void override;
+    auto update(double t, double dt) -> void override;
 
-    void hardInit() override;
-    void softInit() override;
+    void Init() override;
     void unInit() override;
-    void handleInput(SDL_Event &event) override;
 
     double time = 0;
+    
+    void handleInputData(Controller::Input::InputData inputData) override;
+    Camera camera;
 
 private:
     std::vector<size_t> models;
     Renderer renderer;
-    Camera camera;
+    Controller::TerrainManager terrain = {};
 
-    void handleKeyRelease(SDL_Event &event);
-    void handleKeyPress(SDL_Event &event);
-    void handleWindowEvent(SDL_Event &event);
-    void handleMouseMovement(SDL_Event &event);
-    void handleMouseScroll(SDL_Event &event);
-
-    int width  = 0;
-    int height = 0;
-    int ratio  = 0;
+    //SDLFIX SDL_Event &event
+    void handleWindowEvent();
 
     bool moveForward = false;
     bool moveBackward = false;
@@ -49,6 +39,3 @@ private:
 
     double getDeltaTime();
 };
-
-
-#endif //PROJECT_BLUE_PROTOTYPESCENE_HPP
