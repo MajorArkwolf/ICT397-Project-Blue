@@ -32,8 +32,9 @@ namespace Controller {
 		void GenerateTerrain(Model::TerrainModel& newTerrain, int xcord, int zcord, const Blue::Key key);
 		/**
 		 * @brief Generates a perlin noise map instead of loading one in.
-		 * @param The size of the X dimensions.
-		 * @param The size of the Z dimensions.
+		 * @param xcord The size of the X dimensions.
+		 * @param zcord The size of the Z dimensions.
+		 * @param key Key at where to generate the chunk.
 		 */
 		void GeneratePerlinNoise(int xsize, int zsize);
 		/**
@@ -41,6 +42,8 @@ namespace Controller {
 		 * @return Returns the chunksize the factory is set too.
 		 */
 		int GetChunkSize() const;
+
+		void LoadLua();
 
 	private:
 		/// Determines how many squares fit into a single chunk

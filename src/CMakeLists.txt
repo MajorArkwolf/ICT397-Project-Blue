@@ -9,8 +9,9 @@ target_sources(${PROJECT_NAME} PRIVATE
     Controller/Engine/Engine.cpp
     Controller/GUIManager.cpp
     Controller/ResourceManager.cpp
-    Controller/TerrainFactory.cpp
     Controller/TerrainManager.cpp
+    Controller/Factory/GameAssetFactory.cpp
+    Controller/Factory/TerrainFactory.cpp    
     
     # Model
     Model/Models/Mesh.cpp

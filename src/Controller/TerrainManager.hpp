@@ -4,10 +4,10 @@
 #include <glm/vec2.hpp>
 #include <functional>
 #include "Model/TerrainModel.hpp"
-#include "TerrainFactory.hpp"
 #include <string>
 #include "Model/Vertix.hpp"
 #include <functional>
+
 
 namespace Controller {
 	/// Hash function for the key into the map.
@@ -55,8 +55,6 @@ namespace Controller {
 		int radSize = 99;
 		/// How far the character can move inside the play area before a new chunk is laoded.
 		int reloadDistance = 1;
-		/// The factory object that is used to generate terrain for the manager.
-		TerrainFactory factory = {};
 		/// The last position the camera was at.
         Blue::Key lastPos = Blue::Key(999, 999);
 		/// Draw list of chunks to be sent to the renderer.
