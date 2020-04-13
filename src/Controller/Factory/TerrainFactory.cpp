@@ -283,4 +283,5 @@ void Controller::TerrainFactory::ExportHeightMap(float *heightMap) {
             }
         }
     }
+    assert(count == maxIndex);
 }

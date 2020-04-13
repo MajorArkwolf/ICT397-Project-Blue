@@ -10,8 +10,6 @@ void Controller::TerrainManager::Init() {
     Blue::Key updateKey = {};
 	updateKey.first = 0;
 	updateKey.second = 0;
-    Blue::HeightMap height = {};
-    GenerateHeightMap(height);
 }
 
 void Controller::TerrainManager::Draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos) {
