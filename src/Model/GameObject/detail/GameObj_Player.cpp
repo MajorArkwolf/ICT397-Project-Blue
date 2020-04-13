@@ -15,9 +15,17 @@ GameObj_Player::~GameObj_Player() {
 	// GameObj_Player has no unique destruction procedure yet.
 }
 
-GameObjectType GameObj_Player::gameObj_getType() const {
+GameObjectType GameObj_Player::gameObj_getTypeID() const {
 	// Return a copy of the class's unique type identifier
-	return gameObj_getTypeID();
+	return _gameObj_getTypeID();
+}
+
+GameObjectType GameObj_Player::_gameObj_getTypeID() {
+	// Keep track of this class's identifier for its type
+	static const GameObjectType classID = gameObj_registerTypeID();
+
+	// Return a copy of the tracked id
+	return classID;
 }
 
 void GameObj_Player::gameObj_addToDraw() {
@@ -51,12 +59,4 @@ void GameObj_Player::status_delete(std::string key) {
 void GameObj_Player::status_deleteAll() {
 	// Perform the operation on the map
 	player_statuses.clear();
-}
-
-GameObjectType GameObj_Player::gameObj_getTypeID() {
-	// Keep track of this class's identifier for its type
-	static const GameObjectType classID = gameObj_registerTypeID();
-
-	// Return a copy of the tracked id
-	return classID;
 }

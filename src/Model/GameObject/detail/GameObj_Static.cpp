@@ -15,19 +15,19 @@ GameObj_Static::~GameObj_Static() {
 	// GameObj_Static has no unique destruction procedure yet.
 }
 
-GameObjectType GameObj_Static::gameObj_getType() const {
+GameObjectType GameObj_Static::gameObj_getTypeID() const {
 	// Return a copy of the class's unique type identifier
-	return gameObj_getTypeID();
+	return _gameObj_getTypeID();
 }
 
-void GameObj_Static::gameObj_addToDraw() {
-	//TODO: Implement this stubbed out function
-}
-
-GameObjectType GameObj_Static::gameObj_getTypeID() {
+GameObjectType GameObj_Static::_gameObj_getTypeID() {
 	// Keep track of this class's identifier for its type
 	static const GameObjectType classID = gameObj_registerTypeID();
 
 	// Return a copy of the tracked id
 	return classID;
+}
+
+void GameObj_Static::gameObj_addToDraw() {
+	//TODO: Implement this stubbed out function
 }

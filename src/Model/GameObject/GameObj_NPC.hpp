@@ -34,16 +34,15 @@ public:
 		 * @return A unique identifying value for the GameObj_NPC class.
 		 * @warning May return 0 if an error occured with registering the ID!
 		 */
-	GameObjectType gameObj_getType() const;
+	GameObjectType gameObj_getTypeID() const;
 
-		//! Adds the GameObject to the draw queue.
-	void gameObj_addToDraw();
-
-private:
 		/*!
 		 * @brief Identifies the GameObject's type.
 		 * @return A unique identifying value for the GameObj_NPC class.
 		 * @warning May return 0 if an error occured with registering the ID!
 		 */
-	static GameObjectType gameObj_getTypeID();
+	static GameObjectType _gameObj_getTypeID();
+
+		//! Adds the GameObject to the draw queue.
+	void gameObj_addToDraw();
 };

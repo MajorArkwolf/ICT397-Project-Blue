@@ -37,7 +37,14 @@ public:
 		 * @return A unique identifying value for the GameObj_Player class.
 		 * @warning May return 0 if an error occured with registering the ID!
 		 */
-	GameObjectType gameObj_getType() const;
+	GameObjectType gameObj_getTypeID() const;
+
+		/*!
+		 * @brief Identifies the GameObject's type.
+		 * @return A unique identifying value for the GameObj_Player class.
+		 * @warning May return 0 if an error occured with registering the ID!
+		 */
+	static GameObjectType _gameObj_getTypeID();
 
 		//! Adds the GameObject to the draw queue.
 	void gameObj_addToDraw();
@@ -84,12 +91,4 @@ protected:
 		 * @note All player status values are stored as floats.
 		 */
 	std::map<std::string, float> player_statuses;
-
-private:
-		/*!
-		 * @brief Identifies the GameObject's type.
-		 * @return A unique identifying value for the GameObj_Player class.
-		 * @warning May return 0 if an error occured with registering the ID!
-		 */
-	static GameObjectType gameObj_getTypeID();
 };
