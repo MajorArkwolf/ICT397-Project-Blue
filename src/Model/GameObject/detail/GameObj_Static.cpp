@@ -14,6 +14,11 @@ GameObj_Static::~GameObj_Static() {
 }
 
 GameObjectType GameObj_Static::gameObj_getType() const {
+	// Return a copy of the class's unique type identifier
+	return gameObj_getTypeID();
+}
+
+GameObjectType GameObj_Static::gameObj_getTypeID() const {
 	// Keep track of this class's identifier for its type
 	static const GameObjectType classID = gameObj_getType();
 

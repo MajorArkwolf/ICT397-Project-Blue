@@ -14,11 +14,8 @@ GameObj_Player::~GameObj_Player() {
 }
 
 GameObjectType GameObj_Player::gameObj_getType() const {
-	// Keep track of this class's identifier for its type
-	static const GameObjectType classID = gameObj_getType();
-
-	// Return a copy of the tracked id
-	return classID;
+	// Return a copy of the class's unique type identifier
+	return gameObj_getTypeID();
 }
 
 GameObj_Player::status_assign(std::string key, float value) {
@@ -48,4 +45,12 @@ GameObj_Player::status_delete(std::string key) {
 GameObj_Player::status_deleteAll() {
 	// Perform the operation on the map
 	player_statuses.clear();
+}
+
+GameObjectType GameObj_Player::gameObj_getTypeID() const {
+	// Keep track of this class's identifier for its type
+	static const GameObjectType classID = gameObj_getType();
+
+	// Return a copy of the tracked id
+	return classID;
 }

@@ -35,8 +35,9 @@ class GameObj_Player : virtual public GameObject_Base {
 			/*!
 			 * @brief Identifies the GameObject's type.
 			 * @return A unique identifying value for the GameObj_Player class.
+			 * @warning May return 0 if an error occured with registering the ID!
 			 */
-		static GameObjectType gameObj_getType() const;
+		GameObjectType gameObj_getType() const;
 
 			/*!
 			 * @brief Assigns a status (with a value) to the player.
@@ -57,15 +58,17 @@ class GameObj_Player : virtual public GameObject_Base {
 			/*!
 			 * @brief Returns a copy of the value assigned to the player's status.
 			 * @param [in] key The string to identify the status by.
-			 * @return A copy of the status' value, or 0.0f if the status does not exist.
+			 * @return A copy of the status' value, or 0.0f if the status was not found.
 			 * @note Function status_has() should be called prior to confirm the status exists.
+			 * @warning The return value alone cannot be used to determine if an error had occured!
+			 * @see GameObj_Player::status_has()
 			 */
 		float status_get(std::string key);
 
 			/*!
 			 * @brief Deletes a specific status (and it's assigned value) for the player.
 			 * @param [in] key The string to identify the status by.
-			 * @warning If the targeted status does not exist, the operation will silently fail!
+			 * @note If the targeted status does not exist, no changes will occur.
 			 */
 		void status_delete(std::string key);
 
@@ -78,4 +81,12 @@ class GameObj_Player : virtual public GameObject_Base {
 			 * @note All player status values are stored as floats.
 			 */
 		std::map<std::string, float> player_statuses;
+
+	private:
+			/*!
+			 * @brief Identifies the GameObject's type.
+			 * @return A unique identifying value for the GameObj_Player class.
+			 * @warning May return 0 if an error occured with registering the ID!
+			 */
+		static GameObjectType gameObj_getTypeID() const;
 };

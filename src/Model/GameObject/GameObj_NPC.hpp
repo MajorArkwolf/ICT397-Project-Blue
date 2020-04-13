@@ -32,6 +32,15 @@ class GameObj_NPC : virtual public GameObject_Base {
 			/*!
 			 * @brief Identifies the GameObject's type.
 			 * @return A unique identifying value for the GameObj_NPC class.
+			 * @warning May return 0 if an error occured with registering the ID!
 			 */
-		static GameObjectType gameObj_getType() const;
+		GameObjectType gameObj_getType() const;
+
+	private:
+			/*!
+			 * @brief Identifies the GameObject's type.
+			 * @return A unique identifying value for the GameObj_NPC class.
+			 * @warning May return 0 if an error occured with registering the ID!
+			 */
+		static GameObjectType gameObj_getTypeID() const;
 };

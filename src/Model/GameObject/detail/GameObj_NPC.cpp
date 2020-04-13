@@ -14,6 +14,11 @@ GameObj_NPC::~GameObj_NPC() {
 }
 
 GameObjectType GameObj_NPC::gameObj_getType() const {
+	// Return a copy of the class's unique type identifier
+	return gameObj_getTypeID();
+}
+
+GameObjectType GameObj_NPC::gameObj_getTypeID() const {
 	// Keep track of this class's identifier for its type
 	static const GameObjectType classID = gameObj_getType();
 

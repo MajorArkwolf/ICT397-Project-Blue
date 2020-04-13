@@ -6,7 +6,10 @@
 	/// External Dependencies
 #include <glm/glm.hpp>
 
-	//! Declaration of the type for identifying different GameObject classes.
+	/*!
+	 * @brief Declaration of the type for identifying different GameObject classes.
+	 * @warning 0 is reserved for invalid identifiers and error reporting.
+	 */
 using GameObjectType = unsigned int;
 
 	//! The parent class for all child GameObjects.
@@ -27,6 +30,13 @@ public:
 
 		//! Virtual destructor.
 	virtual ~GameObject_Base() = 0;
+
+		/*!
+		 * @brief Identifies the GameObject's type.
+		 * @return Always returns 0 for GameObject_Base.
+		 * @warning Must be implemented by inheritors!
+		 */
+	virtual GameObjectType gameObj_getType() const = 0;
 
 		/*!
 		 * @brief Tracks and calls for the loading of an external model file.
@@ -60,17 +70,18 @@ public:
 		 */
 	glm::vec3 gameObj_lookUp;
 
+protected:
+		/*!
+		 * @brief Registers an identifying value for the GameObject's class.
+		 * @return A unique value of GameObjectType, or the lowest possible value of GameObjectType on error.
+		 * @warning Should only be called by an inheritor's gameObj_getType()!
+		 */
+	static GameObjectType gameObj_registerTypeID();
+
 private:
 		/*!
 		 * @brief Stores the ID of the model for the GameObject.
 		 * @note Defaults to the lowest possible value for the ID type.
 		 */
 	std::size_t gameObj_modelId;
-
-		/*!
-		 * @brief Registers an identifying value for the GameObject's class.
-		 * @return A unique value of GameObjectType, or the lowest possible value of GameObjectType on error.
-		 * @warning Should only be called by an inheritor's gameObj_getType()!
-		 */
-	static GameObjectType registerTypeID();
 };
