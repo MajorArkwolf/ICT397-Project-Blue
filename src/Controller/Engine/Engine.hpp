@@ -18,6 +18,9 @@
 #include "Controller/GUIManager.hpp"
 #include "Controller/ResourceManager.hpp"
 #include "GameStack.hpp"
+#include "Controller/PhysicsFacade/React/ReactDynamicsWorld.hpp"
+
+
 
 const unsigned int SCR_WIDTH  = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -55,6 +58,7 @@ namespace BlueEngine {
         Engine(Engine &&)      = default;
         Engine(const Engine &) = delete;
         ~Engine();
+        Physics::ReactDynamicsWorld dynWorld;
 
         /**
          * @brief Getter to the engine variables.

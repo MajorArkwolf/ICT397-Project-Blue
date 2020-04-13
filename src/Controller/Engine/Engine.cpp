@@ -6,13 +6,11 @@
 #include <string>
 
 #include "BaseState.hpp"
-#include "GameStack.hpp"
-
-#include "Controller/InputManager.hpp"
 #include "Controller/GUIManager.hpp"
+#include "Controller/InputManager.hpp"
 #include "Controller/ResourceManager.hpp"
-
-
+#include "GameStack.hpp"
+#include "Controller/PhysicsFacade/React/ReactShapes.hpp"
 
 // Game States
 #include "Game/Prototype/PrototypeScene.hpp"
@@ -66,14 +64,14 @@ auto Engine::run() -> void {
     glfwDestroyWindow(engine.window);
 }
 
-GUIManager& BlueEngine::Engine::getGuiManager() {
+GUIManager &BlueEngine::Engine::getGuiManager() {
     return guiManager;
 }
 
 /**
  * @brief Game engine default constructor, sets up all variables and settings required for operation
  */
-Engine::Engine() {
+Engine::Engine() : dynWorld(glm::vec3{0, -9.8, 0}) {
     getBasePath();
     if (!glfwInit()) {
         std::cerr << "GLFW FAILED TO INIT \n";
@@ -84,7 +82,6 @@ Engine::Engine() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
     glfwWindowHint(GLFW_FOCUS_ON_SHOW, GLFW_TRUE);
-    
 
 #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,
@@ -100,7 +97,7 @@ Engine::Engine() {
     }
     gleqTrackWindow(window);
     glfwMakeContextCurrent(window);
-    
+
     // tell GLFW to capture our mouse
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -111,8 +108,18 @@ Engine::Engine() {
     }
 
     this->guiManager.initialiseImGUI(window);
+    Physics::ReactShapes shapes;
+    auto id = shapes.createSphere(5);
+    std::cout << id;
+    auto &sphereShape = shapes.shapeMap.at(id);
+    try {
+        auto &w = std::get<0>(sphereShape);
+        std::cout << w.getRadius();
+    } catch (std::bad_variant_access &) {
+    }
 
 
+    
 }
 
 /**
@@ -135,9 +142,8 @@ auto Engine::get() -> Engine & {
 
 auto Engine::processInput() -> void {
     GLEQevent event;
-    auto handledMouse = true;
+    auto handledMouse  = true;
     auto &inputManager = Controller::Input::InputManager::getInstance();
-
 
     while (gleqNextEvent(&event)) {
         if (event.type == GLEQ_KEY_PRESSED || event.type == GLEQ_KEY_RELEASED) {
@@ -151,7 +157,7 @@ auto Engine::processInput() -> void {
                         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
                     } else {
                         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-                    }                     
+                    }
                 }
             } break;
             case GLEQ_WINDOW_CLOSED: {
@@ -189,14 +195,13 @@ auto Engine::getIsRunning() const -> bool {
     return this->isRunning;
 }
 
-auto Engine::endEngine() -> void {    
+auto Engine::endEngine() -> void {
     isRunning = false;
-
 }
 
 auto Engine::getBasePath() -> void {
-    //char *base_path = SDL_GetBasePath();
-    //basepath        = std::string(base_path);
-    //SDL_free(base_path);
+    // char *base_path = SDL_GetBasePath();
+    // basepath        = std::string(base_path);
+    // SDL_free(base_path);
     basepath = "./";
 }

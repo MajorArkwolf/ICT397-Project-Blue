@@ -12,6 +12,10 @@ target_sources(${PROJECT_NAME} PRIVATE
     Controller/TerrainManager.cpp
     Controller/Factory/GameAssetFactory.cpp
     Controller/Factory/TerrainFactory.cpp    
+    Controller/PhysicsFacade/React/ReactRigidBody.cpp
+    Controller/PhysicsFacade/React/ReactDynamicsWorld.cpp
+    Controller/PhysicsFacade/React/ReactHelper.cpp
+    Controller/PhysicsFacade/React/ReactShapes.cpp
     
     # Model
     Model/Models/Mesh.cpp
