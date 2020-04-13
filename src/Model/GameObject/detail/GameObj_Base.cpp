@@ -5,7 +5,7 @@
 #include <limits>
 
 	/// Internal Dependencies
-#include "../../Models/ModelManager.hpp"
+#include "../../../Controller/ResourceManager.hpp"
 
 GameObj_Base::GameObj_Base() {
 	// Set the initial values of the GameObject's 3D position attributes
@@ -41,11 +41,12 @@ GameObjType GameObj_Base::gameObj_getTypeID() const {
 }
 
 void GameObj_Base::gameObj_setModel(std::string path) {
-	// Call the Model Loader and keep track of what it spits out
-	gameObj_modelId = ModelManager::GetModelID(path);
-
 	// Store the path
 	gameObj_modelPath = path;
+	
+	// Call the Model Loader and keep track of what it spits out
+	auto resmanager = ResourceManager::getInstance();
+	gameObj_modelId = resmanager.getModelID(gameObj_modelPath);
 }
 
 std::size_t GameObj_Base::gameObj_getModelID() {
