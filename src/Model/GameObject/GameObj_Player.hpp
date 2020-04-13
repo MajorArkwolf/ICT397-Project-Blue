@@ -6,6 +6,9 @@
 	/// Internal Dependencies
 #include "GameObject_Base.hpp"
 
+	//! The constant static definition for the identifier of GameObject type GameObj_Player.
+constexpr GameObjectType GAMEOBJ_PLAYER = 2u;
+
 	/*!
 	 * @brief A GameObject containing player-specific features.
 	 * @note Used for extendible and efficient characters that the players can control.
@@ -34,15 +37,13 @@ public:
 
 		/*!
 		 * @brief Identifies the GameObject's type.
-		 * @return A unique identifying value for the GameObj_Player class.
-		 * @warning May return 0 if an error occured with registering the ID!
+		 * @return GAMEOBJ_PLAYER, always.
 		 */
 	GameObjectType gameObj_getTypeID() const;
 
 		/*!
 		 * @brief Identifies the GameObject's type.
-		 * @return A unique identifying value for the GameObj_Player class.
-		 * @warning May return 0 if an error occured with registering the ID!
+		 * @return GAMEOBJ_PLAYER, always.
 		 */
 	static GameObjectType _gameObj_getTypeID();
 

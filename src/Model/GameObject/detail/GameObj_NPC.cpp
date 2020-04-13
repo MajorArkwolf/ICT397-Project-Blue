@@ -21,11 +21,8 @@ GameObjectType GameObj_NPC::gameObj_getTypeID() const {
 }
 
 GameObjectType GameObj_NPC::_gameObj_getTypeID() {
-	// Keep track of this class's identifier for its type
-	static const GameObjectType classID = gameObj_registerTypeID();
-
-	// Return a copy of the tracked id
-	return classID;
+	// Always return error indicator GAMEOBJ_NPC, never return anything else.
+	return GAMEOBJ_NPC;
 }
 
 void GameObj_NPC::gameObj_addToDraw() {

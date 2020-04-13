@@ -3,6 +3,9 @@
 	/// Internal Dependencies
 #include "GameObject_Base.hpp"
 
+	//! The constant static definition for the identifier of GameObject type GameObj_Static.
+constexpr GameObjectType GAMEOBJ_STATIC = 1u;
+
 	/*!
 	 * @brief A non-moving Gameobject.
 	 * @note Used for populating a scene with furnishings.
@@ -31,15 +34,13 @@ public:
 
 		/*!
 		 * @brief Identifies the GameObject's type.
-		 * @return A unique identifying value for the GameObj_Static class.
-		 * @warning May return 0 if an error occured with registering the ID!
+		 * @return GAMEOBJ_STATIC, always.
 		 */
 	GameObjectType gameObj_getTypeID() const;
 
 		/*!
 		 * @brief Identifies the GameObject's type.
-		 * @return A copy of the unique and static identifying value for GameObj_Static.
-		 * @warning May return 0 if an error occured with registering the ID!
+		 * @return GAMEOBJ_STATIC, always.
 		 */
 	static GameObjectType _gameObj_getTypeID();
 

@@ -35,9 +35,9 @@ GameObject_Base::~GameObject_Base() {
 	// GameObj_Base has no unique destruction procedure yet.
 }
 
-GameObjectType GameObject_Base::gameObj_getType() const {
-	// Always return error indicator 0, never return anything else.
-	return 0u;
+GameObjectType GameObject_Base::gameObj_getTypeID() const {
+	// Always return error indicator GAMEOBJ_INVALID, never return anything else.
+	return GAMEOBJ_INVALID;
 }
 
 void GameObject_Base::gameObj_setModel(std::string path) {
@@ -46,21 +46,6 @@ void GameObject_Base::gameObj_setModel(std::string path) {
 
 	// Store the path
 	gameObj_modelPath = path;
-}
-
-GameObjectType GameObject_Base::gameObj_registerTypeID() {
-	// Keep track of the IDs already assigned
-	static GameObjectType idCount = 0u;
-
-	// Catch the overflow of the tracked IDs
-	if (idCount == std::numeric_limits<GameObjectType>::max())
-	{
-		// Return the minimum ID value to indicate an error
-		return 0u;
-	}
-
-	// Generate the ID
-	return ++idCount;
 }
 
 std::size_t GameObject_Base::gameObj_getModelID() {
