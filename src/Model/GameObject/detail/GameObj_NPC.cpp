@@ -18,6 +18,10 @@ GameObjectType GameObj_NPC::gameObj_getType() const {
 	return gameObj_getTypeID();
 }
 
+void GameObj_NPC::gameObj_addToDraw() {
+	//TODO: Implement this stubbed out function
+}
+
 GameObjectType GameObj_NPC::gameObj_getTypeID() const {
 	// Keep track of this class's identifier for its type
 	static const GameObjectType classID = gameObj_getType();

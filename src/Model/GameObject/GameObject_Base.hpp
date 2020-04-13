@@ -10,7 +10,7 @@
 	 * @brief Declaration of the type for identifying different GameObject classes.
 	 * @warning 0 is reserved for invalid identifiers and error reporting.
 	 */
-using GameObjectType = unsigned int;
+using GameObjectType = long unsigned int;
 
 	//! The parent class for all child GameObjects.
 class GameObject_Base
@@ -37,6 +37,12 @@ public:
 		 * @warning Must be implemented by inheritors!
 		 */
 	virtual GameObjectType gameObj_getType() const = 0;
+
+		/*!
+		 * @brief Adds the GameObject to the draw queue.
+		 * @warning Behaviour must be implemented by inheritors!
+		 */
+	virtual void gameObj_addToDraw() = 0;
 
 		/*!
 		 * @brief Tracks and calls for the loading of an external model file.
@@ -69,6 +75,12 @@ public:
 		 * @note Default value of { 0.0f, 1.0f, 0.0f }.
 		 */
 	glm::vec3 gameObj_lookUp;
+
+		/*!
+		 * @brief Stores the identifier for the GameObject's physics body.
+		 * @note Default value of 0ul.
+		 */
+	long unsigned int gameObj_physBody;
 
 protected:
 		/*!

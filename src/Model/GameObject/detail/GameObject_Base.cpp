@@ -13,8 +13,9 @@ GameObject_Base::GameObject_Base() {
 	gameObj_lookAt = {0.0f, 0.0f, 1.0f};
 	gameObj_lookUp = {0.0f, 1.0f, 0.0f};
 
-	// Set the initial stored ID
+	// Set the initial stored identifiers
 	gameObj_modelId = std::numeric_limits<std::size_t>::min();
+	gameObj_physBody = 0ul;
 }
 
 GameObject_Base::GameObject_Base(std::string path, glm::vec3 position, glm::vec3 look_at,

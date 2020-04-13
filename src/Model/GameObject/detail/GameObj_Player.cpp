@@ -18,6 +18,10 @@ GameObjectType GameObj_Player::gameObj_getType() const {
 	return gameObj_getTypeID();
 }
 
+void GameObj_Player::gameObj_addToDraw() {
+	//TODO: Implement this stubbed out function
+}
+
 GameObj_Player::status_assign(std::string key, float value) {
 	// Perform the operation on the map
 	player_statuses[key] = value;
