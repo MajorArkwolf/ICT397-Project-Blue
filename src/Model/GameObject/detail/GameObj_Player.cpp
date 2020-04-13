@@ -2,12 +2,12 @@
 #include "../GameObj_Player.hpp"
 
 GameObj_Player::GameObj_Player()
-	: GameObject_Base() {
+	: GameObj_Base() {
 	// GameObj_Player has no unique attributes to initialise yet
 }
 
 GameObj_Player::GameObj_Player(std::string path, unsigned long int physBody, glm::vec3 position, glm::vec3 look_at, glm::vec3 look_up)
-	: GameObject_Base(path, physBody, position, look_at, look_up) {
+	: GameObj_Base(path, physBody, position, look_at, look_up) {
 	// GameObj_Player has no unique attributes to initialise yet
 }
 
@@ -15,12 +15,12 @@ GameObj_Player::~GameObj_Player() {
 	// GameObj_Player has no unique destruction procedure yet.
 }
 
-GameObjectType GameObj_Player::gameObj_getTypeID() const {
+GameObjType GameObj_Player::gameObj_getTypeID() const {
 	// Return a copy of the class's unique type identifier
 	return _gameObj_getTypeID();
 }
 
-GameObjectType GameObj_Player::_gameObj_getTypeID() {
+GameObjType GameObj_Player::_gameObj_getTypeID() {
 	// Always return error indicator GAMEOBJ_PLAYER, never return anything else.
 	return GAMEOBJ_PLAYER;
 }

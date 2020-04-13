@@ -10,17 +10,17 @@
 	 * @brief Declaration of the type for identifying different GameObject classes.
 	 * @warning 0 is reserved for invalid identifiers and error reporting.
 	 */
-using GameObjectType = unsigned int;
+using GameObjType = unsigned int;
 
 	//! The constant static definition for the identifier of an invalid GameObject type.
-constexpr GameObjectType GAMEOBJ_INVALID = 0u;
+constexpr GameObjType GAMEOBJ_INVALID = 0u;
 
 	//! The parent class for all child GameObjects.
-class GameObject_Base
+class GameObj_Base
 {
 public:
 		//! Initialises class attributes to their defaults.
-	GameObject_Base();
+	GameObj_Base();
 
 		/*!
 		 * @brief Initialises class attributes to custom values.
@@ -30,17 +30,17 @@ public:
 		 * @param [in] look_at The point the GameObject is looking at, relative to its position.
 		 * @param [in] look_up The point where GameObject is looking up, relative to its position.
 		 */
-	GameObject_Base(std::string path, unsigned long int physBody, glm::vec3 position, glm::vec3 look_at, glm::vec3 look_up);
+	GameObj_Base(std::string path, unsigned long int physBody, glm::vec3 position, glm::vec3 look_at, glm::vec3 look_up);
 
 		//! Virtual destructor.
-	virtual ~GameObject_Base() = 0;
+	virtual ~GameObj_Base() = 0;
 
 		/*!
 		 * @brief Identifies the GameObject's type.
-		 * @return Always returns GAMEOBJ_INVALID for GameObject_Base.
+		 * @return Always returns GAMEOBJ_INVALID for GameObj_Base.
 		 * @warning Must be implemented by inheritors!
 		 */
-	virtual GameObjectType gameObj_getTypeID() const = 0;
+	virtual GameObjType gameObj_getTypeID() const = 0;
 
 		/*!
 		 * @brief Adds the GameObject to the draw queue.
