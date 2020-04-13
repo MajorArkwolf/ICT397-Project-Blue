@@ -10,7 +10,7 @@
 	 * @brief A GameObject containing player-specific features.
 	 * @note Used for extendible and efficient characters that the players can control.
 	 */
-class GameObj_Player : virtual public GameObject_Base {
+class GameObj_Player : public GameObject_Base {
 	public:
 			/*!
 			 * @brief Initialses class contents and calls the inherited class constructor.

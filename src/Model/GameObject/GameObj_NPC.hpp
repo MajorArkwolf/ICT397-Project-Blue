@@ -7,7 +7,7 @@
 	 * @brief A non-moving Gameobject.
 	 * @note Used for populating a scene with furnishings.
 	 */
-class GameObj_NPC : virtual public GameObject_Base {
+class GameObj_NPC : public GameObject_Base {
 	public:
 			/*!
 			 * @brief Initialses class contents and calls the inherited class constructor.
