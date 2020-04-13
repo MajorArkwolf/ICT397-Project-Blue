@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include "Factory/GameAssetFactory.hpp"
 Controller::TerrainManager::TerrainManager() {
-
+    id = BlueEngine::IDTracker::getInstance().getID();
 }
 
 void Controller::TerrainManager::Init() {
