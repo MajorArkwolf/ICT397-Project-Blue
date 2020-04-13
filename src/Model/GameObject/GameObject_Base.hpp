@@ -22,11 +22,12 @@ public:
 		/*!
 		 * @brief Initialises class attributes to custom values.
 		 * @param [in] path The path to a target external model file for this GameObject.
+		 * @param [in] physBody The identifier for the physical body for this GameObject.
 		 * @param [in] position The position of the GameObject in the 3D environment.
 		 * @param [in] look_at The point the GameObject is looking at, relative to its position.
 		 * @param [in] look_up The point where GameObject is looking up, relative to its position.
 		 */
-	GameObject_Base(std::string path, glm::vec3 position, glm::vec3 look_at, glm::vec3 look_up);
+	GameObject_Base(std::string path, unsigned long int physBody, glm::vec3 position, glm::vec3 look_at, glm::vec3 look_up);
 
 		//! Virtual destructor.
 	virtual ~GameObject_Base() = 0;
@@ -48,6 +49,7 @@ public:
 		 * @brief Tracks and calls for the loading of an external model file.
 		 * @param [in] path The path to a target external model file for this GameObject.
 		 * @see gameObj_modelId
+		 * @see gameObj_modelPath
 		 */
 	void gameObj_setModel(std::string path);
 
@@ -56,7 +58,14 @@ public:
 		 * @return The ID of the tracked model.
 		 * @see gameObj_modelId
 		 */
-	std::size_t gameObj_getModel();
+	std::size_t gameObj_getModelID();
+
+		/*!
+		 * @brief Returns the model for this GameObject.
+		 * @return The ID of the tracked model.
+		 * @see gameObj_modelPath
+		 */
+	std::string gameObj_getModelPath();
 
 		/*!
 		 * @brief Stores the current position of the GameObject in a 3D space.
@@ -92,8 +101,14 @@ protected:
 
 private:
 		/*!
-		 * @brief Stores the ID of the model for the GameObject.
+		 * @brief Stores the identifier of the model for the GameObject.
 		 * @note Defaults to the lowest possible value for the ID type.
 		 */
 	std::size_t gameObj_modelId;
+
+		/*!
+		 * @brief Stores the external path to the model on the disk for the GameObject.
+		 * @note Defaults to "".
+		 */
+	std::string gameObj_modelPath;
 };
