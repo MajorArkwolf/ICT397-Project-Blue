@@ -20,7 +20,7 @@ namespace Model {
 
         Model(char *path, bool gamma);
         Model(std::string path, bool gamma);
-        void Draw(Shader shader);
+        void Draw(Shader& shader);
 
       private:
         void loadModel(const std::string &path);

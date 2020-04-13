@@ -6,18 +6,19 @@
 #include <map>
 #include <cassert>
 #include "stb_image.h"
-#include "View/Renderer/OpenGLProxy.hpp"
+#include "Controller/Engine/Engine.hpp"
 
 
 void Controller::TerrainFactory::Init() {
+    auto &render = BlueEngine::Engine::get().renderer;
     terrainShader = std::make_shared<Shader>("./res/shader/terrain_vert.vs", "./res/shader/terrain_frag.fs");
     waterShader = std::make_shared<Shader>("./res/shader/water_vert.vs", "./res/shader/water_frag.fs");
     LoadPerlinNoise(".//res//images//test2.jpg");
-    snowTextureID = BlueEngine::RenderCode::TextureFromFile("snow.jpg", "./res/images");
-    grassTextureID = BlueEngine::RenderCode::TextureFromFile("grass.jpg", "./res/images");
-    dirtTextureID  = BlueEngine::RenderCode::TextureFromFile("dirt.jpg", "./res/images");
-    sandTextureID  = BlueEngine::RenderCode::TextureFromFile("sand.jpg", "./res/images");
-    waterTextureID = BlueEngine::RenderCode::TextureFromFile("water.jpg", "./res/images");
+    snowTextureID = render.TextureFromFile("snow.jpg", "./res/images", false);
+    grassTextureID = render.TextureFromFile("grass.jpg", "./res/images", false);
+    dirtTextureID  = render.TextureFromFile("dirt.jpg", "./res/images", false);
+    sandTextureID  = render.TextureFromFile("sand.jpg", "./res/images", false);
+    waterTextureID = render.TextureFromFile("water.jpg", "./res/images", false);
 }
 
 void LoadLua() {

@@ -25,7 +25,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     View/Renderer/Shader.cpp
     View/EulerCamera.cpp
     View/Renderer/Renderer.cpp
-    View/Renderer/OpenGLProxy.cpp
+    View/Renderer/OpenGL.cpp
     View/Renderer/Skybox.cpp
 
     # Game

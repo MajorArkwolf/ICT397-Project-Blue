@@ -5,7 +5,7 @@
 #include "Controller/Engine/Engine.hpp"
 #include "Model/Models/Model.hpp"
 #include "Model/Models/ModelManager.hpp"
-#include "View/Renderer/OpenGLProxy.hpp"
+#include "View/Renderer/OpenGL.hpp"
 #include "View/Renderer/Renderer.hpp"
 
 using Controller::Input::BLUE_InputAction;
@@ -29,20 +29,23 @@ auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
 		camera.ProcessKeyboard(RIGHT, dt);
 	}
 
-	terrain.Update(camera.getLocation());
+	//terrain.Update(camera.getLocation());
 }
 
 void PrototypeScene::Init() {
 	auto& resManager = ResourceManager::getInstance();
-	BlueEngine::RenderCode::HardInit();
-	terrain.Init();
-	camera.Position.y = 100.0;
+	auto &renderer = BlueEngine::Engine::get().renderer;
+	renderer.Init();
+	//terrain.Init();
+	//camera.Position.y = 100.0;
 	camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
-	models.push_back(resManager.getModelID("res/model/player_male.obj"));
+	models.emplace_back("res/model/player_male.obj", false);
+
+	//models.push_back(resManager.getModelID("res/model/player_male.obj"));
 }
 
 void PrototypeScene::handleWindowEvent() {
-	BlueEngine::RenderCode::ResizeWindow();
+	View::OpenGL::ResizeWindow();
 }
 
 // SDLFIX
@@ -92,7 +95,7 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
 		}
 	} break;
 	case BLUE_InputType::MOUSE_MOTION: { // Mouse motion event
-		if (engine.getMouseMode() == false) {
+		if (!engine.getMouseMode()) {
 			auto x = static_cast<double>(inputData.mouseMotionRelative.x);
 			auto y = static_cast<double>(inputData.mouseMotionRelative.y);
 			y = y * -1.0;
@@ -116,40 +119,13 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
 }
 
 auto PrototypeScene::display() -> void {
-	// SDLFIX
-	auto& engine = BlueEngine::Engine::get();
-	BlueEngine::RenderCode::Display();
-	auto& guiManager = engine.getGuiManager();
-
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplGlfw_NewFrame();
-	guiManager.startWindowFrame();
-	guiManager.displayInputRebindWindow();
-	guiManager.displayEscapeMenu();
-	guiManager.displayInstructionMenu();
-	int width = 0, height = 0;
-	glfwGetWindowSize(engine.window, &width, &height);
-	// view/projection transformations
-	glm::mat4 projection =
-		glm::perspective(glm::radians(camera.Zoom),
-			static_cast<double>(width) / static_cast<double>(height), 0.1, 100000.0);
-	glm::mat4 view = camera.GetViewMatrix();
-
+    auto &renderer = BlueEngine::Engine::get().renderer;
+    renderer.SetCameraOnRender(camera);
 	//glm::mat4 model = glm::mat4(5.0f);
-
-	//Renderer::addToDraw(model, models[0]);
-	terrain.Draw(projection, view, camera.Position);
+	renderer.AddToQue(models.at(0));
+	//terrain.Draw(projection, view, camera.Position);
 	//renderer.draw(view, projection);
-    glm::mat4 skyboxView = glm::mat4(glm::mat3(camera.GetViewMatrix()));
-    skybox.draw(skyboxView, projection);
-	guiManager.endWindowFrame();
-
-	BlueEngine::RenderCode::EndDisplay();
 }
 
 void PrototypeScene::unInit() {}
 
-double PrototypeScene::getDeltaTime() {
-	auto newTime = glfwGetTime();
-	return (newTime - time);
-}

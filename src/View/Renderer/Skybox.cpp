@@ -4,7 +4,7 @@
 #include "stb_image.h"
 #include "Controller/Engine/Engine.hpp"
 
-Skybox::Skybox() {
+View::Skybox::Skybox() {
     auto &engine = BlueEngine::Engine::get();
     glGenVertexArrays(1, &skyboxVAO);
     glGenBuffers(1, &skyboxVBO);
@@ -28,14 +28,14 @@ Skybox::Skybox() {
     shader       = new Shader(vs.c_str(), fs.c_str());
 }
 
-Skybox::~Skybox() {
+View::Skybox::~Skybox() {
     delete shader;
     glDeleteVertexArrays(1, &skyboxVAO);
     glDeleteBuffers(1, &skyboxVAO);
 }
 
 
-unsigned int Skybox::loadCubemap(vector<string> mFaces) {
+unsigned int View::Skybox::loadCubemap(vector<string> mFaces) {
     unsigned int textureID;
     glGenTextures(1, &textureID);
     glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
@@ -63,7 +63,7 @@ unsigned int Skybox::loadCubemap(vector<string> mFaces) {
     return textureID;
 }  
 
-void Skybox::draw(const glm::mat4& view, const glm::mat4& projection) {
+void View::Skybox::draw(const glm::mat4& view, const glm::mat4& projection) {
     glDepthFunc(GL_LEQUAL); // change depth function so depth test passes when values are equal to depth buffer's content
     shader->use();
     shader->setInt("skybox", 0);
@@ -78,4 +78,4 @@ void Skybox::draw(const glm::mat4& view, const glm::mat4& projection) {
     glDepthFunc(GL_LESS); // set depth function back to default
 }
 
-void Skybox::update() {}
+void View::Skybox::update() {}

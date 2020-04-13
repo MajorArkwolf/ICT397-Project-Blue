@@ -8,20 +8,19 @@
 
 #include "Model/Models/DataTypes.hpp"
 #include "View/Renderer/Shader.hpp"
+#include "View/Renderer/DrawStruct.hpp"
 
 class Mesh {
   public:
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
     std::vector<Texture> textures;
-    unsigned int VAO;
+    unsigned int VAO = 0;
 
     Mesh(std::vector<Vertex> newVerticies, std::vector<unsigned int> newIndicies,
          std::vector<Texture> newTextures);
-    void Draw(Shader shader);
+    void Draw(Shader &shader);
 
   private:
-    unsigned int VBO, EBO;
-
-    void setupMesh();
+    unsigned int VBO = 0, EBO = 0;
 };

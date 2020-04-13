@@ -39,7 +39,7 @@ auto Engine::run() -> void {
     // State previous;
     // State current;
     // State state;
-    glfwFocusWindow(engine.window);
+    //glfwFocusWindow(engine.window);
     ResourceManager::getInstance().loadResources();
     while (engine.getIsRunning()) {
         double newTime   = glfwGetTime();
@@ -62,6 +62,7 @@ auto Engine::run() -> void {
         // state = currentState * alpha + previousState * (1.0 - alpha);
 
         engine.gameStack.getTop()->display();
+        engine.renderer.Draw();
     }
     glfwDestroyWindow(engine.window);
 }
