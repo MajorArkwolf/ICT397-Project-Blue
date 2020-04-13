@@ -1,5 +1,8 @@
 #pragma once
 
+	/// System Dependencies
+#include <memory>
+
 	/// Internal Dependencies
 #include "GameObject_Base.hpp"
 
@@ -7,10 +10,9 @@
 namespace GameAssetFactory {
 		/*!
 		 * @brief Parameterised GameObject Factory.
-		 * @param [in] type A string containing the target type of GameObject to generate.
+		 * @param [in] type A GameObject type identifier for the target factory output.
 		 * @return A pointer to a newly assigned GameObject, or nullptr on error.
-		 * @see GameObject_Base
-		 * @see FactoryKey_Type
+		 * @see GameObject_Base::gameObj_getType()
 		 */
-	GameObject_Base* GameObject(std::string type);
+	std::shared_ptr<GameObject_Base> GameObject(GameObjectType type);
 };
