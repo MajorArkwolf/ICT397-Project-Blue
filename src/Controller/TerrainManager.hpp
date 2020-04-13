@@ -8,6 +8,7 @@
 #include "Model/Vertix.hpp"
 #include <functional>
 #include "Controller/Engine/IDTracker.hpp"
+#include "Model/Vertix.hpp"
 
 
 namespace Controller {
@@ -50,14 +51,14 @@ namespace Controller {
 		 */
 		void Update(glm::ivec2 key);
 
-		void GenerateHeightMap();
+		void GenerateHeightMap(Blue::HeightMap& heightMap);
 
 	private:
 	    BlueEngine::ID id = 0;
 		/// The max size a key can be to stop out of bound checks on the terrain.
 		size_t maxKey = 15;
 		/// How many chunks are rendered in a circle around a set position. Usually based on the camera.
-		int radSize = 4;
+		int radSize = 1;
 		/// How far the character can move inside the play area before a new chunk is laoded.
 		int reloadDistance = 1;
 		/// The last position the camera was at.

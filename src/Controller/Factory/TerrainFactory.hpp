@@ -45,11 +45,19 @@ namespace Controller {
 
 		void LoadLua();
 
+        int getWidth() const;
+
+        int getHeight() const;
+
+        void ExportHeightMap(float *heightMap);
+
 	private:
 		/// Determines how many squares fit into a single chunk
 		int ChunkSize = 100;
 		/// Sets the max side of the play area
-		int maxSize = 4096;
+		int maxSize = 0;
+		int width = 0;
+        int height = 0;
 		/// Heightmap of floats used for terrain.
 		std::vector<std::vector<Blue::Perlin>> fValues = {};
 		/// A pointer to the terrain shader.
