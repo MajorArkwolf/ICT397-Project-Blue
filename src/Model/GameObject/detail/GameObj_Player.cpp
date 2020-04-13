@@ -1,11 +1,13 @@
 	/// Definition Include
 #include "../GameObj_Player.hpp"
 
-GameObj_Player::GameObj_Player() {
+GameObj_Player::GameObj_Player()
+	: GameObject_Base() {
 	// GameObj_Player has no unique attributes to initialise yet
 }
 
-GameObj_Player::GameObj_Player(std::string path, glm::vec3 position, glm::vec3 look_at, glm::vec3 look_up) {
+GameObj_Player::GameObj_Player(std::string path, unsigned long int physBody, glm::vec3 position, glm::vec3 look_at, glm::vec3 look_up)
+	: GameObject_Base(path, physBody, position, look_at, look_up) {
 	// GameObj_Player has no unique attributes to initialise yet
 }
 
@@ -22,17 +24,17 @@ void GameObj_Player::gameObj_addToDraw() {
 	//TODO: Implement this stubbed out function
 }
 
-GameObj_Player::status_assign(std::string key, float value) {
+void GameObj_Player::status_assign(std::string key, float value) {
 	// Perform the operation on the map
 	player_statuses[key] = value;
 }
 
-GameObj_Player::status_has(std::string key) {
+bool GameObj_Player::status_has(std::string key) {
 	// Perform the operation on the map
-	return (player_statuses.has() != player_statuses.end());
+	return (player_statuses.find(key) != player_statuses.end());
 }
 
-GameObj_Player::status_get(std::string key) {
+float GameObj_Player::status_get(std::string key) {
 	// Catch an invalid key
 	if (!status_has(key))
 		return 0.0f;
@@ -41,19 +43,19 @@ GameObj_Player::status_get(std::string key) {
 	return player_statuses.at(key);
 }
 
-GameObj_Player::status_delete(std::string key) {
+void GameObj_Player::status_delete(std::string key) {
 	// Perform the operation on the map
 	player_statuses.erase(key);
 }
 
-GameObj_Player::status_deleteAll() {
+void GameObj_Player::status_deleteAll() {
 	// Perform the operation on the map
 	player_statuses.clear();
 }
 
-GameObjectType GameObj_Player::gameObj_getTypeID() const {
+GameObjectType GameObj_Player::gameObj_getTypeID() {
 	// Keep track of this class's identifier for its type
-	static const GameObjectType classID = gameObj_getType();
+	static const GameObjectType classID = gameObj_registerTypeID();
 
 	// Return a copy of the tracked id
 	return classID;
