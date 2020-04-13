@@ -69,6 +69,13 @@ class BeCollisionWorld {
      */
     bool TestOverLap(BeAbstractCollision *target1, BeAbstractCollision *target2);
 
+    /**
+     *  @brief delete body
+     *  @param body collision body
+     *  @return
+     */
+    void DestroyCollisionBody(rp3d::CollisionBody *body);
+
   private:
     BeSettings beConfig;
     rp3d::CollisionWorld *beCollisionWorld;

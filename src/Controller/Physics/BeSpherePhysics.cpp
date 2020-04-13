@@ -26,11 +26,15 @@ void BeSpherePhysics::SetTransform(glm::vec3 position, glm::quat rotation) {
     body->setTransform(transform);
 }
 
-BeTransform *BeSpherePhysics::GetTransform() {
-    BeTransform *result = new BeTransform(transform);
+BeTransform BeSpherePhysics::GetTransform() {
+    BeTransform result(transform);
     return result;
 }
 
 beBodyId BeSpherePhysics::GetId() {
     return bodyId;
+}
+
+void BeSpherePhysics::EnableGravity(bool gravity) {
+    body->enableGravity(gravity);
 }

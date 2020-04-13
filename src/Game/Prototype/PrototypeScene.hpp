@@ -8,14 +8,14 @@
 #include "Controller/InputManager.hpp"
 #include "Controller/Physics/BeAbstractPhysicsLibrary.hpp"
 #include "Controller/Physics/BeConfig.hpp"
-#include "Controller/Physics/BeCollisionWorld.hpp"
+#include "Controller/Physics/BeDynamicWorld.hpp"
+#include "Controller/TerrainManager.hpp"
 
 
 class PrototypeScene : public BaseState {
 public:
     PrototypeScene();
-    PrototypeScene(BeAbstractPhysicsLibrary *library);
-    ~PrototypeScene() override = default;
+    ~PrototypeScene() override;
 
     auto display() -> void override;
     auto update(double t, double dt) -> void override;
@@ -31,6 +31,7 @@ public:
 private:
     std::vector<size_t> models;
     Renderer renderer;
+    Controller::TerrainManager terrain = {};
 
     //SDLFIX SDL_Event &event
     void handleWindowEvent();

@@ -50,4 +50,5 @@ class BeAbstractPhysicsFactory {
                                             float radius, float capsuleHeight,
                                             BeDynamicWorld *world, float *terrain,
                                             ShapeType type, beBodyId targetId) = 0;
+
 };

@@ -43,7 +43,7 @@ class BeCapsulePhysics : public BeAbstractPhysics {
      *  @param
      *  @return BeTransform the facaded class for the react transform class
      */
-    BeTransform *GetTransform() override;
+    BeTransform GetTransform() override;
 
     /**
      *  @brief Getter for the body's id
@@ -51,6 +51,13 @@ class BeCapsulePhysics : public BeAbstractPhysics {
      *  @return the body's id
      */
     beBodyId GetId() override;
+
+    /**
+     *  @brief enables gravity
+     *  @param gravity boolean for state of gravity
+     *  @return
+     */
+    void EnableGravity(bool gravity) override;
 
   private:
     rp3d::CapsuleShape *shape;

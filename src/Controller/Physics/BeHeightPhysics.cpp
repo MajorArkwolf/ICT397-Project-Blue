@@ -29,11 +29,15 @@ void BeHeightPhysics::SetTransform(glm::vec3 position, glm::quat rotation) {
     body->setTransform(transform);
 }
 
-BeTransform *BeHeightPhysics::GetTransform() {
-    BeTransform *result = new BeTransform(transform);
+BeTransform BeHeightPhysics::GetTransform() {
+    BeTransform result(transform);
     return result;
 }
 
 beBodyId BeHeightPhysics::GetId() {
     return bodyId;
+}
+
+void BeHeightPhysics::EnableGravity(bool gravity) {
+    body->enableGravity(gravity);
 }

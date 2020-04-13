@@ -44,3 +44,7 @@ rp3d::CollisionBody *BeCollisionWorld::CreateCollisionBody(rp3d::Transform trans
 
     return body;
 }
+
+void BeCollisionWorld::DestroyCollisionBody(rp3d::CollisionBody *body){
+    beCollisionWorld->destroyCollisionBody(body);
+}

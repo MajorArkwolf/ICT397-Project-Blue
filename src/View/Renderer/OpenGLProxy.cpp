@@ -133,20 +133,16 @@ unsigned int BlueEngine::RenderCode::TextureFromFile(const char *path, const std
 }
 
 void BlueEngine::RenderCode::ResizeWindow() {
-    //auto &engine = BlueEngine::Engine::get();
+    auto &engine = BlueEngine::Engine::get();
     
-    //SDLFIX
+    int width = 0, height = 0;
+    glfwGetWindowSize(engine.window, &width, &height);
 
-    //May no longer be needed here
-
-    //int width = 800;
-    //int height = 600;
-
-    //glMatrixMode(GL_PROJECTION);
-    //glLoadIdentity();
-    //glViewport(0, 0, width, height);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glViewport(0, 0, width, height);
     //gluPerspective(60, width/height, 1, 300);
-    //glMatrixMode(GL_MODELVIEW);
+    glMatrixMode(GL_MODELVIEW);
 }
 
 void BlueEngine::RenderCode::HardInit() {

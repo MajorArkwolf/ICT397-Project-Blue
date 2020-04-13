@@ -4,6 +4,7 @@
 
 #include "Controller/Engine/Engine.hpp"
 #include "Model/Models/ModelManager.hpp"
+#include "Controller/ResourceManager.hpp"
 
 Renderer::Renderer() {
     auto &engine = BlueEngine::Engine::get();
@@ -18,12 +19,13 @@ void Renderer::addToDraw(const glm::mat4 &modelMesh, const size_t &modelID) {
 }
 
 void Renderer::draw(const glm::mat4 &view, const glm::mat4 &projection) {
+    auto &resManager = ResourceManager::getInstance();
     shader->use();
     shader->setMat4("projection", projection);
     shader->setMat4("view", view);
     for (auto &m : drawList()) {
         shader->setMat4("model", m.first);
-        ModelManager::Draw(m.second, shader);
+        resManager.drawModel(m.second, shader);
     }
     drawList().clear();
 }

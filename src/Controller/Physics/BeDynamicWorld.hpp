@@ -73,6 +73,60 @@ class BeDynamicWorld {
      */
     bool TestOverLap(BeAbstractPhysics *target1, BeAbstractPhysics *target2);
 
+    /**
+     *  @brief delete body
+     *  @param body rigid body
+     *  @return
+     */
+    void DestroyRigidBody(rp3d::RigidBody *body);
+
+    /**
+     *  @brief gravity toggle
+     *  @param toggle boolean for switching on gravity
+     *  @return
+     */
+    void EnableGravity(bool toggle);
+
+    /**
+     *  @brief delete body
+     *  @param gravity the gravity constant
+     *  @return
+     */
+    void SetGravity(glm::vec3 gravity);
+
+    /**
+     *  @brief sleeping toggle where objects come to rest
+     *  @param toggle boolean for switching on sleep
+     *  @return
+     */
+    void EnableSleeping(bool toggle);
+
+    /**
+     *  @brief set resting velocity
+     *  @param velocity speed
+     *  @return
+     */
+    void SetSleepLinearVelocity(float velocity);
+
+    /**
+     *  @brief set angular velocity
+     *  @param velocity speed
+     *  @return
+     */
+    void SetSleepAngularVelocity(float velocity);
+
+    /**
+     * @brief sets the number of iterations to solve for new position
+     * @param iterations number of tries
+     */
+    void SetNumIterationPositionSolver(int iterations);
+
+    /**
+     * @brief sets the number of iterations to solve for new position
+     * @param iterations number of tries
+     */
+    void SetNumIterationVelocitySolver(int iterations);
+
   private:
     BeSettings worldSettings;
     rp3d::Vector3 *worldGravity;

@@ -24,7 +24,7 @@ class BeAbstractPhysics{
      *  @param
      *  @return BeTransform the facaded class for the react transform class
      */
-    virtual BeTransform *GetTransform() = 0 ;
+    virtual BeTransform GetTransform() = 0 ;
 
     /**
      *  @brief Getter for the body's id
@@ -32,6 +32,13 @@ class BeAbstractPhysics{
      *  @return the body's id
      */
     virtual beBodyId GetId() = 0;
+
+    /**
+     *  @brief enables gravity
+     *  @param gravity boolean for state of gravity
+     *  @return
+     */
+    virtual void EnableGravity(bool gravity) = 0;
 
   protected:
     rp3d::bodyindex bodyId;

@@ -3,21 +3,21 @@
 #include <iostream>
 #include "View/Renderer/OpenGLProxy.hpp"
 
-Model::Model(char *path, bool gamma = false) : gammaCorrection(gamma) {
+Model::Model::Model(char *path, bool gamma = false) : gammaCorrection(gamma) {
     loadModel(path);
 }
 
-Model::Model(string path, bool gamma = false) : gammaCorrection(gamma) {
+Model::Model::Model(string path, bool gamma = false) : gammaCorrection(gamma) {
     loadModel(path.c_str());
 }
 
-void Model::Draw(Shader shader) {
+void Model::Model::Draw(Shader shader) {
     for (unsigned int i = 0; i < meshes.size(); i++) {
         meshes[i].Draw(shader);
     }
 }
 
-void Model::loadModel(string const &path) {
+void Model::Model::loadModel(string const &path) {
     // read file via ASSIMP
     Assimp::Importer importer;
     const aiScene *scene =
@@ -38,7 +38,7 @@ void Model::loadModel(string const &path) {
     processNode(scene->mRootNode, scene);
 }
 
-void Model::processNode(aiNode *node, const aiScene *scene) {
+void Model::Model::processNode(aiNode *node, const aiScene *scene) {
     // process each mesh located at the current node
     for (unsigned int i = 0; i < node->mNumMeshes; i++) {
         // the node object only contains indices to index the actual objects in the scene.
@@ -52,7 +52,7 @@ void Model::processNode(aiNode *node, const aiScene *scene) {
     }
 }
 
-Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
+Mesh Model::Model::processMesh(aiMesh *mesh, const aiScene *scene) {
     // data to fill
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
@@ -141,7 +141,7 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
     return Mesh(vertices, indices, textures);
 }
 
-std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type,
+std::vector<Texture> Model::Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type,
                                             string typeName) {
     std::vector<Texture> textures;
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {

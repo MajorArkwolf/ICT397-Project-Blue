@@ -43,3 +43,36 @@ rp3d::RigidBody *BeDynamicWorld::CreateRigidBody(rp3d::Transform transform) {
 
     return body;
 }
+
+void BeDynamicWorld::DestroyRigidBody(rp3d::RigidBody *body){
+    bePhysicsWorld->destroyCollisionBody(body);
+}
+
+void BeDynamicWorld::EnableGravity(bool toggle) {
+    bePhysicsWorld->setIsGratityEnabled(toggle);
+}
+
+void BeDynamicWorld::SetGravity(glm::vec3 gravity) {
+    rp3d::Vector3 grav(gravity.x, gravity.y, gravity.z);
+    bePhysicsWorld->setGravity(grav);
+}
+
+void BeDynamicWorld::EnableSleeping(bool toggle) {
+    bePhysicsWorld->enableSleeping(toggle);
+}
+
+void BeDynamicWorld::SetSleepLinearVelocity(float velocity) {
+    bePhysicsWorld->setSleepLinearVelocity(velocity);
+}
+
+void BeDynamicWorld::SetSleepAngularVelocity(float velocity) {
+    bePhysicsWorld->setSleepAngularVelocity(velocity);
+}
+
+void BeDynamicWorld::SetNumIterationPositionSolver(int iterations) {
+    bePhysicsWorld->setNbIterationsPositionSolver(iterations);
+}
+
+void BeDynamicWorld::SetNumIterationVelocitySolver(int iterations) {
+    bePhysicsWorld->setNbIterationsVelocitySolver(iterations);
+}
