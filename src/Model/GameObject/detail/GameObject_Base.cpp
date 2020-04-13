@@ -28,6 +28,10 @@ GameObject_Base::GameObject_Base(std::string path, glm::vec3 position, glm::vec3
 	gameObj_setModel(path);
 }
 
+GameObject_Base::~GameObject_Base() {
+	// GameObj_Base has no unique destruction procedure yet.
+}
+
 void GameObject_Base::gameObj_setModel(std::string path) {
 	// Call the Model Loader and keep track of what it spits out
     gameObj_modelId = ModelManager::GetModelID();

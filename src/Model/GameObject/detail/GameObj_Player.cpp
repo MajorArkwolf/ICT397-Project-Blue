@@ -9,6 +9,10 @@ GameObj_Player::GameObj_Player(std::string path, glm::vec3 position, glm::vec3 l
 	// GameObj_Player has no unique attributes to initialise yet
 }
 
+GameObj_Player::~GameObj_Player() {
+	// GameObj_Player has no unique destruction procedure yet.
+}
+
 GameObjectType GameObj_Player::gameObj_getType() const {
 	// Keep track of this class's identifier for its type
 	static const GameObjectType classID = gameObj_getType();

@@ -26,6 +26,9 @@ class GameObj_Static : virtual public GameObject_Base {
 		GameObj_Static(std::string path, glm::vec3 position, glm::vec3 look_at, glm::vec3 look_up)
 			: GameObject_Base(path, position, look_at, look_up);
 
+			//! GameObj_Static destructor
+		~GameObj_Static();
+
 			/*!
 			 * @brief Identifies the GameObject's type.
 			 * @return A unique identifying value for the GameObj_Static class.

@@ -25,6 +25,9 @@ public:
 		 */
 	GameObject_Base(std::string path, glm::vec3 position, glm::vec3 look_at, glm::vec3 look_up);
 
+		//! Virtual destructor.
+	virtual ~GameObject_Base() = 0;
+
 		/*!
 		 * @brief Tracks and calls for the loading of an external model file.
 		 * @param [in] path The path to a target external model file for this GameObject.
