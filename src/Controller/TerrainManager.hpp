@@ -48,6 +48,8 @@ namespace Controller {
 		 * @param the key to where the camera is relative to the chunk its in.
 		 */
 		void Update(glm::ivec2 key);
+
+		
 	private:
 		/// The max size a key can be to stop out of bound checks on the terrain.
 		size_t maxKey = 15;

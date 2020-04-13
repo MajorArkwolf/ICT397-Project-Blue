@@ -13,8 +13,7 @@ namespace View::Data {
         water
     };
     struct DrawItem {
-        std::function<void()> draw = nullptr;
-        Shader* shader = nullptr;
-        unsigned int VAO = 0;
+        glm::vec3 pos = {};
+        std::function<void(glm::mat4 projection, glm::mat4 view, const glm::dvec3& cameraPos)> draw = nullptr;
     };
 }

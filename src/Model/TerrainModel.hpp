@@ -44,6 +44,8 @@ namespace Model {
 		 * @param View matrix for the model
 		 */
 		void Draw(glm::mat4 projection, glm::mat4 view, const glm::dvec3& cameraPos);
+
+		void AddToDraw();
 		///Model scale size
 		glm::mat4 model = glm::mat4(0.5f);
 		///The position that the chunk will be drawn at.

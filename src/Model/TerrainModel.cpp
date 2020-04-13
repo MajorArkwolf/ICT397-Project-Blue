@@ -81,3 +81,7 @@ void Model::TerrainModel::Draw(glm::mat4 projection, glm::mat4 view, const glm::
     glActiveTexture(GL_TEXTURE0);
     water.Draw(projection, view, cameraPos);
 }
+
+void Model::TerrainModel::AddToDraw() {
+
+}
