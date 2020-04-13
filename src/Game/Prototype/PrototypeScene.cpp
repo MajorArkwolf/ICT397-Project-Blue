@@ -34,8 +34,6 @@ auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
 
 void PrototypeScene::Init() {
 	auto& resManager = ResourceManager::getInstance();
-	auto &renderer = BlueEngine::Engine::get().renderer;
-	renderer.Init();
 	//terrain.Init();
 	//camera.Position.y = 100.0;
 	camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));

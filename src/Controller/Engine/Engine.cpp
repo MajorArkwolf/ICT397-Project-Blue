@@ -40,6 +40,7 @@ auto Engine::run() -> void {
     // State current;
     // State state;
     //glfwFocusWindow(engine.window);
+    engine.renderer.Init();
     ResourceManager::getInstance().loadResources();
     while (engine.getIsRunning()) {
         double newTime   = glfwGetTime();

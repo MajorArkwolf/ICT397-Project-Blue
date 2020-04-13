@@ -7,10 +7,13 @@
 #include <functional>
 
 namespace View::Data {
+    enum class ShaderModel {
+        model,
+        terrain,
+        water
+    };
     struct DrawItem {
-        std::vector<unsigned int> &indices;
-        std::vector<Texture> &textures;
-        std::function<void()> setShader = nullptr;
+        std::function<void()> draw = nullptr;
         Shader* shader = nullptr;
         unsigned int VAO = 0;
     };

@@ -30,7 +30,7 @@ namespace View {
     private:
         std::vector<Model::Model*> drawQue = {};
         Camera *camera = nullptr;
-        std::unique_ptr<Skybox> skyBox = nullptr;
         std::unique_ptr<Shader> shader = nullptr;
+        Skybox skyBox = {};
     };
 }

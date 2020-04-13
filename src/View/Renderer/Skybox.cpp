@@ -4,8 +4,15 @@
 #include "stb_image.h"
 #include "Controller/Engine/Engine.hpp"
 
-View::Skybox::Skybox() {
-    auto &engine = BlueEngine::Engine::get();
+View::Skybox::Skybox() {}
+
+View::Skybox::~Skybox() {
+    glDeleteVertexArrays(1, &skyboxVAO);
+    glDeleteBuffers(1, &skyboxVAO);
+}
+
+void View::Skybox::Init() {
+    //auto &engine = BlueEngine::Engine::get();
     glGenVertexArrays(1, &skyboxVAO);
     glGenBuffers(1, &skyboxVBO);
     glBindVertexArray(skyboxVAO);
@@ -15,25 +22,20 @@ View::Skybox::Skybox() {
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
 
-	faces.push_back(engine.basepath + "res/images/skybox/right.jpg");
-    faces.push_back(engine.basepath + "res/images/skybox/left.jpg");
-    faces.push_back(engine.basepath + "res/images/skybox/top.jpg");
-    faces.push_back(engine.basepath + "res/images/skybox/bottom.jpg");
-    faces.push_back(engine.basepath + "res/images/skybox/front.jpg");
-    faces.push_back(engine.basepath + "res/images/skybox/back.jpg");
-	cubemapTexture = loadCubemap(faces);
+    faces.emplace_back("./res/images/skybox/right.jpg");
+    faces.emplace_back("./res/images/skybox/left.jpg");
+    faces.emplace_back("./res/images/skybox/top.jpg");
+    faces.emplace_back("./res/images/skybox/bottom.jpg");
+    faces.emplace_back("./res/images/skybox/front.jpg");
+    faces.emplace_back("./res/images/skybox/back.jpg");
+    cubemapTexture = loadCubemap(faces);
 
-	auto vs = string(engine.basepath + "/res/shader/skybox_vert.vs");
-    auto fs = string(engine.basepath + "/res/shader/skybox_frag.fv");
-    shader       = new Shader(vs.c_str(), fs.c_str());
+    auto vs = string("./res/shader/skybox_vert.vs");
+    auto fs = string("./res/shader/skybox_frag.fv");
+    shader = std::make_unique<Shader>(vs.c_str(), fs.c_str());
+    shader->use();
+    shader->setInt("skybox", 0);
 }
-
-View::Skybox::~Skybox() {
-    delete shader;
-    glDeleteVertexArrays(1, &skyboxVAO);
-    glDeleteBuffers(1, &skyboxVAO);
-}
-
 
 unsigned int View::Skybox::loadCubemap(vector<string> mFaces) {
     unsigned int textureID;
@@ -66,7 +68,7 @@ unsigned int View::Skybox::loadCubemap(vector<string> mFaces) {
 void View::Skybox::draw(const glm::mat4& view, const glm::mat4& projection) {
     glDepthFunc(GL_LEQUAL); // change depth function so depth test passes when values are equal to depth buffer's content
     shader->use();
-    shader->setInt("skybox", 0);
+    //shader->setInt("skybox", 0);
     shader->setMat4("sk_view", view);
     shader->setMat4("sk_projection", projection);
     // skybox cube
@@ -75,6 +77,7 @@ void View::Skybox::draw(const glm::mat4& view, const glm::mat4& projection) {
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
+    glActiveTexture(GL_TEXTURE0);
     glDepthFunc(GL_LESS); // set depth function back to default
 }
 

@@ -9,6 +9,8 @@
 #include "stb_image.h"
 
 void View::OpenGL::Draw() {
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     auto &engine = BlueEngine::Engine::get();
     auto& guiManager = engine.getGuiManager();
     ImGui_ImplOpenGL3_NewFrame();
@@ -26,18 +28,18 @@ void View::OpenGL::Draw() {
     glm::mat4 view = camera->GetViewMatrix();
     glm::mat4 skyboxView = glm::mat4(glm::mat3(camera->GetViewMatrix()));
     glm::mat4 model = glm::mat4(1.0f);
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+
     shader->use();
     shader->setMat4("model", model);
     shader->setMat4("projection", projection);
     shader->setMat4("view", view);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     for (auto &m : drawQue) {
         if (m != nullptr) {
             m->Draw(*shader);
         }
     }
-    skyBox->draw(skyboxView, projection);
+    skyBox.draw(skyboxView, projection);
     GUIManager::endWindowFrame();
     glfwSwapBuffers(engine.window);
 }
@@ -54,8 +56,8 @@ void View::OpenGL::Init() {
     glCullFace(GL_BACK);
     glEnable(GL_DEPTH_TEST);
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
-    skyBox = std::make_unique<Skybox>(Skybox());
     shader = std::make_unique<Shader>(Shader("./res/shader/vertshader.vs", "./res/shader/fragshader.fs"));
+    skyBox.Init();
 
 }
 void View::OpenGL::DeInit() {
