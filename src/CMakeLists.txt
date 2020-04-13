@@ -9,11 +9,17 @@ target_sources(${PROJECT_NAME} PRIVATE
     Controller/InputManager.cpp
     Controller/Engine/Engine.cpp
     Controller/GUIManager.cpp
-    
+
     # Model
     Model/Models/Mesh.cpp
     Model/Models/Model.cpp
     Model/Models/ModelManager.cpp
+
+	Model/GameObject/detail/GameObj_Base.cpp
+	Model/GameObject/detail/GameObj_Static.cpp
+	Model/GameObject/detail/GameObj_Player.cpp
+	Model/GameObject/detail/GameObj_NPC.cpp
+	Model/GameObject/detail/GameAssetFactory.cpp
 
     # View
     View/Renderer/Shader.cpp
