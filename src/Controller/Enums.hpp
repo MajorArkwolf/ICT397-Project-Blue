@@ -31,7 +31,8 @@ namespace Controller {
             MOUSE_MOTION,
             MOUSE_WHEEL,
             MOUSE_BUTTONDOWN,
-            MOUSE_BUTTONUP
+            MOUSE_BUTTONUP,
+            WINDOW_RESIZE
         };
 
     }

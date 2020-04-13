@@ -101,6 +101,10 @@ namespace Controller {
              */
             void bindKey(BLUE_InputAction action, int key);
 
+            void resetKeyStates();
+            void recordKeyStates(GLEQevent &event);
+            const int* getKeyStates();
+
           private:
             /// A map containing key value pairs between a game action and a particular key
             std::map<BLUE_InputAction, int> InputMap;
@@ -149,6 +153,8 @@ namespace Controller {
             std::vector<std::pair<std::string, int>> stringScancodePairs;
             /// A vector of pairs linking a string and an input action
             std::vector<std::pair<std::string, BLUE_InputAction>> stringActionPairs;
+
+            int KeyStates[GLFW_KEY_LAST];
         };
     }
 }

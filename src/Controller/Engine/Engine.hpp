@@ -9,13 +9,15 @@
 
 #define GLEQ_IMPLEMENTATION
 #define GLEQ_STATIC
+#include "gleq.h"
+//
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
 #include "BaseState.hpp"
 #include "Controller/GUIManager.hpp"
+#include "Controller/ResourceManager.hpp"
 #include "GameStack.hpp"
-#include "gleq.h"
 
 const unsigned int SCR_WIDTH  = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -84,5 +86,6 @@ namespace BlueEngine {
         bool getMouseMode();
 
         void setMouseMode(bool mode);
+
     };
 }
