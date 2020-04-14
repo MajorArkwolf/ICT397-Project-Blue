@@ -43,10 +43,11 @@ namespace Model {
 		 * @param Projection matrix for the camera
 		 * @param View matrix for the model
 		 */
-		void Draw(glm::mat4 projection, glm::mat4 view, const glm::dvec3& cameraPos);
+		void Draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos);
 
 		void AddToDraw();
-		///Model scale size
+
+        ///Model scale size
 		glm::mat4 model = glm::mat4(0.5f);
 		///The position that the chunk will be drawn at.
 		glm::vec3 position = {};
@@ -64,5 +65,6 @@ namespace Model {
 		unsigned int textureID = 0, textureID2 = 0, textureID3 = 0, textureID4 = 0;
 		/// Water
 		Water water = {};
-	};
+
+    };
 }

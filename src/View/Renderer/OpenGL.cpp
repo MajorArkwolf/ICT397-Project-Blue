@@ -7,6 +7,7 @@
 #include "Controller/GUIManager.hpp"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#include <algorithm>
 
 void View::OpenGL::Draw() {
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -29,19 +30,18 @@ void View::OpenGL::Draw() {
     glm::mat4 skyboxView = glm::mat4(glm::mat3(camera->GetViewMatrix()));
     glm::mat4 model = glm::mat4(1.0f);
 
-    shader->use();
-    shader->setMat4("model", model);
-    shader->setMat4("projection", projection);
-    shader->setMat4("view", view);
-
+//    shader->use();
+//    shader->setMat4("model", model);
+//    shader->setMat4("projection", projection);
+//    shader->setMat4("view", view);
+    sortDrawDistance();
     for (auto &m : drawQue) {
-        if (m != nullptr) {
-            m->Draw(*shader);
-        }
+        m.drawPointer(projection, view, camera->Position);
     }
     skyBox.draw(skyboxView, projection);
     GUIManager::endWindowFrame();
     glfwSwapBuffers(engine.window);
+    drawQue.clear();
 }
 void View::OpenGL::Init() {
     int width  = 0;
@@ -150,8 +150,8 @@ void View::OpenGL::ResizeWindow() {
     glViewport(0, 0, width, height);
 }
 
-void View::OpenGL::AddToQue(Model::Model& newModel) {
-    drawQue.push_back(&newModel);
+void View::OpenGL::AddToQue(View::Data::DrawItem drawItem) {
+    drawQue.push_back(drawItem);
 }
 
 unsigned int View::OpenGL::TextureFromFile(const char *path, const std::string &directory,
@@ -199,4 +199,15 @@ unsigned int View::OpenGL::TextureFromFile(const char *path, const std::string &
 }
 void View::OpenGL::SetCameraOnRender(Camera &mainCamera) {
     camera = &mainCamera;
+}
+
+void View::OpenGL::sortDrawDistance() {
+    glm::vec3 cpos = {camera->Position.x, static_cast<float>(camera->Position.y), static_cast<float>(camera->Position.z)};
+    for (auto &e : drawQue) {
+        e.distance = glm::distance(e.pos, cpos);
+    }
+    sort(drawQue.begin(), drawQue.end(),
+         [](const View::Data::DrawItem& lhs, const View::Data::DrawItem& rhs)->bool {
+             return lhs.distance > rhs.distance;
+         });
 }

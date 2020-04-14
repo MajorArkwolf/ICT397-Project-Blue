@@ -17,7 +17,7 @@ namespace View {
         void Draw() override;
         void Init() override;
         void DeInit() override;
-        void AddToQue(Model::Model& newModel);
+        void AddToQue(View::Data::DrawItem drawItem);
         static void SetupMesh(unsigned int &VAO, unsigned int &VBO, unsigned int &EBO,
                        std::vector<Vertex> &vertices, std::vector<unsigned int> &indices);
         static void ResizeWindow();
@@ -28,7 +28,8 @@ namespace View {
         void SetCameraOnRender(Camera &mainCamera);
 
     private:
-        std::vector<Model::Model*> drawQue = {};
+        void sortDrawDistance();
+        std::vector<View::Data::DrawItem> drawQue = {};
         Camera *camera = nullptr;
         std::unique_ptr<Shader> shader = nullptr;
         Skybox skyBox = {};

@@ -1,8 +1,11 @@
 #include "TerrainModel.hpp"
 
+#include "Controller/Engine/Engine.hpp"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <functional>
+#include <Controller/Factory/GameAssetFactory.hpp>
 
 Model::TerrainModel::TerrainModel() {
 }
@@ -59,7 +62,7 @@ void Model::TerrainModel::setTextures(unsigned int tex1, unsigned int tex2, unsi
     terrainShader->setInt("texture4", 3);
 }
 
-void Model::TerrainModel::Draw(glm::mat4 projection, glm::mat4 view, const glm::dvec3& cameraPos) {
+void Model::TerrainModel::Draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos) {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, textureID);
     glActiveTexture(GL_TEXTURE1);
@@ -83,5 +86,15 @@ void Model::TerrainModel::Draw(glm::mat4 projection, glm::mat4 view, const glm::
 }
 
 void Model::TerrainModel::AddToDraw() {
-
+    auto &renderer = BlueEngine::Engine::get().renderer;
+    auto chunkSize = Controller::Factory::get().terrain.GetChunkSize();
+    std::function e = [&](const glm::mat4 &projection, const glm::mat4 &view, const glm::dvec3 &cameraPos) {
+        this->Draw(projection, view, cameraPos);
+    };
+    View::Data::DrawItem di;
+    di.drawPointer = e;
+    di.pos = position;
+    di.pos.x += chunkSize / 2.0f;
+    di.pos.z += chunkSize / 2.0f;
+    renderer.AddToQue(di);
 }

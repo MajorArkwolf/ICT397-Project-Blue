@@ -29,7 +29,7 @@ auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
 		camera.ProcessKeyboard(RIGHT, dt);
 	}
 
-	//terrain.Update(camera.getLocation());
+	terrain.Update(camera.getLocation());
 }
 
 void PrototypeScene::Init() {
@@ -120,7 +120,8 @@ auto PrototypeScene::display() -> void {
     auto &renderer = BlueEngine::Engine::get().renderer;
     renderer.SetCameraOnRender(camera);
 	//glm::mat4 model = glm::mat4(5.0f);
-	renderer.AddToQue(models.at(0));
+	//renderer.AddToQue(models.at(0));
+	terrain.AddToDraw();
 	//terrain.Draw(projection, view, camera.Position);
 	//renderer.draw(view, projection);
 }

@@ -14,6 +14,7 @@ namespace View::Data {
     };
     struct DrawItem {
         glm::vec3 pos = {};
-        std::function<void(glm::mat4 projection, glm::mat4 view, const glm::dvec3& cameraPos)> draw = nullptr;
+        float distance = {};
+        std::function<void(const glm::mat4&, const glm::mat4&, const glm::dvec3&)> drawPointer;
     };
 }

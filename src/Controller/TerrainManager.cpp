@@ -68,3 +68,9 @@ void Controller::TerrainManager::Update(glm::ivec2 key) {
 		}
 	}
 }
+
+void Controller::TerrainManager::AddToDraw() {
+    for (const auto& e : drawCircle) {
+        e->AddToDraw();
+    }
+}
