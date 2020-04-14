@@ -8,7 +8,7 @@ namespace Physics {
     enum class ShapeType {Sphere, Box, Capsule, Heightfield};
     class ReactShapes {
 
-        using ReactShapeVariant = std::variant<const rp3d::SphereShape, const rp3d::BoxShape, const rp3d::CapsuleShape, const rp3d::HeightFieldShape>;
+        using ReactShapeVariant = std::variant< rp3d::SphereShape,  rp3d::BoxShape,  rp3d::CapsuleShape,  rp3d::HeightFieldShape>;
 
 
       public:
@@ -18,7 +18,7 @@ namespace Physics {
         size_t createCapsule(float radius, float height);
         size_t createHeightfield(int columns, int rows, float minHeight, float maxHeight,
                                   float *terrainData);
-        std::map<size_t, ReactShapeVariant> shapeMap;
+        std::map<size_t, std::unique_ptr<rp3d::CollisionShape>> shapeMap;
       private:
         size_t generateID();
         
