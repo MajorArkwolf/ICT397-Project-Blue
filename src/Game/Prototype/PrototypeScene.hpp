@@ -50,5 +50,6 @@ private:
     BeAbstractPhysicsLibrary *physics;
     BeAbstractPhysics *cam;
     BeAbstractPhysics *body;
+    BeAbstractPhysics *test;
 
 };

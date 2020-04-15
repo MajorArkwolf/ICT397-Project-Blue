@@ -4,7 +4,8 @@
 
 enum class ShapeType { Box, Height, Sphere, Capsule };
 
-struct BeSettings {
+typedef rp3d::BodyType BeBodyType;
 
+struct BeSettings {
     rp3d::WorldSettings beSettings;
 };

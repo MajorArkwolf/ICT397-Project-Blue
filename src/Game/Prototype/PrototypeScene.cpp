@@ -18,6 +18,7 @@ PrototypeScene::PrototypeScene() {
 PrototypeScene::~PrototypeScene() {
     world->DestroyRigidBody(cam->GetBody());
     world->DestroyRigidBody(body->GetBody());
+    world->DestroyRigidBody(test->GetBody());
     delete physics;
     delete factory;
     delete world;
@@ -68,9 +69,15 @@ void PrototypeScene::Init() {
     physics = new BePhysicsLibrary(factory);
     cam = physics->CreateBody(camera.Position, glm::quat(1, 0, 0, 1), glm::vec3(1, 1, 1), 1, 0, 0,
                               0, 0, world, blah, ShapeType::Box, 1);
-    //cam->EnableGravity(true);
+    cam->EnableGravity(true);
+
+    test = physics->CreateBody(glm::vec3(0, 100, 0), glm::quat(1, 0, 0, 1), glm::vec3(10, 10, 10), 1,
+                               10, 10, 0, 0, world, blah, ShapeType::Height, 2);
+    test->EnableGravity(true);
+
     body = physics->CreateBody(glm::vec3(0, 0, 0), glm::quat(1, 0, 0, 1), glm::vec3(10, 10, 10), 1,
                                10, 10, 0, 0, world, blah, ShapeType::Height, 2);
+    body->SetType(BeBodyType::STATIC);
 }
 
 void PrototypeScene::handleWindowEvent() {

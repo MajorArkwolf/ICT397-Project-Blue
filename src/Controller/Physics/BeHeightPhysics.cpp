@@ -46,3 +46,7 @@ beBodyId BeHeightPhysics::GetId() {
 void BeHeightPhysics::EnableGravity(bool gravity) {
     body->enableGravity(gravity);
 }
+
+void BeHeightPhysics::SetType(BeBodyType type) {
+    body->setType(type);
+}

@@ -45,3 +45,7 @@ beBodyId BeCapsulePhysics::GetId() {
 void BeCapsulePhysics::EnableGravity(bool gravity) {
     body->enableGravity(gravity);
 }
+
+void BeCapsulePhysics::SetType(BeBodyType type) {
+    body->setType(type);
+}

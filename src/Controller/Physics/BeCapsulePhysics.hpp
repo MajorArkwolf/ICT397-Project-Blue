@@ -64,6 +64,12 @@ class BeCapsulePhysics : public BeAbstractPhysics {
      */
     void EnableGravity(bool gravity) override;
 
+    /**
+     * @brief set body type
+     * @param type rp3d body type enum
+     */
+    void SetType(BeBodyType type) override;
+
   private:
     rp3d::CapsuleShape *shape;
 

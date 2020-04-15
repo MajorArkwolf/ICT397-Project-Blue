@@ -13,8 +13,8 @@ BeCollisionWorld::BeCollisionWorld(const BeSettings &worldSettings) {
 
 }
 
-~BeCollisionWorld::~BeCollisionWorld(){
-    delete world;
+BeCollisionWorld::~BeCollisionWorld(){
+    delete beCollisionWorld;
 }
 
 

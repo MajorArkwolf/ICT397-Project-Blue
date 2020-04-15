@@ -44,3 +44,7 @@ beBodyId BeBoxPhysics::GetId() {
 void BeBoxPhysics::EnableGravity(bool gravity) {
     body->enableGravity(gravity);
 }
+
+void BeBoxPhysics::SetType(BeBodyType type) {
+    body->setType(type);
+}

@@ -1,6 +1,8 @@
 #pragma once
 
 #include <reactphysics3d.h>
+
+#include "BeConfig.hpp"
 #include "BeTransform.hpp"
 
 class BeAbstractPhysics{
@@ -39,6 +41,12 @@ class BeAbstractPhysics{
      *  @return
      */
     virtual void EnableGravity(bool gravity) = 0;
+
+    /**
+     * @brief set body type
+     * @param type rp3d body type enum
+     */
+    virtual void SetType(BeBodyType type) = 0;
 
   protected:
     rp3d::bodyindex bodyId;
