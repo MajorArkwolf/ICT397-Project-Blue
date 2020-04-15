@@ -29,7 +29,6 @@ private:
     Renderer renderer;
     Controller::TerrainManager terrain = {};
 
-    //SDLFIX SDL_Event &event
     void handleWindowEvent();
 
     bool moveForward = false;

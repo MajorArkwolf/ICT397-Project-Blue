@@ -29,7 +29,7 @@ namespace Controller {
 		 * @param the z coordinate that will determine where the chunk sits.
 		 * @param They key to where the data will be mapped.
 		 */
-		void GenerateTerrain(Model::TerrainModel& newTerrain, int xcord, int zcord, const Blue::Key key);
+		void GenerateTerrain(Model::TerrainModel& newTerrain, int xcord, int zcord, Blue::Key key);
 		/**
 		 * @brief Generates a perlin noise map instead of loading one in.
 		 * @param xcord The size of the X dimensions.
@@ -42,14 +42,25 @@ namespace Controller {
 		 * @return Returns the chunksize the factory is set too.
 		 */
 		int GetChunkSize() const;
-
+        /**
+         * @brief Loads LUA variables into be used by the factory for generation.
+         */
 		void LoadLua();
+        /**
+         * @brief Allows outside functions to know the max key side to ensure no out of bounds during generation.
+         * @return Max key side.
+         */
+		size_t GetMaxKey();
 
 	private:
+	    /// Determines the max height and width
+        int width = 0, height = 0;
 		/// Determines how many squares fit into a single chunk
-		int ChunkSize = 100;
+		int chunkSize = 100;
 		/// Sets the max side of the play area
-		int maxSize = 4096;
+		int maxSize = 0;
+		/// The max an object can travel before it falls out of bounds.
+		size_t maxKey = 0;
 		/// Heightmap of floats used for terrain.
 		std::vector<std::vector<Blue::Perlin>> fValues = {};
 		/// A pointer to the terrain shader.
@@ -107,5 +118,13 @@ namespace Controller {
 		 */
 		void LoadPerlinNoise(const string filename);
         void GenerateNormals(std::vector<Blue::Vertex> &verticies, std::vector<unsigned int> indicies);
+        /**
+         * @brief Sets the max size based of which is smaller, width or height.
+         */
+        void SetMaxSize();
+        /**
+         * @brief Sets the max key size dependent on max size and chunk size.
+         */
+        void SetMaxKey();
 	};
 }
