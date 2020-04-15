@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include "Factory/GameAssetFactory.hpp"
 Controller::TerrainManager::TerrainManager() {
-
+    id = BlueEngine::IDTracker::getInstance().getID();
 }
 
 void Controller::TerrainManager::Init() {
@@ -22,6 +22,17 @@ float Controller::TerrainManager::Distance(const Blue::Key &left, const Blue::Ke
 	const float x_diff = left.first - right.first;
 	const float y_diff = left.second - right.second;
 	return std::sqrt(x_diff * x_diff + y_diff * y_diff);
+}
+
+void Controller::TerrainManager::GenerateHeightMap(Blue::HeightMap& heightMap) {
+    auto& terrainFactory = Controller::Factory::get().terrain;
+    heightMap.targetId = this->id;
+    heightMap.width = terrainFactory.getWidth();
+    heightMap.height = terrainFactory.getHeight();
+    heightMap.position.x = static_cast<float>(terrainFactory.getWidth() / 2);
+    heightMap.position.z = static_cast<float>(terrainFactory.getHeight() / 2);
+    heightMap.rotation = {};
+    terrainFactory.ExportHeightMap(heightMap.terrain);
 }
 
 void Controller::TerrainManager::Update(glm::ivec2 key) {
