@@ -51,6 +51,10 @@ namespace Controller {
 		 */
 		void Update(glm::ivec2 key);
 
+        /**
+         * @brief GenerateHeightMap to be used for anything that needs the heightmap
+         * @param heightMap a struct used to store multiple values.
+         */
 		void GenerateHeightMap(Blue::HeightMap& heightMap);
 
 	private:

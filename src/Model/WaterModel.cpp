@@ -3,6 +3,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <ctime>
+#include <utility>
 
 
 Model::Water::Water() {
@@ -39,7 +40,7 @@ void Model::Water::SetupModel() {
 }
 
 void Model::Water::SetShader(std::shared_ptr<Shader> newWater) {
-    shader = newWater;
+    shader = std::move(newWater);
     shader->use();
     shader->setInt("texture1", 0);
 }
