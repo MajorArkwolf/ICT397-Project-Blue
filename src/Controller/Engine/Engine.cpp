@@ -13,7 +13,6 @@
 #include "Controller/ResourceManager.hpp"
 
 
-
 // Game States
 #include "Game/Prototype/PrototypeScene.hpp"
 
@@ -95,11 +94,12 @@ Engine::Engine() {
 
     // glfw window creation
     // --------------------
-    window = glfwCreateWindow(800, 600, "Project Blue", nullptr, nullptr);
+    window = glfwCreateWindow(3440, 1440, "Project Blue", glfwGetPrimaryMonitor(), nullptr);
     if (window == nullptr) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
     }
+
     gleqTrackWindow(window);
     glfwMakeContextCurrent(window);
     
