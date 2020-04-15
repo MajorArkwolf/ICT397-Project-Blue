@@ -2,10 +2,8 @@
 #include <cmath>
 #include <cstdlib>
 #include "Factory/GameAssetFactory.hpp"
-
 Controller::TerrainManager::TerrainManager() {
-    auto &terrainFactory = Controller::Factory::get().terrain;
-    maxKey = terrainFactory.GetMaxKey();
+
 }
 
 void Controller::TerrainManager::Init() {
