@@ -6,8 +6,8 @@ GameObj_NPC::GameObj_NPC()
 	// GameObj_NPC has no unique attributes to initialise yet
 }
 
-GameObj_NPC::GameObj_NPC(std::string path, unsigned long int physBody, glm::vec3 position, glm::vec3 look_at, glm::vec3 look_up)
-	: GameObj_Base(path, physBody, position, look_at, look_up) {
+GameObj_NPC::GameObj_NPC(std::string path, unsigned long int physBody, glm::vec3 position, float rotateHori, float rotateVert, float rotateTilt)
+	: GameObj_Base(path, physBody, position, rotateHori, rotateVert, rotateTilt) {
 	// GameObj_NPC has no unique attributes to initialise yet
 }
 

@@ -27,10 +27,11 @@ public:
 		 * @param [in] path The path to a target external model file for this GameObject.
 		 * @param [in] physBody The identifier for the physical body for this GameObject.
 		 * @param [in] position The position of the GameObject in the 3D environment.
-		 * @param [in] look_at The point the GameObject is looking at, relative to its position.
-		 * @param [in] look_up The point where GameObject is looking up, relative to its position.
+		 * @param [in] rotateHori The GameObject's rotation, in degrees, along the Y axis.
+		 * @param [in] rotateVert The GameObject's rotation, in degrees, along the X axis.
+		 * @param [in] rotateTilt The GameObject's rotation, in degrees, along the Z axis.
 		 */
-	GameObj_Base(std::string path, unsigned long int physBody, glm::vec3 position, glm::vec3 look_at, glm::vec3 look_up);
+	GameObj_Base(std::string path, unsigned long int physBody, glm::vec3 position, float rotateHori, float rotateVert, float rotateTilt);
 
 		//! Virtual destructor.
 	virtual ~GameObj_Base() = 0;
@@ -77,16 +78,22 @@ public:
 	glm::vec3 gameObj_pos;
 
 		/*!
-		 * @brief The point the GameObject is currently looking at, relative to its position.
-		 * @note Default value of { 0.0f, 0.0f, 1.0f }.
+		 * @brief The GameObject's rotation, in degrees, along the Y axis.
+		 * @note Default 0.0f.
 		 */
-	glm::vec3 gameObj_lookAt;
+	float gameObj_rotateHori;
 
 		/*!
-		 * @brief Stores the direction that points up relative from the GameObject in a 3D space.
-		 * @note Default value of { 0.0f, 1.0f, 0.0f }.
+		 * @brief The GameObject's rotation, in degrees, along the X axis.
+		 * @note Default 0.0f.
 		 */
-	glm::vec3 gameObj_lookUp;
+	float gameObj_rotateVert;
+
+		/*!
+		 * @brief The GameObject's rotation, in degrees, along the Z axis.
+		 * @note Default 0.0f.
+		 */
+	float gameObj_rotateTilt;
 
 		/*!
 		 * @brief Stores the identifier for the GameObject's physics body.
