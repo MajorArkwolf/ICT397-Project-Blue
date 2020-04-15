@@ -7,6 +7,7 @@
 #include "Model/Models/ModelManager.hpp"
 #include "View/Renderer/OpenGLProxy.hpp"
 #include "View/Renderer/Renderer.hpp"
+#include "Model/GameObject/GameObject.hpp"
 
 using Controller::Input::BLUE_InputAction;
 using Controller::Input::BLUE_InputType;
@@ -33,12 +34,19 @@ auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
 }
 
 void PrototypeScene::Init() {
-	auto& resManager = ResourceManager::getInstance();
+	//auto& resManager = ResourceManager::getInstance();
 	BlueEngine::RenderCode::HardInit();
 	terrain.Init();
 	camera.Position.y = 100.0;
 	camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
-	models.push_back(resManager.getModelID("res/model/player_male.obj"));
+	//models.push_back(resManager.getModelID("res/model/player_male.obj"));
+
+	//TODO: Make this no longer hard-coded in C++
+	// Generate the GameObject and configure it
+	scene_objects.push_back(GameAssetFactory::GameObject(GAMEOBJ_STATIC));
+	scene_objects[0].get()->gameObj_setModel("res/model/player_male.obj");
+	scene_objects[0].get()->gameObj_rotateHori = 90.0f;
+	scene_objects[0].get()->gameObj_pos = glm::vec3(0.0f, 150.0f, 0.0f);
 }
 
 void PrototypeScene::handleWindowEvent() {
@@ -135,11 +143,12 @@ auto PrototypeScene::display() -> void {
 			static_cast<double>(width) / static_cast<double>(height), 0.1, 100000.0);
 	glm::mat4 view = camera.GetViewMatrix();
 
-	//glm::mat4 model = glm::mat4(5.0f);
-
-	//Renderer::addToDraw(model, models[0]);
+	// Display the scene's terrain
 	terrain.Draw(projection, view, camera.Position);
-	//renderer.draw(view, projection);
+
+	// Display the scene's objects
+	scene_objects[0].get()->gameObj_addToDraw();
+	renderer.draw(view, projection);
 
 	guiManager.endWindowFrame();
 

@@ -1,12 +1,14 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 
 #include "Controller/Engine/BaseState.hpp"
 #include "View/Renderer/Renderer.hpp"
 #include "View/EulerCamera.hpp"
 #include "Controller/InputManager.hpp"
 #include "Controller/TerrainManager.hpp"
+#include "Model/GameObject/GameObj_Base.hpp"
 
 class PrototypeScene : public BaseState {
 public:
@@ -25,7 +27,8 @@ public:
     Camera camera;
 
 private:
-    std::vector<size_t> models;
+    //std::vector<size_t> models;
+    std::vector<std::shared_ptr<GameObj_Base>> scene_objects;
     Renderer renderer;
     Controller::TerrainManager terrain = {};
 
