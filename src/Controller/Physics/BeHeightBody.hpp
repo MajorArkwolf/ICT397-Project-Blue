@@ -20,6 +20,11 @@ class BeHeightBody : public BeAbstractCollision {
                  BeCollisionWorld *world, float *terrain, beBodyId targetId);
 
     /**
+     * @brief destrructor for body
+     */
+    ~BeHeightBody();
+
+    /**
      *  @brief Getter for config
      *  @param
      *  @return settings for the world

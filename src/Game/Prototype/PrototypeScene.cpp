@@ -79,72 +79,73 @@ void PrototypeScene::handleWindowEvent() {
 
 // SDLFIX
 void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
-    auto &engine      = BlueEngine::Engine::get();
-    auto &guiManager  = engine.getGuiManager();
-    auto handledMouse = false;
+	auto& engine = BlueEngine::Engine::get();
+	auto& guiManager = engine.getGuiManager();
+	auto handledMouse = false;
 
-    switch (inputData.inputType) {
-        case BLUE_InputType::KEY_PRESS: { //  Key Press events
+	switch (inputData.inputType) {
+	case BLUE_InputType::KEY_PRESS: { //  Key Press events
 
-            switch (inputData.inputAction) {
-                case BLUE_InputAction::INPUT_MOVE_FORWARD: {
-                    moveForward = true;
-                } break;
-                case BLUE_InputAction::INPUT_MOVE_BACKWARD: {
-                    moveBackward = true;
-                } break;
-                case BLUE_InputAction::INPUT_MOVE_LEFT: {
-                    moveLeft = true;
-                } break;
-                case BLUE_InputAction::INPUT_MOVE_RIGHT: {
-                    moveRight = true;
-                } break;
-                case BLUE_InputAction::INPUT_ESCAPE: {
-                    guiManager.toggleWindow("menu");
-                } break;
-                default: break;
-            }
+		switch (inputData.inputAction) {
+		case BLUE_InputAction::INPUT_MOVE_FORWARD: {
+			moveForward = true;
+		} break;
+		case BLUE_InputAction::INPUT_MOVE_BACKWARD: {
+			moveBackward = true;
+		} break;
+		case BLUE_InputAction::INPUT_MOVE_LEFT: {
+			moveLeft = true;
+		} break;
+		case BLUE_InputAction::INPUT_MOVE_RIGHT: {
+			moveRight = true;
+		} break;
+		case BLUE_InputAction::INPUT_ESCAPE: {
+			guiManager.toggleWindow("menu");
+		} break;
+		default: break;
+		}
 
-        } break;
-        case BLUE_InputType::KEY_RELEASE: { // Key Release events
-            switch (inputData.inputAction) {
-                case BLUE_InputAction::INPUT_MOVE_FORWARD: {
-                    moveForward = false;
-                } break;
-                case BLUE_InputAction::INPUT_MOVE_BACKWARD: {
-                    moveBackward = false;
-                } break;
-                case BLUE_InputAction::INPUT_MOVE_LEFT: {
-                    moveLeft = false;
-                } break;
-                case BLUE_InputAction::INPUT_MOVE_RIGHT: {
-                    moveRight = false;
-                } break;
-                default: break;
-            }
-        } break;
-        case BLUE_InputType::MOUSE_MOTION: { // Mouse motion event
-            if (engine.getMouseMode() == false) {
-                auto x = static_cast<float>(inputData.mouseMotionRelative.x);
-                auto y = static_cast<float>(inputData.mouseMotionRelative.y);
-                y      = y * -1.0f;
-                camera.ProcessMouseMovement(x, y);
-                handledMouse = true;
-            }
+	} break;
+	case BLUE_InputType::KEY_RELEASE: { // Key Release events
+		switch (inputData.inputAction) {
+		case BLUE_InputAction::INPUT_MOVE_FORWARD: {
+			moveForward = false;
+		} break;
+		case BLUE_InputAction::INPUT_MOVE_BACKWARD: {
+			moveBackward = false;
+		} break;
+		case BLUE_InputAction::INPUT_MOVE_LEFT: {
+			moveLeft = false;
+		} break;
+		case BLUE_InputAction::INPUT_MOVE_RIGHT: {
+			moveRight = false;
+		} break;
+		default: break;
+		}
+	} break;
+	case BLUE_InputType::MOUSE_MOTION: { // Mouse motion event
+		if (engine.getMouseMode() == false) {
+			auto x = static_cast<double>(inputData.mouseMotionRelative.x);
+			auto y = static_cast<double>(inputData.mouseMotionRelative.y);
+			y = y * -1.0;
+			camera.ProcessMouseMovement(x, y);
+			handledMouse = true;
+		}
 
-        } break;
-        case BLUE_InputType::MOUSE_WHEEL: { // Mouse Wheel event
-            double amountScrolledY = static_cast<double>(inputData.mouseWheelMotion);
-            camera.ProcessMouseScroll(amountScrolledY);
-        } break;
-        case BLUE_InputType::WINDOW_RESIZE: {
-            this->handleWindowEvent();
-        } break;
-        default: break;
-    }
-    if (!handledMouse) {
-        engine.mouse = {0.0f, 0.0f};
-    }
+	} break;
+	case BLUE_InputType::MOUSE_WHEEL: { // Mouse Wheel event
+		double amountScrolledY = static_cast<double>(inputData.mouseWheelMotion);
+		camera.ProcessMouseScroll(amountScrolledY);
+	} break;
+	case BLUE_InputType::WINDOW_RESIZE: {
+		this->handleWindowEvent();
+	} break;
+	default: break;
+	}
+	if (!handledMouse) {
+		engine.mouse = { 0.0f, 0.0f };
+	}
+
 }
 
 auto PrototypeScene::display() -> void {

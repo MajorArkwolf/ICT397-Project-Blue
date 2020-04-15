@@ -22,6 +22,10 @@ class BeCapsuleBody : public BeAbstractCollision {
      */
     BeCapsuleBody(glm::vec3 position, glm::quat rotation, float radius,
                   float height, BeCollisionWorld *world, beBodyId targetId);
+    /**
+     * @brief destructor for shape
+     */
+    ~BeCapsuleBody();
 
     /**
      *  @brief concrete method for getting body

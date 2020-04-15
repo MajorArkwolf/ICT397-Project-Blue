@@ -60,11 +60,6 @@ class GUIManager {
     void toggleWindow(std::string windowName);
 
   private:
-    /// The max number of windwows possible
-    static constexpr int windowMax = 30;
-
-    /// An array of booleans telling each window whether to display or not
-    bool windowOpen[windowMax];
 
     /// A mapping of a window name to a location in the window open array
     std::map<std::string, bool> windowOpenMap;

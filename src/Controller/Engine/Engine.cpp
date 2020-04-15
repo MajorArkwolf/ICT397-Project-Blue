@@ -138,10 +138,14 @@ auto Engine::processInput() -> void {
     auto handledMouse = true;
     auto &inputManager = Controller::Input::InputManager::getInstance();
 
+
     while (gleqNextEvent(&event)) {
+        if (event.type == GLEQ_KEY_PRESSED || event.type == GLEQ_KEY_RELEASED) {
+            inputManager.recordKeyStates(event);
+        }
         switch (event.type) {
             case GLEQ_KEY_PRESSED: {
-                if (event.keyboard.key == GLFW_KEY_F11) {
+                if (event.keyboard.key == GLFW_KEY_F1) {
                     auto mouseMode = glfwGetInputMode(window, GLFW_CURSOR);
                     if (mouseMode == GLFW_CURSOR_NORMAL) {
                         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -153,9 +157,7 @@ auto Engine::processInput() -> void {
             case GLEQ_WINDOW_CLOSED: {
                 this->endEngine();
             } break;
-            case GLEQ_WINDOW_RESIZED: {
-
-            }
+            default: break;
         }
 
         gameStack.getTop()->handleInputData(inputManager.ProcessInput(event));

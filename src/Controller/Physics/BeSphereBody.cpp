@@ -15,6 +15,11 @@ BeSphereBody::BeSphereBody(glm::vec3 position, glm::quat rotation, float radius,
     bodyId = targetId;
 }
 
+BeSphereBody::~BeSphereBody(){
+    delete shape;
+    delete body;
+}
+
 rp3d::CollisionBody *BeSphereBody::GetBody() {
     return body;
 }

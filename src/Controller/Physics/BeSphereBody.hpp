@@ -16,6 +16,10 @@ class BeSphereBody : public BeAbstractCollision {
      */
     BeSphereBody(glm::vec3 position, glm::quat rotation, float radius,
                  BeCollisionWorld *world, beBodyId targetId);
+    /**
+     * @brief destructor for body
+     */
+    ~BeSphereBody();
 
     /**
      *  @brief Getter for config

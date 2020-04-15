@@ -12,6 +12,11 @@ BeDynamicWorld::BeDynamicWorld(const glm::vec3 &gravity, const BeSettings &setti
     bePhysicsWorld = new rp3d::DynamicsWorld(*worldGravity);
 }
 
+BeDynamicWorld::~BeDynamicWorld(){
+    delete worldGravity;
+    delete bePhysicsWorld;
+}
+
 glm::vec3 BeDynamicWorld::GetGravity() {
     return glm::vec3(worldGravity->x, worldGravity->y, worldGravity->z);
 }

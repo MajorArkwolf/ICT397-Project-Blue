@@ -17,6 +17,11 @@ BeHeightPhysics::BeHeightPhysics(glm::vec3 position, glm::quat rotation, float m
     bodyId = targetId;
 }
 
+BeHeightPhysics::~BeHeightPhysics(){
+    delete shape;
+    delete body;
+}
+
 rp3d::RigidBody *BeHeightPhysics::GetBody() {
     return body;
 }

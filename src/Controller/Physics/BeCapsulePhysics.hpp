@@ -25,6 +25,11 @@ class BeCapsulePhysics : public BeAbstractPhysics {
     float height, BeDynamicWorld *world, beBodyId targetId);
 
     /**
+     * @brief destructor for shape
+     */
+    ~BeCapsulePhysics();
+
+    /**
      *  @brief concrete method for getting body
      *  @return might be naughty returning a react physics body
      */

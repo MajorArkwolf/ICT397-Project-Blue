@@ -17,6 +17,11 @@ BeCapsuleBody::BeCapsuleBody(glm::vec3 position, glm::quat rotation,
     bodyId = targetId;
 }
 
+BeCapsuleBody::~BeCapsuleBody() {
+    delete shape;
+    delete body;
+}
+
 rp3d::CollisionBody *BeCapsuleBody::GetBody() {
     return body;
 }

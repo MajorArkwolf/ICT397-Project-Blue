@@ -25,6 +25,10 @@ class BeDynamicWorld {
      */
     BeDynamicWorld(const glm::vec3 &gravity, const BeSettings &settings);
 
+    /**
+     * @brief destructor for world
+     */
+    ~BeDynamicWorld();
 
     /**
      *  @brief Getter for gravity

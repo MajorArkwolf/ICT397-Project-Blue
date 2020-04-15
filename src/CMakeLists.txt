@@ -24,8 +24,9 @@ target_sources(${PROJECT_NAME} PRIVATE
     Controller/Physics/BeSpherePhysics.cpp
     Controller/GUIManager.cpp
     Controller/ResourceManager.cpp
-    Controller/TerrainFactory.cpp
     Controller/TerrainManager.cpp
+    Controller/Factory/GameAssetFactory.cpp
+    Controller/Factory/TerrainFactory.cpp    
 
     
     # Model

@@ -16,6 +16,11 @@ BeCapsulePhysics::BeCapsulePhysics(glm::vec3 position, glm::quat rotation, float
     bodyId = targetId;
 }
 
+BeCapsulePhysics::~BeCapsulePhysics(){
+    delete shape;
+    delete body;
+}
+
 rp3d::RigidBody *BeCapsulePhysics::GetBody() {
     return body;
 }

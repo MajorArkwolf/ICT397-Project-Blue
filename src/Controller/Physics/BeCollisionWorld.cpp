@@ -13,6 +13,11 @@ BeCollisionWorld::BeCollisionWorld(const BeSettings &worldSettings) {
 
 }
 
+~BeCollisionWorld::~BeCollisionWorld(){
+    delete world;
+}
+
+
 BeSettings BeCollisionWorld::GetConfig() {
     return beConfig;
 }

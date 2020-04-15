@@ -18,6 +18,11 @@ BeHeightBody::BeHeightBody(glm::vec3 position, glm::quat rotation, int width,
     bodyId = targetId;
 }
 
+BeHeightBody::~BeHeightBody() {
+    delete shape;
+    delete body;
+}
+
 rp3d::CollisionBody *BeHeightBody::GetBody() {
     return body;
 }

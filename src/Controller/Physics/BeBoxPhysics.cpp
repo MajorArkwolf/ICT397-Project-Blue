@@ -15,6 +15,10 @@ BeBoxPhysics::BeBoxPhysics(glm::vec3 position, glm::quat rotation, glm::vec3 ext
     bodyId = targetId;
 
 }
+BeBoxPhysics::~BeBoxPhysics() {
+    delete shape;
+    delete body;
+}
 
 rp3d::RigidBody *BeBoxPhysics::GetBody() {
     return body;

@@ -19,10 +19,7 @@ namespace Controller::Input {
         int width, height;
         glfwGetWindowSize(engine.window, &width, &height);
 
-
-        static glm::vec2 currentMousePos{width/2,height/2};
-
-
+        static glm::vec2 currentMousePos{width / 2, height / 2};
 
         switch (event.type) {
             case GLEQ_KEY_PRESSED: {
@@ -52,7 +49,7 @@ namespace Controller::Input {
             case GLEQ_SCROLLED: {
                 inputEvent.inputType        = BLUE_InputType::MOUSE_WHEEL;
                 inputEvent.mouseWheelMotion = event.scroll.y;
-                
+
             } break;
             case GLEQ_WINDOW_RESIZED: {
                 inputEvent.inputType = BLUE_InputType::WINDOW_RESIZE;
@@ -114,7 +111,7 @@ namespace Controller::Input {
                 return n.second;
             }
         }
-        //unknown key
+        // unknown key
         return 0;
     }
 
@@ -144,8 +141,7 @@ namespace Controller::Input {
         if (inputRef.isString()) {
             std::string input = inputRef.cast<std::string>();
             std::cout << input << std::endl;
-            InputMap.insert(
-                std::pair<BLUE_InputAction, int>(action, hashStringToGLFWKey(input)));
+            InputMap.insert(std::pair<BLUE_InputAction, int>(action, hashStringToGLFWKey(input)));
         }
     }
 
@@ -156,6 +152,24 @@ namespace Controller::Input {
             }
         }
         InputMap.at(action) = key;
+    }
+
+    void InputManager::resetKeyStates() {
+        for (auto &n : KeyStates) {
+            n = false;
+        }
+    }
+
+    void InputManager::recordKeyStates(GLEQevent &event) {
+        if (event.type == GLEQ_KEY_PRESSED) {
+            KeyStates[event.keyboard.key] = true;
+        } else if (event.type == GLEQ_KEY_RELEASED) {
+            KeyStates[event.keyboard.key] = false;
+        }
+    }
+
+    const int *InputManager::getKeyStates() {
+        return KeyStates;
     }
 
     void InputManager::readLuaInputTable(luabridge::LuaRef inputTable) {
@@ -215,13 +229,11 @@ namespace Controller::Input {
         stringScancodePairs.push_back(std::pair<std::string, int>("Y", GLFW_KEY_Y));
         stringScancodePairs.push_back(std::pair<std::string, int>("Z", GLFW_KEY_Z));
         stringScancodePairs.push_back(std::pair<std::string, int>("Space", GLFW_KEY_SPACE));
-        stringScancodePairs.push_back(
-            std::pair<std::string, int>("LSHIFT", GLFW_MOD_SHIFT));
+        stringScancodePairs.push_back(std::pair<std::string, int>("LSHIFT", GLFW_MOD_SHIFT));
         stringScancodePairs.push_back(std::pair<std::string, int>("LCTRL", GLFW_MOD_CONTROL));
         stringScancodePairs.push_back(std::pair<std::string, int>("TAB", GLFW_KEY_TAB));
         stringScancodePairs.push_back(std::pair<std::string, int>("LALT", GLFW_MOD_ALT));
-        stringScancodePairs.push_back(
-            std::pair<std::string, int>("ESCAPE", GLFW_KEY_ESCAPE));
+        stringScancodePairs.push_back(std::pair<std::string, int>("ESCAPE", GLFW_KEY_ESCAPE));
 
         stringActionPairs.push_back(std::pair<std::string, BLUE_InputAction>(
             "Move Forward", BLUE_InputAction::INPUT_MOVE_FORWARD));
@@ -256,47 +268,47 @@ namespace Controller::Input {
     InputManager::~InputManager() {}
     void InputManager::populateInputMap() { // Populates Input map with all actions to allow mapping inputs to them
 
-        InputMap.insert(std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_JUMP,
-                                                                  GLFW_KEY_UNKNOWN));
-        InputMap.insert(std::pair<BLUE_InputAction, int>(
-            BLUE_InputAction::INPUT_MOVE_FORWARD, GLFW_KEY_UNKNOWN));
-        InputMap.insert(std::pair<BLUE_InputAction, int>(
-            BLUE_InputAction::INPUT_MOVE_BACKWARD, GLFW_KEY_UNKNOWN));
-        InputMap.insert(std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_MOVE_LEFT,
-                                                                  GLFW_KEY_UNKNOWN));
-        InputMap.insert(std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_MOVE_RIGHT,
-                                                                  GLFW_KEY_UNKNOWN));
-        InputMap.insert(std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_SPRINT,
-                                                                  GLFW_KEY_UNKNOWN));
-        InputMap.insert(std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_CROUCH,
-                                                                  GLFW_KEY_UNKNOWN));
-        InputMap.insert(std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_ESCAPE,
-                                                                  GLFW_KEY_UNKNOWN));
+        InputMap.insert(std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_JUMP, GLFW_KEY_UNKNOWN));
+        InputMap.insert(std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_MOVE_FORWARD,
+                                                         GLFW_KEY_UNKNOWN));
+        InputMap.insert(std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_MOVE_BACKWARD,
+                                                         GLFW_KEY_UNKNOWN));
+        InputMap.insert(
+            std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_MOVE_LEFT, GLFW_KEY_UNKNOWN));
+        InputMap.insert(
+            std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_MOVE_RIGHT, GLFW_KEY_UNKNOWN));
+        InputMap.insert(
+            std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_SPRINT, GLFW_KEY_UNKNOWN));
+        InputMap.insert(
+            std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_CROUCH, GLFW_KEY_UNKNOWN));
+        InputMap.insert(
+            std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_ESCAPE, GLFW_KEY_UNKNOWN));
 
-        InputMap.insert(std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_ACTION_1,
-                                                                  GLFW_KEY_UNKNOWN));
-        InputMap.insert(std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_ACTION_2,
-                                                                  GLFW_KEY_UNKNOWN));
-        InputMap.insert(std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_ACTION_3,
-                                                                  GLFW_KEY_UNKNOWN));
-        InputMap.insert(std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_ACTION_4,
-                                                                  GLFW_KEY_UNKNOWN));
+        InputMap.insert(
+            std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_ACTION_1, GLFW_KEY_UNKNOWN));
+        InputMap.insert(
+            std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_ACTION_2, GLFW_KEY_UNKNOWN));
+        InputMap.insert(
+            std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_ACTION_3, GLFW_KEY_UNKNOWN));
+        InputMap.insert(
+            std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_ACTION_4, GLFW_KEY_UNKNOWN));
 
-        InputMap.insert(std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_LOOK_UP,
-                                                                  GLFW_KEY_UNKNOWN));
-        InputMap.insert(std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_LOOK_DOWN,
-                                                                  GLFW_KEY_UNKNOWN));
-        InputMap.insert(std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_LOOK_LEFT,
-                                                                  GLFW_KEY_UNKNOWN));
-        InputMap.insert(std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_LOOK_RIGHT,
-                                                                  GLFW_KEY_UNKNOWN));
-        InputMap.insert(std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_DEFAULT,
-                                                                  GLFW_KEY_UNKNOWN));
+        InputMap.insert(
+            std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_LOOK_UP, GLFW_KEY_UNKNOWN));
+        InputMap.insert(
+            std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_LOOK_DOWN, GLFW_KEY_UNKNOWN));
+        InputMap.insert(
+            std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_LOOK_LEFT, GLFW_KEY_UNKNOWN));
+        InputMap.insert(
+            std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_LOOK_RIGHT, GLFW_KEY_UNKNOWN));
+        InputMap.insert(
+            std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_DEFAULT, GLFW_KEY_UNKNOWN));
     }
 
     InputManager::InputManager() {
         populateInputMap();
         DefaultInputMap();
         createEnumStringPairs();
+        resetKeyStates();
     }
 }

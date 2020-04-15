@@ -25,6 +25,11 @@ class BeSpherePhysics : public BeAbstractPhysics{
         BeDynamicWorld *world, beBodyId targetId);
 
     /**
+     * @brief destructor for body
+     */
+    ~BeSpherePhysics();
+
+    /**
      *  @brief Getter for config
      *  @param
      *  @return settings for the world

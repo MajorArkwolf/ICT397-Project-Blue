@@ -25,7 +25,7 @@ public:
 
     double time = 0;
     
-    void handleInputData(Controller::Input::InputData inputData);
+    void handleInputData(Controller::Input::InputData inputData) override;
     Camera camera;
 
 private:

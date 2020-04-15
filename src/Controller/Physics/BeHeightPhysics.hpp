@@ -24,6 +24,8 @@ class BeHeightPhysics : public BeAbstractPhysics{
     BeHeightPhysics(glm::vec3 position, glm::quat rotation, float mass, int width, int height,
         BeDynamicWorld *world, float *terrain, beBodyId targetId);
 
+    ~BeHeightPhysics();
+
     /**
      *  @brief Getter for config
      *  @param

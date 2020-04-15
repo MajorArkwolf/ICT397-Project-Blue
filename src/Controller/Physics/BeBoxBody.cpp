@@ -15,6 +15,11 @@ BeBoxBody::BeBoxBody(glm::vec3 position, glm::quat rotation, glm::vec3 extent,
     bodyId = targetId;
 }
 
+BeBoxBody::~BeBoxBody() {
+    delete shape;
+    delete body;
+}
+
 rp3d::CollisionBody *BeBoxBody::GetBody() {
     return body;
 }

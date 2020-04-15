@@ -23,6 +23,11 @@ class BeBoxBody : public BeAbstractCollision {
               BeCollisionWorld *world, beBodyId targetId);
 
     /**
+     * @brief destructor for the body
+     */
+    ~BeBoxBody();
+
+    /**
      *  @brief concrete method for getting body
      *  @return might be naughty returning a react physics body
      */

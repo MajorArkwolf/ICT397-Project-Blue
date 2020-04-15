@@ -14,6 +14,11 @@ BeSpherePhysics::BeSpherePhysics(glm::vec3 position, glm::quat rotation, float m
     bodyId = targetId;
 }
 
+BeSpherePhysics::~BeSpherePhysics(){
+    delete shape;
+    delete body;
+}
+
 rp3d::RigidBody *BeSpherePhysics::GetBody() {
     return body;
 }

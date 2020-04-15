@@ -24,6 +24,8 @@ class BeBoxPhysics: public BeAbstractPhysics {
     BeBoxPhysics(glm::vec3 position, glm::quat rotation, glm::vec3 extent, beScalar mass,
     BeDynamicWorld *world, beBodyId targetId);
 
+    ~BeBoxPhysics();
+
     /**
      *  @brief concrete method for getting body
      *  @return might be naughty returning a react physics body

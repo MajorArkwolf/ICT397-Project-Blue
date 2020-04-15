@@ -24,6 +24,11 @@ class BeCollisionWorld {
     BeCollisionWorld(const BeSettings &worldSettings);
 
     /**
+     * @brief destructor fro world
+     */
+    ~BeCollisionWorld();
+
+    /**
      *  @brief Getter for config
      *  @param
      *  @return settings for the world
