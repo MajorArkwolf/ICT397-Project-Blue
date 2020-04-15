@@ -1,14 +1,13 @@
 #pragma once
 
 #define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
-
+#include <imgui.h>
 #include <map>
 #include <string>
 
-#include <imgui.h>
-#include <examples/imgui_impl_opengl3.h>
+#include <GLFW/glfw3.h>
 #include <examples/imgui_impl_glfw.h>
+#include <examples/imgui_impl_opengl3.h>
 
 class GUIManager {
   public:
@@ -45,6 +44,11 @@ class GUIManager {
     void displayInstructionMenu();
 
     /**
+     * @brief Displays the instruction menu
+     */
+    void displayQuitScreen();
+
+    /**
      * @brief Starts an Imgui Window frame, must be called at the beginning of a display loop
      */
     void startWindowFrame();
@@ -60,7 +64,6 @@ class GUIManager {
     void toggleWindow(std::string windowName);
 
   private:
-
     /// A mapping of a window name to a location in the window open array
     std::map<std::string, bool> windowOpenMap;
 

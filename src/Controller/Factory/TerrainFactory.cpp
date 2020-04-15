@@ -189,23 +189,22 @@ void Controller::TerrainFactory::CleanupChunk(Model::TerrainModel& terrain) {
 
 void Controller::TerrainFactory::LoadPerlinNoise(const string filename) {
     int width, height, nrComponents;
-    const unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
+    unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
     assert(data != nullptr);
-    //Verify this frees
-    stbi_image_free(0);
+
     fValues.resize(width + 1);
     for (auto& e : fValues) {
         e.resize(height + 1);
     }
-    for (size_t x = 0; x <= height - 1; ++x) {
-        for (size_t y = 0; y <= width - 1; ++y) {
+    for (auto x = 0; x <= height - 1; ++x) {
+        for (auto y = 0; y <= width - 1; ++y) {
             this->fValues.at(x).at(y).height = static_cast<float>(data[((x * width) + y) * 3]);
         }
     }
     int runtime = 1;
-    for (size_t run = 0; run < runtime; ++run) {
-        for (size_t x = 1; x <= height - 1; ++x) {
-            for (size_t y = 1; y <= width - 1; ++y) {
+    for (auto run = 0; run < runtime; ++run) {
+        for (auto x = 1; x <= height - 1; ++x) {
+            for (auto y = 1; y <= width - 1; ++y) {
                 float sum = {};
                 sum += this->fValues.at(x).at(y).height;
                 sum += this->fValues.at(x - 1).at(y).height;
@@ -217,7 +216,7 @@ void Controller::TerrainFactory::LoadPerlinNoise(const string filename) {
             }
         }
     }
-    
+    stbi_image_free(data);
 }
 
 int Controller::TerrainFactory::GetChunkSize() const {

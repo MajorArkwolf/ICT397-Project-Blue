@@ -7,6 +7,7 @@
 #include "Model/Models/ModelManager.hpp"
 #include "View/Renderer/OpenGLProxy.hpp"
 #include "View/Renderer/Renderer.hpp"
+#include "Controller/TextureManager.hpp"
 
 using Controller::Input::BLUE_InputAction;
 using Controller::Input::BLUE_InputType;
@@ -39,6 +40,9 @@ void PrototypeScene::Init() {
 	camera.Position.y = 100.0;
 	camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
 	models.push_back(resManager.getModelID("res/model/player_male.obj"));
+    auto &texManager = TextureManager ::getInstance();
+
+    texManager.loadTextureFromFile("res/images/dirt.jpg", "dirt");
 }
 
 void PrototypeScene::handleWindowEvent() {
@@ -127,6 +131,7 @@ auto PrototypeScene::display() -> void {
 	guiManager.displayInputRebindWindow();
 	guiManager.displayEscapeMenu();
 	guiManager.displayInstructionMenu();
+    guiManager.displayQuitScreen();
 	int width = 0, height = 0;
 	glfwGetWindowSize(engine.window, &width, &height);
 	// view/projection transformations

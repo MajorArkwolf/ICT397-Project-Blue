@@ -19,7 +19,6 @@ void ResourceManager::loadResources() {
     auto scriptPath = basePath + "res/scripts/LoadResources.lua";
     getGlobalNamespace(L).beginNamespace("resources").addFunction("loadString", &loadString).endNamespace();
     getGlobalNamespace(L).beginNamespace("resources").addFunction("loadModel", &loadModel).endNamespace();
-    std::cout << scriptPath;
     luaL_dofile(L, scriptPath.c_str());
     lua_pcall(L, 0, 0, 0);
 
