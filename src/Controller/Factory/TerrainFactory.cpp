@@ -12,17 +12,15 @@
 void Controller::TerrainFactory::Init() {
     terrainShader = std::make_shared<Shader>("./res/shader/terrain_vert.vs", "./res/shader/terrain_frag.fs");
     waterShader = std::make_shared<Shader>("./res/shader/water_vert.vs", "./res/shader/water_frag.fs");
+    LoadPerlinNoise(".//res//images//test2.jpg");
     snowTextureID = BlueEngine::RenderCode::TextureFromFile("snow.jpg", "./res/images");
     grassTextureID = BlueEngine::RenderCode::TextureFromFile("grass.jpg", "./res/images");
     dirtTextureID  = BlueEngine::RenderCode::TextureFromFile("dirt.jpg", "./res/images");
     sandTextureID  = BlueEngine::RenderCode::TextureFromFile("sand.jpg", "./res/images");
     waterTextureID = BlueEngine::RenderCode::TextureFromFile("water.jpg", "./res/images");
-    LoadPerlinNoise(".//res//images//test2.jpg");
-    SetMaxSize();
-    SetMaxKey();
 }
 
-void LoadLua() {
+void Controller::TerrainFactory::LoadLua() {
     // Lua needs the following parameters
     // Chunksize
     // LoadPerlin -> Boolean to determine if its going to load an image or generate the noise
@@ -34,18 +32,18 @@ void LoadLua() {
     // watertexture
 }
 
-void Controller::TerrainFactory::GenerateTerrain(Model::TerrainModel &newTerrain, const int xcord,
-                                                const int zcord, const Blue::Key key) {
+void Controller::TerrainFactory::GenerateTerrain(Model::TerrainModel &newTerrain, int xcord,
+                                                 int zcord, const Blue::Key key) {
 
-    int xsize = chunkSize + 1;
-    int zsize = chunkSize + 1;
+    int xsize = ChunkSize + 1;
+    int zsize = ChunkSize + 1;
     ///Pass a shared pointer to our terrain.
     newTerrain.LoadShader(terrainShader);
     newTerrain.water.SetShader(waterShader);
     ///Generate verticies to form a giant square.
     GenerateVerticies(newTerrain.verticies, xsize, zsize);
     ///Give heights to the y values using perlin noise.
-    AddDetail(newTerrain.verticies, key, maxSize, chunkSize);
+    AddDetail(newTerrain.verticies, key, maxSize, ChunkSize);
     ///Generate indicies for the verticies.
     GenerateIndicies(newTerrain.indicies, xsize, zsize);
     ///Generate the texture coordinates of the squares.
@@ -55,10 +53,10 @@ void Controller::TerrainFactory::GenerateTerrain(Model::TerrainModel &newTerrain
     ///Send the chunk to OpenGL to be stored in the GPU.
     newTerrain.SetupModel();
     ///Set the location of the chunk.
-    newTerrain.position.x = xcord * chunkSize;
-    newTerrain.position.z = zcord * chunkSize;
+    newTerrain.position.x = xcord * ChunkSize;
+    newTerrain.position.z = zcord * ChunkSize;
     GenerateWater(newTerrain.water, xcord, zcord, key);
-    newTerrain.water.position = glm::vec3{ xcord * chunkSize , 105, zcord * chunkSize };
+    newTerrain.water.position = glm::vec3{ xcord * ChunkSize , 105, zcord * ChunkSize };
     ///Load the textures for the model.
     newTerrain.setTextures(snowTextureID, grassTextureID, dirtTextureID, sandTextureID);
     ///Clean up the useless data to save room in ram.
@@ -67,8 +65,8 @@ void Controller::TerrainFactory::GenerateTerrain(Model::TerrainModel &newTerrain
 
 void Controller::TerrainFactory::GenerateWater(Model::Water &lake, int xcord, int zcord,
                                                const Blue::Key key) {
-    int xsize = chunkSize + 1;
-    int zsize = chunkSize + 1;
+    int xsize = ChunkSize + 1;
+    int zsize = ChunkSize + 1;
     GenerateVerticies(lake.verticies, xsize, zsize);
     GenerateIndicies(lake.indicies, xsize, zsize);
     GenerateTextureCords(lake.verticies);
@@ -164,9 +162,9 @@ void Controller::TerrainFactory::GeneratePerlinNoise(int xsize, int zsize) {
 
 void Controller::TerrainFactory::AddDetail(std::vector<Blue::Vertex> &terrain, const Blue::Key key,
                                            int maxSize, int chunkSize) {
-    int row = (maxSize / 2) + key.first * chunkSize;
+    int row = (height / 2) + key.first * chunkSize;
     int max_row = row + chunkSize;
-    int col = (maxSize / 2) + key.second * chunkSize;
+    int col = (width / 2) + key.second * chunkSize;
     int max_col = col + chunkSize;
     auto y = col;
     float x = -1;
@@ -185,14 +183,16 @@ void Controller::TerrainFactory::CleanupChunk(Model::TerrainModel& terrain) {
     terrain.verticies.clear();
     terrain.verticies.shrink_to_fit();
     terrain.indicie_size = terrain.indicies.size();
-    //terrain.indicies.clear();
-   // terrain.indicies.shrink_to_fit();
+    terrain.indicies.clear();
+    terrain.indicies.shrink_to_fit();
 }
 
 void Controller::TerrainFactory::LoadPerlinNoise(const string filename) {
-    int nrComponents = 0;
+    int nrComponents;
     const unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
     assert(data != nullptr);
+    assert(width == height);
+    maxSize = width;
     //Verify this frees
     stbi_image_free(0);
     fValues.resize(width + 1);
@@ -223,7 +223,7 @@ void Controller::TerrainFactory::LoadPerlinNoise(const string filename) {
 }
 
 int Controller::TerrainFactory::GetChunkSize() const {
-    return this->chunkSize;
+    return this->ChunkSize;
 }
 
 void Controller::TerrainFactory::GenerateNormals(std::vector<Blue::Vertex> &verticies,
@@ -261,18 +261,27 @@ void Controller::TerrainFactory::GenerateNormals(std::vector<Blue::Vertex> &vert
     }
 }
 
-void Controller::TerrainFactory::SetMaxSize() {
-    if (width > height) {
-        maxSize = height;
-    } else {
-        maxSize = width;
+int Controller::TerrainFactory::getWidth() const {
+    return width;
+}
+
+int Controller::TerrainFactory::getHeight() const {
+    return height;
+}
+
+void Controller::TerrainFactory::ExportHeightMap(float *heightMap) {
+    size_t maxIndex = (width + 1) * (height + 1);
+    heightMap = new float[maxIndex];
+    size_t count = 0;
+    for (auto &x : fValues) {
+        for (auto & y : x) {
+            if (count < maxIndex) {
+                heightMap[count] = y.height;
+                ++count;
+            } else {
+                std::cerr << "ERROR: TerrainFactory::ExportHeightMap out of bounds!\n";
+            }
+        }
     }
-}
-
-void Controller::TerrainFactory::SetMaxKey() {
-    maxKey = static_cast<size_t>(((maxSize / chunkSize) / 2)  - 1);
-}
-
-size_t Controller::TerrainFactory::GetMaxKey() {
-    return maxKey;
+    assert(count == maxIndex);
 }
