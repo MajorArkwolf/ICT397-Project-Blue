@@ -39,13 +39,13 @@ namespace Controller {
 		void Init();
 		/**
 		 * @brief Draw call for the terrain model objects.
-		 * @param Projection matrix for the camera
-		 * @param View matrix for the model
+		 * @param projection matrix for the camera
+		 * @param view matrix for the model
 		 */
 		void Draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos);
 		/**
 		 * @brief Updatecall for the terrain model objects.
-		 * @param the key to where the camera is relative to the chunk its in.
+		 * @param key to where the camera is relative to the chunk its in.
 		 */
 		void Update(glm::ivec2 key);
 	private:
@@ -64,8 +64,8 @@ namespace Controller {
 		
 		/**
 		 * @brief Pythatogrious function to determine the distance of 2 cartesian coordinates.
-		 * @param Key of the first square.
-		 * @param Key of the second square.
+		 * @param left Key of the first square.
+		 * @param right Key of the second square.
 		 * @return distance between the two keys.
 		 */
         float Distance(const Blue::Key &left, const Blue::Key &right) const;
