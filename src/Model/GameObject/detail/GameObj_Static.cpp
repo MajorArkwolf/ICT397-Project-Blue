@@ -2,7 +2,6 @@
 #include "../GameObj_Static.hpp"
 
 	/// External Dependencies
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 	/// Internal Dependencies
