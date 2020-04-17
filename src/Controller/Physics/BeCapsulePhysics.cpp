@@ -18,7 +18,6 @@ BeCapsulePhysics::BeCapsulePhysics(glm::vec3 position, glm::quat rotation, float
 
 BeCapsulePhysics::~BeCapsulePhysics(){
     delete shape;
-    delete body;
 }
 
 rp3d::RigidBody *BeCapsulePhysics::GetBody() {
@@ -48,4 +47,9 @@ void BeCapsulePhysics::EnableGravity(bool gravity) {
 
 void BeCapsulePhysics::SetType(BeBodyType type) {
     body->setType(type);
+}
+
+BeMaterial *BeCapsulePhysics::GetMaterial() {
+    BeMaterial *result = new BeMaterial(body->getMaterial());
+    return result;
 }

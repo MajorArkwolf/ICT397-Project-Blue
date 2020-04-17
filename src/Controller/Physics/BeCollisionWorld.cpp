@@ -7,10 +7,8 @@ BeCollisionWorld::BeCollisionWorld() {
 }
 
 BeCollisionWorld::BeCollisionWorld(const BeSettings &worldSettings) {
-
     beConfig         = worldSettings;
     beCollisionWorld = new rp3d::CollisionWorld(worldSettings.beSettings);
-
 }
 
 BeCollisionWorld::~BeCollisionWorld(){

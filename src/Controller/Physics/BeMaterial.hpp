@@ -5,11 +5,15 @@
 
 class BeMaterial {
   public:
-    BeMaterial(BeMaterial target);
-    rp3d::Material GetMaterial();
+    BeMaterial();
+    BeMaterial(BeMaterial *mat);
+    BeMaterial(rp3d::Material mat);
+    void SetMaterial(rp3d::Material *target);
+    ~BeMaterial();
+    [[nodiscard]] rp3d::Material *GetMaterial() const ;
     void SetBounciness(float bounciness);
-    BeMaterial operator=(BeMaterial rhs);
+    BeMaterial &operator=(const BeMaterial &rhs);
 
   private:
-    rp3d::Material material;
+    rp3d::Material *material;
 };

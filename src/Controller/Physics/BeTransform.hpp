@@ -50,12 +50,14 @@ class BeTransform {
      * @brief sets physics object rotation
      * @param inputOrientation the rotation
      */
-    void SetOrientation(BeQuaternion inputOrientation);
+    void SetOrientation(glm::quat inputOrientation);
 
     /**
-     * @param inputOrientation the rotation
+     * @brief getter for orientation
+     * @param
+     * @return the rotation
      */
-    BeQuaternion GetOrientation();
+    glm::quat GetOrientation();
 
     /**
      * @brief Sets the physics object position
@@ -67,6 +69,14 @@ class BeTransform {
      * @brief gets the physics object position
      */
     glm::vec3 GetPosition() const;
+
+
+
+    /**
+     * @brief getter for transform
+     * @return rp3d transform
+     */
+    rp3d::Transform GetTransform();
 
     /**
      * @brief sets the orientation and position to identity
@@ -91,6 +101,15 @@ class BeTransform {
      * @return multiplied rotation and position
      */
     BeTransform &operator*(const BeTransform &rhs);
+
+    /**
+     * @brief interpolate body position probably lerp or something
+     * @param previous old position
+     * @param current new position
+     * @param factor step
+     * @return new transform
+     */
+    static BeTransform InterPolateTransform(BeTransform previous, BeTransform current, double factor);
 
   private:
     rp3d::Quaternion orientation;

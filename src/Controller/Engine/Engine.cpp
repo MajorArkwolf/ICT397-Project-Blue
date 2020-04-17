@@ -36,6 +36,11 @@ auto Engine::run() -> void {
     double currentTime = glfwGetTime();
     double accumulator = 0.0;
 
+    //BePhysics time
+    double timeStep = 1.0 / 60.0;
+    double acc = 0.0;
+
+
     // State previous;
     // State current;
     // State state;
@@ -44,6 +49,12 @@ auto Engine::run() -> void {
     while (engine.getIsRunning()) {
         double newTime   = glfwGetTime();
         double frameTime = newTime - currentTime;
+
+        // testing only pls delete
+        double deltaTime = newTime - prevTime;
+        prevTime = newTime;
+        acc += deltaTime;
+
         if (frameTime > 0.25)
             frameTime = 0.25;
         currentTime = newTime;
@@ -54,12 +65,25 @@ auto Engine::run() -> void {
             // previousState = currentState;
             glfwPollEvents();
             engine.processInput();
-            engine.gameStack.getTop()->update(t, dt);
+            engine.gameStack.getTop()->update(t, dt, timeStep);
             t += dt;
             accumulator -= dt;
         }
+
+        while(acc >= timeStep)
+        {
+            //testing only pls delete
+            engine.gameStack.getTop()->updateWorld(timeStep);
+            acc -= timeStep;
+        }
+
         const double alpha = accumulator / dt;
         // state = currentState * alpha + previousState * (1.0 - alpha);
+
+        // to delete for testing physics
+        factor = acc / timeStep;
+        std::cout << "factor: " << factor << std::endl;
+        //engine.gameStack.getTop()->updatePhysics(factor);
 
         engine.gameStack.getTop()->display();
     }
@@ -111,7 +135,6 @@ Engine::Engine() {
     }
 
     this->guiManager.initialiseImGUI(window);
-
 
 }
 

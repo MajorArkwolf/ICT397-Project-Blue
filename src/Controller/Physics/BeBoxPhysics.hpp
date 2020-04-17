@@ -67,6 +67,12 @@ class BeBoxPhysics: public BeAbstractPhysics {
      */
     void SetType(BeBodyType type) override;
 
+    /**
+     * @brief get material to set bounciness and other attributes
+     * @return BeMaterial
+     */
+    BeMaterial *GetMaterial() override;
+
   private:
     rp3d::BoxShape *shape;
 };

@@ -15,7 +15,7 @@
 #include <glm/vec3.hpp>
 
 #include "BaseState.hpp"
-
+#include "Controller/Physics/BeTimer.hpp"
 #include "Controller/Physics/BeRP3DFactory.hpp"
 #include "Controller/Physics/BePhysicsLibrary.hpp"
 #include "Controller/GUIManager.hpp"
@@ -53,6 +53,10 @@ namespace BlueEngine {
         float lastX     = SCR_WIDTH / 2.0f;
         float lastY     = SCR_HEIGHT / 2.0f;
         bool firstMouse = true;
+
+        //Testing physics delete after
+        static inline double factor = 0.01;
+        static inline double prevTime = 0.0;
 
       public:
         Engine(Engine &&)      = default;

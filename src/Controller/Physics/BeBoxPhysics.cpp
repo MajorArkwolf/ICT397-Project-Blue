@@ -16,8 +16,8 @@ BeBoxPhysics::BeBoxPhysics(glm::vec3 position, glm::quat rotation, glm::vec3 ext
 
 }
 BeBoxPhysics::~BeBoxPhysics() {
+
     delete shape;
-    delete body;
 }
 
 rp3d::RigidBody *BeBoxPhysics::GetBody() {
@@ -47,4 +47,9 @@ void BeBoxPhysics::EnableGravity(bool gravity) {
 
 void BeBoxPhysics::SetType(BeBodyType type) {
     body->setType(type);
+}
+
+BeMaterial *BeBoxPhysics::GetMaterial() {
+    BeMaterial *result = new BeMaterial(body->getMaterial());
+    return result;
 }

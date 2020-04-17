@@ -16,7 +16,6 @@ BeSpherePhysics::BeSpherePhysics(glm::vec3 position, glm::quat rotation, float m
 
 BeSpherePhysics::~BeSpherePhysics(){
     delete shape;
-    delete body;
 }
 
 rp3d::RigidBody *BeSpherePhysics::GetBody() {
@@ -46,4 +45,9 @@ void BeSpherePhysics::EnableGravity(bool gravity) {
 
 void BeSpherePhysics::SetType(BeBodyType type) {
     body->setType(type);
+}
+
+BeMaterial *BeSpherePhysics::GetMaterial() {
+    BeMaterial *result = new BeMaterial(body->getMaterial());
+    return result;
 }

@@ -10,6 +10,11 @@
 class BeAbstractPhysicsFactory {
   public:
     /**
+     * @brief destructor
+     */
+    virtual ~BeAbstractPhysicsFactory() = default;
+
+    /**
      *  @brief creates a collision body
      *  @param position the position of the body
      *  @param rotation the orientation of the body

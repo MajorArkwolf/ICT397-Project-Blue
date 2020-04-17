@@ -4,9 +4,11 @@ target_sources(${PROJECT_NAME} PRIVATE
     main.cpp
 
     # Controller/Engine/QuaternionCamera.cpp Not used, needs to be updated
+    Controller/Engine/Engine.cpp
+    Controller/Engine/IDTracker.cpp
     Controller/Engine/LuaManager.cpp
     Controller/InputManager.cpp
-    Controller/Engine/Engine.cpp
+
     Controller/Physics/BeCollisionWorld.cpp
     Controller/Physics/BeQuaternion.cpp
     Controller/Physics/BeTransform.cpp
@@ -22,6 +24,9 @@ target_sources(${PROJECT_NAME} PRIVATE
     Controller/Physics/BeCapsulePhysics.cpp
     Controller/Physics/BeHeightPhysics.cpp
     Controller/Physics/BeSpherePhysics.cpp
+    Controller/Physics/BeMaterial.cpp
+    Controller/Physics/BeTimer.cpp
+
     Controller/GUIManager.cpp
     Controller/ResourceManager.cpp
     Controller/TerrainManager.cpp

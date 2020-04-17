@@ -19,7 +19,6 @@ BeHeightPhysics::BeHeightPhysics(glm::vec3 position, glm::quat rotation, float m
 
 BeHeightPhysics::~BeHeightPhysics(){
     delete shape;
-    delete body;
 }
 
 rp3d::RigidBody *BeHeightPhysics::GetBody() {
@@ -49,4 +48,9 @@ void BeHeightPhysics::EnableGravity(bool gravity) {
 
 void BeHeightPhysics::SetType(BeBodyType type) {
     body->setType(type);
+}
+
+BeMaterial *BeHeightPhysics::GetMaterial() {
+    BeMaterial *result = new BeMaterial(body->getMaterial());
+    return result;
 }

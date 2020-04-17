@@ -131,6 +131,8 @@ class BeDynamicWorld {
      */
     void SetNumIterationVelocitySolver(int iterations);
 
+    void Update(float timeStep);
+
   private:
     BeSettings worldSettings;
     rp3d::Vector3 *worldGravity;

@@ -9,6 +9,11 @@
 class BeAbstractPhysicsLibrary {
   public:
     /**
+     * @brief destructor
+     */
+    virtual ~BeAbstractPhysicsLibrary() {delete  factory;}
+
+    /**
      *  @brief creates the factory
      *  @param position the position of the body
      *  @param rotation the orientation of the body

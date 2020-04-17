@@ -81,3 +81,7 @@ void BeDynamicWorld::SetNumIterationPositionSolver(int iterations) {
 void BeDynamicWorld::SetNumIterationVelocitySolver(int iterations) {
     bePhysicsWorld->setNbIterationsVelocitySolver(iterations);
 }
+
+void BeDynamicWorld::Update(float timeStep) {
+    bePhysicsWorld->update(timeStep);
+}

@@ -3,7 +3,7 @@
 #include <glm/detail/type_quat.hpp>
 
 BeTransform::BeTransform() {
-    orientation = rp3d::Quaternion(0, 0, 0, 0);
+    orientation = rp3d::Quaternion(0, 0, 0, 1);
     position    = rp3d::Vector3(0, 0, 0);
 }
 
@@ -36,18 +36,19 @@ BeTransform::BeTransform(const rp3d::Transform &inputTransform) {
     transform   = inputTransform;
 }
 
-BeTransform::~BeTransform() {}
+BeTransform::~BeTransform() {
 
-BeQuaternion BeTransform::GetOrientation() {
-    BeQuaternion orient = BeQuaternion(transform.getOrientation().x, transform.getOrientation().y,
-                                       transform.getOrientation().z, transform.getOrientation().w);
+}
 
+glm::quat BeTransform::GetOrientation() {
+    glm::quat orient = glm::quat(transform.getOrientation().w, transform.getOrientation().x,
+                                       transform.getOrientation().y, transform.getOrientation().z);
     return orient;
 }
 
-void BeTransform::SetOrientation(BeQuaternion inputOrientation) {
-    orientation = rp3d::Quaternion(inputOrientation.GetX(), inputOrientation.GetY(),
-                                   inputOrientation.GetZ(), inputOrientation.GetW());
+void BeTransform::SetOrientation(glm::quat inputOrientation) {
+    orientation = rp3d::Quaternion(inputOrientation.x, inputOrientation.y,
+                                   inputOrientation.z, inputOrientation.w);
     transform.setOrientation(orientation);
 }
 
@@ -61,6 +62,10 @@ glm::vec3 BeTransform::GetPosition() const {
     glm::vec3 pos(transform.getPosition().x, transform.getPosition().y, transform.getPosition().z);
 
     return pos;
+}
+
+rp3d::Transform BeTransform::GetTransform() {
+    return transform;
 }
 
 void BeTransform::SetToIdentity() {
@@ -87,5 +92,11 @@ BeTransform &BeTransform::operator*(const BeTransform &rhs) {
     rp3d::Transform temp        = rp3d::Transform(posResult, quatResult);
     transform                   = temp;
     BeTransform result          = BeTransform(transform);
+    return result;
+}
+
+BeTransform BeTransform::InterPolateTransform(BeTransform previous, BeTransform current, double factor) {
+    rp3d::Transform temp = rp3d::Transform::interpolateTransforms(previous.GetTransform(), current.GetTransform(), factor);
+    BeTransform result(temp);
     return result;
 }

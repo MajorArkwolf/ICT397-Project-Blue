@@ -53,6 +53,8 @@ class BeHeightBody : public BeAbstractCollision {
      */
     beBodyId GetId() override;
 
+
+
   private:
     rp3d::HeightFieldShape *shape;
 };

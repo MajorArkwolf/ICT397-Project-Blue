@@ -3,10 +3,16 @@
 #include <reactphysics3d.h>
 
 #include "BeConfig.hpp"
+#include "BeMaterial.hpp"
 #include "BeTransform.hpp"
 
 class BeAbstractPhysics{
   public:
+    /**
+     * @brief destructor
+     */
+    virtual ~BeAbstractPhysics(){}
+
     /**
      *  @brief abstract method for getting body
      *  @return might be naughty returning a react physics body
@@ -47,6 +53,12 @@ class BeAbstractPhysics{
      * @param type rp3d body type enum
      */
     virtual void SetType(BeBodyType type) = 0;
+
+    /**
+     * @brief get material to set bounciness and other attributes
+     * @return BeMaterial
+     */
+    virtual BeMaterial *GetMaterial() = 0;
 
   protected:
     rp3d::bodyindex bodyId;
