@@ -1,15 +1,16 @@
 #pragma once
-#include <unordered_map>
-#include <map>
-#include <glm/vec2.hpp>
 #include <functional>
-#include "Model/TerrainModel.hpp"
+#include <map>
 #include <string>
+#include <unordered_map>
+
+#include <glm/vec2.hpp>
+
+#include "Model/TerrainModel.hpp"
 #include "Model/Vertix.hpp"
 #include <functional>
 #include "Controller/Engine/IDTracker.hpp"
 #include "Model/Vertix.hpp"
-
 
 namespace Controller {
 	/// Hash function for the key into the map.
@@ -67,17 +68,17 @@ namespace Controller {
 		int reloadDistance = 1;
 		/// The last position the camera was at.
         Blue::Key lastPos = Blue::Key(999, 999);
-		/// Draw list of chunks to be sent to the renderer.
-		std::vector<std::shared_ptr<Model::TerrainModel>> drawCircle = {};
-		/// Unordered map of shared pointers to terrain models for quick access.
+        /// Draw list of chunks to be sent to the renderer.
+        std::vector<std::shared_ptr<Model::TerrainModel>> drawCircle = {};
+        /// Unordered map of shared pointers to terrain models for quick access.
         std::unordered_map<Blue::Key, std::shared_ptr<Model::TerrainModel>, pair_hash> map = {};
-		
-		/**
-		 * @brief Pythatogrious function to determine the distance of 2 cartesian coordinates.
-		 * @param left Key of the first square.
-		 * @param right Key of the second square.
-		 * @return distance between the two keys.
-		 */
+
+        /**
+         * @brief Pythatogrious function to determine the distance of 2 cartesian coordinates.
+         * @param Key of the first square.
+         * @param Key of the second square.
+         * @return distance between the two keys.
+         */
         float Distance(const Blue::Key &left, const Blue::Key &right) const;
-	};
+    };
 }

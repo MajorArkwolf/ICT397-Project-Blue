@@ -13,6 +13,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     Controller/TerrainManager.cpp
     Controller/Factory/GameAssetFactory.cpp
     Controller/Factory/TerrainFactory.cpp    
+    Controller/TextureManager.cpp
     
     # Model
     Model/Models/Mesh.cpp
@@ -21,6 +22,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     Model/TerrainModel.cpp
     Model/WaterModel.cpp
     Model/TextManager.cpp
+    Model/Texture.cpp
 
     # View
     View/Renderer/Shader.cpp
