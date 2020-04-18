@@ -6,14 +6,14 @@
 	/// External Dependencies
 #include <glm/glm.hpp>
 
+	/// Internal Dependencies
+#include "Controller/Engine/IDTracker.hpp"
+
 	/*!
 	 * @brief Declaration of the type for identifying different GameObject classes.
 	 * @warning 0 is reserved for invalid identifiers and error reporting.
 	 */
 using GameObjType = unsigned int;
-
-	//! The constant static definition for the identifier of an invalid GameObject type.
-constexpr GameObjType GAMEOBJ_INVALID = 0u;
 
 	//! The parent class for all child GameObjects.
 class GameObj_Base
@@ -35,6 +35,12 @@ public:
 
 		//! Virtual destructor.
 	virtual ~GameObj_Base() = 0;
+
+		/*!
+		 * @brief Returns a copy of this GameObject's unique identifier.
+		 * @return An identifier value.
+		 */
+	BlueEngine::ID gameObj_getUniqueID();
 
 		/*!
 		 * @brief Identifies the GameObject's type.
@@ -113,4 +119,10 @@ private:
 		 * @note Defaults to "".
 		 */
 	std::string gameObj_modelPath;
+
+		/*!
+		 * @brief Stores the unique Identifier for the GameObject.
+		 * @note Defaults to BlueEngine::IDTracker.getID().
+		 */
+	BlueEngine::ID gameObj_uniqueId;
 };

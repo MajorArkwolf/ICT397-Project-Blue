@@ -4,10 +4,7 @@
 #include <map>
 
 	/// Internal Dependencies
-#include "GameObj_Base.hpp"
-
-	//! The constant static definition for the identifier of GameObject type GameObj_Player.
-constexpr GameObjType GAMEOBJ_PLAYER = 2u;
+#include "Base.hpp"
 
 	/*!
 	 * @brief A GameObject containing player-specific features.

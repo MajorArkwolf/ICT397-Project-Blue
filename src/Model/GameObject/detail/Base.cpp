@@ -1,11 +1,12 @@
 	/// Definition Include
-#include "../GameObj_Base.hpp"
+#include "../Base.hpp"
 
 	/// External Dependencies
 #include <limits>
 
 	/// Internal Dependencies
-#include "../../../Controller/ResourceManager.hpp"
+#include "Controller/ResourceManager.hpp"
+#include "../GameObject.hpp"
 
 GameObj_Base::GameObj_Base() {
 	// Set the initial values of the GameObject's 3D position attributes
@@ -18,6 +19,7 @@ GameObj_Base::GameObj_Base() {
 	gameObj_modelId = std::numeric_limits<std::size_t>::min();
 	gameObj_modelPath = "";
 	gameObj_physBody = 0ul;
+	gameObj_uniqueId = BlueEngine::IDTracker::getInstance().getID();
 }
 
 GameObj_Base::GameObj_Base(std::string path, unsigned long int physBody, glm::vec3 position, float rotateHori, float rotateVert, float rotateTilt) {
@@ -29,11 +31,19 @@ GameObj_Base::GameObj_Base(std::string path, unsigned long int physBody, glm::ve
 
 	// Set the initial stored identifiers
 	gameObj_setModel(path);
+	gameObj_modelPath = path;
 	gameObj_physBody = physBody;
+	gameObj_uniqueId = BlueEngine::IDTracker::getInstance().getID();
 }
 
 GameObj_Base::~GameObj_Base() {
 	// GameObj_Base has no unique destruction procedure yet.
+}
+
+BlueEngine::ID GameObj_Base::gameObj_getUniqueID()
+{
+	// Return a copy of the GameObject's unique identifier
+	return gameObj_uniqueId;
 }
 
 GameObjType GameObj_Base::gameObj_getTypeID() const {

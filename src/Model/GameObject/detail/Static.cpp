@@ -1,11 +1,12 @@
 	/// Definition Include
-#include "../GameObj_Static.hpp"
+#include "../Static.hpp"
 
 	/// External Dependencies
 #include <glm/gtc/matrix_transform.hpp>
 
 	/// Internal Dependencies
 #include "View/Renderer/Renderer.hpp"
+#include "../GameObject.hpp"
 
 GameObj_Static::GameObj_Static()
 	: GameObj_Base() {

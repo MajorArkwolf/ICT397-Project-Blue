@@ -1,11 +1,12 @@
 	/// Definition Include
-#include "../GameObj_Player.hpp"
+#include "../Player.hpp"
 
 	/// External Dependencies
 #include <glm/gtc/matrix_transform.hpp>
 
 	/// Internal Dependencies
 #include "View/Renderer/Renderer.hpp"
+#include "../GameObject.hpp"
 
 GameObj_Player::GameObj_Player()
 	: GameObj_Base() {

@@ -1,12 +1,10 @@
 #pragma once
 
 	/// The base GameObject
-#include "GameObj_Base.hpp"
+#include "Base.hpp"
 
-	/// All child GameObjects
-#include "GameObj_Static.hpp"
-#include "GameObj_Player.hpp"
-#include "GameObj_NPC.hpp"
-
-	/// All GameObject managers
-#include "GameAssetFactory.hpp"
+	/// Constant GameObject type identifying value definitions
+constexpr GameObjType GAMEOBJ_INVALID = 0u;
+constexpr GameObjType GAMEOBJ_STATIC = 1u;
+constexpr GameObjType GAMEOBJ_PLAYER = 2u;
+constexpr GameObjType GAMEOBJ_NPC = 3u;

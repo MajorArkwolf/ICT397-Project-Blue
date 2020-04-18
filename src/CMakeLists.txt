@@ -22,11 +22,11 @@ target_sources(${PROJECT_NAME} PRIVATE
     Model/WaterModel.cpp
     Model/TextManager.cpp
 
-	Model/GameObject/detail/GameObj_Base.cpp
-	Model/GameObject/detail/GameObj_Static.cpp
-	Model/GameObject/detail/GameObj_Player.cpp
-	Model/GameObject/detail/GameObj_NPC.cpp
-	Model/GameObject/detail/GameAssetFactory.cpp
+    Model/GameObject/detail/Base.cpp
+    Model/GameObject/detail/Static.cpp
+    Model/GameObject/detail/Player.cpp
+    Model/GameObject/detail/NPC.cpp
+    Model/GameObject/detail/Manager.cpp
 
     # View
     View/Renderer/Shader.cpp

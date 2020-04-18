@@ -1,11 +1,12 @@
 	/// Definition Include
-#include "../GameObj_NPC.hpp"
+#include "../NPC.hpp"
 
 	/// External Dependencies
 #include <glm/gtc/matrix_transform.hpp>
 
 	/// Internal Dependencies
 #include "View/Renderer/Renderer.hpp"
+#include "../GameObject.hpp"
 
 GameObj_NPC::GameObj_NPC()
 	: GameObj_Base() {

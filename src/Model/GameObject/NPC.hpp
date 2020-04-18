@@ -1,22 +1,19 @@
 #pragma once
 
 	/// Internal Dependencies
-#include "GameObj_Base.hpp"
-
-	//! The constant static definition for the identifier of GameObject type GameObj_Static.
-constexpr GameObjType GAMEOBJ_STATIC = 1u;
+#include "Base.hpp"
 
 	/*!
 	 * @brief A non-moving Gameobject.
 	 * @note Used for populating a scene with furnishings.
 	 */
-class GameObj_Static : public GameObj_Base {
+class GameObj_NPC : public GameObj_Base {
 public:
 		/*!
 		 * @brief Initialses class contents and calls the inherited class constructor.
 		 * @see GameObj_Base
 		 */
-	GameObj_Static();
+	GameObj_NPC();
 
 		/*!
 		 * @brief Sets initial class contents and calls the inherited class constructor.
@@ -28,20 +25,20 @@ public:
 		 * @param [in] rotateTilt The GameObject's rotation, in degrees, along the Z axis.
 		 * @see GameObj_Base
 		 */
-	GameObj_Static(std::string path, unsigned long int physBody, glm::vec3 position, float rotateHori, float rotateVert, float rotateTilt);
+	GameObj_NPC(std::string path, unsigned long int physBody, glm::vec3 position, float rotateHori, float rotateVert, float rotateTilt);
 
-		//! GameObj_Static destructor
-	~GameObj_Static();
+		//! GameObj_NPC destructor
+	~GameObj_NPC();
 
 		/*!
 		 * @brief Identifies the GameObject's type.
-		 * @return GAMEOBJ_STATIC, always.
+		 * @return GAMEOBJ_NPC, always.
 		 */
 	GameObjType gameObj_getTypeID() const;
 
 		/*!
 		 * @brief Identifies the GameObject's type.
-		 * @return GAMEOBJ_STATIC, always.
+		 * @return GAMEOBJ_NPC, always.
 		 */
 	static GameObjType _gameObj_getTypeID();
 
