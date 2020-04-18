@@ -9,7 +9,7 @@
 enum Camera_Movement { FORWARD, BACKWARD, LEFT, RIGHT };
 
 // Default camera values
-const double YAW         = -90.0;
+const double YAW         = 0.0;
 const double PITCH       = 0.0;
 const double SPEED       = 0.05;
 const double SENSITIVITY = 0.1;
