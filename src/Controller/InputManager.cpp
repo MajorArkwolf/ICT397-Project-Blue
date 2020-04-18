@@ -166,6 +166,7 @@ namespace Controller::Input {
         } else if (event.type == GLEQ_KEY_RELEASED) {
             KeyStates[event.keyboard.key] = false;
         }
+        
     }
 
     const int *InputManager::getKeyStates() {
@@ -190,8 +191,8 @@ namespace Controller::Input {
         InputMap.at(BLUE_InputAction::INPUT_MOVE_RIGHT)    = GLFW_KEY_D;
         InputMap.at(BLUE_InputAction::INPUT_ACTION_1)      = GLFW_KEY_E;
         InputMap.at(BLUE_InputAction::INPUT_ACTION_2)      = GLFW_KEY_R;
-        InputMap.at(BLUE_InputAction::INPUT_SPRINT)        = GLFW_MOD_SHIFT;
-        InputMap.at(BLUE_InputAction::INPUT_CROUCH)        = GLFW_MOD_CONTROL;
+        InputMap.at(BLUE_InputAction::INPUT_SPRINT)        = GLFW_KEY_LEFT_SHIFT;
+        InputMap.at(BLUE_InputAction::INPUT_CROUCH)        = GLFW_KEY_LEFT_CONTROL;
         InputMap.at(BLUE_InputAction::INPUT_ESCAPE)        = GLFW_KEY_ESCAPE;
     }
 
@@ -229,10 +230,10 @@ namespace Controller::Input {
         stringScancodePairs.push_back(std::pair<std::string, int>("Y", GLFW_KEY_Y));
         stringScancodePairs.push_back(std::pair<std::string, int>("Z", GLFW_KEY_Z));
         stringScancodePairs.push_back(std::pair<std::string, int>("Space", GLFW_KEY_SPACE));
-        stringScancodePairs.push_back(std::pair<std::string, int>("LSHIFT", GLFW_MOD_SHIFT));
-        stringScancodePairs.push_back(std::pair<std::string, int>("LCTRL", GLFW_MOD_CONTROL));
+        stringScancodePairs.push_back(std::pair<std::string, int>("LSHIFT", GLFW_KEY_LEFT_SHIFT));
+        stringScancodePairs.push_back(std::pair<std::string, int>("LCTRL", GLFW_KEY_LEFT_CONTROL));
         stringScancodePairs.push_back(std::pair<std::string, int>("TAB", GLFW_KEY_TAB));
-        stringScancodePairs.push_back(std::pair<std::string, int>("LALT", GLFW_MOD_ALT));
+        stringScancodePairs.push_back(std::pair<std::string, int>("LALT", GLFW_KEY_LEFT_ALT));
         stringScancodePairs.push_back(std::pair<std::string, int>("ESCAPE", GLFW_KEY_ESCAPE));
 
         stringActionPairs.push_back(std::pair<std::string, BLUE_InputAction>(

@@ -7,7 +7,7 @@
 namespace BlueEngine {
 	namespace RenderCode {
         void DrawModel(Shader shader, unsigned int &VAO,
-                       const std::vector<Texture> &textures,
+                       const std::vector<TextureB> &textures,
                        const std::vector<unsigned int> &indices);
 
 		void SetupMesh(unsigned int &VAO, unsigned int &VBO, unsigned int &EBO,
