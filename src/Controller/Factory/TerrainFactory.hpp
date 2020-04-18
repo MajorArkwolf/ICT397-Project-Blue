@@ -46,21 +46,23 @@ namespace Controller {
 
         void LoadLua();
 
-      private:
-        std::string perlinPath       = {};
-        std::string grassTextureName = {};
-        std::string waterTextureName = {};
-        std::string snowTextureName  = {};
-        std::string dirtTextureName  = {};
-        std::string sandTextureName  = {};
-        /// Determines how many squares fit into a single chunk
-        int ChunkSize = 100;
-        /// Sets the max side of the play area
-        int maxSize = 4096;
-        /// Heightmap of floats used for terrain.
-        std::vector<std::vector<Blue::Perlin>> fValues = {};
-        /// A pointer to the terrain shader.
-        std::shared_ptr<Shader> terrainShader = nullptr;
+        int getWidth() const;
+
+        int getHeight() const;
+
+        void ExportHeightMap(float *heightMap);
+
+	private:
+		/// Determines how many squares fit into a single chunk
+		int ChunkSize = 100;
+		/// Sets the max side of the play area
+		int maxSize = 0;
+		int width = 0;
+        int height = 0;
+		/// Heightmap of floats used for terrain.
+		std::vector<std::vector<Blue::Perlin>> fValues = {};
+		/// A pointer to the terrain shader.
+		std::shared_ptr<Shader> terrainShader = nullptr;
         /// A pointer to the water shader.
         std::shared_ptr<Shader> waterShader = nullptr;
         /// Snow Texture ID

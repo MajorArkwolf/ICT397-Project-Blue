@@ -217,9 +217,9 @@ void Controller::TerrainFactory::GeneratePerlinNoise(int xsize, int zsize) {
 
 void Controller::TerrainFactory::AddDetail(std::vector<Blue::Vertex> &terrain, const Blue::Key key,
                                            int maxSize, int chunkSize) {
-    int row     = (maxSize / 2) + key.first * chunkSize;
+    int row = (height / 2) + key.first * chunkSize;
     int max_row = row + chunkSize;
-    int col     = (maxSize / 2) + key.second * chunkSize;
+    int col = (width / 2) + key.second * chunkSize;
     int max_col = col + chunkSize;
     auto y      = col;
     float x     = -1;
@@ -243,8 +243,8 @@ void Controller::TerrainFactory::CleanupChunk(Model::TerrainModel &terrain) {
 }
 
 void Controller::TerrainFactory::LoadPerlinNoise(const string filename) {
-    int width, height, nrComponents;
-    unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
+    int nrComponents;
+    const unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
     assert(data != nullptr);
 
     fValues.resize(width + 1);
@@ -313,4 +313,29 @@ void Controller::TerrainFactory::GenerateNormals(std::vector<Blue::Vertex> &vert
         }
         verticies.at(index).normals = avgNormal / static_cast<float>(count);
     }
+}
+
+int Controller::TerrainFactory::getWidth() const {
+    return width;
+}
+
+int Controller::TerrainFactory::getHeight() const {
+    return height;
+}
+
+void Controller::TerrainFactory::ExportHeightMap(float *heightMap) {
+    size_t maxIndex = (width + 1) * (height + 1);
+    heightMap = new float[maxIndex];
+    size_t count = 0;
+    for (auto &x : fValues) {
+        for (auto & y : x) {
+            if (count < maxIndex) {
+                heightMap[count] = y.height;
+                ++count;
+            } else {
+                std::cerr << "ERROR: TerrainFactory::ExportHeightMap out of bounds!\n";
+            }
+        }
+    }
+    assert(count == maxIndex);
 }
