@@ -81,12 +81,13 @@ void GUIManager::displayEscapeMenu() {
         ImGui::Begin(resManager.getString("OptionMenu_title").c_str(), &windowOpen,
                      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize);
         if (ImGui::Button("Controls")) {
-            auto &isControlsOpen = windowOpenMap.at("controls");
-            isControlsOpen       = isControlsOpen ? false : true;
+            toggleWindow("constrols");
         }
         if (ImGui::Button("Instructions")) {
-            auto &isControlsOpen = windowOpenMap.at("instructions");
-            isControlsOpen       = isControlsOpen ? false : true;
+            toggleWindow("instructions");
+        }
+        if (ImGui::Button("Dev Menu")) {
+            toggleWindow("dev");
         }
         if (ImGui::Button("Exit")) {
             toggleWindow("exit");
@@ -116,15 +117,40 @@ void GUIManager::displayQuitScreen() {
     if (windowOpen) {
         int height = 0, width = 0;
         glfwGetWindowSize(engine.window, &width, &height);
-        ImGui::SetNextWindowPos(ImVec2(width/2, height/2), ImGuiCond_Always, ImVec2(0.5, 0.5));
+        ImGui::SetNextWindowPos(ImVec2(width / 2, height / 2), ImGuiCond_Always, ImVec2(0.5, 0.5));
         ImGui::Begin("###Exit", &windowOpen,
-                     ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar);
+                     ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize |
+                         ImGuiWindowFlags_NoTitleBar);
 
         ImGui::Text("Thank you for playing our game. Click the image to exit.");
         if (ImGui::ImageButton((void *)(intptr_t)texture.TextureID,
                                ImVec2(texture.width / 4, texture.height / 4))) {
             engine.endEngine();
         }
+
+        ImGui::End();
+    }
+}
+
+void GUIManager::displayDevScreen(Camera &camera) {
+    // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
+    bool &windowOpen = windowOpenMap.at("dev");
+    if (windowOpen) {
+        auto key = camera.getLocation();
+        ImGui::Begin("Dev Menu", &windowOpen, ImGuiWindowFlags_NoCollapse);
+        ImGui::Text("Camera Position: %f, %f, %f", camera.Position.x, camera.Position.y,
+                    camera.Position.z);
+        ImGui::SliderFloat("Camera Speed", &camera.MovementSpeed, 0.001f, 2.0f);
+        ImGui::Text("Camera Location Key: %d, %d", key.x, key.y);
+        ImGui::End();
+    }
+}
+
+void GUIManager::displayTextureManager() {
+    auto &TextureManager = TextureManager::getInstance();
+    bool &windowOpen     = windowOpenMap.at("texture");
+    if (windowOpen) {
+        ImGui::Begin("Terrain Textures", &windowOpen, ImGuiWindowFlags_NoCollapse);
 
         ImGui::End();
     }
@@ -155,4 +181,6 @@ void GUIManager::initialiseWindowOpenMap() {
     windowOpenMap.insert(std::make_pair(std::string("controls"), false));
     windowOpenMap.insert(std::make_pair(std::string("instructions"), false));
     windowOpenMap.insert(std::make_pair(std::string("exit"), false));
+    windowOpenMap.insert(std::make_pair(std::string("dev"), false));
+    windowOpenMap.insert(std::make_pair(std::string("texture"), false));
 }

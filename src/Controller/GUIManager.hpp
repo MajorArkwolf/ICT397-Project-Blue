@@ -9,6 +9,8 @@
 #include <examples/imgui_impl_glfw.h>
 #include <examples/imgui_impl_opengl3.h>
 
+#include "View/EulerCamera.hpp"
+
 class GUIManager {
   public:
     /**
@@ -44,9 +46,19 @@ class GUIManager {
     void displayInstructionMenu();
 
     /**
-     * @brief Displays the instruction menu
+     * @brief Displays the quit screen
      */
     void displayQuitScreen();
+
+    /**
+     * @brief Displays the dev screen
+     */
+    void displayDevScreen(Camera &camera);
+
+    /**
+     * @brief Displays the texture manager
+     */
+    void displayTextureManager();
 
     /**
      * @brief Starts an Imgui Window frame, must be called at the beginning of a display loop

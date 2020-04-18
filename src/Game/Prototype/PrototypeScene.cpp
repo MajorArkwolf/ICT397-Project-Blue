@@ -132,6 +132,7 @@ auto PrototypeScene::display() -> void {
 	guiManager.displayEscapeMenu();
 	guiManager.displayInstructionMenu();
     guiManager.displayQuitScreen();
+    guiManager.displayDevScreen(camera);
 	int width = 0, height = 0;
 	glfwGetWindowSize(engine.window, &width, &height);
 	// view/projection transformations

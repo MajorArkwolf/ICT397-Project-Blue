@@ -68,3 +68,10 @@ void Controller::TerrainManager::Update(glm::ivec2 key) {
 		}
 	}
 }
+
+void Controller::TerrainManager::SetTerrainTextures(size_t snow, size_t grass, size_t dirt,
+                                                    size_t sand) {
+    for (auto &n : map) {
+        n.second->setTextures(snow, grass, dirt, sand);
+	}
+}
