@@ -7,6 +7,7 @@
 #include "Model/Models/ModelManager.hpp"
 #include "View/Renderer/OpenGL.hpp"
 #include "View/Renderer/Renderer.hpp"
+#include "Controller/TextureManager.hpp"
 
 using Controller::Input::BLUE_InputAction;
 using Controller::Input::BLUE_InputType;

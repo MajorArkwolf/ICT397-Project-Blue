@@ -20,6 +20,9 @@ void View::OpenGL::Draw() {
     guiManager.displayInputRebindWindow();
     guiManager.displayEscapeMenu();
     guiManager.displayInstructionMenu();
+    guiManager.displayQuitScreen();
+    guiManager.displayDevScreen(*camera);
+    guiManager.displayTextureManager();
     int width = 0, height = 0;
     glfwGetWindowSize(engine.window, &width, &height);
     // view/projection transformations
@@ -64,7 +67,7 @@ void View::OpenGL::DeInit() {
 
 }
 
-void View::OpenGL::DrawModel(Shader& shader, unsigned int &VAO, const std::vector<Texture> &textures,
+void View::OpenGL::DrawModel(Shader& shader, unsigned int &VAO, const std::vector<TextureB> &textures,
                const std::vector<unsigned int> &indices) {
     // bind appropriate textures
     unsigned int diffuseNr  = 1;

@@ -23,7 +23,7 @@ namespace View {
         static void ResizeWindow();
         static unsigned int TextureFromFile(const char *path, const std::string &directory,
                                                    [[maybe_unused]] bool gamma);
-        static void DrawModel(Shader& shader, unsigned int &VAO, const std::vector<Texture> &textures,
+        static void DrawModel(Shader& shader, unsigned int &VAO, const std::vector<TextureB> &textures,
                               const std::vector<unsigned int> &indices);
         void SetCameraOnRender(Camera &mainCamera);
 

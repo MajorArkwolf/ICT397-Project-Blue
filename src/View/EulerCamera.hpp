@@ -28,7 +28,7 @@ public:
     double Yaw;
     double Pitch;
     // Camera options
-    double MovementSpeed;
+    float MovementSpeed;
     double MouseSensitivity;
     double Zoom;
 

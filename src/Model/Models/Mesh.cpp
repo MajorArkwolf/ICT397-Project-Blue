@@ -7,7 +7,7 @@
 
 
 Mesh::Mesh(std::vector<Vertex> newVerticies, std::vector<unsigned int> newIndicies,
-           std::vector<Texture> newTextures) {
+           std::vector<TextureB> newTextures) {
     this->vertices = newVerticies;
     this->indices  = newIndicies;
     this->textures = newTextures;

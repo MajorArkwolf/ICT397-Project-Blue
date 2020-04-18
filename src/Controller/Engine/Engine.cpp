@@ -94,7 +94,7 @@ Engine::Engine() {
 
     // glfw window creation
     // --------------------
-    window = glfwCreateWindow(3440, 1440, "Project Blue", glfwGetPrimaryMonitor(), nullptr);
+    window = glfwCreateWindow(1920, 1080, "Project Blue", /*glfwGetPrimaryMonitor()*/ nullptr, nullptr);
     if (window == nullptr) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();

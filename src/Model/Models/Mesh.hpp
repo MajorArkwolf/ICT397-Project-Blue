@@ -14,13 +14,14 @@ class Mesh {
   public:
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
-    std::vector<Texture> textures;
-    unsigned int VAO = 0;
+    std::vector<TextureB> textures;
+    unsigned int VAO;
 
     Mesh(std::vector<Vertex> newVerticies, std::vector<unsigned int> newIndicies,
-         std::vector<Texture> newTextures);
-    void Draw(Shader &shader);
+         std::vector<TextureB> newTextures);
+    void Draw(Shader& shader);
 
   private:
     unsigned int VBO = 0, EBO = 0;
+	void setupMesh();
 };
