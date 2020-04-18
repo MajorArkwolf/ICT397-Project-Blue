@@ -75,6 +75,8 @@ namespace Controller {
         unsigned int sandTextureID = {};
         /// Water Texture ID
         unsigned int waterTextureID = {};
+        ///Perlin Path
+        std::string perlinPath = {};
 
         void GenerateWater(Model::Water &lake, int xcord, int zcord, const Blue::Key key);
         /**

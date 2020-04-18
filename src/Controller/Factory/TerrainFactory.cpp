@@ -60,23 +60,23 @@ void Controller::TerrainFactory::LoadLua() {
         }
         if (grassTexture.isString()) {
             grassTexturePath = grassTexture.cast<string>();
-            grassTextureName = grassTexturePath;
+
         }
         if (snowTexture.isString()) {
             snowTexturePath = snowTexture.cast<string>();
-            snowTextureName = snowTexturePath;
+
         }
         if (dirtTexture.isString()) {
             dirtTexturePath = dirtTexture.cast<string>();
-            dirtTextureName = dirtTexturePath;
+
         }
         if (sandTexture.isString()) {
             sandTexturePath = sandTexture.cast<string>();
-            sandTextureName = sandTexturePath;
+
         }
         if (waterTexture.isString()) {
             waterTexturePath = waterTexture.cast<string>();
-            waterTextureName = waterTexturePath;
+
         }
         if (loadPerlin.isBool()) {
             generatePerlin = loadPerlin.cast<bool>();
@@ -244,7 +244,7 @@ void Controller::TerrainFactory::CleanupChunk(Model::TerrainModel &terrain) {
 
 void Controller::TerrainFactory::LoadPerlinNoise(const string filename) {
     int nrComponents;
-    const unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
+    unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
     assert(data != nullptr);
 
     fValues.resize(width + 1);
