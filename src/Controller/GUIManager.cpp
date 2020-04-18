@@ -89,6 +89,9 @@ void GUIManager::displayEscapeMenu() {
         if (ImGui::Button("Dev Menu")) {
             toggleWindow("dev");
         }
+        if (ImGui::Button("Textures")) {
+            toggleWindow("texture");
+        }
         if (ImGui::Button("Exit")) {
             toggleWindow("exit");
         }
@@ -147,11 +150,56 @@ void GUIManager::displayDevScreen(Camera &camera) {
 }
 
 void GUIManager::displayTextureManager() {
-    auto &TextureManager = TextureManager::getInstance();
+    auto &textureManager = TextureManager::getInstance();
     bool &windowOpen     = windowOpenMap.at("texture");
+    auto &texMap         = textureManager.textureMap;
     if (windowOpen) {
+        textureRebind();
         ImGui::Begin("Terrain Textures", &windowOpen, ImGuiWindowFlags_NoCollapse);
 
+        /*auto *currentSelection = &(*texMap.begin());
+        if (ImGui::BeginCombo("asd", currentSelection->first.c_str())) {
+            for (auto &n : texMap) {
+                ImGui::PushID(n.first.c_str());
+                bool isSelected = currentSelection->first == n.first;
+                if (ImGui::Selectable(n.first.c_str(), isSelected)) {
+                    currentSelection = &n;
+                }
+                ImGui::PopID();
+            }
+            ImGui::EndCombo();
+        }*/
+
+        for (auto &n : texMap) {
+            static char text[255];
+            std::string currentTexture;
+            ImGui::Image((void *)(intptr_t)n.second.TextureID, ImVec2(100, 100));
+            ImGui::SameLine();
+            ImGui::Text(n.first.c_str());
+            std::string buttonName = "Rebind###" + n.first;
+            if (ImGui::Button(buttonName.c_str())) {
+                texName                           = n.first;
+                windowOpenMap.at("textureRebind") = true;
+            }
+
+            ImGui::Separator();
+        }
+        ImGui::End();
+    }
+}
+void GUIManager::textureRebind() {
+    bool &windowOpen = windowOpenMap.at("textureRebind");
+    auto &texManager = TextureManager::getInstance();
+    if (windowOpen) {
+        static char text[255];
+        std::string windowTitle = "New Texture Path for '" + texName + "'";
+        ImGui::Begin(windowTitle.c_str(), &windowOpen, ImGuiWindowFlags_AlwaysAutoResize);
+        ImGui::InputText(" ", text, IM_ARRAYSIZE(text));
+        if (ImGui::Button("Set")) {
+            std::string asd(text);
+            texManager.textureMap.erase(texName);
+            texManager.loadTextureFromFile(text, texName);
+        }
         ImGui::End();
     }
 }
@@ -183,4 +231,5 @@ void GUIManager::initialiseWindowOpenMap() {
     windowOpenMap.insert(std::make_pair(std::string("exit"), false));
     windowOpenMap.insert(std::make_pair(std::string("dev"), false));
     windowOpenMap.insert(std::make_pair(std::string("texture"), false));
+    windowOpenMap.insert(std::make_pair(std::string("textureRebind"), false));
 }

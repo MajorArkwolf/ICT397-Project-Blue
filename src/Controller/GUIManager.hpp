@@ -1,10 +1,9 @@
 #pragma once
 
-#define GLFW_INCLUDE_NONE
 #include <imgui.h>
 #include <map>
 #include <string>
-
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <examples/imgui_impl_glfw.h>
 #include <examples/imgui_impl_opengl3.h>
@@ -81,4 +80,7 @@ class GUIManager {
 
     /// Initialises the window open map
     void initialiseWindowOpenMap();
+
+    void textureRebind();
+    std::string texName{};
 };
