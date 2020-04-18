@@ -32,6 +32,19 @@ std::shared_ptr<GameObj_Base> GameObj_Manager::get(BlueEngine::ID identifier)
 	}
 }
 
+void GameObj_Manager::process(void(*function)(std::shared_ptr<GameObj_Base>)) {
+	// Catch processing on nullptr
+	if (function == nullptr)
+		return;
+	
+	// Process all of the stored GameObjects
+	for (auto i = managedGameObjects.begin(); i != managedGameObjects.end(); ++i)
+	{
+		// Pass the smart GameObject pointer to the function
+		(*function)(i->second);
+	}
+}
+
 void GameObj_Manager::remove(BlueEngine::ID identifier) {
 	// Just remove the specified GameObject from the manager, don't directly call for it to be removed from memory
 	managedGameObjects.erase(identifier);

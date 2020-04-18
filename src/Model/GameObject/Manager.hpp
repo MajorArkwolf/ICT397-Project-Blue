@@ -35,6 +35,13 @@ public:
 	std::shared_ptr<GameObj_Base> get(BlueEngine::ID identifier);
 
 		/*!
+		 * @brief Runs a provided functions through all of the stored GameObjects.
+		 * @param [in] function A pointer to a void returning function that takes a smart pointer to a GameObject.
+		 * @note The provided function will not be called if the manager currently doesn't manage anything.
+		 */
+	void process(void(*function)(std::shared_ptr<GameObj_Base>));
+
+		/*!
 		 * @brief Calls for a specific GameObject to be removed from the manager.
 		 * @param [in] identifier A GameObject identifier.
 		 * @note No effect will occur if the requested GameObject is not managed.
