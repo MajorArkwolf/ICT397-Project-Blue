@@ -30,7 +30,7 @@ namespace Controller {
          * @param the z coordinate that will determine where the chunk sits.
          * @param They key to where the data will be mapped.
          */
-        void GenerateTerrain(Model::TerrainModel &newTerrain, int xcord, int zcord, const Blue::Key key);
+        void GenerateTerrain(Model::TerrainModel &newTerrain, const Blue::Key& key);
         /**
          * @brief Generates a perlin noise map instead of loading one in.
          * @param xcord The size of the X dimensions.
@@ -83,10 +83,11 @@ namespace Controller {
         unsigned int sandTextureID = {};
         /// Water Texture ID
         unsigned int waterTextureID = {};
+        float snowHeight = 190.0f, dirtHeight = 170, grassHeight = 150, sandHeight = 130, waterHeight = 105;
         ///Perlin Path
         std::string perlinPath = {};
 
-        void GenerateWater(Model::Water &lake, int xcord, int zcord, const Blue::Key key);
+        void GenerateWater(Model::Water &lake, const Blue::Key& key);
         /**
          * @brief Generates texture coordinates.
          * @param reference to the terrain object.
@@ -106,8 +107,7 @@ namespace Controller {
          * @param the max size of the chunk.
          * @param The size of a chunk.
          */
-        void AddDetail(std::vector<Blue::Vertex> &terrain, const Blue::Key key, int maxSize,
-                       int chunkSize);
+        void AddDetail(std::vector<Blue::Vertex> &terrain, const Blue::Key& key, int chunkSize);
         /**
          * @brief Generates indicies for terrains.
          * @param reference to the terrain object.
@@ -125,7 +125,12 @@ namespace Controller {
          * @brief Loads perlin noise into the factory to be used for chunk generation.
          * @param the filename of the image of perlin noise.
          */
-        void LoadPerlinNoise(const string filename);
+        void LoadPerlinNoise(const string& filename);
+        /**
+         * Generate soft normals for the verticies
+         * @param verticies the be soft normales.
+         * @param indicies to generate the hard normals
+         */
         void GenerateNormals(std::vector<Blue::Vertex> &verticies, std::vector<unsigned int> indicies);
     };
 }

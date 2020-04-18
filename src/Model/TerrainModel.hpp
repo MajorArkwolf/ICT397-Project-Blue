@@ -37,13 +37,21 @@ namespace Model {
 		 * @param ID to texture 2
 		 * @param ID to texture 3
 		 */
-		void setTextures(unsigned int tex1, unsigned int tex2, unsigned int tex3, unsigned int tex4);
+		void setTextures(unsigned int& snowTex, unsigned int& grasstex, unsigned int& dirtTex, unsigned int& sandTex);
 		/**
 		 * @brief Draw call for the terrain object.
 		 * @param Projection matrix for the camera
 		 * @param View matrix for the model
 		 */
 		void Draw(glm::mat4 projection, glm::mat4 view, const glm::dvec3& cameraPos);
+		/**
+		 * Set the height offsets for when each texture is applied and sent to the shader.
+		 * @param newSnowHeight The height at which the snow trickles off.
+		 * @param newDirtHeight The height at which the dirt trickles off.
+		 * @param newGrassHeight The height at which the dirt trickles off.
+		 * @param newSandHeight The height at which the sand starts.
+		 */
+		void setHeightOffsets(float newSnowHeight, float newDirtHeight, float newGrassHeight, float newSandHeight);
 		///Model scale size
 		glm::mat4 model = glm::mat4(0.5f);
 		///The position that the chunk will be drawn at.
@@ -59,7 +67,11 @@ namespace Model {
 		/// Needed for the EBO.
 		unsigned int indicie_size = 0;
 		/// Texture ID's
-		unsigned int textureID = 0, textureID2 = 0, textureID3 = 0, textureID4 = 0;
+		unsigned int snowTextureID = 0;
+		unsigned int grassTextureID = 0;
+		unsigned int dirtTextureID = 0;
+		unsigned int sandTextureID = 0;
+        float snowHeight = 190.0f, dirtHeight = 170, grassHeight = 150, sandHeight = 130;
 		/// Water
 		Water water = {};
 	};
