@@ -11,9 +11,9 @@
 GameObj_Base::GameObj_Base() {
 	// Set the initial values of the GameObject's 3D position attributes
 	gameObj_pos  = {0.0f, 0.0f, 0.0f};
-	gameObj_rotateHori = 0.0f;
-	gameObj_rotateVert = 0.0f;
-	gameObj_rotateTilt = 0.0f;
+	gameObj_yaw = 0.0f;
+	gameObj_pitch = 0.0f;
+	gameObj_roll = 0.0f;
 
 	// Set the initial stored identifiers
 	gameObj_modelId = std::numeric_limits<std::size_t>::min();
@@ -25,9 +25,9 @@ GameObj_Base::GameObj_Base() {
 GameObj_Base::GameObj_Base(std::string path, unsigned long int physBody, glm::vec3 position, float rotateHori, float rotateVert, float rotateTilt) {
 	// Set the initial values of the GameObject's 3D position attributes
 	gameObj_pos  = position;
-	gameObj_rotateHori = rotateHori;
-	gameObj_rotateVert = rotateVert;
-	gameObj_rotateTilt = rotateTilt;
+	gameObj_yaw = rotateHori;
+	gameObj_pitch = rotateVert;
+	gameObj_roll = rotateTilt;
 
 	// Set the initial stored identifiers
 	gameObj_setModel(path);

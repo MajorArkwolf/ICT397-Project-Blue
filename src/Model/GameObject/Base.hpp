@@ -27,11 +27,11 @@ public:
 		 * @param [in] path The path to a target external model file for this GameObject.
 		 * @param [in] physBody The identifier for the physical body for this GameObject.
 		 * @param [in] position The position of the GameObject in the 3D environment.
-		 * @param [in] rotateHori The GameObject's rotation, in degrees, along the Y axis.
-		 * @param [in] rotateVert The GameObject's rotation, in degrees, along the X axis.
-		 * @param [in] rotateTilt The GameObject's rotation, in degrees, along the Z axis.
+		 * @param [in] yaw The GameObject's rotation, in degrees, along the Y axis.
+		 * @param [in] pitch The GameObject's rotation, in degrees, along the X axis.
+		 * @param [in] roll The GameObject's rotation, in degrees, along the Z axis.
 		 */
-	GameObj_Base(std::string path, unsigned long int physBody, glm::vec3 position, float rotateHori, float rotateVert, float rotateTilt);
+	GameObj_Base(std::string path, unsigned long int physBody, glm::vec3 position, float yaw, float pitch, float roll);
 
 		//! Virtual destructor.
 	virtual ~GameObj_Base() = 0;
@@ -87,19 +87,19 @@ public:
 		 * @brief The GameObject's rotation, in degrees, along the Y axis.
 		 * @note Default 0.0f.
 		 */
-	float gameObj_rotateHori;
+	float gameObj_yaw;
 
 		/*!
 		 * @brief The GameObject's rotation, in degrees, along the X axis.
 		 * @note Default 0.0f.
 		 */
-	float gameObj_rotateVert;
+	float gameObj_pitch;
 
 		/*!
 		 * @brief The GameObject's rotation, in degrees, along the Z axis.
 		 * @note Default 0.0f.
 		 */
-	float gameObj_rotateTilt;
+	float gameObj_roll;
 
 		/*!
 		 * @brief Stores the identifier for the GameObject's physics body.

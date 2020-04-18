@@ -40,9 +40,9 @@ void GameObj_NPC::gameObj_addToDraw() {
 	translation = glm::translate(translation, gameObj_pos);
 
 	// Configure the model orientation
-	translation = glm::rotate(translation, glm::radians(gameObj_rotateHori), glm::vec3(0.0f, 1.0f, 0.0f));
-	translation = glm::rotate(translation, glm::radians(gameObj_rotateVert), glm::vec3(1.0f, 0.0f, 0.0f));
-	translation = glm::rotate(translation, glm::radians(gameObj_rotateTilt), glm::vec3(0.0f, 0.0f, 1.0f));
+	translation = glm::rotate(translation, glm::radians(gameObj_yaw), glm::vec3(0.0f, 1.0f, 0.0f));
+	translation = glm::rotate(translation, glm::radians(gameObj_pitch), glm::vec3(1.0f, 0.0f, 0.0f));
+	translation = glm::rotate(translation, glm::radians(gameObj_roll), glm::vec3(0.0f, 0.0f, 1.0f));
 
 	// Add the GameObject's model to the renderer's draw call
 	Renderer::addToDraw(translation, gameObj_getModelID());
