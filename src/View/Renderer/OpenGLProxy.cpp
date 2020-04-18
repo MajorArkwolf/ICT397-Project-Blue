@@ -8,7 +8,7 @@
 #include "stb_image.h"
 
 void BlueEngine::RenderCode::DrawModel(Shader shader, unsigned int &VAO,
-               const std::vector<Texture> &textures,
+               const std::vector<TextureB> &textures,
                const std::vector<unsigned int> &indices) {
     // bind appropriate textures
     unsigned int diffuseNr  = 1;

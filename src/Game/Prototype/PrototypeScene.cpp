@@ -7,6 +7,7 @@
 #include "Model/Models/ModelManager.hpp"
 #include "View/Renderer/OpenGLProxy.hpp"
 #include "View/Renderer/Renderer.hpp"
+#include "Controller/TextureManager.hpp"
 
 using Controller::Input::BLUE_InputAction;
 using Controller::Input::BLUE_InputType;
@@ -127,6 +128,9 @@ auto PrototypeScene::display() -> void {
 	guiManager.displayInputRebindWindow();
 	guiManager.displayEscapeMenu();
 	guiManager.displayInstructionMenu();
+    guiManager.displayQuitScreen();
+    guiManager.displayDevScreen(camera);
+    guiManager.displayTextureManager();
 	int width = 0, height = 0;
 	glfwGetWindowSize(engine.window, &width, &height);
 	// view/projection transformations

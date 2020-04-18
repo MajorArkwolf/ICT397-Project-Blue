@@ -56,7 +56,7 @@ Mesh Model::Model::processMesh(aiMesh *mesh, const aiScene *scene) {
     // data to fill
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
-    std::vector<Texture> textures;
+    std::vector<TextureB> textures;
 
     // Walk through each of the mesh's vertices
     for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
@@ -121,19 +121,19 @@ Mesh Model::Model::processMesh(aiMesh *mesh, const aiScene *scene) {
     // specular: texture_specularN normal: texture_normalN
 
     // 1. diffuse maps
-    std::vector<Texture> diffuseMaps =
+    std::vector<TextureB> diffuseMaps =
         loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
     textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
     // 2. specular maps
-    std::vector<Texture> specularMaps =
+    std::vector<TextureB> specularMaps =
         loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
     textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
     // 3. normal maps
-    std::vector<Texture> normalMaps =
+    std::vector<TextureB> normalMaps =
         loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
     textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
     // 4. height maps
-    std::vector<Texture> heightMaps =
+    std::vector<TextureB> heightMaps =
         loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
     textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
@@ -141,9 +141,9 @@ Mesh Model::Model::processMesh(aiMesh *mesh, const aiScene *scene) {
     return Mesh(vertices, indices, textures);
 }
 
-std::vector<Texture> Model::Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type,
+std::vector<TextureB> Model::Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type,
                                             string typeName) {
-    std::vector<Texture> textures;
+    std::vector<TextureB> textures;
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
         aiString str;
         mat->GetTexture(type, i, &str);
@@ -157,7 +157,7 @@ std::vector<Texture> Model::Model::loadMaterialTextures(aiMaterial *mat, aiTextu
             }
         }
         if (!skip) { // if texture hasn't been loaded already, load it
-            Texture texture;
+            TextureB texture;
             texture.id   = BlueEngine::RenderCode::TextureFromFile(str.C_Str(), this->directory);
             texture.type = typeName;
             texture.path = str.C_Str();

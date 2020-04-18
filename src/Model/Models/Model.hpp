@@ -13,7 +13,7 @@
 namespace Model {
     class Model {
       public:
-        std::vector<Texture> textures_loaded; // Stores all textures, needs to be global
+        std::vector<TextureB> textures_loaded; // Stores all textures, needs to be global
         std::vector<Mesh> meshes;
         std::string directory;
         bool gammaCorrection;
@@ -26,7 +26,7 @@ namespace Model {
         void loadModel(const std::string &path);
         void processNode(aiNode *node, const aiScene *scene);
         Mesh processMesh(aiMesh *mesh, const aiScene *scene);
-        std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type,
+        std::vector<TextureB> loadMaterialTextures(aiMaterial *mat, aiTextureType type,
                                                   std::string typeName);
     };
 }
