@@ -7,7 +7,7 @@
 #include "Model/Models/ModelManager.hpp"
 #include "View/Renderer/OpenGLProxy.hpp"
 #include "View/Renderer/Renderer.hpp"
-#include "Model/GameObject/GameObject.hpp"
+//#include "Model/GameObject/GameObject.hpp"
 
 using Controller::Input::BLUE_InputAction;
 using Controller::Input::BLUE_InputType;
@@ -41,12 +41,12 @@ void PrototypeScene::Init() {
 	camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
 	//models.push_back(resManager.getModelID("res/model/player_male.obj"));
 
-	//TODO: Make this no longer hard-coded in C++
+	/*TODO: Make this no longer hard-coded in C++
 	// Generate the GameObject and configure it
 	scene_objects.push_back(GameAssetFactory::GameObject(GAMEOBJ_STATIC));
 	scene_objects[0].get()->gameObj_setModel("res/model/player_male.obj");
 	scene_objects[0].get()->gameObj_rotateHori = 90.0f;
-	scene_objects[0].get()->gameObj_pos = glm::vec3(0.0f, 150.0f, 0.0f);
+	scene_objects[0].get()->gameObj_pos = glm::vec3(0.0f, 150.0f, 0.0f);*/
 }
 
 void PrototypeScene::handleWindowEvent() {
@@ -147,8 +147,8 @@ auto PrototypeScene::display() -> void {
 	terrain.Draw(projection, view, camera.Position);
 
 	// Display the scene's objects
-	scene_objects[0].get()->gameObj_addToDraw();
-	renderer.draw(view, projection);
+	//scene_objects[0].get()->gameObj_addToDraw();
+	//renderer.draw(view, projection);
 
 	guiManager.endWindowFrame();
 

@@ -8,7 +8,7 @@
 #include "View/EulerCamera.hpp"
 #include "Controller/InputManager.hpp"
 #include "Controller/TerrainManager.hpp"
-#include "Model/GameObject/GameObj_Base.hpp"
+//#include "Model/GameObject/GameObj_Base.hpp"
 
 class PrototypeScene : public BaseState {
 public:
@@ -28,7 +28,6 @@ public:
 
 private:
     //std::vector<size_t> models;
-    std::vector<std::shared_ptr<GameObj_Base>> scene_objects;
     Renderer renderer;
     Controller::TerrainManager terrain = {};
 
