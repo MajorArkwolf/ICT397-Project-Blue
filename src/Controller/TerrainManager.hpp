@@ -22,6 +22,10 @@ namespace Controller {
 			return std::hash<T1>()(key.first) ^ std::hash<T2>()(key.second);
 		}
 	};
+	struct ChunkClod {
+	    Model::TerrainModel level1 = {};
+	    Model::TerrainModel level2 = {};
+	};
 	/**
 	 * @class TerrainManager
 	 * @brief Uses a fly weight pattern to manage terrain chunks.
@@ -72,11 +76,9 @@ namespace Controller {
 		/// The last position the camera was at.
         Blue::Key lastPos = Blue::Key(999, 999);
         /// Draw list of chunks to be sent to the renderer.
-        std::vector<std::shared_ptr<Model::TerrainModel>> drawCircle = {};
+        std::vector<Model::TerrainModel*> drawCircle = {};
         /// Unordered map of shared pointers to terrain models for quick access.
-        std::unordered_map<Blue::Key, std::shared_ptr<Model::TerrainModel>, pair_hash> map = {};
-        std::unordered_map<Blue::Key, std::shared_ptr<Model::TerrainModel>, pair_hash> mapCLOD2 = {};
-
+        std::unordered_map<Blue::Key, std::shared_ptr<ChunkClod>, pair_hash> map = {};
         /**
          * @brief Pythagoras function to determine the distance of 2 cartesian coordinates.
          * @param Key of the first square.
