@@ -75,6 +75,7 @@ namespace Controller {
         std::vector<std::shared_ptr<Model::TerrainModel>> drawCircle = {};
         /// Unordered map of shared pointers to terrain models for quick access.
         std::unordered_map<Blue::Key, std::shared_ptr<Model::TerrainModel>, pair_hash> map = {};
+        std::unordered_map<Blue::Key, std::shared_ptr<Model::TerrainModel>, pair_hash> mapCLOD2 = {};
 
         /**
          * @brief Pythagoras function to determine the distance of 2 cartesian coordinates.

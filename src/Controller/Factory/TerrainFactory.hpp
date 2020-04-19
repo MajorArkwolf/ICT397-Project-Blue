@@ -25,16 +25,20 @@ namespace Controller {
         void Init();
         /**
          * @brief Generates a single chunk of terrain.
-         * @param Reference to the terrain chunk to be modified.
-         * @param the x coordinate that will determine where the chunk sits.
-         * @param the z coordinate that will determine where the chunk sits.
-         * @param They key to where the data will be mapped.
+         * @param newTerrain Reference to the terrain chunk to be modified.
+         * @param key They key to where the data will be mapped.
          */
         void GenerateTerrain(Model::TerrainModel &newTerrain, const Blue::Key& key);
         /**
+         * Generates a lower level terrain chunk
+         * @param newTerrain the terrain chunk to be generated.
+         * @param key the location of the key.
+         */
+        void GenerateTerrainL2(Model::TerrainModel &newTerrain, const Blue::Key& key);
+        /**
          * @brief Generates a perlin noise map instead of loading one in.
-         * @param xcord The size of the X dimensions.
-         * @param zcord The size of the Z dimensions.
+         * @param xsize The size of the X dimensions.
+         * @param zsize The size of the Z dimensions.
          * @param key Key at where to generate the chunk.
          */
         void GeneratePerlinNoise(int xsize, int zsize);
@@ -132,5 +136,17 @@ namespace Controller {
          * @param indicies to generate the hard normals
          */
         void GenerateNormals(std::vector<Blue::Vertex> &verticies, std::vector<unsigned int> indicies);
+        /**
+         * Overloaded function to generate verticies for the terrain.
+         * @param terrain The terrain model to add verticies to.
+         * @param xsize The max X size of verticies to generate.
+         * @param zsize The max Z size of verticies to generate.
+         * @param xstart The min X value to start from.
+         * @param zstart The min Z value to start from.
+         * @param increment The amount to increment each verticie by.
+         */
+        void
+        GenerateVerticies(vector<Blue::Vertex> &terrain, unsigned int xsize, unsigned int zsize, unsigned int xstart,
+                          unsigned int zstart, unsigned int increment);
     };
 }

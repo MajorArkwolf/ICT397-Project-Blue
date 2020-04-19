@@ -45,7 +45,7 @@ namespace Model {
 		 * @param Projection matrix for the camera
 		 * @param View matrix for the model
 		 */
-		void Draw(glm::mat4 projection, glm::mat4 view, const glm::dvec3& cameraPos);
+		void Draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos);
 		/**
 		 * Set the height offsets for when each texture is applied and sent to the shader.
 		 * @param newSnowHeight The height at which the snow trickles off.

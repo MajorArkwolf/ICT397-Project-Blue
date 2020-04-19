@@ -132,9 +132,14 @@ void Controller::TerrainFactory::GenerateWater(Model::Water &lake, const Blue::K
 
 void Controller::TerrainFactory::GenerateVerticies(std::vector<Blue::Vertex> &terrain,
                                                    unsigned int xsize, unsigned int zsize) {
+    GenerateVerticies(terrain, xsize, zsize, 0, 0, 1);
+}
+
+void Controller::TerrainFactory::GenerateVerticies(std::vector<Blue::Vertex> &terrain,
+                                                   unsigned int xsize, unsigned int zsize, unsigned int xstart, unsigned int zstart, unsigned int increment) {
     Blue::Vertex vertex{};
-    for (unsigned i = 0; i < xsize; ++i) {
-        for (unsigned j = 0; j < zsize; ++j) {
+    for (unsigned i = xstart; i < xsize; i += increment) {
+        for (unsigned j = zstart; j < zsize; j+= increment) {
             vertex.position.x = i;
             vertex.position.z = j;
             terrain.push_back(vertex);
@@ -338,4 +343,36 @@ void Controller::TerrainFactory::ExportHeightMap(float *heightMap) {
         }
     }
     assert(count == maxIndex);
+}
+
+void Controller::TerrainFactory::GenerateTerrainL2(Model::TerrainModel &newTerrain, const Blue::Key &key) {
+    int xsize = ChunkSize + 1;
+    int zsize = ChunkSize + 1;
+    /// Pass a shared pointer to our terrain.
+    newTerrain.LoadShader(terrainShader);
+    newTerrain.water.SetShader(waterShader);
+    /// Generate verticies to form a giant square.
+    GenerateVerticies(newTerrain.verticies, xsize, zsize, 4, 4, 4);
+    /// Give heights to the y values using perlin noise.
+    std::vector<Blue::Vertex> detail = {};
+    AddDetail(detail, key, ChunkSize);
+    /// Generate indicies for the verticies.
+//    GenerateIndicies(newTerrain.indicies, xsize, zsize);
+//    /// Generate the texture coordinates of the squares.
+//    GenerateTextureCords(newTerrain.verticies);
+//    /// Generate Soft Normals
+//    GenerateNormals(newTerrain.verticies, newTerrain.indicies);
+//    /// Sets the height at which levels the textures will set.
+//    newTerrain.setHeightOffsets(snowHeight, dirtHeight, grassHeight, sandHeight);
+//    /// Send the chunk to OpenGL to be stored in the GPU.
+//    newTerrain.SetupModel();
+//    /// Set the location of the chunk.
+//    newTerrain.position.x = key.first * ChunkSize;
+//    newTerrain.position.z = key.second * ChunkSize;
+//    GenerateWater(newTerrain.water, key);
+//    newTerrain.water.position = glm::vec3{key.first * ChunkSize, waterHeight, key.second * ChunkSize};
+//    /// Load the textures for the model.
+//    newTerrain.setTextures(snowTextureID, grassTextureID, dirtTextureID, sandTextureID);
+//    /// Clean up the useless data to save room in ram.
+//    CleanupChunk(newTerrain);
 }
