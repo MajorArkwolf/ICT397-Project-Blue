@@ -357,7 +357,7 @@ void Controller::TerrainFactory::GenerateTerrainL2(Model::TerrainModel &newTerra
     std::vector<Blue::Vertex> detail = {};
     AddDetail(detail, key, ChunkSize);
     /// Generate indicies for the verticies.
-//    GenerateIndicies(newTerrain.indicies, xsize, zsize);
+    GenerateIndicies(newTerrain.indicies, xsize, zsize);
 //    /// Generate the texture coordinates of the squares.
 //    GenerateTextureCords(newTerrain.verticies);
 //    /// Generate Soft Normals
