@@ -25,7 +25,7 @@ using std::string;
  */
 auto Engine::run() -> void {
     auto &engine = Engine::get();
-
+    ResourceManager::getInstance().loadResources();
     auto *prototype = new PrototypeScene();
     engine.gameStack.AddToStack(prototype);
 
@@ -40,7 +40,6 @@ auto Engine::run() -> void {
     // State state;
     //glfwFocusWindow(engine.window);
     engine.renderer.Init();
-    ResourceManager::getInstance().loadResources();
     while (engine.getIsRunning()) {
         double newTime   = glfwGetTime();
         double frameTime = newTime - currentTime;
