@@ -62,3 +62,8 @@ bool BeHeightPhysics::IsSleepEnabled() {
 void BeHeightPhysics::SetSleep(bool toggle) {
     body->setIsAllowedToSleep(toggle);
 }
+
+void BeHeightPhysics::ApplyForceToCentre(const glm::vec3 &force) {
+    rp3d::Vector3 f(force.x, force.y, force.z);
+    body->applyForceToCenterOfMass(f);
+}

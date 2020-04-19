@@ -72,6 +72,12 @@ class BeAbstractPhysics{
      */
     virtual void SetSleep(bool toggle) = 0;
 
+    /**
+     * @brief apply force to dynamic physics object
+     * @param force vector representing force in newtons
+     */
+    virtual void ApplyForceToCentre(const glm::vec3 &force) = 0;
+
   protected:
     rp3d::bodyindex bodyId;
     rp3d::Transform transform;

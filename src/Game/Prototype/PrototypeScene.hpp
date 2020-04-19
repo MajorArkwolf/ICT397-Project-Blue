@@ -7,6 +7,8 @@
 #include "View/Renderer/Renderer.hpp"
 #include "View/EulerCamera.hpp"
 #include "Controller/InputManager.hpp"
+
+#include "Controller/Physics/BeAbstractPhysicsFactory.hpp"
 #include "Controller/Physics/BeAbstractPhysicsLibrary.hpp"
 #include "Controller/Physics/BeConfig.hpp"
 #include "Controller/Physics/BeDynamicWorld.hpp"
@@ -23,7 +25,7 @@ public:
     ~PrototypeScene() override;
 
     auto display() -> void override;
-    auto update(double t, double dt, double ts) -> void override;
+    auto update(double t, double dt) -> void override;
 
     auto updateWorld(double ts) -> void override;
     auto updatePhysics(double f) -> void override;
@@ -46,15 +48,16 @@ private:
     double getDeltaTime();
 
     BeSettings settings;
+    Blue::HeightMap map;
     float * blah;
     glm::vec3  grav;
     BeDynamicWorld *world;
     BeAbstractPhysicsFactory *factory;
     BeAbstractPhysicsLibrary *physics;
     BeAbstractPhysics *cam;
-    //BeAbstractPhysics *body;
-    BeAbstractPhysics *testy;
-    BeAbstractPhysics *testx;
+    BeAbstractPhysics *body;
+    //BeAbstractPhysics *testy;
+    //BeAbstractPhysics *testx;
     std::vector <BeAbstractPhysics *> bodies;
 
     BeTransform previousTransform;

@@ -26,6 +26,7 @@ using std::string;
 auto Engine::run() -> void {
     auto &engine = Engine::get();
 
+    ResourceManager::getInstance().loadResources();
     auto *prototype = new PrototypeScene();
     engine.gameStack.AddToStack(prototype);
 
@@ -35,25 +36,15 @@ auto Engine::run() -> void {
     double currentTime = glfwGetTime();
     double accumulator = 0.0;
 
-    //BePhysics time
-    double timeStep = 1.0 / 60.0;
-    double acc = 0.0;
-
-
     // State previous;
     // State current;
     // State state;
     //glfwFocusWindow(engine.window);
     engine.renderer.Init();
-    ResourceManager::getInstance().loadResources();
+
     while (engine.getIsRunning()) {
         double newTime   = glfwGetTime();
         double frameTime = newTime - currentTime;
-
-        // testing only pls delete
-        double deltaTime = newTime - prevTime;
-        prevTime = newTime;
-        acc += deltaTime;
 
         if (frameTime > 0.25)
             frameTime = 0.25;
@@ -65,10 +56,21 @@ auto Engine::run() -> void {
             // previousState = currentState;
             glfwPollEvents();
             engine.processInput();
-            engine.gameStack.getTop()->update(t, dt, timeStep);
+            engine.gameStack.getTop()->update(t, dt);
             t += dt;
             accumulator -= dt;
         }
+
+        const double alpha = accumulator / dt;
+        // state = currentState * alpha + previousState * (1.0 - alpha);
+
+        // testing only pls delete
+        double timeStep = 1.0 / 60.0;
+        double acc = 0.0;
+
+        double deltaTime = newTime - prevTime;
+        prevTime = newTime;
+        acc += deltaTime;
 
         while(acc >= timeStep)
         {
@@ -76,9 +78,6 @@ auto Engine::run() -> void {
             engine.gameStack.getTop()->updateWorld(timeStep);
             acc -= timeStep;
         }
-
-        const double alpha = accumulator / dt;
-        // state = currentState * alpha + previousState * (1.0 - alpha);
 
         // to delete for testing physics
         factor = acc / timeStep;

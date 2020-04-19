@@ -86,6 +86,12 @@ class BeHeightPhysics : public BeAbstractPhysics{
      */
     void SetSleep(bool toggle) override;
 
+    /**
+     * @brief apply force to dynamic physics object
+     * @param force vector representing force in newtons
+     */
+    void ApplyForceToCentre(const glm::vec3 &force) override ;
+
   private:
     rp3d::HeightFieldShape *shape;
 };

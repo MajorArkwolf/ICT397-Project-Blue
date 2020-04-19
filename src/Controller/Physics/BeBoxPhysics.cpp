@@ -61,3 +61,9 @@ bool BeBoxPhysics::IsSleepEnabled() {
 void BeBoxPhysics::SetSleep(bool toggle) {
     body->setIsAllowedToSleep(toggle);
 }
+
+void BeBoxPhysics::ApplyForceToCentre(const glm::vec3 &force) {
+    std::cout << "running force..." << std::endl;
+    rp3d::Vector3 f(force.x, force.y, force.z);
+    body->applyForceToCenterOfMass(f);
+}
