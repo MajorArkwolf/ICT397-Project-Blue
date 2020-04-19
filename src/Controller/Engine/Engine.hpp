@@ -18,6 +18,7 @@
 #include "Controller/GUIManager.hpp"
 #include "Controller/ResourceManager.hpp"
 #include "GameStack.hpp"
+#include "View/Renderer/OpenGL.hpp"
 
 const unsigned int SCR_WIDTH  = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -32,6 +33,9 @@ namespace BlueEngine {
 
         /* GLFW handles. */
         GLFWwindow *window = nullptr;
+
+        /* Renderer for OpenGL */
+        View::OpenGL renderer = {};
 
         /**
          * @brief The current FPS

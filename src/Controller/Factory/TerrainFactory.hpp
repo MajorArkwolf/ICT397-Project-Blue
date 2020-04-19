@@ -25,16 +25,20 @@ namespace Controller {
         void Init();
         /**
          * @brief Generates a single chunk of terrain.
-         * @param Reference to the terrain chunk to be modified.
-         * @param the x coordinate that will determine where the chunk sits.
-         * @param the z coordinate that will determine where the chunk sits.
-         * @param They key to where the data will be mapped.
+         * @param newTerrain Reference to the terrain chunk to be modified.
+         * @param key They key to where the data will be mapped.
          */
-        void GenerateTerrain(Model::TerrainModel &newTerrain, int xcord, int zcord, const Blue::Key key);
+        void GenerateTerrain(Model::TerrainModel &newTerrain, const Blue::Key& key);
+        /**
+         * Generates a lower level terrain chunk
+         * @param newTerrain the terrain chunk to be generated.
+         * @param key the location of the key.
+         */
+        void GenerateTerrainL2(Model::TerrainModel &newTerrain, const Blue::Key& key);
         /**
          * @brief Generates a perlin noise map instead of loading one in.
-         * @param xcord The size of the X dimensions.
-         * @param zcord The size of the Z dimensions.
+         * @param xsize The size of the X dimensions.
+         * @param zsize The size of the Z dimensions.
          * @param key Key at where to generate the chunk.
          */
         void GeneratePerlinNoise(int xsize, int zsize);
@@ -47,9 +51,15 @@ namespace Controller {
         void LoadLua();
 
         int getWidth() const;
-
+        /**
+         * @brief Getter for height
+         * @return the height of the height map
+         */
         int getHeight() const;
-
+        /**
+         * @brief Getter for height
+         * @param heightMap a float pointer array.
+         */
         void ExportHeightMap(float *heightMap);
 
 	private:
@@ -57,7 +67,9 @@ namespace Controller {
 		int ChunkSize = 100;
 		/// Sets the max side of the play area
 		int maxSize = 0;
+		/// Max width of the height map
 		int width = 0;
+		/// Max height of the height map
         int height = 0;
 		/// Heightmap of floats used for terrain.
 		std::vector<std::vector<Blue::Perlin>> fValues = {};
@@ -75,10 +87,11 @@ namespace Controller {
         unsigned int sandTextureID = {};
         /// Water Texture ID
         unsigned int waterTextureID = {};
+        float snowHeight = 190.0f, dirtHeight = 170, grassHeight = 150, sandHeight = 130, waterHeight = 105;
         ///Perlin Path
         std::string perlinPath = {};
 
-        void GenerateWater(Model::Water &lake, int xcord, int zcord, const Blue::Key key);
+        void GenerateWater(Model::Water &lake, const Blue::Key& key);
         /**
          * @brief Generates texture coordinates.
          * @param reference to the terrain object.
@@ -98,8 +111,7 @@ namespace Controller {
          * @param the max size of the chunk.
          * @param The size of a chunk.
          */
-        void AddDetail(std::vector<Blue::Vertex> &terrain, const Blue::Key key, int maxSize,
-                       int chunkSize);
+        void AddDetail(std::vector<Blue::Vertex> &terrain, const Blue::Key& key, int chunkSize);
         /**
          * @brief Generates indicies for terrains.
          * @param reference to the terrain object.
@@ -117,7 +129,24 @@ namespace Controller {
          * @brief Loads perlin noise into the factory to be used for chunk generation.
          * @param the filename of the image of perlin noise.
          */
-        void LoadPerlinNoise(const string filename);
+        void LoadPerlinNoise(const string& filename);
+        /**
+         * Generate soft normals for the verticies
+         * @param verticies the be soft normales.
+         * @param indicies to generate the hard normals
+         */
         void GenerateNormals(std::vector<Blue::Vertex> &verticies, std::vector<unsigned int> indicies);
+        /**
+         * Overloaded function to generate verticies for the terrain.
+         * @param terrain The terrain model to add verticies to.
+         * @param xsize The max X size of verticies to generate.
+         * @param zsize The max Z size of verticies to generate.
+         * @param xstart The min X value to start from.
+         * @param zstart The min Z value to start from.
+         * @param increment The amount to increment each verticie by.
+         */
+        void
+        GenerateVerticies(vector<Blue::Vertex> &terrain, unsigned int xsize, unsigned int zsize, unsigned int xstart,
+                          unsigned int zstart, unsigned int increment);
     };
 }

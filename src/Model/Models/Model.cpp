@@ -1,7 +1,8 @@
 #include "Model.hpp"
 
 #include <iostream>
-#include "View/Renderer/OpenGLProxy.hpp"
+#include "View/Renderer/OpenGL.hpp"
+#include "Controller/Engine/Engine.hpp"
 
 Model::Model::Model(char *path, bool gamma = false) : gammaCorrection(gamma) {
     loadModel(path);
@@ -11,9 +12,9 @@ Model::Model::Model(string path, bool gamma = false) : gammaCorrection(gamma) {
     loadModel(path.c_str());
 }
 
-void Model::Model::Draw(Shader shader) {
-    for (unsigned int i = 0; i < meshes.size(); i++) {
-        meshes[i].Draw(shader);
+void Model::Model::Draw(Shader& shader) {
+    for (auto &mesh : meshes) {
+        mesh.Draw(shader);
     }
 }
 
@@ -158,7 +159,7 @@ std::vector<TextureB> Model::Model::loadMaterialTextures(aiMaterial *mat, aiText
         }
         if (!skip) { // if texture hasn't been loaded already, load it
             TextureB texture;
-            texture.id   = BlueEngine::RenderCode::TextureFromFile(str.C_Str(), this->directory);
+            texture.id   = BlueEngine::Engine::get().renderer.TextureFromFile(str.C_Str(), this->directory, false);
             texture.type = typeName;
             texture.path = str.C_Str();
             textures.push_back(texture);

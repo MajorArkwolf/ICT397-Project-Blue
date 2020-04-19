@@ -7,6 +7,7 @@
 #include "View/EulerCamera.hpp"
 #include "Controller/InputManager.hpp"
 #include "Controller/TerrainManager.hpp"
+#include "View/Renderer/Skybox.hpp"
 
 class PrototypeScene : public BaseState {
 public:
@@ -19,23 +20,15 @@ public:
     void Init() override;
     void unInit() override;
 
-    double time = 0;
-    
     void handleInputData(Controller::Input::InputData inputData) override;
     Camera camera;
 
 private:
-    std::vector<size_t> models;
-    Renderer renderer;
+    std::vector<Model::Model> models = {};
     Controller::TerrainManager terrain = {};
-
-    //SDLFIX SDL_Event &event
     void handleWindowEvent();
-
     bool moveForward = false;
     bool moveBackward = false;
     bool moveLeft = false;
     bool moveRight = false;
-
-    double getDeltaTime();
 };

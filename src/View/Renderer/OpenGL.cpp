@@ -1,14 +1,73 @@
-#include "OpenGLProxy.hpp"
+#include "OpenGL.hpp"
 #include <iostream>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glad/glad.h>
 #include "Controller/Engine/Engine.hpp"
+#include "Controller/GUIManager.hpp"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#include <algorithm>
 
-void BlueEngine::RenderCode::DrawModel(Shader shader, unsigned int &VAO,
-               const std::vector<TextureB> &textures,
+void View::OpenGL::Draw() {
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    auto &engine = BlueEngine::Engine::get();
+    auto& guiManager = engine.getGuiManager();
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    GUIManager::startWindowFrame();
+    guiManager.displayInputRebindWindow();
+    guiManager.displayEscapeMenu();
+    guiManager.displayInstructionMenu();
+    guiManager.displayQuitScreen();
+    guiManager.displayDevScreen(*camera);
+    guiManager.displayTextureManager();
+    int width = 0, height = 0;
+    glfwGetWindowSize(engine.window, &width, &height);
+    // view/projection transformations
+    glm::mat4 projection =
+            glm::perspective(glm::radians(camera->Zoom),
+                             static_cast<double>(width) / static_cast<double>(height), 0.1, 100000.0);
+    glm::mat4 view = camera->GetViewMatrix();
+    glm::mat4 skyboxView = glm::mat4(glm::mat3(camera->GetViewMatrix()));
+    glm::mat4 model = glm::mat4(1.0f);
+
+//    shader->use();
+//    shader->setMat4("model", model);
+//    shader->setMat4("projection", projection);
+//    shader->setMat4("view", view);
+    sortDrawDistance();
+    for (auto &m : drawQue) {
+        m.drawPointer(projection, view, camera->Position);
+    }
+    skyBox.draw(skyboxView, projection);
+    GUIManager::endWindowFrame();
+    glfwSwapBuffers(engine.window);
+    drawQue.clear();
+}
+void View::OpenGL::Init() {
+    int width  = 0;
+    int height = 0;
+
+    auto &engine = BlueEngine::Engine::get();
+    glfwGetWindowSize(engine.window, &width, &height);
+    glViewport(0, 0, width, height);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glEnable(GL_DEPTH_TEST);
+    glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+    shader = std::make_unique<Shader>(Shader("./res/shader/vertshader.vs", "./res/shader/fragshader.fs"));
+    skyBox.Init();
+
+}
+void View::OpenGL::DeInit() {
+
+}
+
+void View::OpenGL::DrawModel(Shader& shader, unsigned int &VAO, const std::vector<TextureB> &textures,
                const std::vector<unsigned int> &indices) {
     // bind appropriate textures
     unsigned int diffuseNr  = 1;
@@ -24,7 +83,7 @@ void BlueEngine::RenderCode::DrawModel(Shader shader, unsigned int &VAO,
             number = std::to_string(diffuseNr++);
         else if (name == "texture_specular")
             number =
-                std::to_string(specularNr++); // transfer unsigned int to stream
+                    std::to_string(specularNr++); // transfer unsigned int to stream
         else if (name == "texture_normal")
             number = std::to_string(normalNr++); // transfer unsigned int to stream
         else if (name == "texture_height")
@@ -45,8 +104,8 @@ void BlueEngine::RenderCode::DrawModel(Shader shader, unsigned int &VAO,
     glActiveTexture(GL_TEXTURE0);
 }
 
-void BlueEngine::RenderCode::SetupMesh(unsigned int &VAO, unsigned int &VBO, unsigned int &EBO,
-        std::vector<Vertex> &vertices, std::vector<unsigned int> &indices) {
+void View::OpenGL::SetupMesh(unsigned int &VAO, unsigned int &VBO, unsigned int &EBO,
+               std::vector<Vertex> &vertices, std::vector<unsigned int> &indices) {
     // create buffers/arrays
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -87,8 +146,19 @@ void BlueEngine::RenderCode::SetupMesh(unsigned int &VAO, unsigned int &VBO, uns
     glBindVertexArray(0);
 }
 
-unsigned int BlueEngine::RenderCode::TextureFromFile(const char *path, const std::string &directory,
-                             [[maybe_unused]] bool gamma) {
+void View::OpenGL::ResizeWindow() {
+    auto &engine = BlueEngine::Engine::get();
+    int width = 0, height = 0;
+    glfwGetWindowSize(engine.window, &width, &height);
+    glViewport(0, 0, width, height);
+}
+
+void View::OpenGL::AddToQue(View::Data::DrawItem drawItem) {
+    drawQue.push_back(drawItem);
+}
+
+unsigned int View::OpenGL::TextureFromFile(const char *path, const std::string &directory,
+                                                     [[maybe_unused]] bool gamma) {
     std::string filename = std::string(path);
     filename             = directory + '/' + filename;
 
@@ -97,7 +167,7 @@ unsigned int BlueEngine::RenderCode::TextureFromFile(const char *path, const std
 
     int width, height, nrComponents;
     unsigned char *data =
-        stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
+            stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
     if (data) {
         GLenum format = 1;
         if (nrComponents == 1)
@@ -129,57 +199,18 @@ unsigned int BlueEngine::RenderCode::TextureFromFile(const char *path, const std
         stbi_image_free(data);
     }
     return textureID;
-
+}
+void View::OpenGL::SetCameraOnRender(Camera &mainCamera) {
+    camera = &mainCamera;
 }
 
-void BlueEngine::RenderCode::ResizeWindow() {
-    auto &engine = BlueEngine::Engine::get();
-    
-    int width = 0, height = 0;
-    glfwGetWindowSize(engine.window, &width, &height);
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glViewport(0, 0, width, height);
-    //gluPerspective(60, width/height, 1, 300);
-    glMatrixMode(GL_MODELVIEW);
+void View::OpenGL::sortDrawDistance() {
+    glm::vec3 cpos = {camera->Position.x, static_cast<float>(camera->Position.y), static_cast<float>(camera->Position.z)};
+    for (auto &e : drawQue) {
+        e.distance = glm::distance(e.pos, cpos);
+    }
+    sort(drawQue.begin(), drawQue.end(),
+         [](const View::Data::DrawItem& lhs, const View::Data::DrawItem& rhs)->bool {
+             return lhs.distance > rhs.distance;
+         });
 }
-
-void BlueEngine::RenderCode::HardInit() {
-    int width  = 0;
-    int height = 0;
-
-    //glLoadIdentity();
-    //glLineWidth(1);
-    auto &engine = BlueEngine::Engine::get();
-    glfwGetWindowSize(engine.window, &width, &height);
-
-    //glMatrixMode(GL_PROJECTION);
-    //glLoadIdentity();
-    glViewport(0, 0, width, height);
-    //gluPerspective(60, width / height, 1, 300);
-    //glMatrixMode(GL_MODELVIEW);
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glEnable(GL_DEPTH_TEST);
-    glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
-}
-
-void BlueEngine::RenderCode::Display() {
-    // render
-    // ------
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
-
-void BlueEngine::RenderCode::EndDisplay() {
-    auto &engine = BlueEngine::Engine::get();
-    glfwSwapBuffers(engine.window);
-}
-
-
-

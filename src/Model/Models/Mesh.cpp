@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "View/Renderer/OpenGLProxy.hpp"
+#include "View/Renderer/OpenGL.hpp"
 
 
 Mesh::Mesh(std::vector<Vertex> newVerticies, std::vector<unsigned int> newIndicies,
@@ -11,9 +11,10 @@ Mesh::Mesh(std::vector<Vertex> newVerticies, std::vector<unsigned int> newIndici
     this->vertices = newVerticies;
     this->indices  = newIndicies;
     this->textures = newTextures;
-    BlueEngine::RenderCode::SetupMesh(VAO, VBO, EBO, this->vertices, this->indices);
+    View::OpenGL::SetupMesh(VAO, VBO, EBO, this->vertices, this->indices);
+    //drawItem.shader
 }
 
-void Mesh::Draw(Shader shader) {
-    BlueEngine::RenderCode::DrawModel(shader, VAO, textures, indices);
+void Mesh::Draw(Shader& shader) {
+    View::OpenGL::DrawModel(shader, VAO, textures, indices);
 }

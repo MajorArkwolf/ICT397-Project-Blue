@@ -3,6 +3,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <ctime>
+#include <utility>
 
 
 Model::Water::Water() {
@@ -39,16 +40,14 @@ void Model::Water::SetupModel() {
 }
 
 void Model::Water::SetShader(std::shared_ptr<Shader> newWater) {
-    shader = newWater;
+    shader = std::move(newWater);
     shader->use();
     shader->setInt("texture1", 0);
 }
 
 void Model::Water::Draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos) {
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture1);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, texture2);
+    glBindTexture(GL_TEXTURE_2D, waterTextureID);
     auto temp = model;
     temp = glm::translate(temp, position);
     //temp = glm::scale(temp, scale);
@@ -57,7 +56,7 @@ void Model::Water::Draw(const glm::mat4& projection, const glm::mat4& view, cons
     shader->setMat4("w_view", view);
     shader->setMat4("w_model", temp);
     shader->setVec3("lightColor", 1.0f, 1.0f, 1.0f);
-    shader->setVec3("lightPos", 1.0f, 200.0f, 1.0f);
+    shader->setVec3("lightPos", 1.0f, 400.0f, 1.0f);
     shader->setVec3("viewPos", cameraPos);
     
     glBindVertexArray(VAO);
@@ -65,4 +64,12 @@ void Model::Water::Draw(const glm::mat4& projection, const glm::mat4& view, cons
     //shader->end();
     glBindVertexArray(0);
     glActiveTexture(GL_TEXTURE0);
+}
+
+void Model::Water::SetTexture(unsigned int newTex) {
+    waterTextureID = newTex;
+}
+
+void Model::Water::SetWaterHeight(float newWaterHeight) {
+    position.y = newWaterHeight;
 }

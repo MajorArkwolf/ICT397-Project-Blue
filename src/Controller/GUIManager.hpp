@@ -62,12 +62,12 @@ class GUIManager {
     /**
      * @brief Starts an Imgui Window frame, must be called at the beginning of a display loop
      */
-    void startWindowFrame();
+    static void startWindowFrame();
 
     /**
      * @brief Ends an Imgui window frame, must be called at the end of a display loop before swapping window
      */
-    void endWindowFrame();
+    static void endWindowFrame();
 
     /**
      * @brief Toggles a window given its name in the map
