@@ -31,7 +31,8 @@ target_sources(${PROJECT_NAME} PRIVATE
     Controller/ResourceManager.cpp
     Controller/TerrainManager.cpp
     Controller/Factory/GameAssetFactory.cpp
-    Controller/Factory/TerrainFactory.cpp    
+    Controller/Factory/TerrainFactory.cpp
+    Controller/TextureManager.cpp
 
     
     # Model
@@ -41,12 +42,14 @@ target_sources(${PROJECT_NAME} PRIVATE
     Model/TerrainModel.cpp
     Model/WaterModel.cpp
     Model/TextManager.cpp
+    Model/Texture.cpp
 
     # View
     View/Renderer/Shader.cpp
     View/EulerCamera.cpp
     View/Renderer/Renderer.cpp
-    View/Renderer/OpenGLProxy.cpp
+    View/Renderer/OpenGL.cpp
+    View/Renderer/Skybox.cpp
 
     # Game
     Game/SceneManager.cpp

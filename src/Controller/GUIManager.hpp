@@ -1,14 +1,14 @@
 #pragma once
 
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
-
+#include <imgui.h>
 #include <map>
 #include <string>
-
-#include <imgui.h>
-#include <examples/imgui_impl_opengl3.h>
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
 #include <examples/imgui_impl_glfw.h>
+#include <examples/imgui_impl_opengl3.h>
+
+#include "View/EulerCamera.hpp"
 
 class GUIManager {
   public:
@@ -45,14 +45,29 @@ class GUIManager {
     void displayInstructionMenu();
 
     /**
+     * @brief Displays the quit screen
+     */
+    void displayQuitScreen();
+
+    /**
+     * @brief Displays the dev screen
+     */
+    void displayDevScreen(Camera &camera);
+
+    /**
+     * @brief Displays the texture manager
+     */
+    void displayTextureManager();
+
+    /**
      * @brief Starts an Imgui Window frame, must be called at the beginning of a display loop
      */
-    void startWindowFrame();
+    static void startWindowFrame();
 
     /**
      * @brief Ends an Imgui window frame, must be called at the end of a display loop before swapping window
      */
-    void endWindowFrame();
+    static void endWindowFrame();
 
     /**
      * @brief Toggles a window given its name in the map
@@ -60,10 +75,12 @@ class GUIManager {
     void toggleWindow(std::string windowName);
 
   private:
-
     /// A mapping of a window name to a location in the window open array
     std::map<std::string, bool> windowOpenMap;
 
     /// Initialises the window open map
     void initialiseWindowOpenMap();
+
+    void textureRebind();
+    std::string texName{};
 };

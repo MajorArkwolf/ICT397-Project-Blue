@@ -13,7 +13,6 @@
 #include "Controller/ResourceManager.hpp"
 
 
-
 // Game States
 #include "Game/Prototype/PrototypeScene.hpp"
 
@@ -44,7 +43,8 @@ auto Engine::run() -> void {
     // State previous;
     // State current;
     // State state;
-    glfwFocusWindow(engine.window);
+    //glfwFocusWindow(engine.window);
+    engine.renderer.Init();
     ResourceManager::getInstance().loadResources();
     while (engine.getIsRunning()) {
         double newTime   = glfwGetTime();
@@ -86,6 +86,7 @@ auto Engine::run() -> void {
         engine.gameStack.getTop()->updatePhysics(factor);
 
         engine.gameStack.getTop()->display();
+        engine.renderer.Draw();
     }
     glfwDestroyWindow(engine.window);
 }
@@ -117,11 +118,12 @@ Engine::Engine() {
 
     // glfw window creation
     // --------------------
-    window = glfwCreateWindow(800, 600, "Project Blue", nullptr, nullptr);
+    window = glfwCreateWindow(1920, 1080, "Project Blue", /*glfwGetPrimaryMonitor()*/ nullptr, nullptr);
     if (window == nullptr) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
     }
+
     gleqTrackWindow(window);
     glfwMakeContextCurrent(window);
     
