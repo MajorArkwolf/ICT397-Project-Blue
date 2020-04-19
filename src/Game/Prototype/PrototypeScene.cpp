@@ -7,7 +7,9 @@
 #include "Model/Models/ModelManager.hpp"
 #include "View/Renderer/OpenGLProxy.hpp"
 #include "View/Renderer/Renderer.hpp"
-//#include "Model/GameObject/GameObject.hpp"
+#include "Model/GameObject/Manager.hpp"
+#include "Controller/Engine/LuaManager.hpp"
+#include "Controller/Factory/GameAssetFactory.hpp"
 
 using Controller::Input::BLUE_InputAction;
 using Controller::Input::BLUE_InputType;
@@ -39,14 +41,13 @@ void PrototypeScene::Init() {
 	terrain.Init();
 	camera.Position.y = 100.0;
 	camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
-	//models.push_back(resManager.getModelID("res/model/player_male.obj"));
 
-	/*TODO: Make this no longer hard-coded in C++
-	// Generate the GameObject and configure it
-	scene_objects.push_back(GameAssetFactory::GameObject(GAMEOBJ_STATIC));
-	scene_objects[0].get()->gameObj_setModel("res/model/player_male.obj");
-	scene_objects[0].get()->gameObj_rotateHori = 90.0f;
-	scene_objects[0].get()->gameObj_pos = glm::vec3(0.0f, 150.0f, 0.0f);*/
+	// Temporarily hard-code the external Lua script file while a proper implementation of Lua integration is on hold
+	//GameObj_Manager::lua_init();
+	//luaL_dofile(LuaManager::getInstance().getLuaState(), "res/scripts/gameobjsSet.lua");
+	auto tempGameObj = Controller::Factory::get().GameObject(1u);
+	GameObj_Manager::insert(tempGameObj);
+	tempGameObj.get()->gameObj_setModel("res/model/player_male.obj");
 }
 
 void PrototypeScene::handleWindowEvent() {
@@ -147,8 +148,8 @@ auto PrototypeScene::display() -> void {
 	terrain.Draw(projection, view, camera.Position);
 
 	// Display the scene's objects
-	//scene_objects[0].get()->gameObj_addToDraw();
-	//renderer.draw(view, projection);
+	GameObj_Manager::addAllToDraw();
+	renderer.draw(view, projection);
 
 	guiManager.endWindowFrame();
 
