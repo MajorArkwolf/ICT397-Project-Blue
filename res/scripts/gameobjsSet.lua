@@ -1,13 +1,15 @@
--- Attempt to create and add a GameObject
-gameObjID = GameObject_Manager.add(1);
-exampleObj = GameObject_Manager.get(gameObjID);
+-- Generate 15 new GameObjects
+local i = 0;
+while (i < 15)
+do
+	-- Generate the new GameObject (of type Static)
+	identifier = GameObject_Manager.add(1);
+	new_game_object = GameObject_Manager.get(identifier);
 
--- If the GameObject creation was successful
-if (exampleObj.isValid()) {
-	-- Print the GameObject's identifier
-	print(exampleObj.getUniqueID());
+	-- Set the newly created GameObject's position and model
+	new_game_object:setModel("res/model/player_male.obj");
+	new_game_object:setPos_X(i * 5);
 
-	-- Set the GameObject's model and position
-	exampleObj.setModel("res/model/player_male.obj");
-	exampleObj.setPos_Y(150);
-}
+	-- Increment the counter to prevent infinite GameObject generation
+	i = i + 1;
+end
