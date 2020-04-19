@@ -355,7 +355,7 @@ void Controller::TerrainFactory::GenerateTerrainL2(Model::TerrainModel &newTerra
     newTerrain.LoadShader(terrainShader);
     newTerrain.water.SetShader(waterShader);
     /// Generate verticies to form a giant square.
-    GenerateVerticies(newTerrain.verticies, xsize, zsize, 0, 0, 5);
+    GenerateVerticies(newTerrain.verticies, xsize, zsize , 1, 1, 5);
     /// Give heights to the y values using perlin noise.
     AddDetailV2(newTerrain, key);
     /// Generate indicies for the verticies.
@@ -367,7 +367,7 @@ void Controller::TerrainFactory::GenerateTerrainL2(Model::TerrainModel &newTerra
     /// Generate Soft Normals
     GenerateNormals(newTerrain.verticies, newTerrain.indicies);
     /// Sets the height at which levels the textures will set.
-    StitchSeemedVerticies(newTerrain, key);
+    //StitchSeemedVerticies(newTerrain, key);
     newTerrain.setHeightOffsets(snowHeight, dirtHeight, grassHeight, sandHeight);
     /// Send the chunk to OpenGL to be stored in the GPU.
     newTerrain.SetupModel();
@@ -416,7 +416,6 @@ void Controller::TerrainFactory::StitchSeemedVerticies(Model::TerrainModel &newT
 
     // Left Side, Bottom to top.
     for (unsigned int index = 0; index < (size - length); index += length) {
-        //std::cout << "Index: " << index << " Max: " << (size - length);
         Blue::Vertex first = newTerrain.verticies.at(index);
         Blue::Vertex second = newTerrain.verticies.at(index + length);
         auto diff = static_cast<unsigned int>(second.position.x) - static_cast<unsigned int>(first.position.x);
