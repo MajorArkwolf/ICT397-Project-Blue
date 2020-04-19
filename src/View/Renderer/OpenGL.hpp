@@ -78,7 +78,14 @@ namespace View {
          * @param mainCamera the active camera in the scene.
          */
         void SetCameraOnRender(Camera &mainCamera);
-
+        /**
+         * Setup the terrain models
+         * @param VAO index of buffer.
+         * @param VBO index of buffer.
+         * @param EBO index of buffer.
+         * @param verticies to load into the buffers.
+         * @param indicies to load into the buffers.
+         */
         void SetupTerrainModel(unsigned int &VAO, unsigned &VBO, unsigned int &EBO, std::vector<Blue::Vertex>& verticies, std::vector<unsigned int>& indicies);
 
     private:
