@@ -17,32 +17,7 @@ Model::TerrainModel::~TerrainModel() {
 }
 
 void Model::TerrainModel::SetupModel() {
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, verticies.size() * sizeof(Blue::Vertex), &verticies[0],
-                 GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicies.size() * sizeof(unsigned int), &indicies[0], GL_STATIC_DRAW);
-
-    // Vertex Positions
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Blue::Vertex), nullptr);
-
-    // TexCords
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Blue::Vertex),
-                          reinterpret_cast<void *>(offsetof(Blue::Vertex, texCoords)));
-
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Blue::Vertex),
-                          reinterpret_cast<void *>(offsetof(Blue::Vertex, normals)));
-    glBindVertexArray(0);
+    BlueEngine::Engine::get().renderer.SetupTerrainModel(VAO, VBO, EBO, verticies, indicies);
 }
 
 void Model::TerrainModel::LoadShader(std::shared_ptr<Shader> newTerrain) {
