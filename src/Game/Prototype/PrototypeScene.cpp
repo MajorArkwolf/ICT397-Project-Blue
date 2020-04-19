@@ -91,6 +91,10 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
 		case BLUE_InputAction::INPUT_MOVE_RIGHT: {
 			moveRight = false;
 		} break;
+        case BLUE_InputAction::INPUT_ACTION_2: {
+            auto &renderer = BlueEngine::Engine::get().renderer;
+            renderer.ToggleWireFrame();
+        } break;
         case BLUE_InputAction::INPUT_ACTION_3: {
             guiManager.toggleWindow("instructions");
         } break;

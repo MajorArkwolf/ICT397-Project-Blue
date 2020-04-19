@@ -190,7 +190,7 @@ namespace Controller::Input {
         InputMap.at(BLUE_InputAction::INPUT_MOVE_LEFT)     = GLFW_KEY_A;
         InputMap.at(BLUE_InputAction::INPUT_MOVE_RIGHT)    = GLFW_KEY_D;
         InputMap.at(BLUE_InputAction::INPUT_ACTION_1)      = GLFW_KEY_E;
-        InputMap.at(BLUE_InputAction::INPUT_ACTION_2)      = GLFW_KEY_R;
+        InputMap.at(BLUE_InputAction::INPUT_ACTION_2)      = GLFW_KEY_K;
         InputMap.at(BLUE_InputAction::INPUT_ACTION_3)      = GLFW_KEY_M;
         InputMap.at(BLUE_InputAction::INPUT_ACTION_4)      = GLFW_KEY_X;
         InputMap.at(BLUE_InputAction::INPUT_SPRINT)        = GLFW_KEY_LEFT_SHIFT;

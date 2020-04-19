@@ -81,7 +81,7 @@ void GUIManager::displayEscapeMenu() {
         ImGui::Begin(resManager.getString("OptionMenu_title").c_str(), &windowOpen,
                      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize);
         if (ImGui::Button("Controls")) {
-            toggleWindow("constrols");
+            toggleWindow("controls");
         }
         if (ImGui::Button("Instructions")) {
             toggleWindow("instructions");
