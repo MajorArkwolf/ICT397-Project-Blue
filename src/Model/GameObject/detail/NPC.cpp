@@ -8,6 +8,9 @@
 #include "View/Renderer/Renderer.hpp"
 #include "../GameObject.hpp"
 
+	/// Debugging Dependencies
+#include <assert.h>
+
 GameObj_NPC::GameObj_NPC()
 	: GameObj_Base() {
 	// GameObj_NPC has no unique attributes to initialise yet
@@ -33,18 +36,7 @@ GameObjType GameObj_NPC::_gameObj_getTypeID() {
 }
 
 void GameObj_NPC::gameObj_addToDraw() {
-	// Prepare for model position configuration
-	glm::mat4 translation = glm::mat4(1.0f);
-
-	// Configure the model position
-	translation = glm::translate(translation, gameObj_pos);
-
-	// Configure the model orientation
-	translation = glm::rotate(translation, glm::radians(gameObj_yaw), glm::vec3(0.0f, 1.0f, 0.0f));
-	translation = glm::rotate(translation, glm::radians(gameObj_pitch), glm::vec3(1.0f, 0.0f, 0.0f));
-	translation = glm::rotate(translation, glm::radians(gameObj_roll), glm::vec3(0.0f, 0.0f, 1.0f));
-
-	// Add the GameObject's model to the renderer's draw call
-	Renderer::addToDraw(translation, gameObj_getModelID());
+	// Temporarily removed for the moment, make sure to re-implement this!
+	assert(false);
 }
 
