@@ -82,7 +82,7 @@ void Controller::TerrainManager::Update(glm::ivec2 key) {
 							drawCircle.push_back(&e->level1);
 						}
 						else {
-							drawCircle.push_back(&map.at(newKey)->level1);
+							drawCircle.push_back(&map.at(newKey)->level2);
 						}
 					} else {
                         if(map.find(newKey) != map.end()) {

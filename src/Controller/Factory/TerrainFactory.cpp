@@ -139,7 +139,7 @@ void Controller::TerrainFactory::GenerateVerticies(std::vector<Blue::Vertex> &te
                                                    unsigned int xsize, unsigned int zsize, unsigned int xstart, unsigned int zstart, unsigned int increment) {
     Blue::Vertex vertex{};
     for (unsigned i = xstart; i < xsize; i += increment) {
-        for (unsigned j = zstart; j < zsize; j+= increment) {
+        for (unsigned j = zstart; j < zsize; j += increment) {
             vertex.position.x = i;
             vertex.position.z = j;
             terrain.push_back(vertex);
@@ -164,12 +164,10 @@ void Controller::TerrainFactory::GenerateIndicies(std::vector<unsigned int> &ter
 
 void Controller::TerrainFactory::GenerateTextureCords(std::vector<Blue::Vertex> &terrain) {
     unsigned int tracker  = 0;
-    unsigned int switcher = 0;
-    float prevx           = 0;
+    float prevx           = terrain.at(0).position.x;
     int size              = 1;
     int x                 = 0;
     int y                 = 0;
-    prevx                 = terrain.at(0).position.x;
     for (auto &vert : terrain) {
         if (prevx != vert.position.x) {
             x++;
