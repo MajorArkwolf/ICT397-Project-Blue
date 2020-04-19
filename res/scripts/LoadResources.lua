@@ -18,7 +18,7 @@ Strings = {
 	OptionMenu_title = "Menu",
 	ControlMenu_title = "Controls",
 	InstructionMenu_title = "Instructions",
-	InstructionMenu_instructions = "Do stuff to win",
+	InstructionMenu_instructions = "Press escape to open the menu \nUse WASD to move around \nUse the mouse to look around",
 	Control_MoveForward_description = " ",
 	Control_MoveBackward_description = " ",
 	Control_MoveLeft_description = " ",
@@ -48,3 +48,10 @@ resources.loadModel("res/models/ironman.obj")
 --]]
 
 resources.loadModel("res/model/IronMan/IronMan.obj")
+
+resources.loadTexture("res/images/grass.jpg", "grass")
+resources.loadTexture("res/images/water.jpg", "water")
+resources.loadTexture("res/images/sand.jpg", "sand")
+resources.loadTexture("res/images/dirt.jpg", "dirt")
+resources.loadTexture("res/images/snow.jpg", "snow")
+resources.loadTexture("res/images/endscene.jpg", "exitScreen")

@@ -5,8 +5,9 @@
 #include "Controller/Engine/Engine.hpp"
 #include "Model/Models/Model.hpp"
 #include "Model/Models/ModelManager.hpp"
-#include "View/Renderer/OpenGLProxy.hpp"
+#include "View/Renderer/OpenGL.hpp"
 #include "View/Renderer/Renderer.hpp"
+#include "Controller/TextureManager.hpp"
 #include "Model/GameObject/Manager.hpp"
 #include "Controller/Engine/LuaManager.hpp"
 #include "Controller/Factory/GameAssetFactory.hpp"
@@ -36,10 +37,8 @@ auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
 }
 
 void PrototypeScene::Init() {
-	//auto& resManager = ResourceManager::getInstance();
-	BlueEngine::RenderCode::HardInit();
-	terrain.Init();
-	camera.Position.y = 100.0;
+	//terrain.Init();
+	//camera.Position.y = 100.0;
 	camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
 	// Temporarily hard-code the external Lua script file while a proper implementation of Lua integration is on hold
@@ -51,7 +50,7 @@ void PrototypeScene::Init() {
 }
 
 void PrototypeScene::handleWindowEvent() {
-	BlueEngine::RenderCode::ResizeWindow();
+	View::OpenGL::ResizeWindow();
 }
 
 // SDLFIX
@@ -79,6 +78,7 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
 		case BLUE_InputAction::INPUT_ESCAPE: {
 			guiManager.toggleWindow("menu");
 		} break;
+
 		default: break;
 		}
 
@@ -97,11 +97,21 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
 		case BLUE_InputAction::INPUT_MOVE_RIGHT: {
 			moveRight = false;
 		} break;
+        case BLUE_InputAction::INPUT_ACTION_2: {
+            auto &renderer = BlueEngine::Engine::get().renderer;
+            renderer.ToggleWireFrame();
+        } break;
+        case BLUE_InputAction::INPUT_ACTION_3: {
+            guiManager.toggleWindow("instructions");
+        } break;
+        case BLUE_InputAction::INPUT_ACTION_4: {
+            guiManager.toggleWindow("exit");
+        } break;
 		default: break;
 		}
 	} break;
 	case BLUE_InputType::MOUSE_MOTION: { // Mouse motion event
-		if (engine.getMouseMode() == false) {
+		if (!engine.getMouseMode()) {
 			auto x = static_cast<double>(inputData.mouseMotionRelative.x);
 			auto y = static_cast<double>(inputData.mouseMotionRelative.y);
 			y = y * -1.0;
@@ -125,40 +135,11 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
 }
 
 auto PrototypeScene::display() -> void {
-	// SDLFIX
-	auto& engine = BlueEngine::Engine::get();
-	BlueEngine::RenderCode::Display();
-	auto& guiManager = engine.getGuiManager();
-
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplGlfw_NewFrame();
-	guiManager.startWindowFrame();
-	guiManager.displayInputRebindWindow();
-	guiManager.displayEscapeMenu();
-	guiManager.displayInstructionMenu();
-	int width = 0, height = 0;
-	glfwGetWindowSize(engine.window, &width, &height);
-	// view/projection transformations
-	glm::mat4 projection =
-		glm::perspective(glm::radians(camera.Zoom),
-			static_cast<double>(width) / static_cast<double>(height), 0.1, 100000.0);
-	glm::mat4 view = camera.GetViewMatrix();
-
-	// Display the scene's terrain
-	terrain.Draw(projection, view, camera.Position);
-
-	// Display the scene's objects
+    auto &renderer = BlueEngine::Engine::get().renderer;
+    renderer.SetCameraOnRender(camera);
+	terrain.AddToDraw();
 	GameObj_Manager::addAllToDraw();
-	renderer.draw(view, projection);
-
-	guiManager.endWindowFrame();
-
-	BlueEngine::RenderCode::EndDisplay();
 }
 
 void PrototypeScene::unInit() {}
 
-double PrototypeScene::getDeltaTime() {
-	auto newTime = glfwGetTime();
-	return (newTime - time);
-}
