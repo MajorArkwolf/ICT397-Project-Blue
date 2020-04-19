@@ -72,6 +72,7 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
 		case BLUE_InputAction::INPUT_ESCAPE: {
 			guiManager.toggleWindow("menu");
 		} break;
+
 		default: break;
 		}
 
@@ -90,6 +91,12 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
 		case BLUE_InputAction::INPUT_MOVE_RIGHT: {
 			moveRight = false;
 		} break;
+        case BLUE_InputAction::INPUT_ACTION_3: {
+            guiManager.toggleWindow("instructions");
+        } break;
+        case BLUE_InputAction::INPUT_ACTION_4: {
+            guiManager.toggleWindow("exit");
+        } break;
 		default: break;
 		}
 	} break;

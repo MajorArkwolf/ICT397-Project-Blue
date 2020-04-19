@@ -105,7 +105,7 @@ void GUIManager::displayInstructionMenu() {
     bool &windowOpen = windowOpenMap.at("instructions");
     if (windowOpen) {
         ImGui::Begin(resManager.getString("InstructionMenu_title").c_str(), &windowOpen,
-                     ImGuiWindowFlags_NoCollapse);
+                     ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize);
         ImGui::Text(resManager.getString("InstructionMenu_instructions").c_str());
         ImGui::End();
     }
@@ -113,7 +113,7 @@ void GUIManager::displayInstructionMenu() {
 
 void GUIManager::displayQuitScreen() {
     auto &textures   = TextureManager::getInstance();
-    auto &texture    = textures.getTexture("dirt");
+    auto &texture    = textures.getTexture("exitScreen");
     bool &windowOpen = windowOpenMap.at("exit");
     auto &engine     = BlueEngine::Engine::get();
 
