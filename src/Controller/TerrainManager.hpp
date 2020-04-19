@@ -42,18 +42,22 @@ namespace Controller {
 		void Init();
 		/**
 		 * @brief Draw call for the terrain model objects.
-		 * @param Projection matrix for the camera
-		 * @param View matrix for the model
+		 * @param projection matrix for the camera
+		 * @param view matrix for the model
 		 */
 		void Draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos);
 		/**
 		 * @brief Updatecall for the terrain model objects.
-		 * @param the key to where the camera is relative to the chunk its in.
+		 * @param key to where the camera is relative to the chunk its in.
 		 */
 		void Update(glm::ivec2 key);
 
 		void AddToDraw();
 
+        /**
+         * @brief GenerateHeightMap to be used for anything that needs the heightmap
+         * @param heightMap a struct used to store multiple values.
+         */
 		void GenerateHeightMap(Blue::HeightMap& heightMap);
 
 		

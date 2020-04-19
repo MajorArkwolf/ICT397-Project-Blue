@@ -87,8 +87,7 @@ void Controller::TerrainFactory::LoadLua() {
     }
 }
 
-void Controller::TerrainFactory::GenerateTerrain(Model::TerrainModel &newTerrain, int xcord,
-                                                 int zcord, const Blue::Key key) {
+void Controller::TerrainFactory::GenerateTerrain(Model::TerrainModel &newTerrain, const Blue::Key& key) {
 
     int xsize = ChunkSize + 1;
     int zsize = ChunkSize + 1;
@@ -98,28 +97,29 @@ void Controller::TerrainFactory::GenerateTerrain(Model::TerrainModel &newTerrain
     /// Generate verticies to form a giant square.
     GenerateVerticies(newTerrain.verticies, xsize, zsize);
     /// Give heights to the y values using perlin noise.
-    AddDetail(newTerrain.verticies, key, maxSize, ChunkSize);
+    AddDetail(newTerrain.verticies, key, ChunkSize);
     /// Generate indicies for the verticies.
     GenerateIndicies(newTerrain.indicies, xsize, zsize);
     /// Generate the texture coordinates of the squares.
     GenerateTextureCords(newTerrain.verticies);
     /// Generate Soft Normals
     GenerateNormals(newTerrain.verticies, newTerrain.indicies);
+    /// Sets the height at which levels the textures will set.
+    newTerrain.setHeightOffsets(snowHeight, dirtHeight, grassHeight, sandHeight);
     /// Send the chunk to OpenGL to be stored in the GPU.
     newTerrain.SetupModel();
     /// Set the location of the chunk.
-    newTerrain.position.x = xcord * ChunkSize;
-    newTerrain.position.z = zcord * ChunkSize;
-    GenerateWater(newTerrain.water, xcord, zcord, key);
-    newTerrain.water.position = glm::vec3{xcord * ChunkSize, 105, zcord * ChunkSize};
+    newTerrain.position.x = key.first * ChunkSize;
+    newTerrain.position.z = key.second * ChunkSize;
+    GenerateWater(newTerrain.water, key);
+    newTerrain.water.position = glm::vec3{key.first * ChunkSize, waterHeight, key.second * ChunkSize};
     /// Load the textures for the model.
     newTerrain.setTextures(snowTextureID, grassTextureID, dirtTextureID, sandTextureID);
     /// Clean up the useless data to save room in ram.
     CleanupChunk(newTerrain);
 }
 
-void Controller::TerrainFactory::GenerateWater(Model::Water &lake, int xcord, int zcord,
-                                               const Blue::Key key) {
+void Controller::TerrainFactory::GenerateWater(Model::Water &lake, const Blue::Key& key) {
     int xsize = ChunkSize + 1;
     int zsize = ChunkSize + 1;
     GenerateVerticies(lake.verticies, xsize, zsize);
@@ -215,8 +215,7 @@ void Controller::TerrainFactory::GeneratePerlinNoise(int xsize, int zsize) {
     }
 }
 
-void Controller::TerrainFactory::AddDetail(std::vector<Blue::Vertex> &terrain, const Blue::Key key,
-                                           int maxSize, int chunkSize) {
+void Controller::TerrainFactory::AddDetail(std::vector<Blue::Vertex> &terrain, const Blue::Key& key, const int chunkSize) {
     int row = (height / 2) + key.first * chunkSize;
     int max_row = row + chunkSize;
     int col = (width / 2) + key.second * chunkSize;
@@ -238,11 +237,11 @@ void Controller::TerrainFactory::CleanupChunk(Model::TerrainModel &terrain) {
     terrain.verticies.clear();
     terrain.verticies.shrink_to_fit();
     terrain.indicie_size = terrain.indicies.size();
-    terrain.indicies.clear();
-    terrain.indicies.shrink_to_fit();
+    //terrain.indicies.clear();
+    //terrain.indicies.shrink_to_fit();
 }
 
-void Controller::TerrainFactory::LoadPerlinNoise(const string filename) {
+void Controller::TerrainFactory::LoadPerlinNoise(const string& filename) {
     int nrComponents;
     unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
     assert(data != nullptr);
@@ -325,6 +324,7 @@ int Controller::TerrainFactory::getHeight() const {
 
 void Controller::TerrainFactory::ExportHeightMap(float *heightMap) {
     size_t maxIndex = (width + 1) * (height + 1);
+    delete heightMap;
     heightMap = new float[maxIndex];
     size_t count = 0;
     for (auto &x : fValues) {

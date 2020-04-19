@@ -15,26 +15,31 @@ uniform sampler2D texture1;
 uniform sampler2D texture2;
 uniform sampler2D texture3;
 uniform sampler2D texture4;
+uniform float tm_snowHeight;
+uniform float tm_dirtHeight;
+uniform float tm_grassHeight;
+uniform float tm_sandHeight;
 
 void main()
 {
+    float maxHeight = 255;
     vec4 t1 = texture(texture1, TexCoord);
     vec4 t2 = texture(texture2, TexCoord);
     vec4 t3 = texture(texture3, TexCoord);
     vec4 t4 = texture(texture4, TexCoord);
 
     if (HeightPoint[1] > 190) {
-        float blend_percent = (HeightPoint[1] - 190) / 65;
+        float blend_percent = (HeightPoint[1] - tm_snowHeight) / (maxHeight - tm_snowHeight);
         FragColor = mix(t3, t1, blend_percent);
-    } else if (HeightPoint[1] > 170) {
+    } else if (HeightPoint[1] > tm_dirtHeight) {
         FragColor = t3;
-    } else if (HeightPoint[1] > 150) {
-        float blend_percent = (HeightPoint[1] - 150) / 20;
+    } else if (HeightPoint[1] > tm_grassHeight) {
+        float blend_percent = (HeightPoint[1] - tm_grassHeight) / (tm_dirtHeight - tm_grassHeight);
         FragColor = mix(t2, t3, blend_percent);
     } else {
         FragColor = t2;
     }
-    if (HeightPoint[1] < 130) {
+    if (HeightPoint[1] < tm_sandHeight) {
         FragColor = t4;
 	}
 
