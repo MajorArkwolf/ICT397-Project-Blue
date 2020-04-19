@@ -29,7 +29,7 @@ void Controller::TerrainManager::GenerateHeightMap(Blue::HeightMap& heightMap) {
     heightMap.position.x = static_cast<float>(terrainFactory.getWidth() / 2.0f);
     heightMap.position.z = static_cast<float>(terrainFactory.getHeight() / 2.0f);
     heightMap.rotation = {};
-    terrainFactory.ExportHeightMap(heightMap.terrain);
+    heightMap.terrain = terrainFactory.ExportHeightMap();
 }
 
 void Controller::TerrainManager::Update(glm::ivec2 key) {

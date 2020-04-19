@@ -60,7 +60,7 @@ namespace Controller {
          * @brief Getter for height
          * @param heightMap a float pointer array.
          */
-        void ExportHeightMap(float *heightMap);
+        float * ExportHeightMap();
 
 	private:
 		/// Determines how many squares fit into a single chunk
