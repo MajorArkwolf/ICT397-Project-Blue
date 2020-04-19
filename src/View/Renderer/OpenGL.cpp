@@ -25,22 +25,22 @@ void View::OpenGL::Draw() {
     guiManager.displayTextureManager();
     int width = 0, height = 0;
     glfwGetWindowSize(engine.window, &width, &height);
-    // view/projection transformations
     glm::mat4 projection =
             glm::perspective(glm::radians(camera->Zoom),
                              static_cast<double>(width) / static_cast<double>(height), 0.1, 100000.0);
     glm::mat4 view = camera->GetViewMatrix();
     glm::mat4 skyboxView = glm::mat4(glm::mat3(camera->GetViewMatrix()));
-    glm::mat4 model = glm::mat4(1.0f);
-
-//    shader->use();
-//    shader->setMat4("model", model);
-//    shader->setMat4("projection", projection);
-//    shader->setMat4("view", view);
     sortDrawDistance();
+    if(wireframe)
+    {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    } else {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
     for (auto &m : drawQue) {
         m.drawPointer(projection, view, camera->Position);
     }
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     skyBox.draw(skyboxView, projection);
     GUIManager::endWindowFrame();
     glfwSwapBuffers(engine.window);
@@ -59,7 +59,6 @@ void View::OpenGL::Init() {
     glCullFace(GL_BACK);
     glEnable(GL_DEPTH_TEST);
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
-    shader = std::make_unique<Shader>(Shader("./res/shader/vertshader.vs", "./res/shader/fragshader.fs"));
     skyBox.Init();
 
 }
@@ -213,4 +212,37 @@ void View::OpenGL::sortDrawDistance() {
          [](const View::Data::DrawItem& lhs, const View::Data::DrawItem& rhs)->bool {
              return lhs.distance > rhs.distance;
          });
+}
+
+void View::OpenGL::ToggleWireFrame() {
+    wireframe = !wireframe;
+}
+
+void View::OpenGL::SetupTerrainModel(unsigned int &VAO, unsigned &VBO, unsigned int &EBO, std::vector<Blue::Vertex>& verticies, std::vector<unsigned int>& indicies) {
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
+
+    glBindVertexArray(VAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, verticies.size() * sizeof(Blue::Vertex), &verticies[0],
+                 GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicies.size() * sizeof(unsigned int), &indicies[0], GL_STATIC_DRAW);
+
+    // Vertex Positions
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Blue::Vertex), nullptr);
+
+    // TexCords
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Blue::Vertex),
+                          reinterpret_cast<void *>(offsetof(Blue::Vertex, texCoords)));
+
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Blue::Vertex),
+                          reinterpret_cast<void *>(offsetof(Blue::Vertex, normals)));
+    glBindVertexArray(0);
 }
