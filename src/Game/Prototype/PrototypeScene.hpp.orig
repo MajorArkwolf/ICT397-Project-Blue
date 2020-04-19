@@ -32,13 +32,8 @@ private:
     std::vector<size_t> models;
     Renderer renderer;
 
-<<<<<<< HEAD
-
-    void handleWindowEvent(SDL_Event &event);
-=======
-    //SDLFIX SDL_Event &event
     void handleWindowEvent();
->>>>>>> develop
+
 
     bool moveForward = false;
     bool moveBackward = false;

@@ -25,7 +25,6 @@ target_sources(${PROJECT_NAME} PRIVATE
     Controller/Physics/BeHeightPhysics.cpp
     Controller/Physics/BeSpherePhysics.cpp
     Controller/Physics/BeMaterial.cpp
-    Controller/Physics/BeTimer.cpp
 
     Controller/GUIManager.cpp
     Controller/ResourceManager.cpp
