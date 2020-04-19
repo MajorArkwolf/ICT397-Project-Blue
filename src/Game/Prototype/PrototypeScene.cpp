@@ -17,11 +17,11 @@ PrototypeScene::PrototypeScene() {
 
 PrototypeScene::~PrototypeScene() {
     world->DestroyRigidBody(cam->GetBody());
-    world->DestroyRigidBody(body->GetBody());
+    // world->DestroyRigidBody(body->GetBody());
     world->DestroyRigidBody(testy->GetBody());
     world->DestroyRigidBody(testx->GetBody());
     delete cam;
-    delete body;
+    // delete body;
     delete testy;
     delete testx;
     delete factory;
@@ -47,67 +47,66 @@ auto PrototypeScene::update([[maybe_unused]] double t, double dt, double ts) -> 
 
     terrain.Update(camera.getLocation());
 
+    cam->SetTransform(camera.Position, glm::quat(1, 0, 0, 0));
+    bool test = world->TestOverLap(testx->GetBody(), testy->GetBody());
+//    bool test = world->TestAABBOverlap(cam->GetBody(), testy->GetBody());
+    std::cout << "Collision test: " << test << std::endl;
 
-
-
-
+//    std::cout << "Camera position x:" << camera.Position.x << " y: " << camera.Position.y
+//              << " z: " << camera.Position.z << std::endl;
+    std::cout << "Testx Position x: " << testx->GetTransform().GetPosition().x
+              << " y: " << testx->GetTransform().GetPosition().y
+              << " z: " << testx->GetTransform().GetPosition().z << std::endl;
+    std::cout << "Testy Position x: " << testy->GetTransform().GetPosition().x
+              << " y: " << testy->GetTransform().GetPosition().y
+              << " z: " << testy->GetTransform().GetPosition().z << std::endl;
 }
 
 void PrototypeScene::updateWorld(double ts) {
-    if(world != nullptr)
-    {
+    if (world != nullptr) {
         world->Update(ts);
-    } else{
+    } else {
         std::cout << "World not created" << std::endl;
     }
-
 }
 
 void PrototypeScene::updatePhysics(double f) {
 
     BeTransform currentTransform = testx->GetTransform();
 
-    cam->SetTransform(camera.Position, glm::quat(1, 0, 0, 0));
-
     BeTransform newPosition = BeTransform::InterPolateTransform(previousTransform, currentTransform, f);
-
-    testy->SetTransform(newPosition.GetPosition(), newPosition.GetOrientation());
 
     previousTransform = currentTransform;
 
-    bool test = world->TestAABBOverlap(testx->GetBody(), testy->GetBody());
-    std::cout << "Collision test: " << test << std::endl;
-//    std::cout << "Camera position x:" << camera.Position.x << " y: " << camera.Position.y
-//              << " z: " << camera.Position.z << std::endl;
-    std::cout << "Testx Position x: " << testx->GetTransform().GetPosition().x
-              << " y: " << testx->GetTransform().GetPosition().y
-              << " z: " << testx->GetTransform().GetPosition().z << std::endl;
+    testx->SetTransform(newPosition.GetPosition(), newPosition.GetOrientation());
 }
-
 
 void PrototypeScene::Init() {
     auto &resManager = ResourceManager::getInstance();
     BlueEngine::RenderCode::HardInit();
     terrain.Init();
     // camera.Position.y = 100.0;
-    camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
+    camera = Camera(glm::vec3(0.0f, 10.0f, 0.0f));
     models.push_back(resManager.getModelID("res/model/nanosuit/nanosuit.obj"));
 
     Blue::HeightMap map;
     terrain.GenerateHeightMap(map);
 
-    settings.beSettings.isSleepingEnabled                 = true;
-    settings.beSettings.defaultVelocitySolverNbIterations = 20;
-    grav  = glm::vec3(0, -1, 0);
+    settings.beSettings.isSleepingEnabled = true;
+    // settings.beSettings.defaultVelocitySolverNbIterations = 20;
+    grav = glm::vec3(0, -4, 0);
     blah = new float[100];
     for (int ii = 0; ii < 100; ii += 1) {
         blah[ii] = 0;
     }
 
     world = new BeDynamicWorld(grav, settings);
-//    world->SetGravity(grav);
-//    world->EnableGravity(true);
-//    world->EnableSleeping(settings.beSettings.isSleepingEnabled);
+    std::cout << " world gravity x: " << world->GetWorld()->getGravity().x
+              << " y: " << world->GetWorld()->getGravity().y
+              << " z: " << world->GetWorld()->getGravity().z << std::endl;
+    std::cout << "gravity enabled: " << world->GetWorld()->isGravityEnabled() << std::endl;
+    world->EnableGravity(true);
+    world->EnableSleeping(settings.beSettings.isSleepingEnabled);
 //    world->SetSleepLinearVelocity(settings.beSettings.defaultSleepLinearVelocity);
 //    world->SetSleepAngularVelocity(settings.beSettings.defaultSleepAngularVelocity);
 //    world->SetNumIterationPositionSolver(settings.beSettings.defaultPositionSolverNbIterations);
@@ -115,33 +114,35 @@ void PrototypeScene::Init() {
     factory = new BeRP3DFactory();
     physics = new BePhysicsLibrary(factory);
 
-    cam = physics->CreateBody(camera.Position, glm::quat(1, 0, 0, 1), glm::vec3(1, 1, 1), 1, 0, 0,
+    cam = physics->CreateBody(camera.Position, glm::quat(1, 0, 0, -1), glm::vec3(1, 1, 1), 1, 0, 0,
                               0, 0, world, blah, ShapeType::Box, 1);
     cam->EnableGravity(true);
-//    auto camMat = cam->GetMaterial();
-//    camMat->SetBounciness(0.2);
+    //    auto camMat = cam->GetMaterial();
+    //    camMat->SetBounciness(0.2);
     bodies.emplace_back(cam);
 
+    //    body = physics->CreateBody(map.position, map.rotation, glm::vec3(0, 0, 0), map.mass, map.width,
+    //                               map.height, 0, 0, world, map.terrain, ShapeType::Height, map.targetId);
+    //    body->SetType(BeBodyType::STATIC);
+    //    bodies.emplace_back(body);
 
-    body = physics->CreateBody(map.position, map.rotation, glm::vec3(0, 0, 0), map.mass, map.width,
-                               map.height, 0, 0, world, map.terrain, ShapeType::Height, map.targetId);
-    body->SetType(BeBodyType::STATIC);
-    bodies.emplace_back(body);
-
-    testy = physics->CreateBody(glm::vec3(100, 0, 100), glm::quat(1, 0, 0, 1), glm::vec3(100, 10, 100),
-                                1, 10, 10, 0, 0, world, blah, ShapeType::Box, 2);
-    //testy->EnableGravity(true);
+    testy = physics->CreateBody(glm::vec3(0, 0, 0), glm::quat(1, 0, 0, 0), glm::vec3(1000, 10, 1000),
+                                100, 10, 10, 0, 0, world, blah, ShapeType::Box, 2);
+    testy->EnableGravity(true);
     testy->SetType(BeBodyType::STATIC);
-//    auto testyMat = testy->GetMaterial();
-//    testyMat->SetBounciness(0.2);
+    auto testyMat = testy->GetMaterial();
+    testyMat.SetBounciness(0.2);
     bodies.emplace_back(testy);
 
-    testx = physics->CreateBody(glm::vec3(100, 100, 100), glm::quat(1, 0, 0, 1), glm::vec3(10, 10, 10),
-                                1, 10, 10, 0, 0, world, blah, ShapeType::Box, 3);
+    testx = physics->CreateBody(glm::vec3(10, 10000, 10), glm::quat(1, 0, 0, 0), glm::vec3(1, 1, 1), 1,
+                                0, 0, 0, 0, world, blah, ShapeType::Box, 3);
     testx->EnableGravity(true);
-//    auto testxMat = testx->GetMaterial();
-//    testxMat->SetBounciness(0.2);
+    testx->SetSleep(true);
+    auto testxMat = testx->GetMaterial();
+    testxMat.SetBounciness(0.2);
+    testx->SetType(BeBodyType::DYNAMIC);
     bodies.emplace_back(testx);
+    previousTransform.SetToIdentity();
 }
 
 void PrototypeScene::handleWindowEvent() {
@@ -247,8 +248,6 @@ auto PrototypeScene::display() -> void {
     guiManager.endWindowFrame();
 
     BlueEngine::RenderCode::EndDisplay();
-
-
 }
 
 void PrototypeScene::unInit() {}

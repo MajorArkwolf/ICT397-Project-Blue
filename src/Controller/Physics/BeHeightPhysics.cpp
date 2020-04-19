@@ -34,7 +34,7 @@ void BeHeightPhysics::SetTransform(glm::vec3 position, glm::quat rotation) {
 }
 
 BeTransform BeHeightPhysics::GetTransform() {
-    BeTransform result(transform);
+    BeTransform result(body->getTransform());
     return result;
 }
 
@@ -50,7 +50,15 @@ void BeHeightPhysics::SetType(BeBodyType type) {
     body->setType(type);
 }
 
-BeMaterial *BeHeightPhysics::GetMaterial() {
-    BeMaterial *result = new BeMaterial(body->getMaterial());
+BeMaterial BeHeightPhysics::GetMaterial() {
+    BeMaterial result(body->getMaterial());
     return result;
+}
+
+bool BeHeightPhysics::IsSleepEnabled() {
+    return body->isAllowedToSleep();
+}
+
+void BeHeightPhysics::SetSleep(bool toggle) {
+    body->setIsAllowedToSleep(toggle);
 }

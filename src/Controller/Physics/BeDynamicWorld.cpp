@@ -5,32 +5,30 @@ BeDynamicWorld::BeDynamicWorld(){
     bePhysicsWorld = nullptr;
 }
 
-
 BeDynamicWorld::BeDynamicWorld(const glm::vec3 &gravity, const BeSettings &settings) {
-
-    worldGravity = new rp3d::Vector3(gravity.x, gravity.y, gravity.z);
-    bePhysicsWorld = new rp3d::DynamicsWorld(*worldGravity);
+    worldSettings = settings.beSettings;
+    worldGravity = rp3d::Vector3(gravity.x, gravity.y, gravity.z);
+    bePhysicsWorld = new rp3d::DynamicsWorld(worldGravity, settings.beSettings);
 }
 
 BeDynamicWorld::~BeDynamicWorld(){
-    delete worldGravity;
     delete bePhysicsWorld;
 }
 
+rp3d::DynamicsWorld *BeDynamicWorld::GetWorld() {
+    return bePhysicsWorld;
+}
+
 glm::vec3 BeDynamicWorld::GetGravity() {
-    return glm::vec3(worldGravity->x, worldGravity->y, worldGravity->z);
+    return glm::vec3(worldGravity.x, worldGravity.y, worldGravity.z);
 }
 
 bool BeDynamicWorld::TestAABBOverlap(rp3d::RigidBody *body1, rp3d::RigidBody *body2) {
-
-
     return bePhysicsWorld->testAABBOverlap(body1, body2);
 }
 
-
 bool BeDynamicWorld::TestAABBOverlap(BeAbstractPhysics *target1,
                                        BeAbstractPhysics *target2) {
-
     return bePhysicsWorld->testAABBOverlap(target1->GetBody(), target2->GetBody());
 }
 
@@ -39,13 +37,11 @@ bool BeDynamicWorld::TestOverLap(rp3d::RigidBody *body1, rp3d::RigidBody *body2)
 }
 
 bool BeDynamicWorld::TestOverLap(BeAbstractPhysics *target1, BeAbstractPhysics *target2) {
-
     return bePhysicsWorld->testOverlap(target1->GetBody(), target2->GetBody());
 }
 
 rp3d::RigidBody *BeDynamicWorld::CreateRigidBody(rp3d::Transform transform) {
     rp3d::RigidBody *body = bePhysicsWorld->createRigidBody(transform);
-
     return body;
 }
 
@@ -82,6 +78,7 @@ void BeDynamicWorld::SetNumIterationVelocitySolver(int iterations) {
     bePhysicsWorld->setNbIterationsVelocitySolver(iterations);
 }
 
-void BeDynamicWorld::Update(float timeStep) {
+void BeDynamicWorld::Update(double timeStep) {
     bePhysicsWorld->update(timeStep);
 }
+

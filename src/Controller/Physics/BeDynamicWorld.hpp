@@ -31,6 +31,12 @@ class BeDynamicWorld {
     ~BeDynamicWorld();
 
     /**
+     * @brief getter for world
+     * @return dynamic world pointer
+     */
+    rp3d::DynamicsWorld *GetWorld();
+
+    /**
      *  @brief Getter for gravity
      *  @param
      *  @return gravity for the world
@@ -131,10 +137,14 @@ class BeDynamicWorld {
      */
     void SetNumIterationVelocitySolver(int iterations);
 
-    void Update(float timeStep);
+    /**
+     * @brief updates the physics world
+     * @param timeStep a slice of time
+     */
+    void Update(double timeStep);
 
   private:
-    BeSettings worldSettings;
-    rp3d::Vector3 *worldGravity;
+    rp3d::WorldSettings worldSettings;
+    rp3d::Vector3 worldGravity;
     rp3d::DynamicsWorld *bePhysicsWorld;
 };

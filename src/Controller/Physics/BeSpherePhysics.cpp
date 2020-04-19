@@ -31,7 +31,7 @@ void BeSpherePhysics::SetTransform(glm::vec3 position, glm::quat rotation) {
 }
 
 BeTransform BeSpherePhysics::GetTransform() {
-    BeTransform result(transform);
+    BeTransform result(body->getTransform());
     return result;
 }
 
@@ -47,7 +47,15 @@ void BeSpherePhysics::SetType(BeBodyType type) {
     body->setType(type);
 }
 
-BeMaterial *BeSpherePhysics::GetMaterial() {
-    BeMaterial *result = new BeMaterial(body->getMaterial());
+BeMaterial BeSpherePhysics::GetMaterial() {
+    BeMaterial result(body->getMaterial());
     return result;
+}
+
+bool BeSpherePhysics::IsSleepEnabled() {
+    return body->isAllowedToSleep();
+}
+
+void BeSpherePhysics::SetSleep(bool toggle) {
+    body->setIsAllowedToSleep(toggle);
 }

@@ -35,7 +35,7 @@ void BeCapsuleBody::SetTransform(glm::vec3 position, glm::quat rotation) {
 }
 
 BeTransform *BeCapsuleBody::GetTransform() {
-    BeTransform *result = new BeTransform(transform);
+    BeTransform *result = new BeTransform(body->getTransform());
     return result;
 }
 

@@ -83,7 +83,7 @@ auto Engine::run() -> void {
         // to delete for testing physics
         factor = acc / timeStep;
         std::cout << "factor: " << factor << std::endl;
-        //engine.gameStack.getTop()->updatePhysics(factor);
+        engine.gameStack.getTop()->updatePhysics(factor);
 
         engine.gameStack.getTop()->display();
     }

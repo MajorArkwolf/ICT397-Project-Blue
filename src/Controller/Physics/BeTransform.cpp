@@ -80,9 +80,13 @@ BeTransform BeTransform::GetInverse() {
 }
 
 BeTransform &BeTransform::operator=(const BeTransform &rhs) {
-    position    = rhs.position;
-    orientation = rhs.orientation;
-    transform   = rhs.transform;
+
+    if(this != &rhs)
+    {
+        position    = rhs.position;
+        orientation = rhs.orientation;
+        transform   = rhs.transform;
+    }
     return *this;
 }
 

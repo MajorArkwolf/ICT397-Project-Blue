@@ -33,7 +33,7 @@ void BeCapsulePhysics::SetTransform(glm::vec3 position, glm::quat rotation) {
 }
 
 BeTransform BeCapsulePhysics::GetTransform() {
-    BeTransform result(transform);
+    BeTransform result(body->getTransform());
     return result;
 }
 
@@ -49,7 +49,15 @@ void BeCapsulePhysics::SetType(BeBodyType type) {
     body->setType(type);
 }
 
-BeMaterial *BeCapsulePhysics::GetMaterial() {
-    BeMaterial *result = new BeMaterial(body->getMaterial());
+BeMaterial BeCapsulePhysics::GetMaterial() {
+    BeMaterial result(body->getMaterial());
     return result;
+}
+
+bool BeCapsulePhysics::IsSleepEnabled() {
+    return body->isAllowedToSleep();
+}
+
+void BeCapsulePhysics::SetSleep(bool toggle) {
+    body->setIsAllowedToSleep(toggle);
 }

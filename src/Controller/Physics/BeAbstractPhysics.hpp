@@ -58,7 +58,19 @@ class BeAbstractPhysics{
      * @brief get material to set bounciness and other attributes
      * @return BeMaterial
      */
-    virtual BeMaterial *GetMaterial() = 0;
+    virtual BeMaterial GetMaterial() = 0;
+
+    /**
+     * @brief checks rest state
+     * @return boolean on sleep state
+     */
+    virtual bool IsSleepEnabled() = 0;
+
+    /**
+     * @brief sets sleep state
+     * @param toggle sets sleep boolean
+     */
+    virtual void SetSleep(bool toggle) = 0;
 
   protected:
     rp3d::bodyindex bodyId;

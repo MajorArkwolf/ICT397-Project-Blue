@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <reactphysics3d.h>
 
 #include "Controller/Engine/BaseState.hpp"
 #include "View/Renderer/Renderer.hpp"
@@ -56,11 +57,10 @@ private:
     BeAbstractPhysicsFactory *factory;
     BeAbstractPhysicsLibrary *physics;
     BeAbstractPhysics *cam;
-    BeAbstractPhysics *body;
+    //BeAbstractPhysics *body;
     BeAbstractPhysics *testy;
     BeAbstractPhysics *testx;
     std::vector <BeAbstractPhysics *> bodies;
 
     BeTransform previousTransform;
-
 };

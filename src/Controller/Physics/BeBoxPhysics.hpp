@@ -71,7 +71,19 @@ class BeBoxPhysics: public BeAbstractPhysics {
      * @brief get material to set bounciness and other attributes
      * @return BeMaterial
      */
-    BeMaterial *GetMaterial() override;
+    BeMaterial GetMaterial() override;
+
+    /**
+     * @brief checks rest state
+     * @return boolean on sleep state
+     */
+    bool IsSleepEnabled() override;
+
+    /**
+     * @brief sets sleep state
+     * @param toggle sets sleep boolean
+     */
+    void SetSleep(bool toggle) override;
 
   private:
     rp3d::BoxShape *shape;

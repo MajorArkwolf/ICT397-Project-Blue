@@ -1,31 +1,27 @@
 #include "BeMaterial.hpp"
 
-BeMaterial::BeMaterial(){
-    material = nullptr;
+BeMaterial::BeMaterial(const BeMaterial &mat) : material(mat.material) {
+
 }
 
-BeMaterial::BeMaterial(BeMaterial *mat) {
-    material = mat->GetMaterial();
+BeMaterial::BeMaterial(const rp3d::Material &mat) : material(mat){
+
 }
 
-BeMaterial::BeMaterial(rp3d::Material mat) {
-    material = &mat;
-}
-
-void BeMaterial::SetMaterial(rp3d::Material *target){
+void BeMaterial::SetMaterial(rp3d::Material target){
     material = target;
 }
 
 BeMaterial::~BeMaterial() {
-    delete material;
+
 }
 
-rp3d::Material *BeMaterial::GetMaterial() const {
+rp3d::Material BeMaterial::GetMaterial() const {
     return material;
 }
 
 void BeMaterial::SetBounciness(float bounciness) {
-    material->setBounciness(bounciness);
+    material.setBounciness(bounciness);
 }
 
 BeMaterial &BeMaterial::operator=(const BeMaterial &rhs) {
