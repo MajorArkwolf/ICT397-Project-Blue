@@ -42,11 +42,12 @@ void PrototypeScene::Init() {
 	camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
 	// Temporarily hard-code the external Lua script file while a proper implementation of Lua integration is on hold
-	//GameObj_Manager::lua_init();
-	//luaL_dofile(LuaManager::getInstance().getLuaState(), "res/scripts/gameobjsSet.lua");
-	auto tempGameObj = Controller::Factory::get().GameObject(1u);
-	GameObj_Manager::insert(tempGameObj);
-	tempGameObj.get()->gameObj_setModel("res/model/player_male.obj");
+	GameObj_Manager::init();
+	luaL_dofile(LuaManager::getInstance().getLuaState(), "res/scripts/gameobjsSet.lua");
+	int errorOut = lua_pcall(LuaManager::getInstance().getLuaState(), 0, 0, 0);
+	std::cout << "stack = " << lua_gettop(LuaManager::getInstance().getLuaState()) << "\n";
+	std::cout << "error = " << errorOut << "\n";
+	std::cout << "message = " << lua_tostring(LuaManager::getInstance().getLuaState(), -1) << "\n";
 }
 
 void PrototypeScene::handleWindowEvent() {

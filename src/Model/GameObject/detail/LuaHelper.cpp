@@ -1,6 +1,11 @@
 	/// Declaration Include
 #include "../LuaHelper.hpp"
 
+GameObj_LuaHelper::GameObj_LuaHelper() {
+	// Set an invalid target GameObject
+	gameObj_pointer = nullptr;
+}
+
 GameObj_LuaHelper::GameObj_LuaHelper(std::shared_ptr<GameObj_Base> target) {
 	// Store the target GameObject
 	gameObj_pointer = target;

@@ -11,8 +11,8 @@
 
 class GameObj_LuaHelper {
 public:
-		//! Use of the default constructor is not allowed
-	GameObj_LuaHelper() = delete;
+		//! Default constructor, sets the target to nullptr
+	GameObj_LuaHelper();
 
 		/*!
 		 * @brief Lua GameObject Helper class constructor.

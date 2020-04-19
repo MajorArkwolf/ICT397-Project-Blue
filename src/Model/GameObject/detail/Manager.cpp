@@ -28,11 +28,17 @@ std::shared_ptr<GameObj_Base> GameObj_Manager::get(BlueEngine::ID identifier)
 }
 
 void GameObj_Manager::addAllToDraw() {
+	//TODO: Remove this debugging code
+	std::cout << "All managed GameObjects:\n";
+	
 	// Process all of the stored GameObjects
 	for (auto i = managedGameObjects.begin(); i != managedGameObjects.end(); ++i)
 	{
 		// Call the addToDraw function
-		i->second.get()->gameObj_addToDraw();
+		//i->second.get()->gameObj_addToDraw();
+
+		//debugging
+		std::cout << "GameObject " << i->second.get()->gameObj_getUniqueID() << ": Model " << i->second.get()->gameObj_getModelID() << " - \"" << i->second.get()->gameObj_getModelPath() << "\"\n";
 	}
 }
 
@@ -67,16 +73,17 @@ GameObj_LuaHelper GameObj_Manager::lua_get(BlueEngine::ID identifier) {
 	return GameObj_LuaHelper(get(identifier));
 }
 
-void GameObj_Manager::lua_init() {
+void GameObj_Manager::init() {
 	// Prevent registering multiple times
 	static bool is_registered = false;
 	if (is_registered)
 		return;
 
 	// Register the LuaHelper class
-	auto vm = LuaManager::getInstance().getLuaState();
-	luabridge::getGlobalNamespace(vm)
+	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
 		.beginClass<GameObj_LuaHelper>("GameObject")
+			.addConstructor<void(*)()>()
+			.addFunction("isValid", &GameObj_LuaHelper::gameObj_isValid)
 			.addFunction("getUniqueID", &GameObj_LuaHelper::gameObj_getUniqueID)
 			.addFunction("getTypeID", &GameObj_LuaHelper::gameObj_getTypeID)
 			.addFunction("setModel", &GameObj_LuaHelper::gameObj_setModel)
@@ -99,13 +106,13 @@ void GameObj_Manager::lua_init() {
 		.endClass();
 
 	// Register the Manager class
-	luabridge::getGlobalNamespace(vm)
-		.beginClass<GameObj_Manager>("GameObject_Manager")
-			.addStaticFunction("add", &GameObj_Manager::lua_add)
-			.addStaticFunction("get", &GameObj_Manager::lua_get)
-			.addStaticFunction("remove", &GameObj_Manager::remove)
-			.addStaticFunction("clear", &GameObj_Manager::clear)
-		.endClass();
+	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
+		.beginNamespace("GameObject_Manager")
+			.addFunction("add", &GameObj_Manager::lua_add)
+			.addFunction("get", &GameObj_Manager::lua_get)
+			.addFunction("remove", &GameObj_Manager::remove)
+			.addFunction("clear", &GameObj_Manager::clear)
+		.endNamespace();
 
 	// Prevent the registration with lua occuring multiple times
 	is_registered = true;

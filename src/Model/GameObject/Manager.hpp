@@ -13,9 +13,9 @@ class GameObj_Manager {
 public:
 		/*!
 		 * @brief Registers the GameObject Manager and LuaHelper classes into the engine's Lua VM.
-		 * @note Only performs the registration once, even if called multiple times.
+		 * @note Only performs the initialisation once, even if called multiple times.
 		 */
-	static void lua_init();
+	static void init();
 
 		/*!
 		 * @brief Adds a new GameObject to be managed.
