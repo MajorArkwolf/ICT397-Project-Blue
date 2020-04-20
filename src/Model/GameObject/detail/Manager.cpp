@@ -34,11 +34,8 @@ void GameObj_Manager::addAllToDraw() {
 	// Process all of the stored GameObjects
 	for (auto i = managedGameObjects.begin(); i != managedGameObjects.end(); ++i)
 	{
-		// Call the addToDraw function
-		//i->second.get()->gameObj_addToDraw();
-
-		//debugging
-		std::cout << "GameObject " << i->second.get()->gameObj_getUniqueID() << ": Model " << i->second.get()->gameObj_getModelID() << " - \"" << i->second.get()->gameObj_getModelPath() << "\"\n";
+		// Call the currently accessed GameObject's addToDraw function
+		i->second.get()->gameObj_addToDraw();
 	}
 }
 
