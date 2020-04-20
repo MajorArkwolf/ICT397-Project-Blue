@@ -24,12 +24,10 @@ public:
 		 * @param [in] path The path to a target external model file for this GameObject.
 		 * @param [in] physBody The identifier for the physical body for this GameObject.
 		 * @param [in] position The position of the GameObject in the 3D environment.
-		 * @param [in] rotateHori The GameObject's rotation, in degrees, along the Y axis.
-		 * @param [in] rotateVert The GameObject's rotation, in degrees, along the X axis.
-		 * @param [in] rotateTilt The GameObject's rotation, in degrees, along the Z axis.
-		 * @see GameObj_Base
+		 * @param [in] rotation The GameObject's rotation, in degrees, for the pitch, yaw, and roll.
+		 * @param [in] scale The scale of the GameObject for its x, y, and z co-ordinates.
 		 */
-	GameObj_Static(std::string path, unsigned long int physBody, glm::vec3 position, float rotateHori, float rotateVert, float rotateTilt);
+	GameObj_Static(std::string path, unsigned long int physBody, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
 
 		//! GameObj_Static destructor
 	~GameObj_Static();
@@ -49,7 +47,6 @@ public:
 		//! Adds the GameObject to the draw queue.
 	void gameObj_addToDraw();
 
-private:
 		//! Stores the GameObject's shader for use in rendering.
 	std::shared_ptr<Shader> gameObj_shader = nullptr;
 

@@ -28,9 +28,6 @@ std::shared_ptr<GameObj_Base> GameObj_Manager::get(BlueEngine::ID identifier)
 }
 
 void GameObj_Manager::addAllToDraw() {
-	//TODO: Remove this debugging code
-	std::cout << "All managed GameObjects:\n";
-	
 	// Process all of the stored GameObjects
 	for (auto i = managedGameObjects.begin(); i != managedGameObjects.end(); ++i)
 	{
@@ -86,17 +83,17 @@ void GameObj_Manager::init() {
 			.addFunction("getModelID", &GameObj_LuaHelper::gameObj_getModelID)
 			.addFunction("getModelPath", &GameObj_LuaHelper::gameObj_getModelPath)
 			.addFunction("getPos_X", &GameObj_LuaHelper::gameObj_getPos_X)
-			.addFunction("setPos_X", &GameObj_LuaHelper::gameObj_setPos_X)
 			.addFunction("getPos_Y", &GameObj_LuaHelper::gameObj_getPos_Y)
-			.addFunction("setPos_Y", &GameObj_LuaHelper::gameObj_setPos_Y)
 			.addFunction("getPos_Z", &GameObj_LuaHelper::gameObj_getPos_Z)
-			.addFunction("setPos_Z", &GameObj_LuaHelper::gameObj_setPos_Z)
-			.addFunction("getYaw", &GameObj_LuaHelper::gameObj_getYaw)
-			.addFunction("setYaw", &GameObj_LuaHelper::gameObj_setYaw)
-			.addFunction("getPitch", &GameObj_LuaHelper::gameObj_getPitch)
-			.addFunction("setPitch", &GameObj_LuaHelper::gameObj_setPitch)
-			.addFunction("getRoll", &GameObj_LuaHelper::gameObj_getRoll)
-			.addFunction("setRoll", &GameObj_LuaHelper::gameObj_setRoll)
+			.addFunction("setPos", &GameObj_LuaHelper::gameObj_setPos)
+			.addFunction("getRotation_yaw", &GameObj_LuaHelper::gameObj_getRotation_yaw)
+			.addFunction("getRotation_pitch", &GameObj_LuaHelper::gameObj_getRotation_pitch)
+			.addFunction("getRotation_roll", &GameObj_LuaHelper::gameObj_getRotation_roll)
+			.addFunction("getScale_X", &GameObj_LuaHelper::gameObj_getScale_X)
+			.addFunction("getScale_Y", &GameObj_LuaHelper::gameObj_getScale_Y)
+			.addFunction("getScale_Z", &GameObj_LuaHelper::gameObj_getScale_Z)
+			.addFunction("setScale", &GameObj_LuaHelper::gameObj_setScale)
+			.addFunction("setRotation", &GameObj_LuaHelper::gameObj_setRotation)
 			.addFunction("getPhysBody", &GameObj_LuaHelper::gameObj_getPhysBody)
 			.addFunction("setPhysBody", &GameObj_LuaHelper::gameObj_setPhysBody)
 		.endClass();

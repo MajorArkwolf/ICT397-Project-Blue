@@ -60,15 +60,6 @@ float GameObj_LuaHelper::gameObj_getPos_X() {
 	return gameObj_pointer.get()->gameObj_pos[0];
 }
 
-void GameObj_LuaHelper::gameObj_setPos_X(float posX) {
-	// Catch invalid state of the LuaHelper
-	if (!gameObj_isValid())
-		return;
-
-	// Perform the operation
-	gameObj_pointer.get()->gameObj_pos[0] = posX;
-}
-
 float GameObj_LuaHelper::gameObj_getPos_Y() {
 	// Catch invalid state of the LuaHelper
 	if (!gameObj_isValid())
@@ -76,15 +67,6 @@ float GameObj_LuaHelper::gameObj_getPos_Y() {
 
 	// Perform the operation
 	return gameObj_pointer.get()->gameObj_pos[1];
-}
-
-void GameObj_LuaHelper::gameObj_setPos_Y(float posY) {
-	// Catch invalid state of the LuaHelper
-	if (!gameObj_isValid())
-		return;
-
-	// Perform the operation
-	gameObj_pointer.get()->gameObj_pos[1] = posY;
 }
 
 float GameObj_LuaHelper::gameObj_getPos_Z() {
@@ -96,67 +78,91 @@ float GameObj_LuaHelper::gameObj_getPos_Z() {
 	return gameObj_pointer.get()->gameObj_pos[2];
 }
 
-void GameObj_LuaHelper::gameObj_setPos_Z(float posZ) {
+void GameObj_LuaHelper::gameObj_setPos(float posX, float posY, float posZ) {
 	// Catch invalid state of the LuaHelper
 	if (!gameObj_isValid())
 		return;
 
 	// Perform the operation
+	gameObj_pointer.get()->gameObj_pos[0] = posX;
+	gameObj_pointer.get()->gameObj_pos[1] = posY;
 	gameObj_pointer.get()->gameObj_pos[2] = posZ;
 }
 
-float GameObj_LuaHelper::gameObj_getYaw() {
+float GameObj_LuaHelper::gameObj_getRotation_yaw() {
 	// Catch invalid state of the LuaHelper
 	if (!gameObj_isValid())
 		throw std::string("Cannot provide return as GameObj_LuaHelper is in an invalid state!");
 
 	// Perform the operation
-	return gameObj_pointer.get()->gameObj_yaw;
+	return gameObj_pointer.get()->gameObj_rotation[0];
 }
 
-void GameObj_LuaHelper::gameObj_setYaw(float yaw) {
-	// Catch invalid state of the LuaHelper
-	if (!gameObj_isValid())
-		return;
-
-	// Perform the operation
-	gameObj_pointer.get()->gameObj_yaw = yaw;
-}
-
-float GameObj_LuaHelper::gameObj_getPitch() {
+float GameObj_LuaHelper::gameObj_getRotation_pitch() {
 	// Catch invalid state of the LuaHelper
 	if (!gameObj_isValid())
 		throw std::string("Cannot provide return as GameObj_LuaHelper is in an invalid state!");
 
 	// Perform the operation
-	return gameObj_pointer.get()->gameObj_pitch;
+	return gameObj_pointer.get()->gameObj_rotation[1];
 }
 
-void GameObj_LuaHelper::gameObj_setPitch(float pitch) {
-	// Catch invalid state of the LuaHelper
-	if (!gameObj_isValid())
-		return;
-
-	// Perform the operation
-	gameObj_pointer.get()->gameObj_pitch = pitch;
-}
-
-float GameObj_LuaHelper::gameObj_getRoll() {
+float GameObj_LuaHelper::gameObj_getRotation_roll() {
 	// Catch invalid state of the LuaHelper
 	if (!gameObj_isValid())
 		throw std::string("Cannot provide return as GameObj_LuaHelper is in an invalid state!");
 
 	// Perform the operation
-	return gameObj_pointer.get()->gameObj_roll;
+	return gameObj_pointer.get()->gameObj_rotation[2];
 }
 
-void GameObj_LuaHelper::gameObj_setRoll(float roll) {
+void GameObj_LuaHelper::gameObj_setRotation(float yaw, float pitch, float roll) {
 	// Catch invalid state of the LuaHelper
 	if (!gameObj_isValid())
 		return;
 
 	// Perform the operation
-	gameObj_pointer.get()->gameObj_roll = roll;
+	gameObj_pointer.get()->gameObj_rotation[0] = yaw;
+	gameObj_pointer.get()->gameObj_rotation[1] = pitch;
+	gameObj_pointer.get()->gameObj_rotation[2] = roll;
+}
+
+float GameObj_LuaHelper::gameObj_getScale_X() {
+	// Catch invalid state of the LuaHelper
+	if (!gameObj_isValid())
+		throw std::string("Cannot provide return as GameObj_LuaHelper is in an invalid state!");
+
+	// Perform the operation
+	return gameObj_pointer.get()->gameObj_scale[0];
+}
+
+float GameObj_LuaHelper::gameObj_getScale_Y() {
+	// Catch invalid state of the LuaHelper
+	if (!gameObj_isValid())
+		throw std::string("Cannot provide return as GameObj_LuaHelper is in an invalid state!");
+
+	// Perform the operation
+	return gameObj_pointer.get()->gameObj_scale[1];
+}
+
+float GameObj_LuaHelper::gameObj_getScale_Z() {
+	// Catch invalid state of the LuaHelper
+	if (!gameObj_isValid())
+		throw std::string("Cannot provide return as GameObj_LuaHelper is in an invalid state!");
+
+	// Perform the operation
+	return gameObj_pointer.get()->gameObj_scale[2];
+}
+
+void GameObj_LuaHelper::gameObj_setScale(float scaleX, float scaleY, float scaleZ) {
+	// Catch invalid state of the LuaHelper
+	if (!gameObj_isValid())
+		return;
+
+	// Perform the operation
+	gameObj_pointer.get()->gameObj_scale[0] = scaleX;
+	gameObj_pointer.get()->gameObj_scale[1] = scaleY;
+	gameObj_pointer.get()->gameObj_scale[2] = scaleZ;
 }
 
 long unsigned int GameObj_LuaHelper::gameObj_getPhysBody() {

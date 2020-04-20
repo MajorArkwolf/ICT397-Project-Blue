@@ -63,25 +63,11 @@ public:
 	float gameObj_getPos_X();
 
 		/*!
-		 * @brief Sets the value of the x-coordinate for the GameObject's position in 3D space.
-		 * @param [in] posX The GameObject's new position x-coordinate value.
-		 * @warning Will silently fail if the LuaHelper is in an invalid state!
-		 */
-	void gameObj_setPos_X(float posX);
-
-		/*!
 		 * @brief Gathers a copy of the y-coordinate for the GameObject's position in 3D space.
 		 * @return A copy of the GameObject's gameObj_pos y-coordinate.
 		 * @exception std::string Cannot provide return as GameObj_LuaHelper is in an invalid state!
 		 */
 	float gameObj_getPos_Y();
-
-		/*!
-		 * @brief Sets the value of the y-coordinate for the GameObject's position in 3D space.
-		 * @param [in] posY The GameObject's new position y-coordinate value.
-		 * @warning Will silently fail if the LuaHelper is in an invalid state!
-		 */
-	void gameObj_setPos_Y(float posY);
 
 		/*!
 		 * @brief Gathers a copy of the z-coordinate for the GameObject's position in 3D space.
@@ -91,53 +77,73 @@ public:
 	float gameObj_getPos_Z();
 
 		/*!
-		 * @brief Sets the value of the z-coordinate for the GameObject's position in 3D space.
-		 * @param [in] posZ The GameObject's new position z-coordinate value.
+		 * @brief Sets the GameObject's position in 3D space.
+		 * @param [in] posX The GameObject's new position along the x-coordinate.
+		 * @param [in] posY The GameObject's new position along the y-coordinate.
+		 * @param [in] posZ The GameObject's new position along the z-coordinate.
 		 * @warning Will silently fail if the LuaHelper is in an invalid state!
 		 */
-	void gameObj_setPos_Z(float posZ);
+	void gameObj_setPos(float posX, float posY, float posZ);
 
 		/*!
-		 * @brief Gathers a copy of the yaw radians for the GameObject's rotation.
-		 * @return A copy of the GameObject's gameObj_yaw value.
+		 * @brief Gathers a copy of the yaw (in degrees) for the GameObject's rotation.
+		 * @return A copy of the GameObject's gameObj_rotation[0] value.
 		 * @exception std::string Cannot provide return as GameObj_LuaHelper is in an invalid state!
 		 */
-	float gameObj_getYaw();
+	float gameObj_getRotation_yaw();
 
 		/*!
-		 * @brief Sets the value of the yaw radians for the GameObject's rotation.
-		 * @param [in] yaw The GameObject's new position gameObj_yaw value.
-		 * @warning Will silently fail if the LuaHelper is in an invalid state!
-		 */
-	void gameObj_setYaw(float yaw);
-
-		/*!
-		 * @brief Gathers a copy of the pitch radians for the GameObject's rotation.
-		 * @return A copy of the GameObject's gameObj_pitch value.
+		 * @brief Gathers a copy of the pitch (in degrees) for the GameObject's rotation.
+		 * @return A copy of the GameObject's gameObj_rotation[1] value.
 		 * @exception std::string Cannot provide return as GameObj_LuaHelper is in an invalid state!
 		 */
-	float gameObj_getPitch();
+	float gameObj_getRotation_pitch();
 
 		/*!
-		 * @brief Sets the value of the pitch radians for the GameObject's rotation.
-		 * @param [in] pitch The GameObject's new position gameObj_pitch value.
-		 * @warning Will silently fail if the LuaHelper is in an invalid state!
-		 */
-	void gameObj_setPitch(float pitch);
-
-		/*!
-		 * @brief Gathers a copy of the roll radians for the GameObject's rotation.
-		 * @return A copy of the GameObject's gameObj_roll value.
+		 * @brief Gathers a copy of the roll (in degrees) for the GameObject's rotation.
+		 * @return A copy of the GameObject's gameObj_rotation[2] value.
 		 * @exception std::string Cannot provide return as GameObj_LuaHelper is in an invalid state!
 		 */
-	float gameObj_getRoll();
+	float gameObj_getRotation_roll();
 
 		/*!
-		 * @brief Sets the value of the roll radians for the GameObject's rotation.
-		 * @param [in] roll The GameObject's new position gameObj_roll value.
+		 * @brief Sets the GameObject's rotation properties.
+		 * @param [in] yaw The new yaw rotation value (in degrees).
+		 * @param [in] pitch The new pitch rotation value (in degrees).
+		 * @param [in] roll The new roll rotation value (in degrees).
 		 * @warning Will silently fail if the LuaHelper is in an invalid state!
 		 */
-	void gameObj_setRoll(float roll);
+	void gameObj_setRotation(float yaw, float pitch, float roll);
+
+		/*!
+		 * @brief Gathers a copy of the GameObject's scale along the x axis.
+		 * @return A copy of the GameObject's gameObj_scale[0] value.
+		 * @exception std::string Cannot provide return as GameObj_LuaHelper is in an invalid state!
+		 */
+	float gameObj_getScale_X();
+
+		/*!
+		 * @brief Gathers a copy of the GameObject's scale along the y axis.
+		 * @return A copy of the GameObject's gameObj_scale[1] value.
+		 * @exception std::string Cannot provide return as GameObj_LuaHelper is in an invalid state!
+		 */
+	float gameObj_getScale_Y();
+
+		/*!
+		 * @brief Gathers a copy of the GameObject's scale along the z axis.
+		 * @return A copy of the GameObject's gameObj_scale[2] value.
+		 * @exception std::string Cannot provide return as GameObj_LuaHelper is in an invalid state!
+		 */
+	float gameObj_getScale_Z();
+
+		/*!
+		 * @brief Sets the GameObject's scale across its 3 dimensions.
+		 * @param [in] scaleX The GameObject's new scale along the x-coordinate.
+		 * @param [in] scaleY The GameObject's new scale along the y-coordinate.
+		 * @param [in] scaleZ The GameObject's new scale along the z-coordinate.
+		 * @warning Will silently fail if the LuaHelper is in an invalid state!
+		 */
+	void gameObj_setScale(float scaleX, float scaleY, float scaleZ);
 
 		/*!
 		 * @brief Gathers a copy of the GameObject's physics body identifier.
