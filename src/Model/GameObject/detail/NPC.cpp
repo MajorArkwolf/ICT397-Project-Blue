@@ -45,10 +45,10 @@ void GameObj_NPC::gameObj_addToDraw() {
     std::function e = [&](const glm::mat4 &projection, const glm::mat4 &view, const glm::dvec3 &cameraPos) {
         this->Draw(projection, view, cameraPos);
     };
-    View::Data::DrawItem di;
-    di.drawPointer = e;
-    di.pos = gameObj_pos;
-    renderer.AddToQue(di);
+    View::Data::DrawItem drawItem = {};
+    drawItem.drawPointer = e;
+    drawItem.pos = gameObj_pos;
+    renderer.AddToQue(drawItem);
 }
 
 void GameObj_NPC::Draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos) {
