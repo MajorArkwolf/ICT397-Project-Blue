@@ -62,10 +62,15 @@ void Controller::TerrainManager::Update(glm::ivec2 key) {
 	if (abs(this->lastPos.first - updateKey.first) > reloadDistance || abs(this->lastPos.second - updateKey.second) > reloadDistance ) {
 		drawCircle.clear();
 		this->lastPos = updateKey;
-		int xlow = updateKey.first - radSize;
-		int zlow = updateKey.second - radSize;
-		int xhigh = updateKey.first + radSize;
-		int zhigh = updateKey.second + radSize;
+		auto max = static_cast<int>(maxKey);
+//		int xlow = updateKey.first - radSize;
+//		int zlow = updateKey.second - radSize;
+//		int xhigh = updateKey.first + radSize;
+//		int zhigh = updateKey.second + radSize;
+        int xlow = -1 * max;
+		int zlow = -1 * max;
+		int xhigh = max;
+		int zhigh = max;
 		auto updatedRadSize = static_cast<float>(radSize);
 
 		for (int x = xlow; x <= xhigh; ++x) {
@@ -82,7 +87,7 @@ void Controller::TerrainManager::Update(glm::ivec2 key) {
 							drawCircle.push_back(&e->level1);
 						}
 						else {
-							drawCircle.push_back(&map.at(newKey)->level2);
+							drawCircle.push_back(&map.at(newKey)->level1);
 						}
 					} else {
                         if(map.find(newKey) != map.end()) {
