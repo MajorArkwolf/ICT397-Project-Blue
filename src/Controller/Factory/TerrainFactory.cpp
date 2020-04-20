@@ -327,10 +327,9 @@ int Controller::TerrainFactory::getHeight() const {
     return height;
 }
 
-void Controller::TerrainFactory::ExportHeightMap(float *heightMap) {
+float *Controller::TerrainFactory::ExportHeightMap() {
     size_t maxIndex = (width + 1) * (height + 1);
-    delete heightMap;
-    heightMap = new float[maxIndex];
+    auto *heightMap = new float[maxIndex];
     size_t count = 0;
     for (auto &x : fValues) {
         for (auto & y : x) {
@@ -343,6 +342,7 @@ void Controller::TerrainFactory::ExportHeightMap(float *heightMap) {
         }
     }
     assert(count == maxIndex);
+    return heightMap;
 }
 
 void Controller::TerrainFactory::GenerateTerrainL2(Model::TerrainModel &newTerrain, const Blue::Key &key) {
