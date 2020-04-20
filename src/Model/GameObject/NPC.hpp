@@ -49,7 +49,7 @@ public:
 		//! Adds the GameObject to the draw queue.
 	void gameObj_addToDraw();
 
-private:
+public:
 	//! Stores the GameObject's shader for use in rendering.
 	std::shared_ptr<Shader> gameObj_shader = nullptr;
 

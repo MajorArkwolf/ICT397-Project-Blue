@@ -107,7 +107,7 @@ public:
 		 */
 	long unsigned int gameObj_physBody;
 
-private:
+protected:
 		/*!
 		 * @brief Stores the identifier of the model for the GameObject.
 		 * @note Defaults to the lowest possible value for the ID type.
