@@ -148,5 +148,11 @@ namespace Controller {
         void
         GenerateVerticies(vector<Blue::Vertex> &terrain, unsigned int xsize, unsigned int zsize, unsigned int xstart,
                           unsigned int zstart, unsigned int increment);
+
+        void StitchSeemedVerticies(Model::TerrainModel &newTerrain, const Blue::Key& key);
+
+        float GetDetailAt(const Blue::Key &key, int xcord, int zcord);
+
+        void AddDetailV2(Model::TerrainModel &newTerrain, const Blue::Key& key);
     };
 }

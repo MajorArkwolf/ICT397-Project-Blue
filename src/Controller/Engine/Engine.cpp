@@ -40,6 +40,7 @@ auto Engine::run() -> void {
     // State state;
     //glfwFocusWindow(engine.window);
     engine.renderer.Init();
+
     while (engine.getIsRunning()) {
         double newTime   = glfwGetTime();
         double frameTime = newTime - currentTime;
