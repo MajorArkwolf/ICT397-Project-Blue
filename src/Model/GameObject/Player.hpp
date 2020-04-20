@@ -1,9 +1,12 @@
 #pragma once
 
-	/// System Dependencies
+/// System Dependencies
 #include <map>
+#include <string>
+#include <memory>
 
 	/// Internal Dependencies
+#include "View/Renderer/Shader.hpp"
 #include "Base.hpp"
 
 	/*!
@@ -90,4 +93,17 @@ protected:
 		 * @note All player status values are stored as floats.
 		 */
 	std::map<std::string, float> player_statuses;
+
+private:
+		//! Stores the GameObject's shader for use in rendering.
+	std::shared_ptr<Shader> gameObj_shader = nullptr;
+
+		/*!
+		 * @brief The draw call for a GameObj_Player.
+		 * @param [in] projection The rendering projection for rendering.
+		 * @param [in] view The rendering view for rendering.
+		 * @param [in] cameraPos The position of the camera for rendering.
+		 * @note Only used by gameObj_addToDraw()!
+		 */
+	void Draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos);
 };

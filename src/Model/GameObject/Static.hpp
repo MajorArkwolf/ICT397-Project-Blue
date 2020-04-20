@@ -1,6 +1,10 @@
 #pragma once
 
+	/// System Dependencies
+#include <memory>
+
 	/// Internal Dependencies
+#include "View/Renderer/Shader.hpp"
 #include "Base.hpp"
 
 	/*!
@@ -44,4 +48,17 @@ public:
 
 		//! Adds the GameObject to the draw queue.
 	void gameObj_addToDraw();
+
+private:
+		//! Stores the GameObject's shader for use in rendering.
+	std::shared_ptr<Shader> gameObj_shader = nullptr;
+
+		/*!
+		 * @brief The draw call for a GameObj_Static.
+		 * @param [in] projection The rendering projection for rendering.
+		 * @param [in] view The rendering view for rendering.
+		 * @param [in] cameraPos The position of the camera for rendering.
+		 * @note Only used by gameObj_addToDraw()!
+		 */
+	void Draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos);
 };

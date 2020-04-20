@@ -5,7 +5,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 	/// Internal Dependencies
-#include "View/Renderer/Renderer.hpp"
 #include "../GameObject.hpp"
 
 	/// Debugging Dependencies
@@ -13,12 +12,14 @@
 
 GameObj_Static::GameObj_Static()
 	: GameObj_Base() {
-	// GameObj_Static has no unique attributes to initialise yet
+	// Configure the Shader
+	gameObj_shader = std::make_shared<Shader>(Shader("res/shader/vertshader.vs", "res/shader/fragshader.fs"));
 }
 
 GameObj_Static::GameObj_Static(std::string path, unsigned long int physBody, glm::vec3 position, float rotateHori, float rotateVert, float rotateTilt)
 	: GameObj_Base(path, physBody, position, rotateHori, rotateVert, rotateTilt) {
-	// GameObj_Static has no unique attributes to initialise yet
+	// Configure the Shader
+	gameObj_shader = std::make_shared<Shader>(Shader("res/shader/vertshader.vs", "res/shader/fragshader.fs"));
 }
 
 GameObj_Static::~GameObj_Static() {
@@ -36,6 +37,11 @@ GameObjType GameObj_Static::_gameObj_getTypeID() {
 }
 
 void GameObj_Static::gameObj_addToDraw() {
+	// Temporarily removed for the moment, make sure to re-implement this!
+	assert(false);
+}
+
+void GameObj_Static::Draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos) {
 	// Temporarily removed for the moment, make sure to re-implement this!
 	assert(false);
 }

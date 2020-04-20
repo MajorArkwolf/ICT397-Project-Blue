@@ -13,12 +13,14 @@
 
 GameObj_Player::GameObj_Player()
 	: GameObj_Base() {
-	// GameObj_Player has no unique attributes to initialise yet
+	// Configure the Shader
+	gameObj_shader = std::make_shared<Shader>(Shader("res/shader/vertshader.vs", "res/shader/fragshader.fs"));
 }
 
 GameObj_Player::GameObj_Player(std::string path, unsigned long int physBody, glm::vec3 position, float rotateHori, float rotateVert, float rotateTilt)
 	: GameObj_Base(path, physBody, position, rotateHori, rotateVert, rotateTilt) {
-	// GameObj_Player has no unique attributes to initialise yet
+	// Configure the Shader
+	gameObj_shader = std::make_shared<Shader>(Shader("res/shader/vertshader.vs", "res/shader/fragshader.fs"));
 }
 
 GameObj_Player::~GameObj_Player() {
@@ -67,4 +69,9 @@ void GameObj_Player::status_delete(std::string key) {
 void GameObj_Player::status_deleteAll() {
 	// Perform the operation on the map
 	player_statuses.clear();
+}
+
+void GameObj_Player::Draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos) {
+	// Temporarily removed for the moment, make sure to re-implement this!
+	assert(false);
 }
