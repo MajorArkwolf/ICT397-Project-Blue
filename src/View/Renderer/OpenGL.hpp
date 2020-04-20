@@ -90,7 +90,7 @@ namespace View {
 
     private:
         /// Decides if the renderer should be in wireframe mode or not.
-        bool wireframe = true;
+        bool wireframe = false;
         /// Sorts the objects based on the view distance, helps solve alpha issues.
         void sortDrawDistance();
         /// DrawQue of objects that need to be rendered by the renderer.

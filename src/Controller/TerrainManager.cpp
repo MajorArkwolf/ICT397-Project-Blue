@@ -4,9 +4,21 @@
 #include "Factory/GameAssetFactory.hpp"
 Controller::TerrainManager::TerrainManager() {
     id = BlueEngine::IDTracker::getInstance().getID();
+    Init();
 }
 
 void Controller::TerrainManager::Init() {
+    auto &factory = Controller::Factory::get().terrain;
+    int mKey = static_cast<int>(maxKey);
+    for (int key_x = mKey * -1; key_x < mKey; ++key_x) {
+        for (int key_z = mKey * -1; key_z < mKey; ++key_z) {
+            Blue::Key key = Blue::Key(key_x, key_z);
+            map.emplace(key, std::make_shared<ChunkClod>());
+            auto&e = map.at(key);
+            factory.GenerateTerrain(e->level1, key);
+            factory.GenerateTerrainL2(e->level2, key);
+        }
+    }
 }
 
 void Controller::TerrainManager::Draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos) {
@@ -50,10 +62,15 @@ void Controller::TerrainManager::Update(glm::ivec2 key) {
 	if (abs(this->lastPos.first - updateKey.first) > reloadDistance || abs(this->lastPos.second - updateKey.second) > reloadDistance ) {
 		drawCircle.clear();
 		this->lastPos = updateKey;
-		int xlow = updateKey.first - radSize;
-		int zlow = updateKey.second - radSize;
-		int xhigh = updateKey.first + radSize;
-		int zhigh = updateKey.second + radSize;
+		auto max = static_cast<int>(maxKey);
+//		int xlow = updateKey.first - radSize;
+//		int zlow = updateKey.second - radSize;
+//		int xhigh = updateKey.first + radSize;
+//		int zhigh = updateKey.second + radSize;
+        int xlow = -1 * max;
+		int zlow = -1 * max;
+		int xhigh = max;
+		int zhigh = max;
 		auto updatedRadSize = static_cast<float>(radSize);
 
 		for (int x = xlow; x <= xhigh; ++x) {
@@ -63,15 +80,20 @@ void Controller::TerrainManager::Update(glm::ivec2 key) {
 					float distance = Distance(updateKey, newKey);
 					if (updatedRadSize >= distance - 0.2f) {
 						if (map.find(newKey) == map.end()) {
-							map.emplace(newKey, std::make_unique<Model::TerrainModel>());
+							map.emplace(newKey, std::make_shared<ChunkClod>());
 							auto& e = map.at(newKey);
-							factory.GenerateTerrain(*e, newKey);
-							drawCircle.push_back(e);
+							factory.GenerateTerrain(e->level1, newKey);
+							factory.GenerateTerrainL2(e->level2, newKey);
+							drawCircle.push_back(&e->level1);
 						}
 						else {
-							drawCircle.push_back(map.at(newKey));
+							drawCircle.push_back(&map.at(newKey)->level1);
 						}
-					}
+					} else {
+                        if(map.find(newKey) != map.end()) {
+                            drawCircle.push_back(&map.at(newKey)->level2);
+                        }
+                    }
 				}
 			}
 		}
