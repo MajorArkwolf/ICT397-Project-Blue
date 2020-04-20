@@ -82,7 +82,6 @@ void GameObj_Manager::init() {
 	// Register the LuaHelper class
 	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
 		.beginClass<GameObj_LuaHelper>("GameObject")
-			.addConstructor<void(*)()>()
 			.addFunction("isValid", &GameObj_LuaHelper::gameObj_isValid)
 			.addFunction("getUniqueID", &GameObj_LuaHelper::gameObj_getUniqueID)
 			.addFunction("getTypeID", &GameObj_LuaHelper::gameObj_getTypeID)
