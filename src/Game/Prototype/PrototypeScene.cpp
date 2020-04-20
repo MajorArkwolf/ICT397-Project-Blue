@@ -37,7 +37,7 @@ void PrototypeScene::Init() {
 	auto& resManager = ResourceManager::getInstance();
 	//terrain.Init();
 	//camera.Position.y = 100.0;
-	camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
+	camera = Camera(glm::vec3(0.0f, 150.0f, 3.0f));
 	models.emplace_back("res/model/player_male.obj", false);
 
 	//models.push_back(resManager.getModelID("res/model/player_male.obj"));

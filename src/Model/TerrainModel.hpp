@@ -66,14 +66,9 @@ namespace Model {
 		std::shared_ptr<Shader> terrainShader = nullptr;
 		/// OpenGL index locations
 		unsigned int VBO = 0, VAO = 0, EBO = 0;
-		/// Needed for the EBO.
-		unsigned int indicie_size = 0;
 		/// Texture ID's
-		unsigned int snowTextureID = 0;
-		unsigned int grassTextureID = 0;
-		unsigned int dirtTextureID = 0;
-		unsigned int sandTextureID = 0;
-        float snowHeight = 190.0f, dirtHeight = 170, grassHeight = 150, sandHeight = 130;
+		std::vector<unsigned int> textures = {};
+        float snowHeight = 0.0f, dirtHeight = 0.0f, grassHeight = 0.0f, sandHeight = 0.0f;
 		/// Water
 		Water water = {};
 

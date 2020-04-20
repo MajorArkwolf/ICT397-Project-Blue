@@ -54,6 +54,7 @@ namespace Model {
 	private:
 		unsigned int VBO = 0, VAO = 0, EBO = 0;
 		unsigned int waterTextureID = 1;
+        std::vector<unsigned int> textures = {};
 		glm::vec3 scale{};		
 		glm::mat4 model = glm::mat4(1.0f);
 	};

@@ -87,7 +87,7 @@ namespace Controller {
         unsigned int sandTextureID = {};
         /// Water Texture ID
         unsigned int waterTextureID = {};
-        float snowHeight = 190.0f, dirtHeight = 170, grassHeight = 150, sandHeight = 130, waterHeight = 105;
+        float snowHeight = 190.0f, dirtHeight = 150.0f, grassHeight = 128.0f, sandHeight = 108.0f, waterHeight = 105.0f;
         ///Perlin Path
         std::string perlinPath = {};
 

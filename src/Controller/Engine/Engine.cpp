@@ -15,6 +15,8 @@
 
 // Game States
 #include "Game/Prototype/PrototypeScene.hpp"
+#include "Controller/Factory/GameAssetFactory.hpp"
+#include "Controller/Factory/TerrainFactory.hpp"
 
 using BlueEngine::Engine;
 using std::runtime_error;
