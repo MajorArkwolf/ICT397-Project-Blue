@@ -287,38 +287,25 @@ int Controller::TerrainFactory::GetChunkSize() const {
 
 void Controller::TerrainFactory::GenerateNormals(std::vector<Blue::Vertex> &verticies,
                                                  std::vector<unsigned int> indicies) {
-    std::vector<Blue::Faces> faces = {};
-    std::multimap<unsigned int, size_t> setFaces = {};
-
+    // append triangle normals to every vertex
     for (size_t index = 0; index < indicies.size(); index += 3) {
-        faces.push_back(Blue::Faces{});
-        auto &face       = faces.at(faces.size() - 1);
-        face.indicies[0] = indicies.at(index);
-        face.indicies[1] = indicies.at(index + 1);
-        face.indicies[2] = indicies.at(index + 2);
-        face.normal      = glm::triangleNormal(verticies.at(face.indicies[0]).position,
-                                          verticies.at(face.indicies[1]).position,
-                                          verticies.at(face.indicies[2]).position);
-        const auto size  = faces.size() - 1;
-        setFaces.emplace(face.indicies[0], size);
-        setFaces.emplace(face.indicies[1], size);
-        setFaces.emplace(face.indicies[2], size);
+        Blue::Vertex &vert1 = verticies[indicies[index]];
+        Blue::Vertex &vert2 = verticies[indicies[index + 1]];
+        Blue::Vertex &vert3 = verticies[indicies[index + 2]];
+        // glm::triangleNormal() probably returns normalized vector,
+        // which is better to compute unnormalized
+        glm::vec3 triNormal = glm::triangleNormal(vert1.position, vert2.position, vert3.position);
+        vert1.normals += triNormal;
+        vert2.normals += triNormal;
+        vert3.normals += triNormal;
     }
 
-    for (unsigned index = 0; index < verticies.size(); ++index) {
-        int count      = 0;
-        auto itr1      = setFaces.lower_bound(index);
-        auto itr2      = setFaces.upper_bound(index);
-        auto avgNormal = glm::vec3{};
-        while (itr1 != itr2) {
-            if (itr1->first == index) {
-                avgNormal += faces.at(itr1->second).normal;
-                ++count;
-            }
-            ++itr1;
-        }
-        verticies.at(index).normals = avgNormal / static_cast<float>(count);
+    // normalize normal vectors
+    for (size_t vert = 0; vert < verticies.size(); ++vert) {
+        Blue::Vertex &vertBlue = verticies[vert];
+        vertBlue.normals       = glm::normalize(vertBlue.normals);
     }
+
 }
 
 int Controller::TerrainFactory::getWidth() const {
