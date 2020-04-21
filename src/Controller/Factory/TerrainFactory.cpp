@@ -88,46 +88,52 @@ void Controller::TerrainFactory::LoadLua() {
 }
 
 void Controller::TerrainFactory::GenerateTerrain(Model::TerrainModel &newTerrain, const Blue::Key& key) {
-
-    int xsize = ChunkSize + 1;
-    int zsize = ChunkSize + 1;
+    unsigned int xsize = static_cast<unsigned int>(ChunkSize + 1);
+    unsigned int  zsize  = static_cast<unsigned int>(ChunkSize + 1);
+    std::vector<Blue::Vertex> verticies = {};
+    std::vector<unsigned int> indicies  = {};
     /// Pass a shared pointer to our terrain.
     newTerrain.LoadShader(terrainShader);
     newTerrain.water.SetShader(waterShader);
     /// Generate verticies to form a giant square.
-    GenerateVerticies(newTerrain.verticies, xsize, zsize);
+    GenerateVerticies(verticies, xsize, zsize);
     /// Give heights to the y values using perlin noise.
-    AddDetail(newTerrain.verticies, key, ChunkSize);
+    AddDetail(verticies, key, ChunkSize);
     /// Generate indicies for the verticies.
-    GenerateIndicies(newTerrain.indicies, xsize, zsize);
+    GenerateIndicies(indicies, xsize, zsize);    
     /// Generate the texture coordinates of the squares.
-    GenerateTextureCords(newTerrain.verticies);
+    GenerateTextureCords(verticies);
     /// Generate Soft Normals
-    GenerateNormals(newTerrain.verticies, newTerrain.indicies);
+    GenerateNormals(verticies, indicies);
     /// Sets the height at which levels the textures will set.
     newTerrain.setHeightOffsets(snowHeight, dirtHeight, grassHeight, sandHeight);
     /// Send the chunk to OpenGL to be stored in the GPU.
-    newTerrain.SetupModel();
+    newTerrain.SetupModel(verticies, indicies);
     /// Set the location of the chunk.
     newTerrain.position.x = key.first * ChunkSize;
     newTerrain.position.z = key.second * ChunkSize;
-    GenerateWater(newTerrain.water, key);
+    GenerateWater(newTerrain.water, key, xsize, zsize, 1);
     newTerrain.water.position = glm::vec3{key.first * ChunkSize, waterHeight, key.second * ChunkSize};
     /// Load the textures for the model.
     newTerrain.setTextures(snowTextureID, grassTextureID, dirtTextureID, sandTextureID);
-    /// Clean up the useless data to save room in ram.
+    /// Clean up the useless data to save room in ram.    
     CleanupChunk(newTerrain);
 }
 
-void Controller::TerrainFactory::GenerateWater(Model::Water &lake, const Blue::Key& key) {
-    int xsize = ChunkSize + 1;
-    int zsize = ChunkSize + 1;
-    GenerateVerticies(lake.verticies, xsize, zsize);
-    GenerateIndicies(lake.indicies, xsize, zsize);
-    GenerateTextureCords(lake.verticies);
-    GenerateNormals(lake.verticies, lake.indicies);
+void Controller::TerrainFactory::GenerateWater(Model::Water &lake, const Blue::Key& key, unsigned int xsize, unsigned int zsize, unsigned int increment) {
+    std::vector<Blue::Vertex> verticies = {};
+    std::vector<unsigned int> indicies  = {};
+    GenerateVerticies(verticies, xsize, zsize, 0, 0, increment);
+    auto sizeOfX = static_cast<unsigned int>(glm::sqrt(verticies.size()));
+    GenerateIndicies(indicies, sizeOfX, sizeOfX);
+    GenerateTextureCords(verticies);
+    //This is a hack to auto set the water normals to reduce computaional time.
+    for (auto &v : verticies) {
+        v.normals = glm::vec3(0.0f, 1.0f, 0.0f);
+    }
+    //GenerateNormals(verticies, lake.indicies);
     lake.SetTexture(waterTextureID);
-    lake.SetupModel();
+    lake.SetupModel(verticies, indicies);
 }
 
 void Controller::TerrainFactory::GenerateVerticies(std::vector<Blue::Vertex> &terrain,
@@ -169,7 +175,7 @@ void Controller::TerrainFactory::GenerateTextureCords(std::vector<Blue::Vertex> 
     int x                 = 0;
     int y                 = 0;
     for (auto &vert : terrain) {
-        if (prevx != vert.position.x) {
+        if (static_cast<int>(prevx) != static_cast<int>(vert.position.x)) {
             x++;
             y     = 0;
             prevx = vert.position.x;
@@ -188,16 +194,14 @@ void Controller::TerrainFactory::GenerateTextureCords(std::vector<Blue::Vertex> 
 }
 
 void Controller::TerrainFactory::GeneratePerlinNoise(int xsize, int zsize) {
-    fValues.resize(xsize);
-    int width     = xsize;
-    int height    = zsize;
-    float xFactor = 1.0f / (width - 1);
-    float yFactor = 1.0f / (height - 1);
+    fValues.resize(static_cast<size_t>(xsize));
+    float xFactor = 1.0f / (xsize - 1);
+    float yFactor = 1.0f / (zsize - 1);
     float a       = 5;
     float b       = 0.5;
 
-    for (int row = 0; row < height; row++) {
-        for (int col = 0; col < width; col++) {
+    for (int row = 0; row < zsize; row++) {
+        for (int col = 0; col < xsize; col++) {
             float x     = xFactor * col;
             float y     = yFactor * row;
             float sum   = 0.0f;
@@ -210,7 +214,8 @@ void Controller::TerrainFactory::GeneratePerlinNoise(int xsize, int zsize) {
                 float val = glm::perlin(p) / scale;
                 sum += val;
                 float result                   = (sum + 1.0f) / 2.0f;
-                fValues.at(row).at(col).height = result * 255.0f;
+                fValues.at(static_cast<size_t>(row)).at(static_cast<size_t>(col)).height =
+                    result * 255.0f;
                 freq *= 2.0f; // Double the frequency
                 scale *= b;   // Next power of b
             }
@@ -220,9 +225,7 @@ void Controller::TerrainFactory::GeneratePerlinNoise(int xsize, int zsize) {
 
 void Controller::TerrainFactory::AddDetail(std::vector<Blue::Vertex> &terrain, const Blue::Key& key, const int chunkSize) {
     int row = (height / 2) + key.first * chunkSize;
-    int max_row = row + chunkSize;
     int col = (width / 2) + key.second * chunkSize;
-    int max_col = col + chunkSize;
     auto y      = col;
     float x     = -1;
     for (auto &e : terrain) {
@@ -231,15 +234,16 @@ void Controller::TerrainFactory::AddDetail(std::vector<Blue::Vertex> &terrain, c
             ++row;
             x = e.position.x;
         }
-        e.position.y = fValues.at(row).at(y).height;
+        e.position.y = fValues.at(static_cast<size_t>(row)).at(static_cast<size_t>(y)).height;
         ++y;
     }
 }
 
 void Controller::TerrainFactory::CleanupChunk(Model::TerrainModel &terrain) {
-    terrain.verticies.clear();
-    terrain.verticies.shrink_to_fit();
-    terrain.indicie_size = terrain.indicies.size();
+    //terrain.verticies.clear();
+    //terrain.verticies.shrink_to_fit();
+    //terrain.water.verticies.clear();
+    //terrain.water.verticies.shrink_to_fit();
     //terrain.indicies.clear();
     //terrain.indicies.shrink_to_fit();
 }
@@ -249,13 +253,14 @@ void Controller::TerrainFactory::LoadPerlinNoise(const string& filename) {
     unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
     assert(data != nullptr);
 
-    fValues.resize(width + 1);
+    fValues.resize(static_cast<size_t>(width + 1));
     for (auto &e : fValues) {
-        e.resize(height + 1);
+        e.resize(static_cast<size_t>(height + 1));
     }
     for (auto x = 0; x <= height - 1; ++x) {
         for (auto y = 0; y <= width - 1; ++y) {
-            this->fValues.at(x).at(y).height = static_cast<float>(data[((x * width) + y) * 3]);
+            this->fValues.at(static_cast<size_t>(x)).at(static_cast<size_t> (y)).height =
+                static_cast<float>(data[((x * width) + y) * 3]);
         }
     }
     int runtime = 1;
@@ -282,39 +287,25 @@ int Controller::TerrainFactory::GetChunkSize() const {
 
 void Controller::TerrainFactory::GenerateNormals(std::vector<Blue::Vertex> &verticies,
                                                  std::vector<unsigned int> indicies) {
-    std::vector<Blue::Faces> faces;
-    using Pair = std::pair<unsigned int, size_t>;
-    std::multimap<unsigned int, size_t> setFaces;
-
+    // append triangle normals to every vertex
     for (size_t index = 0; index < indicies.size(); index += 3) {
-        faces.push_back(Blue::Faces{});
-        auto &face       = faces.at(faces.size() - 1);
-        face.indicies[0] = indicies.at(index);
-        face.indicies[1] = indicies.at(index + 1);
-        face.indicies[2] = indicies.at(index + 2);
-        face.normal      = glm::triangleNormal(verticies.at(face.indicies[0]).position,
-                                          verticies.at(face.indicies[1]).position,
-                                          verticies.at(face.indicies[2]).position);
-        const auto size  = faces.size() - 1;
-        setFaces.emplace(face.indicies[0], size);
-        setFaces.emplace(face.indicies[1], size);
-        setFaces.emplace(face.indicies[2], size);
+        Blue::Vertex &vert1 = verticies[indicies[index]];
+        Blue::Vertex &vert2 = verticies[indicies[index + 1]];
+        Blue::Vertex &vert3 = verticies[indicies[index + 2]];
+        // glm::triangleNormal() probably returns normalized vector,
+        // which is better to compute unnormalized
+        glm::vec3 triNormal = glm::triangleNormal(vert1.position, vert2.position, vert3.position);
+        vert1.normals += triNormal;
+        vert2.normals += triNormal;
+        vert3.normals += triNormal;
     }
 
-    for (size_t index = 0; index < verticies.size(); ++index) {
-        int count      = 0;
-        auto itr1      = setFaces.lower_bound(index);
-        auto itr2      = setFaces.upper_bound(index);
-        auto avgNormal = glm::vec3{};
-        while (itr1 != itr2) {
-            if (itr1->first == index) {
-                avgNormal += faces.at(itr1->second).normal;
-                ++count;
-            }
-            ++itr1;
-        }
-        verticies.at(index).normals = avgNormal / static_cast<float>(count);
+    // normalize normal vectors
+    for (size_t vert = 0; vert < verticies.size(); ++vert) {
+        Blue::Vertex &vertBlue = verticies[vert];
+        vertBlue.normals       = glm::normalize(vertBlue.normals);
     }
+
 }
 
 int Controller::TerrainFactory::getWidth() const {
@@ -344,8 +335,10 @@ float *Controller::TerrainFactory::ExportHeightMap() {
 }
 
 void Controller::TerrainFactory::GenerateTerrainL2(Model::TerrainModel &newTerrain, const Blue::Key &key) {
-    int xsize = ChunkSize + 1;
-    int zsize = ChunkSize + 1;
+    unsigned int xsize = static_cast<unsigned int>(ChunkSize + 1);
+    unsigned int zsize = xsize;
+    std::vector<Blue::Vertex> verticies = {};
+    std::vector<unsigned int> indicies  = {};
     /// Set the location of the chunk.
     newTerrain.position.x = key.first * ChunkSize;
     newTerrain.position.z = key.second * ChunkSize;
@@ -353,27 +346,28 @@ void Controller::TerrainFactory::GenerateTerrainL2(Model::TerrainModel &newTerra
     newTerrain.LoadShader(terrainShader);
     newTerrain.water.SetShader(waterShader);
     /// Generate verticies to form a giant square.
-    GenerateVerticies(newTerrain.verticies, xsize, zsize, 0, 0, 5);
+    GenerateVerticies(verticies, xsize, zsize, 0, 0, 5);
     /// Give heights to the y values using perlin noise.
-    AddDetailV2(newTerrain, key);
+    AddDetailV2(verticies, key);
     /// Generate indicies for the verticies.
-    auto sizeOfX = static_cast<unsigned int>(glm::sqrt(newTerrain.verticies.size()));
-    auto sizeOfY = static_cast<unsigned int>(glm::sqrt(newTerrain.verticies.size()));
-    GenerateIndicies(newTerrain.indicies, sizeOfX, sizeOfY);
+    auto sizeOfX = static_cast<unsigned int>(glm::sqrt(verticies.size()));
+    auto sizeOfY = sizeOfX;
+    GenerateIndicies(indicies, sizeOfX, sizeOfY);
     /// Generate the texture coordinates of the squares.
-    GenerateTextureCords(newTerrain.verticies);
+    GenerateTextureCords(verticies);
     /// Generate Soft Normals
-    GenerateNormals(newTerrain.verticies, newTerrain.indicies);
+    GenerateNormals(verticies, indicies);
     /// Sets the height at which levels the textures will set.
     //StitchSeemedVerticies(newTerrain, key);
     newTerrain.setHeightOffsets(snowHeight, dirtHeight, grassHeight, sandHeight);
     /// Send the chunk to OpenGL to be stored in the GPU.
-    newTerrain.SetupModel();
-    GenerateWater(newTerrain.water, key);
+    newTerrain.SetupModel(verticies, indicies);
+    GenerateWater(newTerrain.water, key, xsize, zsize, 5);
     newTerrain.water.position = glm::vec3{key.first * ChunkSize, waterHeight, key.second * ChunkSize};
     /// Load the textures for the model.
     newTerrain.setTextures(snowTextureID, grassTextureID, dirtTextureID, sandTextureID);
     /// Clean up the useless data to save room in ram.
+    newTerrain.EBO_Size = indicies.size();
     CleanupChunk(newTerrain);
 }
 
@@ -539,11 +533,12 @@ void Controller::TerrainFactory::StitchSeemedVerticies(Model::TerrainModel &newT
 float Controller::TerrainFactory::GetDetailAt(const Blue::Key &key, int xcord, int zcord) {
     int row = (height / 2) + key.first * ChunkSize + xcord;
     int col = (width / 2) + key.second * ChunkSize + zcord;
-    return fValues.at(row).at(col).height;
+    return fValues.at(static_cast<size_t>(row)).at(static_cast<size_t>(col)).height;
 }
 
-void Controller::TerrainFactory::AddDetailV2(Model::TerrainModel &newTerrain, const Blue::Key &key) {
-    for (auto &vert : newTerrain.verticies) {
-        vert.position.y = GetDetailAt(key, vert.position.x, vert.position.z);
+void Controller::TerrainFactory::AddDetailV2(std::vector<Blue::Vertex> &newTerrain, const Blue::Key &key) {
+    for (auto &vert : newTerrain) {
+        vert.position.y =
+            GetDetailAt(key, static_cast<int>(vert.position.x), static_cast<int>(vert.position.z));
     }
 }

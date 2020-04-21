@@ -16,8 +16,9 @@ Model::TerrainModel::~TerrainModel() {
     glDeleteBuffers(1, &EBO);
 }
 
-void Model::TerrainModel::SetupModel() {
+void Model::TerrainModel::SetupModel(const std::vector<Blue::Vertex>& verticies, const std::vector<unsigned int>& indicies) {
     BlueEngine::Engine::get().renderer.SetupTerrainModel(VAO, VBO, EBO, verticies, indicies);
+    this->EBO_Size = static_cast<unsigned int>(indicies.size());
 }
 
 void Model::TerrainModel::LoadShader(std::shared_ptr<Shader> newTerrain) {
@@ -32,10 +33,11 @@ void Model::TerrainModel::setHeightOffsets(float newSnowHeight, float newDirtHei
 }
 
 void Model::TerrainModel::setTextures(unsigned int& snowTex, unsigned int& grasstex, unsigned int& dirtTex, unsigned int& sandTex) {
-    this->snowTextureID = snowTex;
-    this->grassTextureID = grasstex;
-    this->dirtTextureID = dirtTex;
-    this->sandTextureID = sandTex;
+    textures.resize(4);
+    textures.at(0) = snowTex;
+    textures.at(1) = grasstex;
+    textures.at(2) = dirtTex;
+    textures.at(3) = sandTex;
 
     terrainShader->use();
     terrainShader->setInt("texture1", 0);
@@ -45,14 +47,6 @@ void Model::TerrainModel::setTextures(unsigned int& snowTex, unsigned int& grass
 }
 
 void Model::TerrainModel::Draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos) {
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, snowTextureID);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, grassTextureID);
-    glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, dirtTextureID);
-    glActiveTexture(GL_TEXTURE3);
-    glBindTexture(GL_TEXTURE_2D, sandTextureID);
     terrainShader->use();
     terrainShader->setMat4("projection", projection);
     terrainShader->setMat4("view", view);
@@ -64,10 +58,7 @@ void Model::TerrainModel::Draw(const glm::mat4& projection, const glm::mat4& vie
     terrainShader->setFloat("tm_dirtHeight", dirtHeight);
     terrainShader->setFloat("tm_grassHeight", grassHeight);
     terrainShader->setFloat("tm_sandHeight", sandHeight);
-    glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, indicie_size, GL_UNSIGNED_INT, nullptr);
-    glBindVertexArray(0);
-    glActiveTexture(GL_TEXTURE0);
+    BlueEngine::Engine::get().renderer.DrawTerrain(VAO, textures, EBO_Size);
     water.Draw(projection, view, cameraPos);
 }
 

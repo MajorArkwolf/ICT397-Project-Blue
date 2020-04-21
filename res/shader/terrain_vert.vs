@@ -17,6 +17,6 @@ void main()
 	FragPos = vec3(model * vec4(aPos, 1.0));
 	gl_Position = projection * view * model * vec4(aPos, 1.0f);
 	Normals = mat3(transpose(inverse(model))) * normals;  
-	HeightPoint = projection * model * vec4(aPos, 1.0f);
+	HeightPoint = vec4(aPos, 1.0f);
 	TexCoord = vec2(aTexCoord.x, aTexCoord.y);	
 }

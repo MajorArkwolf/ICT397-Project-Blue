@@ -39,7 +39,8 @@ auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
 void PrototypeScene::Init() {
 	//terrain.Init();
 	//camera.Position.y = 100.0;
-	camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
+	camera = Camera(glm::vec3(0.0f, 150.0f, 3.0f));
+	models.emplace_back("res/model/player_male.obj", false);
 
 	// Temporarily hard-code the external Lua script file while a proper implementation of Lua integration is on hold
 	GameObj_Manager::init();

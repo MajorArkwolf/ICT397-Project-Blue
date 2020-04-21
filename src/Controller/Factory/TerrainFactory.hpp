@@ -87,11 +87,12 @@ namespace Controller {
         unsigned int sandTextureID = {};
         /// Water Texture ID
         unsigned int waterTextureID = {};
-        float snowHeight = 190.0f, dirtHeight = 170, grassHeight = 150, sandHeight = 130, waterHeight = 105;
+        float snowHeight = 190.0f, dirtHeight = 150.0f, grassHeight = 128.0f, sandHeight = 108.0f, waterHeight = 105.0f;
         ///Perlin Path
         std::string perlinPath = {};
 
-        void GenerateWater(Model::Water &lake, const Blue::Key& key);
+        void GenerateWater(Model::Water &lake, const Blue::Key &key, unsigned int xsize,
+                           unsigned int zsize, unsigned int increment);
         /**
          * @brief Generates texture coordinates.
          * @param reference to the terrain object.
@@ -153,6 +154,6 @@ namespace Controller {
 
         float GetDetailAt(const Blue::Key &key, int xcord, int zcord);
 
-        void AddDetailV2(Model::TerrainModel &newTerrain, const Blue::Key& key);
+        void AddDetailV2(std::vector<Blue::Vertex> &newTerrain, const Blue::Key& key);
     };
 }

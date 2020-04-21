@@ -25,7 +25,8 @@ namespace Model {
 		/**
 		 * @brief Sets up the model for opengl.
 		 */
-		void SetupModel();
+        void SetupModel(const std::vector<Blue::Vertex> &verticies,
+                        const std::vector<unsigned int>& indicies);
 		/**
 		 * @brief Loads the shader used to draw the terrain.
 		 * @param shared pointer to a shader object
@@ -59,23 +60,17 @@ namespace Model {
 		///The position that the chunk will be drawn at.
 		glm::vec3 position = {};
 		///Vector of verticies include positions and texture coordinates.
-        std::vector<Blue::Vertex> verticies = {};
+        //std::vector<Blue::Vertex> verticies = {};
 		///Vector of indicies.
-		std::vector<unsigned int> indicies = {};
+        //std::vector<unsigned int> indicies = {};
 		///A shared pointer to the shader that will be used.
 		std::shared_ptr<Shader> terrainShader = nullptr;
 		/// OpenGL index locations
-		unsigned int VBO = 0, VAO = 0, EBO = 0;
-		/// Needed for the EBO.
-		unsigned int indicie_size = 0;
+		unsigned int VBO = 0, VAO = 0, EBO = 0, EBO_Size = 0;
 		/// Texture ID's
-		unsigned int snowTextureID = 0;
-		unsigned int grassTextureID = 0;
-		unsigned int dirtTextureID = 0;
-		unsigned int sandTextureID = 0;
-        float snowHeight = 190.0f, dirtHeight = 170, grassHeight = 150, sandHeight = 130;
+		std::vector<unsigned int> textures = {};
+        float snowHeight = 0.0f, dirtHeight = 0.0f, grassHeight = 0.0f, sandHeight = 0.0f;
 		/// Water
 		Water water = {};
-
     };
 }

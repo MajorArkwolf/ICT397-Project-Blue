@@ -55,8 +55,8 @@ void View::OpenGL::Init() {
     glViewport(0, 0, width, height);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    //glEnable(GL_CULL_FACE);
-    //glCullFace(GL_BACK);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
     glEnable(GL_DEPTH_TEST);
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
     skyBox.Init();
@@ -218,7 +218,7 @@ void View::OpenGL::ToggleWireFrame() {
     wireframe = !wireframe;
 }
 
-void View::OpenGL::SetupTerrainModel(unsigned int &VAO, unsigned &VBO, unsigned int &EBO, std::vector<Blue::Vertex>& verticies, std::vector<unsigned int>& indicies) {
+void View::OpenGL::SetupTerrainModel(unsigned int &VAO, unsigned &VBO, unsigned int &EBO, const std::vector<Blue::Vertex>& verticies, const std::vector<unsigned int>& indicies) {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
@@ -245,4 +245,18 @@ void View::OpenGL::SetupTerrainModel(unsigned int &VAO, unsigned &VBO, unsigned 
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Blue::Vertex),
                           reinterpret_cast<void *>(offsetof(Blue::Vertex, normals)));
     glBindVertexArray(0);
+}
+
+void View::OpenGL::DrawTerrain(unsigned int &VAO, const std::vector<unsigned int> &textures,
+                               const unsigned int ebo_size) {
+    GLint count = 0;
+    for (auto &e : textures) {
+        glActiveTexture(GL_TEXTURE0 + count);
+        glBindTexture(GL_TEXTURE_2D, e);
+        ++count;
+    }
+    glBindVertexArray(VAO);
+    glDrawElements(GL_TRIANGLES, ebo_size, GL_UNSIGNED_INT, nullptr);
+    glBindVertexArray(0);
+    glActiveTexture(GL_TEXTURE0);
 }

@@ -86,7 +86,11 @@ namespace View {
          * @param verticies to load into the buffers.
          * @param indicies to load into the buffers.
          */
-        void SetupTerrainModel(unsigned int &VAO, unsigned &VBO, unsigned int &EBO, std::vector<Blue::Vertex>& verticies, std::vector<unsigned int>& indicies);
+        void SetupTerrainModel(unsigned int &VAO, unsigned &VBO, unsigned int &EBO, const std::vector<Blue::Vertex>& verticies, const std::vector<unsigned int>& indicies);
+
+        void DrawTerrain(unsigned int &VAO, const std::vector<unsigned int> &textures,
+                         const unsigned int ebo_size);
+
 
     private:
         /// Decides if the renderer should be in wireframe mode or not.
