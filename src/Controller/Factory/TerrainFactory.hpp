@@ -92,7 +92,7 @@ namespace Controller {
         std::string perlinPath = {};
 
         void GenerateWater(Model::Water &lake, const Blue::Key &key, unsigned int xsize,
-                           unsigned int zsize);
+                           unsigned int zsize, unsigned int increment);
         /**
          * @brief Generates texture coordinates.
          * @param reference to the terrain object.
@@ -154,6 +154,6 @@ namespace Controller {
 
         float GetDetailAt(const Blue::Key &key, int xcord, int zcord);
 
-        void AddDetailV2(Model::TerrainModel &newTerrain, const Blue::Key& key);
+        void AddDetailV2(std::vector<Blue::Vertex> &newTerrain, const Blue::Key& key);
     };
 }

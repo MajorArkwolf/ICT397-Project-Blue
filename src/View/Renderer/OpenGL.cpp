@@ -218,7 +218,7 @@ void View::OpenGL::ToggleWireFrame() {
     wireframe = !wireframe;
 }
 
-void View::OpenGL::SetupTerrainModel(unsigned int &VAO, unsigned &VBO, unsigned int &EBO, std::vector<Blue::Vertex>& verticies, std::vector<unsigned int>& indicies) {
+void View::OpenGL::SetupTerrainModel(unsigned int &VAO, unsigned &VBO, unsigned int &EBO, const std::vector<Blue::Vertex>& verticies, const std::vector<unsigned int>& indicies) {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);

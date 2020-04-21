@@ -16,7 +16,7 @@ Model::TerrainModel::~TerrainModel() {
     glDeleteBuffers(1, &EBO);
 }
 
-void Model::TerrainModel::SetupModel() {
+void Model::TerrainModel::SetupModel(const std::vector<Blue::Vertex>& verticies) {
     BlueEngine::Engine::get().renderer.SetupTerrainModel(VAO, VBO, EBO, verticies, indicies);
 }
 

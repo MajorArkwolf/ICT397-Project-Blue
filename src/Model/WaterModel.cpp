@@ -10,7 +10,7 @@ Model::Water::Water() {
 
 }
 
-void Model::Water::SetupModel() {
+void Model::Water::SetupModel(const std::vector<Blue::Vertex>& verticies) {
     BlueEngine::Engine::get().renderer.SetupTerrainModel(VAO, VBO, EBO, verticies, indicies);
 }
 

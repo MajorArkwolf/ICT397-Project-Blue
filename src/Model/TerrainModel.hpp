@@ -25,7 +25,7 @@ namespace Model {
 		/**
 		 * @brief Sets up the model for opengl.
 		 */
-		void SetupModel();
+        void SetupModel(const std::vector<Blue::Vertex> &verticies);
 		/**
 		 * @brief Loads the shader used to draw the terrain.
 		 * @param shared pointer to a shader object
@@ -59,9 +59,9 @@ namespace Model {
 		///The position that the chunk will be drawn at.
 		glm::vec3 position = {};
 		///Vector of verticies include positions and texture coordinates.
-        std::vector<Blue::Vertex> verticies = {};
+        //std::vector<Blue::Vertex> verticies = {};
 		///Vector of indicies.
-		std::vector<unsigned int> indicies = {};
+        std::vector<unsigned int> indicies = {};
 		///A shared pointer to the shader that will be used.
 		std::shared_ptr<Shader> terrainShader = nullptr;
 		/// OpenGL index locations
