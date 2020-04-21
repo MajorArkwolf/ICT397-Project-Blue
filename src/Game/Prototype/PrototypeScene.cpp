@@ -8,6 +8,9 @@
 #include "View/Renderer/OpenGL.hpp"
 #include "View/Renderer/Renderer.hpp"
 #include "Controller/TextureManager.hpp"
+#include "Model/GameObject/Manager.hpp"
+#include "Controller/Engine/LuaManager.hpp"
+#include "Controller/Factory/GameAssetFactory.hpp"
 
 using Controller::Input::BLUE_InputAction;
 using Controller::Input::BLUE_InputType;
@@ -34,13 +37,13 @@ auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
 }
 
 void PrototypeScene::Init() {
-	auto& resManager = ResourceManager::getInstance();
 	//terrain.Init();
 	//camera.Position.y = 100.0;
 	camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
-	models.emplace_back("res/model/player_male.obj", false);
 
-	//models.push_back(resManager.getModelID("res/model/player_male.obj"));
+	// Temporarily hard-code the external Lua script file while a proper implementation of Lua integration is on hold
+	GameObj_Manager::init();
+	luaL_dofile(LuaManager::getInstance().getLuaState(), "res/scripts/gameobjsSet.lua");
 }
 
 void PrototypeScene::handleWindowEvent() {
@@ -131,11 +134,8 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
 auto PrototypeScene::display() -> void {
     auto &renderer = BlueEngine::Engine::get().renderer;
     renderer.SetCameraOnRender(camera);
-	//glm::mat4 model = glm::mat4(5.0f);
-	//renderer.AddToQue(models.at(0));
 	terrain.AddToDraw();
-	//terrain.Draw(projection, view, camera.Position);
-	//renderer.draw(view, projection);
+	GameObj_Manager::addAllToDraw();
 }
 
 void PrototypeScene::unInit() {}

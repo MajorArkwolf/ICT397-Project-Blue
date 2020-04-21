@@ -1,6 +1,9 @@
 #pragma once
 #include "TerrainFactory.hpp"
 
+    /// Internal Dependencies
+#include "Model/GameObject/GameObject.hpp"
+
 namespace Controller {
     class Factory {
       public:
@@ -38,6 +41,13 @@ namespace Controller {
 
         ///Terrain factory used for generating terrain.
         TerrainFactory terrain = {};
+
+            /*!
+             * @brief Parameterised GameObject Factory.
+             * @param [in] type A GameObject type identifier for the target factory output.
+             * @return A pointer to a newly assigned GameObject, or nullptr on error.
+             */
+        std::shared_ptr<GameObj_Base> GameObject(GameObjType type);
       private:
         /**
          * @brief Default constructor, privatised due to singleton pattern.
