@@ -91,7 +91,8 @@ namespace Controller {
         ///Perlin Path
         std::string perlinPath = {};
 
-        void GenerateWater(Model::Water &lake, const Blue::Key& key);
+        void GenerateWater(Model::Water &lake, const Blue::Key &key, unsigned int xsize,
+                           unsigned int zsize);
         /**
          * @brief Generates texture coordinates.
          * @param reference to the terrain object.

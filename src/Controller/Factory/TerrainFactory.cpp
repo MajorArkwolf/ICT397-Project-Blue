@@ -111,7 +111,7 @@ void Controller::TerrainFactory::GenerateTerrain(Model::TerrainModel &newTerrain
     /// Set the location of the chunk.
     newTerrain.position.x = key.first * ChunkSize;
     newTerrain.position.z = key.second * ChunkSize;
-    GenerateWater(newTerrain.water, key);
+    GenerateWater(newTerrain.water, key, xsize, zsize);
     newTerrain.water.position = glm::vec3{key.first * ChunkSize, waterHeight, key.second * ChunkSize};
     /// Load the textures for the model.
     newTerrain.setTextures(snowTextureID, grassTextureID, dirtTextureID, sandTextureID);
@@ -119,9 +119,7 @@ void Controller::TerrainFactory::GenerateTerrain(Model::TerrainModel &newTerrain
     CleanupChunk(newTerrain);
 }
 
-void Controller::TerrainFactory::GenerateWater(Model::Water &lake, const Blue::Key& key) {
-    unsigned int xsize = static_cast<unsigned int>(ChunkSize + 1);
-    unsigned int zsize = static_cast<unsigned int>(ChunkSize + 1);
+void Controller::TerrainFactory::GenerateWater(Model::Water &lake, const Blue::Key& key, unsigned int xsize, unsigned int zsize) {
     GenerateVerticies(lake.verticies, xsize, zsize);
     GenerateIndicies(lake.indicies, xsize, zsize);
     GenerateTextureCords(lake.verticies);
@@ -342,8 +340,8 @@ float *Controller::TerrainFactory::ExportHeightMap() {
 }
 
 void Controller::TerrainFactory::GenerateTerrainL2(Model::TerrainModel &newTerrain, const Blue::Key &key) {
-    int xsize = ChunkSize + 1;
-    int zsize = ChunkSize + 1;
+    unsigned int xsize = static_cast<unsigned int>(ChunkSize + 1);
+    unsigned int zsize = xsize;
     /// Set the location of the chunk.
     newTerrain.position.x = key.first * ChunkSize;
     newTerrain.position.z = key.second * ChunkSize;
@@ -367,7 +365,7 @@ void Controller::TerrainFactory::GenerateTerrainL2(Model::TerrainModel &newTerra
     newTerrain.setHeightOffsets(snowHeight, dirtHeight, grassHeight, sandHeight);
     /// Send the chunk to OpenGL to be stored in the GPU.
     newTerrain.SetupModel();
-    GenerateWater(newTerrain.water, key);
+    GenerateWater(newTerrain.water, key, xsize, zsize);
     newTerrain.water.position = glm::vec3{key.first * ChunkSize, waterHeight, key.second * ChunkSize};
     /// Load the textures for the model.
     newTerrain.setTextures(snowTextureID, grassTextureID, dirtTextureID, sandTextureID);
