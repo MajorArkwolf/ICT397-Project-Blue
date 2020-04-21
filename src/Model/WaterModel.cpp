@@ -10,8 +10,10 @@ Model::Water::Water() {
 
 }
 
-void Model::Water::SetupModel(const std::vector<Blue::Vertex>& verticies) {
+void Model::Water::SetupModel(const std::vector<Blue::Vertex> &verticies,
+                              const std::vector<unsigned int> &indicies) {
     BlueEngine::Engine::get().renderer.SetupTerrainModel(VAO, VBO, EBO, verticies, indicies);
+    this->EBO_Size = static_cast<unsigned int>(indicies.size());
 }
 
 void Model::Water::SetShader(std::shared_ptr<Shader> newWater) {
@@ -31,7 +33,7 @@ void Model::Water::Draw(const glm::mat4& projection, const glm::mat4& view, cons
     shader->setVec3("lightColor", 1.0f, 1.0f, 1.0f);
     shader->setVec3("lightPos", 1.0f, 400.0f, 1.0f);
     shader->setVec3("viewPos", cameraPos);
-    BlueEngine::Engine::get().renderer.DrawTerrain(VAO, textures, indicies);
+    BlueEngine::Engine::get().renderer.DrawTerrain(VAO, textures, EBO_Size);
 }
 
 void Model::Water::SetTexture(unsigned int newTex) {

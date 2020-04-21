@@ -25,7 +25,8 @@ namespace Model {
 		/**
 		 * @brief Sets up the model for opengl.
 		 */
-        void SetupModel(const std::vector<Blue::Vertex> &verticies);
+        void SetupModel(const std::vector<Blue::Vertex> &verticies,
+                        const std::vector<unsigned int>& indicies);
 		/**
 		 * @brief Loads the shader used to draw the terrain.
 		 * @param shared pointer to a shader object
@@ -61,16 +62,15 @@ namespace Model {
 		///Vector of verticies include positions and texture coordinates.
         //std::vector<Blue::Vertex> verticies = {};
 		///Vector of indicies.
-        std::vector<unsigned int> indicies = {};
+        //std::vector<unsigned int> indicies = {};
 		///A shared pointer to the shader that will be used.
 		std::shared_ptr<Shader> terrainShader = nullptr;
 		/// OpenGL index locations
-		unsigned int VBO = 0, VAO = 0, EBO = 0;
+		unsigned int VBO = 0, VAO = 0, EBO = 0, EBO_Size = 0;
 		/// Texture ID's
 		std::vector<unsigned int> textures = {};
         float snowHeight = 0.0f, dirtHeight = 0.0f, grassHeight = 0.0f, sandHeight = 0.0f;
 		/// Water
 		Water water = {};
-
     };
 }

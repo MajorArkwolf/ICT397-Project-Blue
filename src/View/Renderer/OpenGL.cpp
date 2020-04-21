@@ -248,7 +248,7 @@ void View::OpenGL::SetupTerrainModel(unsigned int &VAO, unsigned &VBO, unsigned 
 }
 
 void View::OpenGL::DrawTerrain(unsigned int &VAO, const std::vector<unsigned int> &textures,
-                               const std::vector<unsigned int> &indices) {
+                               const unsigned int ebo_size) {
     GLint count = 0;
     for (auto &e : textures) {
         glActiveTexture(GL_TEXTURE0 + count);
@@ -256,7 +256,7 @@ void View::OpenGL::DrawTerrain(unsigned int &VAO, const std::vector<unsigned int
         ++count;
     }
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, ebo_size, GL_UNSIGNED_INT, nullptr);
     glBindVertexArray(0);
     glActiveTexture(GL_TEXTURE0);
 }

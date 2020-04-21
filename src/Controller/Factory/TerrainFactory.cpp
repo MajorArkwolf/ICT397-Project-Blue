@@ -91,6 +91,7 @@ void Controller::TerrainFactory::GenerateTerrain(Model::TerrainModel &newTerrain
     unsigned int xsize = static_cast<unsigned int>(ChunkSize + 1);
     unsigned int  zsize  = static_cast<unsigned int>(ChunkSize + 1);
     std::vector<Blue::Vertex> verticies = {};
+    std::vector<unsigned int> indicies  = {};
     /// Pass a shared pointer to our terrain.
     newTerrain.LoadShader(terrainShader);
     newTerrain.water.SetShader(waterShader);
@@ -99,15 +100,15 @@ void Controller::TerrainFactory::GenerateTerrain(Model::TerrainModel &newTerrain
     /// Give heights to the y values using perlin noise.
     AddDetail(verticies, key, ChunkSize);
     /// Generate indicies for the verticies.
-    GenerateIndicies(newTerrain.indicies, xsize, zsize);
+    GenerateIndicies(indicies, xsize, zsize);    
     /// Generate the texture coordinates of the squares.
     GenerateTextureCords(verticies);
     /// Generate Soft Normals
-    GenerateNormals(verticies, newTerrain.indicies);
+    GenerateNormals(verticies, indicies);
     /// Sets the height at which levels the textures will set.
     newTerrain.setHeightOffsets(snowHeight, dirtHeight, grassHeight, sandHeight);
     /// Send the chunk to OpenGL to be stored in the GPU.
-    newTerrain.SetupModel(verticies);
+    newTerrain.SetupModel(verticies, indicies);
     /// Set the location of the chunk.
     newTerrain.position.x = key.first * ChunkSize;
     newTerrain.position.z = key.second * ChunkSize;
@@ -115,15 +116,16 @@ void Controller::TerrainFactory::GenerateTerrain(Model::TerrainModel &newTerrain
     newTerrain.water.position = glm::vec3{key.first * ChunkSize, waterHeight, key.second * ChunkSize};
     /// Load the textures for the model.
     newTerrain.setTextures(snowTextureID, grassTextureID, dirtTextureID, sandTextureID);
-    /// Clean up the useless data to save room in ram.
+    /// Clean up the useless data to save room in ram.    
     CleanupChunk(newTerrain);
 }
 
 void Controller::TerrainFactory::GenerateWater(Model::Water &lake, const Blue::Key& key, unsigned int xsize, unsigned int zsize, unsigned int increment) {
     std::vector<Blue::Vertex> verticies = {};
+    std::vector<unsigned int> indicies  = {};
     GenerateVerticies(verticies, xsize, zsize, 0, 0, increment);
     auto sizeOfX = static_cast<unsigned int>(glm::sqrt(verticies.size()));
-    GenerateIndicies(lake.indicies, sizeOfX, sizeOfX);
+    GenerateIndicies(indicies, sizeOfX, sizeOfX);
     GenerateTextureCords(verticies);
     //This is a hack to auto set the water normals to reduce computaional time.
     for (auto &v : verticies) {
@@ -131,7 +133,7 @@ void Controller::TerrainFactory::GenerateWater(Model::Water &lake, const Blue::K
     }
     //GenerateNormals(verticies, lake.indicies);
     lake.SetTexture(waterTextureID);
-    lake.SetupModel(verticies);
+    lake.SetupModel(verticies, indicies);
 }
 
 void Controller::TerrainFactory::GenerateVerticies(std::vector<Blue::Vertex> &terrain,
@@ -285,8 +287,8 @@ int Controller::TerrainFactory::GetChunkSize() const {
 
 void Controller::TerrainFactory::GenerateNormals(std::vector<Blue::Vertex> &verticies,
                                                  std::vector<unsigned int> indicies) {
-    std::vector<Blue::Faces> faces;
-    std::multimap<unsigned int, size_t> setFaces;
+    std::vector<Blue::Faces> faces = {};
+    std::multimap<unsigned int, size_t> setFaces = {};
 
     for (size_t index = 0; index < indicies.size(); index += 3) {
         faces.push_back(Blue::Faces{});
@@ -349,6 +351,7 @@ void Controller::TerrainFactory::GenerateTerrainL2(Model::TerrainModel &newTerra
     unsigned int xsize = static_cast<unsigned int>(ChunkSize + 1);
     unsigned int zsize = xsize;
     std::vector<Blue::Vertex> verticies = {};
+    std::vector<unsigned int> indicies  = {};
     /// Set the location of the chunk.
     newTerrain.position.x = key.first * ChunkSize;
     newTerrain.position.z = key.second * ChunkSize;
@@ -362,21 +365,22 @@ void Controller::TerrainFactory::GenerateTerrainL2(Model::TerrainModel &newTerra
     /// Generate indicies for the verticies.
     auto sizeOfX = static_cast<unsigned int>(glm::sqrt(verticies.size()));
     auto sizeOfY = sizeOfX;
-    GenerateIndicies(newTerrain.indicies, sizeOfX, sizeOfY);
+    GenerateIndicies(indicies, sizeOfX, sizeOfY);
     /// Generate the texture coordinates of the squares.
     GenerateTextureCords(verticies);
     /// Generate Soft Normals
-    GenerateNormals(verticies, newTerrain.indicies);
+    GenerateNormals(verticies, indicies);
     /// Sets the height at which levels the textures will set.
     //StitchSeemedVerticies(newTerrain, key);
     newTerrain.setHeightOffsets(snowHeight, dirtHeight, grassHeight, sandHeight);
     /// Send the chunk to OpenGL to be stored in the GPU.
-    newTerrain.SetupModel(verticies);
+    newTerrain.SetupModel(verticies, indicies);
     GenerateWater(newTerrain.water, key, xsize, zsize, 5);
     newTerrain.water.position = glm::vec3{key.first * ChunkSize, waterHeight, key.second * ChunkSize};
     /// Load the textures for the model.
     newTerrain.setTextures(snowTextureID, grassTextureID, dirtTextureID, sandTextureID);
     /// Clean up the useless data to save room in ram.
+    newTerrain.EBO_Size = indicies.size();
     CleanupChunk(newTerrain);
 }
 

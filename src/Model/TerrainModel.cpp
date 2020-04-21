@@ -16,8 +16,9 @@ Model::TerrainModel::~TerrainModel() {
     glDeleteBuffers(1, &EBO);
 }
 
-void Model::TerrainModel::SetupModel(const std::vector<Blue::Vertex>& verticies) {
+void Model::TerrainModel::SetupModel(const std::vector<Blue::Vertex>& verticies, const std::vector<unsigned int>& indicies) {
     BlueEngine::Engine::get().renderer.SetupTerrainModel(VAO, VBO, EBO, verticies, indicies);
+    this->EBO_Size = static_cast<unsigned int>(indicies.size());
 }
 
 void Model::TerrainModel::LoadShader(std::shared_ptr<Shader> newTerrain) {
@@ -57,7 +58,7 @@ void Model::TerrainModel::Draw(const glm::mat4& projection, const glm::mat4& vie
     terrainShader->setFloat("tm_dirtHeight", dirtHeight);
     terrainShader->setFloat("tm_grassHeight", grassHeight);
     terrainShader->setFloat("tm_sandHeight", sandHeight);
-    BlueEngine::Engine::get().renderer.DrawTerrain(VAO, textures, indicies);
+    BlueEngine::Engine::get().renderer.DrawTerrain(VAO, textures, EBO_Size);
     water.Draw(projection, view, cameraPos);
 }
 

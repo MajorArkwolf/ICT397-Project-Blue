@@ -89,7 +89,8 @@ namespace View {
         void SetupTerrainModel(unsigned int &VAO, unsigned &VBO, unsigned int &EBO, const std::vector<Blue::Vertex>& verticies, const std::vector<unsigned int>& indicies);
 
         void DrawTerrain(unsigned int &VAO, const std::vector<unsigned int> &textures,
-                         const std::vector<unsigned int> &indices);
+                         const unsigned int ebo_size);
+
 
     private:
         /// Decides if the renderer should be in wireframe mode or not.
