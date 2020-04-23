@@ -1,30 +1,17 @@
 #include "Controller/Engine/Engine.hpp"
 
-#include <iomanip>
 #include <iostream>
 #include <stdexcept>
-#include <string>
 
-#include "BaseState.hpp"
-#include "GameStack.hpp"
-
-#include "Controller/InputManager.hpp"
-#include "Controller/GUIManager.hpp"
-#include "Controller/ResourceManager.hpp"
 
 
 // Game States
 #include "Game/Prototype/PrototypeScene.hpp"
-#include "Controller/Factory/GameAssetFactory.hpp"
-#include "Controller/Factory/TerrainFactory.hpp"
 
 using BlueEngine::Engine;
 using std::runtime_error;
 using std::string;
 
-/**
- * @brief The game engine main loop
- */
 auto Engine::run() -> void {
     auto &engine = Engine::get();
     ResourceManager::getInstance().loadResources();
@@ -73,9 +60,6 @@ GUIManager& BlueEngine::Engine::getGuiManager() {
     return guiManager;
 }
 
-/**
- * @brief Game engine default constructor, sets up all variables and settings required for operation
- */
 Engine::Engine() {
     getBasePath();
     if (!glfwInit()) {
@@ -119,18 +103,10 @@ Engine::Engine() {
 
 }
 
-/**
- * @brief Engine default destructor
- * Safely closes Engine and frees memory
- */
 Engine::~Engine() {
     glfwTerminate();
 }
 
-/**
- * @brief Returns the current instance of the engine
- * @return The current engine instance
- */
 auto Engine::get() -> Engine & {
     static auto instance = Engine{};
 
