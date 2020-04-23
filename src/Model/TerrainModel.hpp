@@ -1,6 +1,5 @@
 #pragma once
 #include <glm/vec3.hpp>
-
 #include <vector>
 #include <memory>
 #include "View/Renderer/Shader.hpp"
@@ -17,7 +16,7 @@ namespace Model {
 		/**
 		 * @brief Default constructor.
 		 */
-		TerrainModel();
+		TerrainModel() = default;
 		/**
 		 * @brief Destructor to free OpenGL memory.
 		 */
@@ -25,8 +24,8 @@ namespace Model {
 		/**
 		 * @brief Sets up the model for opengl.
 		 */
-        void SetupModel(const std::vector<Blue::Vertex> &verticies,
-                        const std::vector<unsigned int>& indicies);
+        void SetupModel(const std::vector<Blue::Vertex> &vertices,
+                        const std::vector<unsigned int>& indices);
 		/**
 		 * @brief Loads the shader used to draw the terrain.
 		 * @param shared pointer to a shader object
@@ -38,8 +37,11 @@ namespace Model {
 		 * @param ID to texture 2
 		 * @param ID to texture 3
 		 */
-		void setTextures(unsigned int& snowTex, unsigned int& grasstex, unsigned int& dirtTex, unsigned int& sandTex);
+		void setTextures(unsigned int& snowTex, unsigned int& grassTex, unsigned int& dirtTex, unsigned int& sandTex);
 
+		/**
+		 * Adds the model to the drawl call.
+		 */
         void AddToDraw();
 		/**
 		 * @brief Draw call for the terrain object.
@@ -59,10 +61,6 @@ namespace Model {
 		glm::mat4 model = glm::mat4(0.5f);
 		///The position that the chunk will be drawn at.
 		glm::vec3 position = {};
-		///Vector of verticies include positions and texture coordinates.
-        //std::vector<Blue::Vertex> verticies = {};
-		///Vector of indicies.
-        //std::vector<unsigned int> indicies = {};
 		///A shared pointer to the shader that will be used.
 		std::shared_ptr<Shader> terrainShader = nullptr;
 		/// OpenGL index locations

@@ -1,14 +1,7 @@
 #include "TerrainModel.hpp"
-
-#include "Controller/Engine/Engine.hpp"
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include <functional>
 #include <Controller/Factory/GameAssetFactory.hpp>
-
-Model::TerrainModel::TerrainModel() {
-}
+#include <utility>
 
 Model::TerrainModel::~TerrainModel() {
     glDeleteVertexArrays(1, &VAO);
@@ -16,13 +9,13 @@ Model::TerrainModel::~TerrainModel() {
     glDeleteBuffers(1, &EBO);
 }
 
-void Model::TerrainModel::SetupModel(const std::vector<Blue::Vertex>& verticies, const std::vector<unsigned int>& indicies) {
-    BlueEngine::Engine::get().renderer.SetupTerrainModel(VAO, VBO, EBO, verticies, indicies);
-    this->EBO_Size = static_cast<unsigned int>(indicies.size());
+void Model::TerrainModel::SetupModel(const std::vector<Blue::Vertex>& vertices, const std::vector<unsigned int>& indices) {
+    BlueEngine::Engine::get().renderer.SetupTerrainModel(VAO, VBO, EBO, vertices, indices);
+    this->EBO_Size = static_cast<unsigned int>(indices.size());
 }
 
 void Model::TerrainModel::LoadShader(std::shared_ptr<Shader> newTerrain) {
-    this->terrainShader = newTerrain;
+    this->terrainShader = std::move(newTerrain);
 }
 
 void Model::TerrainModel::setHeightOffsets(float newSnowHeight, float newDirtHeight, float newGrassHeight, float newSandHeight) {
@@ -32,10 +25,10 @@ void Model::TerrainModel::setHeightOffsets(float newSnowHeight, float newDirtHei
     this->sandHeight = newSandHeight;
 }
 
-void Model::TerrainModel::setTextures(unsigned int& snowTex, unsigned int& grasstex, unsigned int& dirtTex, unsigned int& sandTex) {
+void Model::TerrainModel::setTextures(unsigned int& snowTex, unsigned int& grassTex, unsigned int& dirtTex, unsigned int& sandTex) {
     textures.resize(4);
     textures.at(0) = snowTex;
-    textures.at(1) = grasstex;
+    textures.at(1) = grassTex;
     textures.at(2) = dirtTex;
     textures.at(3) = sandTex;
 
