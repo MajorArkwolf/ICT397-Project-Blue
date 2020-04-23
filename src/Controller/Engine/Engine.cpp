@@ -150,11 +150,7 @@ auto Engine::processInput() -> void {
 
 bool BlueEngine::Engine::getMouseMode() {
     auto mouseMode = glfwGetInputMode(window, GLFW_CURSOR);
-    if (mouseMode == GLFW_CURSOR_NORMAL) {
-        return true;
-    } else {
-        return false;
-    }
+    return mouseMode == GLFW_CURSOR_NORMAL;
 }
 
 void BlueEngine::Engine::setMouseMode(bool mode) {
