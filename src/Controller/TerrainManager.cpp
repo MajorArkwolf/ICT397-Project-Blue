@@ -63,10 +63,6 @@ void Controller::TerrainManager::Update(glm::ivec2 key) {
 		drawCircle.clear();
 		this->lastPos = updateKey;
 		auto max = static_cast<int>(maxKey);
-//		int xlow = updateKey.first - radSize;
-//		int zlow = updateKey.second - radSize;
-//		int xhigh = updateKey.first + radSize;
-//		int zhigh = updateKey.second + radSize;
         int xlow = -1 * max;
 		int zlow = -1 * max;
 		int xhigh = max;
