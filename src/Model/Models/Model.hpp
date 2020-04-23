@@ -19,7 +19,7 @@ namespace Model {
         bool gammaCorrection;
 
         Model(char *path, bool gamma);
-        Model(std::string path, bool gamma);
+        Model(const std::string& path, bool gamma);
         void Draw(Shader& shader);
 
       private:
@@ -27,6 +27,6 @@ namespace Model {
         void processNode(aiNode *node, const aiScene *scene);
         Mesh processMesh(aiMesh *mesh, const aiScene *scene);
         std::vector<TextureB> loadMaterialTextures(aiMaterial *mat, aiTextureType type,
-                                                  std::string typeName);
+                                                  const std::string& typeName);
     };
 }

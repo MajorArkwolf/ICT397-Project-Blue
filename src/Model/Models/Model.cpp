@@ -8,8 +8,8 @@ Model::Model::Model(char *path, bool gamma = false) : gammaCorrection(gamma) {
     loadModel(path);
 }
 
-Model::Model::Model(string path, bool gamma = false) : gammaCorrection(gamma) {
-    loadModel(path.c_str());
+Model::Model::Model(const string& path, bool gamma = false) : gammaCorrection(gamma) {
+    loadModel(path);
 }
 
 void Model::Model::Draw(Shader& shader) {
@@ -61,7 +61,7 @@ Mesh Model::Model::processMesh(aiMesh *mesh, const aiScene *scene) {
 
     // Walk through each of the mesh's vertices
     for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
-        Vertex vertex;
+        Vertex vertex{};
         glm::vec3 vector{
             0, 0,
             0}; // we declare a placeholder vector since assimp uses
@@ -143,16 +143,16 @@ Mesh Model::Model::processMesh(aiMesh *mesh, const aiScene *scene) {
 }
 
 std::vector<TextureB> Model::Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type,
-                                            string typeName) {
+                                            const string& typeName) {
     std::vector<TextureB> textures;
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
         aiString str;
         mat->GetTexture(type, i, &str);
         // check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
         bool skip = false;
-        for (unsigned int j = 0; j < textures_loaded.size(); j++) {
-            if (std::strcmp(textures_loaded[j].path.data(), str.C_Str()) == 0) {
-                textures.push_back(textures_loaded[j]);
+        for (auto & j : textures_loaded) {
+            if (std::strcmp(j.path.data(), str.C_Str()) == 0) {
+                textures.push_back(j);
                 skip = true; // a texture with the same filepath has already been loaded, continue to next one. (optimization)
                 break;
             }
