@@ -31,7 +31,7 @@ void View::OpenGL::Draw() {
     glm::mat4 view = camera->GetViewMatrix();
     glm::mat4 skyboxView = glm::mat4(glm::mat3(camera->GetViewMatrix()));
     sortDrawDistance();
-    if(wireframe)
+    if(wireFrame)
     {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     } else {
@@ -215,10 +215,10 @@ void View::OpenGL::sortDrawDistance() {
 }
 
 void View::OpenGL::ToggleWireFrame() {
-    wireframe = !wireframe;
+    wireFrame = !wireFrame;
 }
 
-void View::OpenGL::SetupTerrainModel(unsigned int &VAO, unsigned &VBO, unsigned int &EBO, const std::vector<Blue::Vertex>& verticies, const std::vector<unsigned int>& indicies) {
+void View::OpenGL::SetupTerrainModel(unsigned int &VAO, unsigned &VBO, unsigned int &EBO, const std::vector<Blue::Vertex>& vertices, const std::vector<unsigned int>& indices) {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
@@ -226,11 +226,11 @@ void View::OpenGL::SetupTerrainModel(unsigned int &VAO, unsigned &VBO, unsigned 
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, verticies.size() * sizeof(Blue::Vertex), &verticies[0],
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Blue::Vertex), &vertices[0],
                  GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicies.size() * sizeof(unsigned int), &indicies[0], GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 
     // Vertex Positions
     glEnableVertexAttribArray(0);
