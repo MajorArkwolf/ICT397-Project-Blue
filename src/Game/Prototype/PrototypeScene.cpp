@@ -21,16 +21,16 @@ PrototypeScene::PrototypeScene() {
 
 auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
 	if (moveForward) {
-		camera.ProcessKeyboard(FORWARD, dt);
+		camera.ProcessKeyboard(Camera_Movement::FORWARD, dt);
 	}
 	if (moveBackward) {
-		camera.ProcessKeyboard(BACKWARD, dt);
+		camera.ProcessKeyboard(Camera_Movement::BACKWARD, dt);
 	}
 	if (moveLeft) {
-		camera.ProcessKeyboard(LEFT, dt);
+		camera.ProcessKeyboard(Camera_Movement::LEFT, dt);
 	}
 	if (moveRight) {
-		camera.ProcessKeyboard(RIGHT, dt);
+		camera.ProcessKeyboard(Camera_Movement::RIGHT, dt);
 	}
 
 	terrain.Update(camera.getLocation());
