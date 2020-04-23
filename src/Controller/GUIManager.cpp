@@ -135,7 +135,7 @@ void GUIManager::displayQuitScreen() {
     }
 }
 
-void GUIManager::displayDevScreen(Camera &camera) {
+void GUIManager::displayDevScreen(View::Camera &camera) {
     // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
     bool &windowOpen = windowOpenMap.at("dev");
     if (windowOpen) {
