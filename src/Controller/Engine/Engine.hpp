@@ -39,7 +39,7 @@ namespace BlueEngine {
 
       private:
         /// The game stack to allow to switch between scenes.
-        GameStack<BaseState *> gameStack;
+        GameStack<std::shared_ptr<BaseState>> gameStack;
         /// GUI Manager for our GUI interface.
         GUIManager guiManager;
         /// Flag used to determine if the engine should shutdown.
