@@ -4,15 +4,12 @@
 #include "stb_image.h"
 #include "Controller/Engine/Engine.hpp"
 
-View::Skybox::Skybox() {}
-
 View::Skybox::~Skybox() {
     glDeleteVertexArrays(1, &skyboxVAO);
     glDeleteBuffers(1, &skyboxVAO);
 }
 
 void View::Skybox::Init() {
-    //auto &engine = BlueEngine::Engine::get();
     glGenVertexArrays(1, &skyboxVAO);
     glGenBuffers(1, &skyboxVBO);
     glBindVertexArray(skyboxVAO);
@@ -65,10 +62,9 @@ unsigned int View::Skybox::loadCubemap(vector<string> mFaces) {
     return textureID;
 }  
 
-void View::Skybox::draw(const glm::mat4& view, const glm::mat4& projection) {
+void View::Skybox::draw(const glm::mat4& view, const glm::mat4& projection) const {
     glDepthFunc(GL_LEQUAL); // change depth function so depth test passes when values are equal to depth buffer's content
     shader->use();
-    //shader->setInt("skybox", 0);
     shader->setMat4("sk_view", view);
     shader->setMat4("sk_projection", projection);
     // skybox cube

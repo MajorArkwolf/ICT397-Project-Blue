@@ -21,25 +21,23 @@ PrototypeScene::PrototypeScene() {
 
 auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
 	if (moveForward) {
-		camera.ProcessKeyboard(FORWARD, dt);
+		camera.ProcessKeyboard(Camera_Movement::FORWARD, dt);
 	}
 	if (moveBackward) {
-		camera.ProcessKeyboard(BACKWARD, dt);
+		camera.ProcessKeyboard(Camera_Movement::BACKWARD, dt);
 	}
 	if (moveLeft) {
-		camera.ProcessKeyboard(LEFT, dt);
+		camera.ProcessKeyboard(Camera_Movement::LEFT, dt);
 	}
 	if (moveRight) {
-		camera.ProcessKeyboard(RIGHT, dt);
+		camera.ProcessKeyboard(Camera_Movement::RIGHT, dt);
 	}
 
 	terrain.Update(camera.getLocation());
 }
 
 void PrototypeScene::Init() {
-	//terrain.Init();
-	//camera.Position.y = 100.0;
-	camera = Camera(glm::vec3(0.0f, 150.0f, 3.0f));
+	camera = View::Camera(glm::vec3(0.0f, 150.0f, 3.0f));
 	models.emplace_back("res/model/player_male.obj", false);
 
 	// Temporarily hard-code the external Lua script file while a proper implementation of Lua integration is on hold
@@ -51,7 +49,6 @@ void PrototypeScene::handleWindowEvent() {
 	View::OpenGL::ResizeWindow();
 }
 
-// SDLFIX
 void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
 	auto& engine = BlueEngine::Engine::get();
 	auto& guiManager = engine.getGuiManager();

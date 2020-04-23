@@ -44,7 +44,7 @@ namespace Controller {
         void GeneratePerlinNoise(int xsize, int zsize);
         /**
          * @brief Getter for Chunk size.
-         * @return Returns the chunksize the factory is set too.
+         * @return Returns the chunk size the factory is set too.
          */
         int GetChunkSize() const;
 
@@ -71,7 +71,7 @@ namespace Controller {
 		int width = 0;
 		/// Max height of the height map
         int height = 0;
-		/// Heightmap of floats used for terrain.
+		/// Height map of floats used for terrain.
 		std::vector<std::vector<Blue::Perlin>> fValues = {};
 		/// A pointer to the terrain shader.
 		std::shared_ptr<Shader> terrainShader = nullptr;
@@ -99,27 +99,27 @@ namespace Controller {
          */
         void GenerateTextureCords(std::vector<Blue::Vertex> &terrain);
         /**
-         * @brief Generates verticies for terrains.
+         * @brief Generates vertices for terrains.
          * @param reference to the terrain object.
          * @param The max size across the x plane.
          * @param The max size across the z plane.
          */
-        void GenerateVerticies(std::vector<Blue::Vertex> &terrain, unsigned int xsize,
+        void GenerateVertices(std::vector<Blue::Vertex> &terrain, unsigned int xsize,
                                unsigned int zsize);
         /**
-         * @brief Generates verticies for terrains.
+         * @brief Generates vertices for terrains.
          * @param reference to the terrain object.
          * @param the max size of the chunk.
          * @param The size of a chunk.
          */
         void AddDetail(std::vector<Blue::Vertex> &terrain, const Blue::Key& key, int chunkSize);
         /**
-         * @brief Generates indicies for terrains.
+         * @brief Generates indices for terrains.
          * @param reference to the terrain object.
          * @param The max size across the x plane.
          * @param The max size across the z plane.
          */
-        void GenerateIndicies(std::vector<unsigned int> &terrain, unsigned int xsize,
+        void GenerateIndices(std::vector<unsigned int> &terrain, unsigned int xsize,
                               unsigned int zsize);
         /**
          * @brief cleans up the memory of the terrain chunk.
@@ -132,25 +132,25 @@ namespace Controller {
          */
         void LoadPerlinNoise(const string& filename);
         /**
-         * Generate soft normals for the verticies
-         * @param verticies the be soft normales.
-         * @param indicies to generate the hard normals
+         * Generate soft normals for the vertices
+         * @param vertices the be soft normales.
+         * @param indices to generate the hard normals
          */
-        void GenerateNormals(std::vector<Blue::Vertex> &verticies, std::vector<unsigned int> indicies);
+        void GenerateNormals(std::vector<Blue::Vertex> &vertices, std::vector<unsigned int> indices);
         /**
-         * Overloaded function to generate verticies for the terrain.
-         * @param terrain The terrain model to add verticies to.
-         * @param xsize The max X size of verticies to generate.
-         * @param zsize The max Z size of verticies to generate.
+         * Overloaded function to generate vertices for the terrain.
+         * @param terrain The terrain model to add vertices to.
+         * @param xsize The max X size of vertices to generate.
+         * @param zsize The max Z size of vertices to generate.
          * @param xstart The min X value to start from.
          * @param zstart The min Z value to start from.
          * @param increment The amount to increment each verticie by.
          */
         void
-        GenerateVerticies(vector<Blue::Vertex> &terrain, unsigned int xsize, unsigned int zsize, unsigned int xstart,
+        GenerateVertices(vector<Blue::Vertex> &terrain, unsigned int xsize, unsigned int zsize, unsigned int xstart,
                           unsigned int zstart, unsigned int increment);
 
-        void StitchSeemedVerticies(Model::TerrainModel &newTerrain, const Blue::Key& key);
+        void StitchSeemedVertices(Model::TerrainModel &newTerrain, const Blue::Key& key);
 
         float GetDetailAt(const Blue::Key &key, int xcord, int zcord);
 

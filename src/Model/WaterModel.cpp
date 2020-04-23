@@ -1,19 +1,10 @@
 #include "WaterModel.hpp"
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <ctime>
 #include <utility>
 
-
-Model::Water::Water() {
-
-}
-
-void Model::Water::SetupModel(const std::vector<Blue::Vertex> &verticies,
-                              const std::vector<unsigned int> &indicies) {
-    BlueEngine::Engine::get().renderer.SetupTerrainModel(VAO, VBO, EBO, verticies, indicies);
-    this->EBO_Size = static_cast<unsigned int>(indicies.size());
+void Model::Water::SetupModel(const std::vector<Blue::Vertex> &vertices,
+                              const std::vector<unsigned int> &indices) {
+    BlueEngine::Engine::get().renderer.SetupTerrainModel(VAO, VBO, EBO, vertices, indices);
+    this->EBO_Size = static_cast<unsigned int>(indices.size());
 }
 
 void Model::Water::SetShader(std::shared_ptr<Shader> newWater) {
@@ -37,9 +28,8 @@ void Model::Water::Draw(const glm::mat4& projection, const glm::mat4& view, cons
 }
 
 void Model::Water::SetTexture(unsigned int newTex) {
-    waterTextureID = newTex;
     textures.resize(1);
-    textures.at(0) = waterTextureID;
+    textures.at(0) = newTex;
 }
 
 void Model::Water::SetWaterHeight(float newWaterHeight) {
