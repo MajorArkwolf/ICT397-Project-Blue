@@ -34,7 +34,6 @@ target_sources(${PROJECT_NAME} PRIVATE
     # View
     View/Renderer/Shader.cpp
     View/EulerCamera.cpp
-    View/Renderer/Renderer.cpp
     View/Renderer/OpenGL.cpp
     View/Renderer/Skybox.cpp
 

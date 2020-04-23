@@ -2,9 +2,6 @@
 #include <utility>
 #include <vector>
 
-#include "Model/Models/Mesh.hpp"
-#include "Shader.hpp"
-
 namespace View {
     class Renderer {
         /**
@@ -16,7 +13,7 @@ namespace View {
          */
         virtual void Draw() = 0;
         /**
-         * The default deinit interface.
+         * The default de init interface.
          */
         virtual void DeInit() = 0;
         /**
