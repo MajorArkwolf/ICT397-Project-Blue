@@ -41,7 +41,7 @@ namespace Controller {
 		 */
 		~TerrainManager() = default;
 		/**
-		 * @brief Initalises the manager for generating terrain.
+		 * @brief Initialises the manager for generating terrain.
 		 */
 		void Init();
 		/**
@@ -64,14 +64,15 @@ namespace Controller {
          */
 		void GenerateHeightMap(Blue::HeightMap& heightMap);
 
-		
+		void setCLODLevel(unsigned int newSize);
+
 	private:
 	    BlueEngine::ID id = 0;
 		/// The max size a key can be to stop out of bound checks on the terrain.
 		size_t maxKey = 15;
 		/// How many chunks are rendered in a circle around a set position. Usually based on the camera.
-		int radSize = 3;
-		/// How far the character can move inside the play area before a new chunk is laoded.
+		unsigned int radSize = 3;
+		/// How far the character can move inside the play area before a new chunk is loaded.
 		int reloadDistance = 1;
 		/// The last position the camera was at.
         Blue::Key lastPos = Blue::Key(999, 999);

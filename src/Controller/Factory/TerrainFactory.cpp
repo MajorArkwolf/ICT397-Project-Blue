@@ -27,6 +27,12 @@ void Controller::TerrainFactory::Init() {
     dirtTextureID    = texManager.getTexture("dirt").TextureID;
     sandTextureID    = texManager.getTexture("sand").TextureID;
     waterTextureID   = texManager.getTexture("water").TextureID;
+
+    if (this->width > this->height) {
+        maxKeySize = ((width / 2) / ChunkSize) - 1;
+    } else {
+        maxKeySize = ((height / 2) / ChunkSize) - 1;
+    }
 }
 
 void Controller::TerrainFactory::LoadLua() {
@@ -541,4 +547,8 @@ void Controller::TerrainFactory::AddDetailV2(std::vector<Blue::Vertex> &newTerra
         vert.position.y =
             GetDetailAt(key, static_cast<int>(vert.position.x), static_cast<int>(vert.position.z));
     }
+}
+
+unsigned int Controller::TerrainFactory::getMaxKeySize() {
+    return maxKeySize;
 }

@@ -9,6 +9,7 @@ Controller::TerrainManager::TerrainManager() {
 
 void Controller::TerrainManager::Init() {
     auto &factory = Controller::Factory::get().terrain;
+    maxKey = factory.getMaxKeySize();
     int mKey = static_cast<int>(maxKey);
     for (int key_x = mKey * -1; key_x < mKey; ++key_x) {
         for (int key_z = mKey * -1; key_z < mKey; ++key_z) {
@@ -100,4 +101,8 @@ void Controller::TerrainManager::AddToDraw() {
     for (const auto& e : drawCircle) {
         e->AddToDraw();
     }
+}
+
+void Controller::TerrainManager::setCLODLevel(unsigned int newSize) {
+    radSize = newSize;
 }
