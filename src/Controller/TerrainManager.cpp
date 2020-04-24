@@ -38,8 +38,8 @@ void Controller::TerrainManager::GenerateHeightMap(Blue::HeightMap& heightMap) {
     heightMap.targetId = this->id;
     heightMap.width = terrainFactory.getWidth();
     heightMap.height = terrainFactory.getHeight();
-    heightMap.position.x = static_cast<float>(terrainFactory.getWidth() / 2.0f);
-    heightMap.position.z = static_cast<float>(terrainFactory.getHeight() / 2.0f);
+    heightMap.position.x = (static_cast<float>(terrainFactory.getWidth()) / 2.0f) * -1;
+    heightMap.position.z = ((static_cast<float>(terrainFactory.getHeight()) / 2.0f) * -1);
     heightMap.rotation = {};
     heightMap.terrain = terrainFactory.ExportHeightMap();
 }
