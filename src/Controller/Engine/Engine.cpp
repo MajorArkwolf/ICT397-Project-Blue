@@ -64,12 +64,25 @@ auto Engine::run() -> void {
         const double alpha = accumulator / dt;
         // state = currentState * alpha + previousState * (1.0 - alpha);
 
-        // testing only pls delete
-        double timeStep = 1.0 / 60.0;
-        double acc = 0.0;
+        std::cout << std::endl;
+        std::cout << "raw newtime: " << newTime << " raw currentTime: " << currentTime << std::endl;
+        std::cout << "raw delta: " << frameTime << std::endl;
+        std::cout << "raw factor: " << alpha << std::endl;
 
-        double deltaTime = newTime - prevTime;
-        prevTime = newTime;
+
+        // testing only pls delete
+        uint64_t currTime = glfwGetTime()*1000000;
+
+        //std::cout << "currTime: " << currTime << " prev time: " << prevTime << std::endl;
+        double freq = double(glfwGetTimerFrequency());
+        //std::cout << "frequency: " << freq << std::endl;
+
+        //double deltaTime = double(currTime - prevTime)/freq;
+        double deltaTime = frameTime /10;
+        //std::cout << "deltaTime: " << deltaTime << std::endl;
+
+        prevTime = currTime;
+
         acc += deltaTime;
 
         while(acc >= timeStep)
@@ -81,7 +94,7 @@ auto Engine::run() -> void {
 
         // to delete for testing physics
         factor = acc / timeStep;
-        std::cout << "factor: " << factor << std::endl;
+        //std::cout << "factor: " << factor << std::endl;
         engine.gameStack.getTop()->updatePhysics(factor);
 
         engine.gameStack.getTop()->display();

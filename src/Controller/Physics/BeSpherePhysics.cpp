@@ -47,7 +47,7 @@ void BeSpherePhysics::SetType(BeBodyType type) {
     body->setType(type);
 }
 
-BeMaterial BeSpherePhysics::GetMaterial() {
+BeMaterial &BeSpherePhysics::GetMaterial() {
     BeMaterial result(body->getMaterial());
     return result;
 }
@@ -63,4 +63,9 @@ void BeSpherePhysics::SetSleep(bool toggle) {
 void BeSpherePhysics::ApplyForceToCentre(const glm::vec3 &force) {
     rp3d::Vector3 f(force.x, force.y, force.z);
     body->applyForceToCenterOfMass(f);
+}
+
+glm::vec3 BeSpherePhysics::GetVertexAt(int inputX, int inputY) {
+    glm::vec3 result(0,0,0);
+    return result;
 }

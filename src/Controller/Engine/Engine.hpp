@@ -59,8 +59,10 @@ namespace BlueEngine {
         bool firstMouse = true;
 
         //Testing physics delete after
-        static inline double factor = 0.01;
-        static inline double prevTime = 0.0;
+        static inline double factor = 0.00;
+        static inline uint64_t prevTime = 0;
+        static inline double timeStep = 1.0 / 60.0;
+        static inline double acc = 0.0;
 
       public:
         Engine(Engine &&)      = default;

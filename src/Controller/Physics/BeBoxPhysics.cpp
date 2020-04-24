@@ -13,7 +13,6 @@ BeBoxPhysics::BeBoxPhysics(glm::vec3 position, glm::quat rotation, glm::vec3 ext
     shape                = new rp3d::BoxShape(ext);
     body->addCollisionShape(shape, transform, mass);
     bodyId = targetId;
-
 }
 BeBoxPhysics::~BeBoxPhysics() {
 
@@ -49,7 +48,7 @@ void BeBoxPhysics::SetType(BeBodyType type) {
     body->setType(type);
 }
 
-BeMaterial BeBoxPhysics::GetMaterial() {
+BeMaterial &BeBoxPhysics::GetMaterial() {
     BeMaterial result(body->getMaterial());
     return result;
 }
@@ -66,4 +65,9 @@ void BeBoxPhysics::ApplyForceToCentre(const glm::vec3 &force) {
     std::cout << "running force..." << std::endl;
     rp3d::Vector3 f(force.x, force.y, force.z);
     body->applyForceToCenterOfMass(f);
+}
+
+glm::vec3 BeBoxPhysics::GetVertexAt(int inputX, int inputY) {
+    glm::vec3 result(0,0,0);
+    return result;
 }

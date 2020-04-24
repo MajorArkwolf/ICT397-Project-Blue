@@ -55,11 +55,11 @@ private:
     BeAbstractPhysicsFactory *factory;
     BeAbstractPhysicsLibrary *physics;
     BeAbstractPhysics *cam;
-    BeAbstractPhysics *body;
-    //BeAbstractPhysics *testy;
-    //BeAbstractPhysics *testx;
+    //BeAbstractPhysics *body;
+    BeAbstractPhysics *testy;
+    BeAbstractPhysics *testx;
     std::vector <BeAbstractPhysics *> bodies;
 
-    BeTransform previousTransform;
-
+    BeTransform previousXTransform;
+    BeTransform previousYTransform;
 };

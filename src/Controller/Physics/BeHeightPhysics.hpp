@@ -72,7 +72,7 @@ class BeHeightPhysics : public BeAbstractPhysics{
     * @brief get material to set bounciness and other attributes
     * @return BeMaterial
     */
-    BeMaterial GetMaterial() override;
+    BeMaterial &GetMaterial() override;
 
     /**
      * @brief checks rest state
@@ -90,7 +90,15 @@ class BeHeightPhysics : public BeAbstractPhysics{
      * @brief apply force to dynamic physics object
      * @param force vector representing force in newtons
      */
-    void ApplyForceToCentre(const glm::vec3 &force) override ;
+    void ApplyForceToCentre(const glm::vec3 &force) override;
+
+    /**
+     * @brief get local vertex given x,y coordinates
+     * @param inputX x coord
+     * @param inputY y coord
+     * @return local vertex
+     */
+    glm::vec3 GetVertexAt(int inputX, int inputY) override;
 
   private:
     rp3d::HeightFieldShape *shape;

@@ -82,3 +82,10 @@ void BeDynamicWorld::Update(double timeStep) {
     bePhysicsWorld->update(timeStep);
 }
 
+void BeDynamicWorld::SetTimeBeforeSleep(double time) {
+    bePhysicsWorld->setTimeBeforeSleep(time);
+}
+
+bool BeDynamicWorld::GetSleepToggle() {
+    return bePhysicsWorld->isSleepingEnabled();
+}

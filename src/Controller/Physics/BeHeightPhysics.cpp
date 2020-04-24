@@ -50,7 +50,7 @@ void BeHeightPhysics::SetType(BeBodyType type) {
     body->setType(type);
 }
 
-BeMaterial BeHeightPhysics::GetMaterial() {
+BeMaterial &BeHeightPhysics::GetMaterial() {
     BeMaterial result(body->getMaterial());
     return result;
 }
@@ -66,4 +66,10 @@ void BeHeightPhysics::SetSleep(bool toggle) {
 void BeHeightPhysics::ApplyForceToCentre(const glm::vec3 &force) {
     rp3d::Vector3 f(force.x, force.y, force.z);
     body->applyForceToCenterOfMass(f);
+}
+
+glm::vec3 BeHeightPhysics::GetVertexAt(int inputX, int inputY) {
+    rp3d::Vector3 temp = shape->getVertexAt(inputX, inputY);
+    glm::vec3 result(temp.x, temp.y, temp.z);
+    return result;
 }

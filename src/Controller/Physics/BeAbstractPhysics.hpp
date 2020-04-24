@@ -58,7 +58,7 @@ class BeAbstractPhysics{
      * @brief get material to set bounciness and other attributes
      * @return BeMaterial
      */
-    virtual BeMaterial GetMaterial() = 0;
+    virtual BeMaterial &GetMaterial() = 0;
 
     /**
      * @brief checks rest state
@@ -77,6 +77,14 @@ class BeAbstractPhysics{
      * @param force vector representing force in newtons
      */
     virtual void ApplyForceToCentre(const glm::vec3 &force) = 0;
+
+    /**
+     * @brief get local vertex given x,y coordinates
+     * @param inputX x coord
+     * @param inputY y coord
+     * @return local vertex
+     */
+    virtual glm::vec3 GetVertexAt(int inputX, int inputY) = 0;
 
   protected:
     rp3d::bodyindex bodyId;

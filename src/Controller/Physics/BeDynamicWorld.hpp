@@ -143,6 +143,17 @@ class BeDynamicWorld {
      */
     void Update(double timeStep);
 
+    /**
+     * @brief set time before setting object to rest
+     * @param time elapsed time
+     */
+    void SetTimeBeforeSleep(double time);
+    /**
+     * @brief get sleep options
+     * @return sleep boolean
+     */
+    bool GetSleepToggle();
+
   private:
     rp3d::WorldSettings worldSettings;
     rp3d::Vector3 worldGravity;
