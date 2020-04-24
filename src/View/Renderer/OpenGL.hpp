@@ -109,8 +109,6 @@ namespace View {
         /// The sky box for the scene.
         Skybox skyBox = {};
 
-        //Test test = {};
-
         /**
          * Sorts the objects based on the view distance, helps solve alpha issues.
          */

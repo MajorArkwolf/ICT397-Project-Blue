@@ -88,6 +88,6 @@ void View::Camera::updateCameraVectors() {
 }
 
 glm::ivec2 View::Camera::getLocation() const {
-    auto key = glm::ivec2(static_cast<int>(Position.x / 100), static_cast<int>(Position.z / 100));
+    auto key = glm::ivec2(static_cast<int>(Position.x), static_cast<int>(Position.z));
     return key;
 }
