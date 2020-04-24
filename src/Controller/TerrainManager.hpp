@@ -13,18 +13,10 @@
 #include "Model/Vertix.hpp"
 
 namespace Controller {
-	/// Hash function for the key into the map.
-	struct pair_hash
-	{
-		template <class T1, class T2>
-		std::size_t operator() (const std::pair<T1, T2>& key) const
-		{
-			return std::hash<T1>()(key.first) ^ std::hash<T2>()(key.second);
-		}
-	};
 	struct ChunkClod {
 	    Model::TerrainModel level1 = {};
 	    Model::TerrainModel level2 = {};
+        Blue::Key key = {};
 	};
 	/**
 	 * @class TerrainManager
@@ -51,11 +43,14 @@ namespace Controller {
 		 */
 		void Draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos);
 		/**
-		 * @brief Updatecall for the terrain model objects.
+		 * @brief Update call for the terrain model objects.
 		 * @param key to where the camera is relative to the chunk its in.
 		 */
 		void Update(glm::ivec2 key);
 
+		/**
+		 * Iterates all the chunks and adds them to the draw call.
+		 */
 		void AddToDraw();
 
         /**
@@ -64,7 +59,13 @@ namespace Controller {
          */
 		void GenerateHeightMap(Blue::HeightMap& heightMap);
 
+		/**
+		 * Sets the radius of where level of detail around the character goes from level 1 to level 2.
+		 * @param newSize radius of the new circle.
+		 */
 		void setCLODLevel(unsigned int newSize);
+
+		float getHeightCoord(glm::vec2 currentCord);
 
 	private:
 	    BlueEngine::ID id = 0;
@@ -78,8 +79,8 @@ namespace Controller {
         Blue::Key lastPos = Blue::Key(999, 999);
         /// Draw list of chunks to be sent to the renderer.
         std::vector<Model::TerrainModel*> drawCircle = {};
-        /// Unordered map of shared pointers to terrain models for quick access.
-        std::unordered_map<Blue::Key, std::shared_ptr<ChunkClod>, pair_hash> map = {};
+        /// All the chunks in a scene.
+        std::vector<std::shared_ptr<ChunkClod>> chunks = {};
         /**
          * @brief Pythagoras function to determine the distance of 2 cartesian coordinates.
          * @param Key of the first square.

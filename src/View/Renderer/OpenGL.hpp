@@ -9,6 +9,7 @@
 #include "View/EulerCamera.hpp"
 #include "Model/Models/Model.hpp"
 #include "Model/Vertix.hpp"
+
 namespace View {
     class OpenGL: public View::Renderer {
       public:
@@ -95,7 +96,7 @@ namespace View {
          * @param ebo_size The size of the indices buffer.
          */
         void DrawTerrain(unsigned int &VAO, const std::vector<unsigned int> &textures,
-                         unsigned int ebo_size);
+                         const unsigned int& ebo_size);
 
 
     private:
@@ -107,6 +108,8 @@ namespace View {
         Camera *camera = nullptr;
         /// The sky box for the scene.
         Skybox skyBox = {};
+
+        //Test test = {};
 
         /**
          * Sorts the objects based on the view distance, helps solve alpha issues.

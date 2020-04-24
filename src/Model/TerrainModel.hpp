@@ -58,7 +58,7 @@ namespace Model {
 		 */
 		void setHeightOffsets(float newSnowHeight, float newDirtHeight, float newGrassHeight, float newSandHeight);
 		///Model scale size
-		glm::mat4 model = glm::mat4(0.5f);
+		glm::mat4 model = glm::mat4(1.0f);
 		///The position that the chunk will be drawn at.
 		glm::vec3 position = {};
 		///A shared pointer to the shader that will be used.

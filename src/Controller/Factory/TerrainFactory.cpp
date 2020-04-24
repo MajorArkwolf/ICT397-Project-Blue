@@ -104,7 +104,8 @@ void Controller::TerrainFactory::GenerateTerrain(Model::TerrainModel &newTerrain
     /// Generate vertices to form a giant square.
     GenerateVertices(vertices, xsize, zsize);
     /// Give heights to the y values using perlin noise.
-    AddDetail(vertices, key, ChunkSize);
+    AddDetailV2(vertices, key);
+    //AddDetail(vertices, key, ChunkSize);
     /// Generate indicies for the vertices.
     GenerateIndices(indicies, xsize, zsize);
     /// Generate the texture coordinates of the squares.
@@ -133,7 +134,7 @@ void Controller::TerrainFactory::GenerateWater(Model::Water &lake, const Blue::K
     auto sizeOfX = static_cast<unsigned int>(glm::sqrt(vertices.size()));
     GenerateIndices(indicies, sizeOfX, sizeOfX);
     GenerateTextureCords(vertices);
-    //This is a hack to auto set the water normals to reduce computaional time.
+    //This is a hack to auto set the water normals to reduce computational time.
     for (auto &v : vertices) {
         v.normals = glm::vec3(0.0f, 1.0f, 0.0f);
     }
@@ -537,9 +538,9 @@ void Controller::TerrainFactory::StitchSeemedVertices(Model::TerrainModel &newTe
 }
 
 float Controller::TerrainFactory::GetDetailAt(const Blue::Key &key, const int xcord, const int zcord) {
-    int row = (height / 2) + key.first * ChunkSize + xcord;
-    int col = (width / 2) + key.second * ChunkSize + zcord;
-    return fValues.at(static_cast<size_t>(row)).at(static_cast<size_t>(col)).height;
+    int x = (height / 2) + key.first * ChunkSize + xcord;
+    int z = (width / 2) + key.second * ChunkSize + zcord;
+    return fValues.at(static_cast<size_t>(x)).at(static_cast<size_t>(z)).height;
 }
 
 void Controller::TerrainFactory::AddDetailV2(std::vector<Blue::Vertex> &newTerrain, const Blue::Key &key) {
@@ -551,4 +552,38 @@ void Controller::TerrainFactory::AddDetailV2(std::vector<Blue::Vertex> &newTerra
 
 unsigned int Controller::TerrainFactory::getMaxKeySize() {
     return maxKeySize;
+}
+
+float Controller::TerrainFactory::getHeightAtCord(glm::vec2 currentCord) {
+
+//    auto BL = glm::vec3(0.0f, fValues.at(x).at(z).height, 0.0f);
+//    auto BR = glm::vec3(0.0f, fValues.at(x).at(z2).height, 1.0f);
+//    auto TL = glm::vec3(1.0f, fValues.at(x2).at(z).height, 0.0f);
+//    auto TR = glm::vec3(1.0f, fValues.at(x2).at(z2).height, 1.0f);
+
+    auto offSet = (maxKeySize * ChunkSize);
+    float x = currentCord.x + offSet;
+    float z = currentCord.y + offSet;
+    float x1 = static_cast<int>(floor(currentCord.x)) + offSet;
+    float z1 = static_cast<int>(floor(currentCord.y)) + offSet;
+    float x2 = x1 + 1;
+    float z2 = z1 + 1;
+    auto hBL = fValues.at(x1).at(z1).height;
+    auto hBR = fValues.at(x1).at(z2).height;
+    auto hTL = fValues.at(x2).at(z1).height;
+    auto hTR = fValues.at(x2).at(z2).height;
+    // x-axis
+    //auto resultX = ((( x - x1 )/( x2 - x1 )) * hBL) + ((( x2 - x)/( x2 - x1 )) * hTL);
+    // z-axis
+    //auto resultZ = ( z - z1 )/( z2 - z1 ) * hBL + ( z2 - z )/( z2-z1 ) * hBR;
+    auto result_height = hBL;
+    //auto result_height = hBL + (1 + x - x2) * hTL + (1 + z - z2) * hBR;
+    return result_height;
+}
+
+void Controller::TerrainFactory::crashTest(glm::vec2 currentCord) {
+    int row = currentCord.x + maxKeySize * ChunkSize;
+    int col = currentCord.y + maxKeySize * ChunkSize;
+    std::cout << "Camera X: " << currentCord.x <<" Camera Z: " << currentCord.y << " Row & Col: " << row << " " << col << "\n";
+    auto hBL = fValues.at(row).at(col).height;
 }

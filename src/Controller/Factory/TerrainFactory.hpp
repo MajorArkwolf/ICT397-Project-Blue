@@ -71,9 +71,17 @@ namespace Controller {
          */
         float * ExportHeightMap();
 
+        /**
+         * Gets the maximum chunk size in a certain direction.
+         * @return the max size.
+         */
         unsigned int getMaxKeySize();
 
-	private:
+        float getHeightAtCord(glm::vec2 currentCord);
+
+        void crashTest(glm::vec2 currentCord);
+    /// change this back to private
+	public:
 		/// Determines how many squares fit into a single chunk
 		int ChunkSize = 100;
 		/// Sets the max size of the play area

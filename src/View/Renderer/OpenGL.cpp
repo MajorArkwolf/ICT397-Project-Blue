@@ -1,10 +1,6 @@
 #include "OpenGL.hpp"
 #include <iostream>
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
-#include <glad/glad.h>
 #include "Controller/Engine/Engine.hpp"
-#include "Controller/GUIManager.hpp"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include <algorithm>
@@ -37,6 +33,7 @@ void View::OpenGL::Draw() {
     } else {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
+
     for (auto &m : drawQue) {
         m.drawPointer(projection, view, camera->Position);
     }
@@ -248,7 +245,7 @@ void View::OpenGL::SetupTerrainModel(unsigned int &VAO, unsigned &VBO, unsigned 
 }
 
 void View::OpenGL::DrawTerrain(unsigned int &VAO, const std::vector<unsigned int> &textures,
-                               const unsigned int ebo_size) {
+                               const unsigned int& ebo_size) {
     GLint count = 0;
     for (auto &e : textures) {
         glActiveTexture(GL_TEXTURE0 + count);
