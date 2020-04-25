@@ -13,9 +13,9 @@ namespace Physics {
         void Update(double deltaTime) override;
         RigidBodyID CreateRigidBody(glm::vec3 position, glm::quat) override;
         RigidBody* GetRigidBody(RigidBodyID bodyID) override;
-        std::map<size_t, ReactRigidBody> rigidBodies;
-      private:
 
+      private:
+        std::map<size_t, ReactRigidBody> rigidBodies;
         rp3d::DynamicsWorld dynamicsWorld;
     };
 }
