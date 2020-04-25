@@ -46,19 +46,8 @@ void Controller::TerrainManager::GenerateHeightMap(Blue::HeightMap& heightMap) {
 
 void Controller::TerrainManager::Update(glm::ivec2 key) {
     auto &factory = Controller::Factory::get().terrain;
-    Blue::Key updateKey{};
-	if (key.x < 0) {
-		updateKey.first = key.x / factory.GetChunkSize() - 1;
-	}
-	else {
-		updateKey.first = key.x / factory.GetChunkSize();
-	}
-	if (key.y < 0) {
-		updateKey.second = key.y / factory.GetChunkSize() - 1;
-	}
-	else {
-		updateKey.second = key.y / factory.GetChunkSize();
-	}
+    Blue::Key updateKey = Blue::Key(key.x / factory.GetChunkSize() - 1, updateKey.second = key.y / factory.GetChunkSize() - 1);
+    std::cout << "Key1: " << updateKey.first << "Key2: " << updateKey.second << "\n";
 	if (abs(this->lastPos.first - updateKey.first) > reloadDistance || abs(this->lastPos.second - updateKey.second) > reloadDistance ) {
 		drawCircle.clear();
 		this->lastPos = updateKey;
@@ -100,4 +89,25 @@ void Controller::TerrainManager::AddToDraw() {
     for (const auto& e : drawCircle) {
         e->AddToDraw();
     }
+}
+
+float Controller::TerrainManager::GetBLHeight(glm::vec2 currentCord) {
+    auto &factory = Controller::Factory::get().terrain;
+    auto currentKey = GenerateKey(glm::ivec2(floor(currentCord.x), floor(currentCord.y)));
+    currentCord.x -= currentKey.first * factory.GetChunkSize();
+    currentCord.y -= currentKey.second * factory.GetChunkSize();
+    return factory.GetBLHeight(currentKey, currentCord);
+}
+
+Blue::Key Controller::TerrainManager::GenerateKey(glm::ivec2 currentCord) {
+    auto chunkSize = Controller::Factory::get().terrain.GetChunkSize();
+    Blue::Key key = {};
+    Blue::Key currentKey(floor(currentCord.x) / chunkSize, floor(currentCord.y) / chunkSize);
+    if (currentCord.x < 0) {
+        key.first -= 1;
+    }
+    if (currentCord.y < 0) {
+        key.second -= 1;
+    }
+    return key;
 }

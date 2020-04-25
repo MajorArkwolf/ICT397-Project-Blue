@@ -542,3 +542,7 @@ void Controller::TerrainFactory::AddDetailV2(std::vector<Blue::Vertex> &newTerra
             GetDetailAt(key, static_cast<int>(vert.position.x), static_cast<int>(vert.position.z));
     }
 }
+
+float Controller::TerrainFactory::GetBLHeight(const Blue::Key &key, glm::vec2 currentCord) {
+    return 0.0f;
+}

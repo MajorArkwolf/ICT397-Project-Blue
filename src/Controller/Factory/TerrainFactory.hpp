@@ -62,6 +62,8 @@ namespace Controller {
          */
         float * ExportHeightMap();
 
+        float GetBLHeight(const Blue::Key &key, glm::vec2 currentCord);
+
 	private:
 		/// Determines how many squares fit into a single chunk
 		int ChunkSize = 100;

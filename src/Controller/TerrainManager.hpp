@@ -64,6 +64,9 @@ namespace Controller {
          */
 		void GenerateHeightMap(Blue::HeightMap& heightMap);
 
+        float GetBLHeight(glm::vec2 currentCord);
+
+        Blue::Key GenerateKey(glm::ivec2 currentCord);
 		
 	private:
 	    BlueEngine::ID id = 0;
