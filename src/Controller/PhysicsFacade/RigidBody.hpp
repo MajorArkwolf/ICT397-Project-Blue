@@ -20,5 +20,8 @@ namespace Physics {
         virtual void ApplyForceToCentre(glm::vec3 force)                                  = 0;
         virtual void ApplyForce(glm::vec3 force, glm::vec3 point)                         = 0;
         virtual void Destroy()                                                            = 0;
+
+      private:
+      
     };
 }

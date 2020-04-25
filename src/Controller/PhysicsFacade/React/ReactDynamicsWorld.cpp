@@ -17,17 +17,27 @@ void Physics::ReactDynamicsWorld::Update(double deltaTime) {
 }
 
 Physics::RigidBodyID Physics::ReactDynamicsWorld::CreateRigidBody(glm::vec3 position, glm::quat orientation) {
-    static RigidBodyID rigidBodyCount            = 0;
+    static size_t rigidBodyCount            = 0;
     rp3d::Vector3 bodyPosition = ReactHelper::ConvertVec3(position);
     rp3d::Quaternion bodyOrientation = ReactHelper::ConvertQuaternion(orientation);
     rp3d::Transform transform(bodyPosition, bodyOrientation);
     rp3d::RigidBody *body;
+
+    //Creates a react rigid body in this dynamics world
     body = dynamicsWorld.createRigidBody(transform);
 
 
     ReactRigidBody reactRigidBody = ReactRigidBody(body);
     rigidBodyCount++;
+
+    //Adds the rigid body to the map of rigid bodies
     rigidBodies.insert(std::make_pair(rigidBodyCount, reactRigidBody));
+
+    //Returns the key to the rigid body
     return rigidBodyCount;
     
+}
+
+Physics::RigidBody* Physics::ReactDynamicsWorld::GetRigidBody(RigidBodyID bodyID) {
+    return &rigidBodies.at(bodyID);
 }

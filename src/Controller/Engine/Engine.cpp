@@ -110,7 +110,8 @@ Engine::Engine() : dynWorld(glm::vec3{0, -9.8, 0}) {
     this->guiManager.initialiseImGUI(window);
     Physics::ReactShapes shapes;
     auto id = shapes.createSphere(5);
-    auto &asd = shapes.shapeMap.at(id);
+    //auto &asd = shapes.shapeMap.at(id);
+
   
     /*auto id = shapes.createSphere(5);
     std::cout << id;

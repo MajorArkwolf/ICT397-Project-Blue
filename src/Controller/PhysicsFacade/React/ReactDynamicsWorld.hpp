@@ -12,9 +12,10 @@ namespace Physics {
         void InitialiseWorld(glm::vec3 gravity) override;
         void Update(double deltaTime) override;
         RigidBodyID CreateRigidBody(glm::vec3 position, glm::quat) override;
-
+        RigidBody* GetRigidBody(RigidBodyID bodyID) override;
+        std::map<size_t, ReactRigidBody> rigidBodies;
       private:
-        std::map<RigidBodyID, ReactRigidBody> rigidBodies;
+
         rp3d::DynamicsWorld dynamicsWorld;
     };
 }

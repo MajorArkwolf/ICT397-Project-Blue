@@ -2,6 +2,7 @@
 #include <reactphysics3d.h>
 
 #include "Controller/PhysicsFacade/RigidBody.hpp"
+#include  "Controller/PhysicsFacade/React/ReactShapes.hpp"
 
 namespace Physics {
 
