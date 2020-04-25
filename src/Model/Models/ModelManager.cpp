@@ -2,11 +2,11 @@
 
 #include <map>
 
-auto ModelManager::GetModelID(std::string filename) -> size_t {
+auto ModelManager::GetModelID(const std::string& filename) -> size_t {
     static std::map<std::string, size_t> nameToId = {};
     auto id                                       = nameToId.find(filename);
     if (id == nameToId.end()) { // file not loaded yet
-        ModelRepo().push_back(Model::Model(filename, false));
+        ModelRepo().emplace_back(filename, false);
         nameToId.emplace(filename, ModelRepo().size() - 1);
         return ModelRepo().size() - 1;
     } else {
@@ -14,8 +14,8 @@ auto ModelManager::GetModelID(std::string filename) -> size_t {
     }
 }
 
-void ModelManager::Draw(size_t id, Shader *ourshader) {
-    ModelRepo().at(id).Draw(*ourshader);
+void ModelManager::Draw(size_t id, Shader *ourShader) {
+    ModelRepo().at(id).Draw(*ourShader);
 }
 
 auto ModelManager::ModelRepo() -> std::vector<Model::Model> & {

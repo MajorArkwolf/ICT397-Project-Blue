@@ -1,8 +1,6 @@
 #pragma once
 
-namespace Controller {
-
-    namespace Input {
+namespace Controller::Input {
 
         enum class BLUE_InputAction {
             INPUT_DEFAULT,
@@ -35,5 +33,5 @@ namespace Controller {
             WINDOW_RESIZE
         };
 
-    }
 }
+

@@ -8,12 +8,15 @@
 #include "Model/Models/ModelManager.hpp"
 #include "View/Renderer/OpenGL.hpp"
 #include "View/Renderer/Renderer.hpp"
+#include "Controller/TextureManager.hpp"
+#include "Model/GameObject/Manager.hpp"
+#include "Controller/Engine/LuaManager.hpp"
+#include "Controller/Factory/GameAssetFactory.hpp"
 
 using Controller::Input::BLUE_InputAction;
 using Controller::Input::BLUE_InputType;
 
 PrototypeScene::PrototypeScene() {
-    Init();
 }
 
 PrototypeScene::~PrototypeScene() {
@@ -106,7 +109,7 @@ void PrototypeScene::Init() {
     auto &resManager = ResourceManager::getInstance();
     // terrain.Init();
     // camera.Position.y = 100.0;
-    camera = Camera(glm::vec3(10.0f, 10.0f, 10.0f));
+    camera = View::Camera(glm::vec3(10.0f, 10.0f, 10.0f));
     models.emplace_back("res/model/nanosuit/nanosuit.obj", false);
 
     // models.push_back(resManager.getModelID("res/model/player_male.obj"));
@@ -171,7 +174,7 @@ void PrototypeScene::Init() {
     //    testy->EnableGravity(true);
     testy->SetType(BeBodyType::STATIC);
     BeMaterial &testyMat = testy->GetMaterial();
-    testyMat.SetBounciness(0.2);
+    testyMat.SetBounciness(0.2f);
     bodies.emplace_back(testy);
     previousYTransform.SetToIdentity();
 
@@ -202,7 +205,6 @@ void PrototypeScene::handleWindowEvent() {
     View::OpenGL::ResizeWindow();
 }
 
-// SDLFIX
 void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
 
     auto &engine      = BlueEngine::Engine::get();
@@ -287,11 +289,8 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
 auto PrototypeScene::display() -> void {
     auto &renderer = BlueEngine::Engine::get().renderer;
     renderer.SetCameraOnRender(camera);
-    // glm::mat4 model = glm::mat4(5.0f);
-    // renderer.AddToQue(models.at(0));
-    terrain.AddToDraw();
-    // terrain.Draw(projection, view, camera.Position);
-    // renderer.draw(view, projection);
+	terrain.AddToDraw();
+	GameObj_Manager::addAllToDraw();
 }
 
 void PrototypeScene::unInit() {}

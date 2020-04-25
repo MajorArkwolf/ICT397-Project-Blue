@@ -31,7 +31,7 @@ void View::OpenGL::Draw() {
     glm::mat4 view = camera->GetViewMatrix();
     glm::mat4 skyboxView = glm::mat4(glm::mat3(camera->GetViewMatrix()));
     sortDrawDistance();
-    if(wireframe)
+    if(wireFrame)
     {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     } else {
@@ -89,7 +89,7 @@ void View::OpenGL::DrawModel(Shader& shader, unsigned int &VAO, const std::vecto
             number = std::to_string(heightNr++); // transfer unsigned int to stream
 
         // now set the sampler to the correct texture unit
-        glUniform1i(glGetUniformLocation(shader.ID, (name + number).c_str()), i);
+        glUniform1i(glGetUniformLocation(shader.getId(), (name + number).c_str()), i);
         // and finally bind the texture
         glBindTexture(GL_TEXTURE_2D, textures[i].id);
     }
@@ -215,10 +215,10 @@ void View::OpenGL::sortDrawDistance() {
 }
 
 void View::OpenGL::ToggleWireFrame() {
-    wireframe = !wireframe;
+    wireFrame = !wireFrame;
 }
 
-void View::OpenGL::SetupTerrainModel(unsigned int &VAO, unsigned &VBO, unsigned int &EBO, std::vector<Blue::Vertex>& verticies, std::vector<unsigned int>& indicies) {
+void View::OpenGL::SetupTerrainModel(unsigned int &VAO, unsigned &VBO, unsigned int &EBO, const std::vector<Blue::Vertex>& vertices, const std::vector<unsigned int>& indices) {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
@@ -226,11 +226,11 @@ void View::OpenGL::SetupTerrainModel(unsigned int &VAO, unsigned &VBO, unsigned 
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, verticies.size() * sizeof(Blue::Vertex), &verticies[0],
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Blue::Vertex), &vertices[0],
                  GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicies.size() * sizeof(unsigned int), &indicies[0], GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 
     // Vertex Positions
     glEnableVertexAttribArray(0);
@@ -245,4 +245,18 @@ void View::OpenGL::SetupTerrainModel(unsigned int &VAO, unsigned &VBO, unsigned 
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Blue::Vertex),
                           reinterpret_cast<void *>(offsetof(Blue::Vertex, normals)));
     glBindVertexArray(0);
+}
+
+void View::OpenGL::DrawTerrain(unsigned int &VAO, const std::vector<unsigned int> &textures,
+                               const unsigned int ebo_size) {
+    GLint count = 0;
+    for (auto &e : textures) {
+        glActiveTexture(GL_TEXTURE0 + count);
+        glBindTexture(GL_TEXTURE_2D, e);
+        ++count;
+    }
+    glBindVertexArray(VAO);
+    glDrawElements(GL_TRIANGLES, ebo_size, GL_UNSIGNED_INT, nullptr);
+    glBindVertexArray(0);
+    glActiveTexture(GL_TEXTURE0);
 }

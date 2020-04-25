@@ -29,11 +29,11 @@ namespace View {
          */
         void Init() override;
         /**
-         * Deinitialises the renderer.
+         * De initialises the renderer.
          */
         void DeInit() override;
         /**
-         * Toggles wireframe on and off.
+         * Toggles wire frame on and off.
          */
         void ToggleWireFrame() override;
         /**
@@ -46,8 +46,8 @@ namespace View {
          * @param VAO buffer identity
          * @param VBO buffer identity
          * @param EBO buffer identity
-         * @param vertices the verticies to be passed into OpenGL
-         * @param indices the indicies to be passed into OpenGl.
+         * @param vertices the vertices to be passed into OpenGL
+         * @param indices the indices to be passed into OpenGl.
          */
         static void SetupMesh(unsigned int &VAO, unsigned int &VBO, unsigned int &EBO,
                        std::vector<Vertex> &vertices, std::vector<unsigned int> &indices);
@@ -58,7 +58,7 @@ namespace View {
         /**
          * Load a texture from file and store it.
          * @param path The path to the image.
-         * @param directory The basepath to ensure that no funny operating filesystem stuff happens.
+         * @param directory The base path to ensure that no funny operating filesystem stuff happens.
          * @param gamma A flag to set if there is gamma present.
          * @return A texture ID to avoid loading duplicates.
          */
@@ -69,7 +69,7 @@ namespace View {
          * @param shader the shader used to draw the model.
          * @param VAO index to the VAO buffer.
          * @param textures required to draw the model
-         * @param indices how many indicies are needed to draw the model.
+         * @param indices how many indices are needed to draw the model.
          */
         static void DrawModel(Shader& shader, unsigned int &VAO, const std::vector<TextureB> &textures,
                               const std::vector<unsigned int> &indices);
@@ -83,21 +83,34 @@ namespace View {
          * @param VAO index of buffer.
          * @param VBO index of buffer.
          * @param EBO index of buffer.
-         * @param verticies to load into the buffers.
-         * @param indicies to load into the buffers.
+         * @param vertices to load into the buffers.
+         * @param indices to load into the buffers.
          */
-        void SetupTerrainModel(unsigned int &VAO, unsigned &VBO, unsigned int &EBO, std::vector<Blue::Vertex>& verticies, std::vector<unsigned int>& indicies);
+        void SetupTerrainModel(unsigned int &VAO, unsigned &VBO, unsigned int &EBO, const std::vector<Blue::Vertex>& vertices, const std::vector<unsigned int>& indices);
+
+        /**
+         * Draw the Terrain models
+         * @param VAO index to the buffer object in OpenGL.
+         * @param textures a vector of texture ID's used to generate the terrain.
+         * @param ebo_size The size of the indices buffer.
+         */
+        void DrawTerrain(unsigned int &VAO, const std::vector<unsigned int> &textures,
+                         unsigned int ebo_size);
+
 
     private:
-        /// Decides if the renderer should be in wireframe mode or not.
-        bool wireframe = true;
-        /// Sorts the objects based on the view distance, helps solve alpha issues.
-        void sortDrawDistance();
+        /// Decides if the renderer should be in wire frame mode or not.
+        bool wireFrame = false;
         /// DrawQue of objects that need to be rendered by the renderer.
         std::vector<View::Data::DrawItem> drawQue = {};
         /// The active camera on the draw pass.
         Camera *camera = nullptr;
-        /// The skybox for the scene.
+        /// The sky box for the scene.
         Skybox skyBox = {};
+
+        /**
+         * Sorts the objects based on the view distance, helps solve alpha issues.
+         */
+        void sortDrawDistance();
     };
 }

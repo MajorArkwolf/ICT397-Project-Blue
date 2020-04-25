@@ -1,14 +1,7 @@
 #include "TerrainModel.hpp"
-
-#include "Controller/Engine/Engine.hpp"
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include <functional>
 #include <Controller/Factory/GameAssetFactory.hpp>
-
-Model::TerrainModel::TerrainModel() {
-}
+#include <utility>
 
 Model::TerrainModel::~TerrainModel() {
     glDeleteVertexArrays(1, &VAO);
@@ -16,12 +9,13 @@ Model::TerrainModel::~TerrainModel() {
     glDeleteBuffers(1, &EBO);
 }
 
-void Model::TerrainModel::SetupModel() {
-    BlueEngine::Engine::get().renderer.SetupTerrainModel(VAO, VBO, EBO, verticies, indicies);
+void Model::TerrainModel::SetupModel(const std::vector<Blue::Vertex>& vertices, const std::vector<unsigned int>& indices) {
+    BlueEngine::Engine::get().renderer.SetupTerrainModel(VAO, VBO, EBO, vertices, indices);
+    this->EBO_Size = static_cast<unsigned int>(indices.size());
 }
 
 void Model::TerrainModel::LoadShader(std::shared_ptr<Shader> newTerrain) {
-    this->terrainShader = newTerrain;
+    this->terrainShader = std::move(newTerrain);
 }
 
 void Model::TerrainModel::setHeightOffsets(float newSnowHeight, float newDirtHeight, float newGrassHeight, float newSandHeight) {
@@ -31,11 +25,12 @@ void Model::TerrainModel::setHeightOffsets(float newSnowHeight, float newDirtHei
     this->sandHeight = newSandHeight;
 }
 
-void Model::TerrainModel::setTextures(unsigned int& snowTex, unsigned int& grasstex, unsigned int& dirtTex, unsigned int& sandTex) {
-    this->snowTextureID = snowTex;
-    this->grassTextureID = grasstex;
-    this->dirtTextureID = dirtTex;
-    this->sandTextureID = sandTex;
+void Model::TerrainModel::setTextures(unsigned int& snowTex, unsigned int& grassTex, unsigned int& dirtTex, unsigned int& sandTex) {
+    textures.resize(4);
+    textures.at(0) = snowTex;
+    textures.at(1) = grassTex;
+    textures.at(2) = dirtTex;
+    textures.at(3) = sandTex;
 
     terrainShader->use();
     terrainShader->setInt("texture1", 0);
@@ -45,14 +40,6 @@ void Model::TerrainModel::setTextures(unsigned int& snowTex, unsigned int& grass
 }
 
 void Model::TerrainModel::Draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos) {
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, snowTextureID);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, grassTextureID);
-    glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, dirtTextureID);
-    glActiveTexture(GL_TEXTURE3);
-    glBindTexture(GL_TEXTURE_2D, sandTextureID);
     terrainShader->use();
     terrainShader->setMat4("projection", projection);
     terrainShader->setMat4("view", view);
@@ -64,10 +51,7 @@ void Model::TerrainModel::Draw(const glm::mat4& projection, const glm::mat4& vie
     terrainShader->setFloat("tm_dirtHeight", dirtHeight);
     terrainShader->setFloat("tm_grassHeight", grassHeight);
     terrainShader->setFloat("tm_sandHeight", sandHeight);
-    glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, indicie_size, GL_UNSIGNED_INT, nullptr);
-    glBindVertexArray(0);
-    glActiveTexture(GL_TEXTURE0);
+    BlueEngine::Engine::get().renderer.DrawTerrain(VAO, textures, EBO_Size);
     water.Draw(projection, view, cameraPos);
 }
 

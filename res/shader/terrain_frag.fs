@@ -23,24 +23,24 @@ uniform float tm_sandHeight;
 void main()
 {
     float maxHeight = 255;
-    vec4 t1 = texture(texture1, TexCoord);
-    vec4 t2 = texture(texture2, TexCoord);
-    vec4 t3 = texture(texture3, TexCoord);
-    vec4 t4 = texture(texture4, TexCoord);
+    vec4 snow = texture(texture1, TexCoord);
+    vec4 grass = texture(texture2, TexCoord);
+    vec4 dirt = texture(texture3, TexCoord);
+    vec4 sand = texture(texture4, TexCoord);
 
-    if (HeightPoint[1] > 190) {
-        float blend_percent = (HeightPoint[1] - tm_snowHeight) / (maxHeight - tm_snowHeight);
-        FragColor = mix(t3, t1, blend_percent);
+    if (HeightPoint[1] > tm_snowHeight) {
+        FragColor = snow;
     } else if (HeightPoint[1] > tm_dirtHeight) {
-        FragColor = t3;
+        float blend_percent = (HeightPoint[1] - tm_dirtHeight) / (tm_snowHeight - tm_dirtHeight);
+        FragColor = mix(dirt, snow, blend_percent);
     } else if (HeightPoint[1] > tm_grassHeight) {
         float blend_percent = (HeightPoint[1] - tm_grassHeight) / (tm_dirtHeight - tm_grassHeight);
-        FragColor = mix(t2, t3, blend_percent);
+        FragColor = mix(grass, dirt, blend_percent);
     } else {
-        FragColor = t2;
+        FragColor = grass;
     }
     if (HeightPoint[1] < tm_sandHeight) {
-        FragColor = t4;
+        FragColor = sand;
 	}
 
     // ambient
@@ -62,4 +62,4 @@ void main()
         
     vec3 result = (ambient + diffuse + specular);
     FragColor = FragColor * vec4(result, 1.0);
-} 
+}

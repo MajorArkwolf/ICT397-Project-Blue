@@ -12,7 +12,7 @@ namespace Model {
 	    /**
 	     * Default Constructor
 	     */
-		Water();
+		Water() = default;
 		/**
 		 * Default destructor
 		 */
@@ -37,7 +37,8 @@ namespace Model {
 		/**
 		 * @brief Sets up the model for opengl.
 		 */
-		void SetupModel();
+        void SetupModel(const std::vector<Blue::Vertex> &vertices,
+                        const std::vector<unsigned int> &indices);
         /**
          * Sets the height at which the water is rendered.
          * @param newWaterHeight the height to set the water.
@@ -45,16 +46,17 @@ namespace Model {
 		void SetWaterHeight(float newWaterHeight);
 		/// position where to draw the water
 		glm::vec3 position = { 0, 105, 0 };
-		/// verticies used to generate the terrain
-        std::vector<Blue::Vertex> verticies = {};
-		/// Vector of indicies.
-		std::vector<unsigned int> indicies = {};
-		/// shader used to generate the terrain
-		std::shared_ptr<Shader> shader = nullptr;
+
 	private:
-		unsigned int VBO = 0, VAO = 0, EBO = 0;
-		unsigned int waterTextureID = 1;
-		glm::vec3 scale{};		
+        /// Shader used to draw the water.
+        std::shared_ptr<Shader> shader = nullptr;
+        /// Buffer Object ID's
+		unsigned int VBO = 0, VAO = 0, EBO = 0, EBO_Size = 0;
+        /// Vector of water textures.
+        std::vector<unsigned int> textures = {};
+        /// Scale of the water model
+		glm::vec3 scale{};
+		/// Model matrix.
 		glm::mat4 model = glm::mat4(1.0f);
 	};
 }
