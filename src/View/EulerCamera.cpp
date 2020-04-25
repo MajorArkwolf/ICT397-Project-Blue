@@ -4,7 +4,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 // Constructor with vectors
-Camera::Camera(glm::dvec3 position,
+View::Camera::Camera(glm::dvec3 position,
                glm::dvec3 up, double yaw,
                double pitch)
         : Front(glm::dvec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED),
@@ -17,7 +17,7 @@ Camera::Camera(glm::dvec3 position,
 }
 
 // Constructor with scalar values
-Camera::Camera(double posX, double posY, double posZ, double upX, double upY,
+View::Camera::Camera(double posX, double posY, double posZ, double upX, double upY,
                double upZ, double yaw, double pitch)
         : Front(glm::dvec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED),
           MouseSensitivity(SENSITIVITY), Zoom(ZOOM) {
@@ -28,23 +28,23 @@ Camera::Camera(double posX, double posY, double posZ, double upX, double upY,
     updateCameraVectors();
 }
 
-glm::mat4 Camera::GetViewMatrix() {
+glm::mat4 View::Camera::GetViewMatrix() {
     return glm::lookAt(Position, Position + Front, Up);
 }
 
-void Camera::ProcessKeyboard(Camera_Movement direction, double deltaTime) {
+void View::Camera::ProcessKeyboard(Camera_Movement direction, double deltaTime) {
     double velocity = MovementSpeed * (deltaTime * 1000);
-    if (direction == FORWARD)
+    if (direction == Camera_Movement::FORWARD)
         Position += Front * velocity;
-    if (direction == BACKWARD)
+    if (direction == Camera_Movement::BACKWARD)
         Position -= Front * velocity;
-    if (direction == LEFT)
+    if (direction == Camera_Movement::LEFT)
         Position -= Right * velocity;
-    if (direction == RIGHT)
+    if (direction == Camera_Movement::RIGHT)
         Position += Right * velocity;
 }
 
-void Camera::ProcessMouseMovement(double xoffset, double yoffset,
+void View::Camera::ProcessMouseMovement(double xoffset, double yoffset,
                                   GLboolean constrainPitch) {
     xoffset *= MouseSensitivity;
     yoffset *= MouseSensitivity;
@@ -64,7 +64,7 @@ void Camera::ProcessMouseMovement(double xoffset, double yoffset,
     updateCameraVectors();
 }
 
-void Camera::ProcessMouseScroll(double yoffset) {
+void View::Camera::ProcessMouseScroll(double yoffset) {
     if (Zoom >= 1.0 && Zoom <= 45.0)
         Zoom -= yoffset;
     if (Zoom <= 1.0)
@@ -73,7 +73,7 @@ void Camera::ProcessMouseScroll(double yoffset) {
         Zoom = 45.0;
 }
 
-void Camera::updateCameraVectors() {
+void View::Camera::updateCameraVectors() {
     // Calculate the new Front vector
     glm::dvec3 front;
     front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
@@ -87,6 +87,7 @@ void Camera::updateCameraVectors() {
     Up = glm::normalize(glm::cross(Right, Front));
 }
 
-glm::ivec2 Camera::getLocation() {
-    return glm::ivec2(static_cast<int>(Position.x), static_cast<int>(Position.z));
+glm::ivec2 View::Camera::getLocation() const {
+    auto key = glm::ivec2(static_cast<int>(Position.x), static_cast<int>(Position.z));
+    return key;
 }

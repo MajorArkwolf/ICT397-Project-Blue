@@ -8,6 +8,11 @@
 #include "Model/Models/ModelManager.hpp"
 #include "View/Renderer/OpenGL.hpp"
 #include "View/Renderer/Renderer.hpp"
+#include "Controller/TextureManager.hpp"
+#include "Model/GameObject/Manager.hpp"
+#include "Controller/Engine/LuaManager.hpp"
+#include "Controller/Factory/GameAssetFactory.hpp"
+
 
 using Controller::Input::BLUE_InputAction;
 using Controller::Input::BLUE_InputType;
@@ -18,11 +23,11 @@ PrototypeScene::PrototypeScene() {
 
 PrototypeScene::~PrototypeScene() {
     world->DestroyRigidBody(cam->GetBody());
-    // world->DestroyRigidBody(body->GetBody());
+//    world->DestroyRigidBody(body->GetBody());
     world->DestroyRigidBody(testy->GetBody());
     world->DestroyRigidBody(testx->GetBody());
     delete cam;
-    // delete body;
+//    delete body;
     delete testy;
     delete testx;
     delete factory;
@@ -32,26 +37,20 @@ PrototypeScene::~PrototypeScene() {
 }
 
 auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
+	if (moveForward) {
+		camera.ProcessKeyboard(Camera_Movement::FORWARD, dt);
+	}
+	if (moveBackward) {
+		camera.ProcessKeyboard(Camera_Movement::BACKWARD, dt);
+	}
+	if (moveLeft) {
+		camera.ProcessKeyboard(Camera_Movement::LEFT, dt);
+	}
+	if (moveRight) {
+		camera.ProcessKeyboard(Camera_Movement::RIGHT, dt);
+	}
 
-    if (moveForward) {
-        // camera.ProcessKeyboard(FORWARD, dt);
-        cam->ApplyForceToCentre(glm::vec3(0, 0, 1));
-    }
-    if (moveBackward) {
-        // camera.ProcessKeyboard(BACKWARD, dt);
-        cam->ApplyForceToCentre(glm::vec3(0, 0, -1));
-    }
-    if (moveLeft) {
-        // camera.ProcessKeyboard(LEFT, dt);
-        cam->ApplyForceToCentre(glm::vec3(-1, 0, 0));
-    }
-    if (moveRight) {
-        // wcamera.ProcessKeyboard(RIGHT, dt);
-        cam->ApplyForceToCentre(glm::vec3(1, 0, 0));
-    }
-
-    terrain.Update(camera.getLocation());
-
+	terrain.Update(camera.getLocation());
     camera.Position.x = cam->GetTransform().GetPosition().x;
     camera.Position.y = cam->GetTransform().GetPosition().y;
     camera.Position.z = cam->GetTransform().GetPosition().z;
@@ -103,13 +102,12 @@ void PrototypeScene::updatePhysics(double f) {
 }
 
 void PrototypeScene::Init() {
-    auto &resManager = ResourceManager::getInstance();
-    // terrain.Init();
-    // camera.Position.y = 100.0;
-    camera = Camera(glm::vec3(10.0f, 10.0f, 10.0f));
-    models.emplace_back("res/model/nanosuit/nanosuit.obj", false);
+	camera = View::Camera(glm::vec3(10.0f, 100.0f, 10.0f));
+	models.emplace_back("res/model/nanosuit/nanosuit.obj", false);
 
-    // models.push_back(resManager.getModelID("res/model/player_male.obj"));
+	// Temporarily hard-code the external Lua script file while a proper implementation of Lua integration is on hold
+	GameObj_Manager::init();
+	luaL_dofile(LuaManager::getInstance().getLuaState(), "res/scripts/gameobjsSet.lua");
 
     terrain.GenerateHeightMap(map);
 
@@ -129,6 +127,15 @@ void PrototypeScene::Init() {
 
     // constructing world
     world = new BeDynamicWorld(grav, settings);
+    if(world != nullptr)
+    {
+        std::cout << "World created" << std::endl;
+    }
+    else
+    {
+        std::cout << "world not created" << std::endl;
+    }
+
     std::cout << " world gravity x: " << world->GetWorld()->getGravity().x
               << " y: " << world->GetWorld()->getGravity().y
               << " z: " << world->GetWorld()->getGravity().z << std::endl;
@@ -146,7 +153,20 @@ void PrototypeScene::Init() {
     std::cout << "sleep enabled: " << world->GetSleepToggle() << std::endl;
 
     factory = new BeRP3DFactory();
+    if(factory != nullptr)
+    {
+        std::cout << "factory created" << std::endl;
+    } else {
+        std::cout << "factor not created" << std::endl;
+    }
+
     physics = new BePhysicsLibrary(factory);
+    if(physics != nullptr)
+    {
+        std::cout << "library created" << std::endl;
+    } else {
+        std::cout << "library not created" << std::endl;
+    }
 
     // constructing camera body
     cam = physics->CreateBody(camera.Position, glm::quat(1, 0, 0, -1), glm::vec3(1, 1, 1), 1, 0, 0,
@@ -196,13 +216,13 @@ void PrototypeScene::Init() {
     //            std::cout << "Terrain local position x: " << check.x << " y: " << check.y << " z: " << check.z << std::endl;
     //        }
     //    }
+
 }
 
 void PrototypeScene::handleWindowEvent() {
     View::OpenGL::ResizeWindow();
 }
 
-// SDLFIX
 void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
 
     auto &engine      = BlueEngine::Engine::get();
@@ -287,11 +307,8 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
 auto PrototypeScene::display() -> void {
     auto &renderer = BlueEngine::Engine::get().renderer;
     renderer.SetCameraOnRender(camera);
-    // glm::mat4 model = glm::mat4(5.0f);
-    // renderer.AddToQue(models.at(0));
-    terrain.AddToDraw();
-    // terrain.Draw(projection, view, camera.Position);
-    // renderer.draw(view, projection);
+	terrain.AddToDraw();
+	GameObj_Manager::addAllToDraw();
 }
 
 void PrototypeScene::unInit() {}

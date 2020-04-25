@@ -43,10 +43,16 @@ target_sources(${PROJECT_NAME} PRIVATE
     Model/TextManager.cpp
     Model/Texture.cpp
 
+    Model/GameObject/detail/Base.cpp
+    Model/GameObject/detail/Static.cpp
+    Model/GameObject/detail/Player.cpp
+    Model/GameObject/detail/NPC.cpp
+    Model/GameObject/detail/Manager.cpp
+    Model/GameObject/detail/LuaHelper.cpp
+
     # View
     View/Renderer/Shader.cpp
     View/EulerCamera.cpp
-    View/Renderer/Renderer.cpp
     View/Renderer/OpenGL.cpp
     View/Renderer/Skybox.cpp
 

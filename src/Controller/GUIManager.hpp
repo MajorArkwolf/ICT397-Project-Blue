@@ -52,7 +52,7 @@ class GUIManager {
     /**
      * @brief Displays the dev screen
      */
-    void displayDevScreen(Camera &camera);
+    void displayDevScreen(View::Camera &camera);
 
     /**
      * @brief Displays the texture manager

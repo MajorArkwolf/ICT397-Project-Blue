@@ -1,17 +1,10 @@
 #include "WaterModel.hpp"
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <ctime>
 #include <utility>
 
-
-Model::Water::Water() {
-
-}
-
-void Model::Water::SetupModel() {
-    BlueEngine::Engine::get().renderer.SetupTerrainModel(VAO, VBO, EBO, verticies, indicies);
+void Model::Water::SetupModel(const std::vector<Blue::Vertex> &vertices,
+                              const std::vector<unsigned int> &indices) {
+    BlueEngine::Engine::get().renderer.SetupTerrainModel(VAO, VBO, EBO, vertices, indices);
+    this->EBO_Size = static_cast<unsigned int>(indices.size());
 }
 
 void Model::Water::SetShader(std::shared_ptr<Shader> newWater) {
@@ -21,8 +14,6 @@ void Model::Water::SetShader(std::shared_ptr<Shader> newWater) {
 }
 
 void Model::Water::Draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos) {
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, waterTextureID);
     auto temp = model;
     temp = glm::translate(temp, position);
     //temp = glm::scale(temp, scale);
@@ -33,16 +24,12 @@ void Model::Water::Draw(const glm::mat4& projection, const glm::mat4& view, cons
     shader->setVec3("lightColor", 1.0f, 1.0f, 1.0f);
     shader->setVec3("lightPos", 1.0f, 400.0f, 1.0f);
     shader->setVec3("viewPos", cameraPos);
-    
-    glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, indicies.size(), GL_UNSIGNED_INT, 0);
-    //shader->end();
-    glBindVertexArray(0);
-    glActiveTexture(GL_TEXTURE0);
+    BlueEngine::Engine::get().renderer.DrawTerrain(VAO, textures, EBO_Size);
 }
 
 void Model::Water::SetTexture(unsigned int newTex) {
-    waterTextureID = newTex;
+    textures.resize(1);
+    textures.at(0) = newTex;
 }
 
 void Model::Water::SetWaterHeight(float newWaterHeight) {

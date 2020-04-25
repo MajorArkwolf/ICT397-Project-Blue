@@ -6,24 +6,20 @@
 #include "Controller/Engine/IDTracker.hpp"
 
 namespace Blue {
+    /// Used for chunk loading.
 	using Key = std::pair<int, int>;
-
+    /// Used for the terrain model generation.
 	struct Vertex {
 		glm::vec3 position = {};
 		glm::vec2 texCoords = {};
 		glm::vec3 normals = {};
 	};
 
-	struct Faces {
-		unsigned int indicies[3] = {};
-		glm::vec3 normal = {};
-	};
-
 	struct Perlin {
 		float height = 0;
 		glm::vec3 color = {};
 	};
-
+    /// Used to transfer information from terrain to react.
 	struct HeightMap {
         glm::vec3 position = {};
         glm::quat rotation = {};

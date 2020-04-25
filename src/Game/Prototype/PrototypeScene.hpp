@@ -34,7 +34,7 @@ public:
     void unInit() override;
 
     void handleInputData(Controller::Input::InputData inputData) override;
-    Camera camera;
+    View::Camera camera;
 
 private:
     std::vector<Model::Model> models = {};

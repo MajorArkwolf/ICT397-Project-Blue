@@ -11,12 +11,12 @@ class BeDynamicWorld {
 
   public:
 
-    /**
-     *  @brief parameterised constructor
-     *  @param worldSettings the settings of the world
-     *  @return
-     */
-    BeDynamicWorld();
+//    /**
+//     *  @brief parameterised constructor
+//     *  @param worldSettings the settings of the world
+//     *  @return
+//     */
+//    BeDynamicWorld();
 
     /**
      *  @brief parameterised constructor

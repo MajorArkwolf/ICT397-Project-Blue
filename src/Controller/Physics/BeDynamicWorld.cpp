@@ -1,9 +1,9 @@
 #include "BeDynamicWorld.hpp"
 #include "BeAbstractPhysics.hpp"
 
-BeDynamicWorld::BeDynamicWorld(){
-    bePhysicsWorld = nullptr;
-}
+//BeDynamicWorld::BeDynamicWorld(){
+//    bePhysicsWorld = nullptr;
+//}
 
 BeDynamicWorld::BeDynamicWorld(const glm::vec3 &gravity, const BeSettings &settings) {
     worldSettings = settings.beSettings;

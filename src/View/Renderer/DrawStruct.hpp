@@ -7,11 +7,6 @@
 #include <functional>
 
 namespace View::Data {
-    enum class ShaderModel {
-        model,
-        terrain,
-        water
-    };
     struct DrawItem {
         glm::vec3 pos = {};
         float distance = {};

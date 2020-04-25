@@ -5,6 +5,7 @@
 BeTransform::BeTransform() {
     orientation = rp3d::Quaternion(0, 0, 0, 1);
     position    = rp3d::Vector3(0, 0, 0);
+    transform = rp3d::Transform(position, orientation);
 }
 
 BeTransform::BeTransform(BeVector3 position, BeQuaternion orientation) {

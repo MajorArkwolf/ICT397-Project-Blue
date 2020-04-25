@@ -88,58 +88,64 @@ void Controller::TerrainFactory::LoadLua() {
 }
 
 void Controller::TerrainFactory::GenerateTerrain(Model::TerrainModel &newTerrain, const Blue::Key& key) {
-
-    int xsize = ChunkSize + 1;
-    int zsize = ChunkSize + 1;
+    unsigned int xsize = static_cast<unsigned int>(ChunkSize + 1);
+    unsigned int  zsize  = static_cast<unsigned int>(ChunkSize + 1);
+    std::vector<Blue::Vertex> vertices = {};
+    std::vector<unsigned int> indicies  = {};
     /// Pass a shared pointer to our terrain.
     newTerrain.LoadShader(terrainShader);
     newTerrain.water.SetShader(waterShader);
-    /// Generate verticies to form a giant square.
-    GenerateVerticies(newTerrain.verticies, xsize, zsize);
+    /// Generate vertices to form a giant square.
+    GenerateVertices(vertices, xsize, zsize);
     /// Give heights to the y values using perlin noise.
-    AddDetail(newTerrain.verticies, key, ChunkSize);
-    /// Generate indicies for the verticies.
-    GenerateIndicies(newTerrain.indicies, xsize, zsize);
+    AddDetail(vertices, key, ChunkSize);
+    /// Generate indicies for the vertices.
+    GenerateIndices(indicies, xsize, zsize);
     /// Generate the texture coordinates of the squares.
-    GenerateTextureCords(newTerrain.verticies);
+    GenerateTextureCords(vertices);
     /// Generate Soft Normals
-    GenerateNormals(newTerrain.verticies, newTerrain.indicies);
+    GenerateNormals(vertices, indicies);
     /// Sets the height at which levels the textures will set.
     newTerrain.setHeightOffsets(snowHeight, dirtHeight, grassHeight, sandHeight);
     /// Send the chunk to OpenGL to be stored in the GPU.
-    newTerrain.SetupModel();
+    newTerrain.SetupModel(vertices, indicies);
     /// Set the location of the chunk.
     newTerrain.position.x = key.first * ChunkSize;
     newTerrain.position.z = key.second * ChunkSize;
-    GenerateWater(newTerrain.water, key);
+    GenerateWater(newTerrain.water, key, xsize, zsize, 1);
     newTerrain.water.position = glm::vec3{key.first * ChunkSize, waterHeight, key.second * ChunkSize};
     /// Load the textures for the model.
     newTerrain.setTextures(snowTextureID, grassTextureID, dirtTextureID, sandTextureID);
-    /// Clean up the useless data to save room in ram.
+    /// Clean up the useless data to save room in ram.    
     CleanupChunk(newTerrain);
 }
 
-void Controller::TerrainFactory::GenerateWater(Model::Water &lake, const Blue::Key& key) {
-    int xsize = ChunkSize + 1;
-    int zsize = ChunkSize + 1;
-    GenerateVerticies(lake.verticies, xsize, zsize);
-    GenerateIndicies(lake.indicies, xsize, zsize);
-    GenerateTextureCords(lake.verticies);
-    GenerateNormals(lake.verticies, lake.indicies);
+void Controller::TerrainFactory::GenerateWater(Model::Water &lake, const Blue::Key& key, unsigned int xsize, unsigned int zsize, unsigned int increment) {
+    std::vector<Blue::Vertex> vertices = {};
+    std::vector<unsigned int> indicies  = {};
+    GenerateVertices(vertices, xsize, zsize, 0, 0, increment);
+    auto sizeOfX = static_cast<unsigned int>(glm::sqrt(vertices.size()));
+    GenerateIndices(indicies, sizeOfX, sizeOfX);
+    GenerateTextureCords(vertices);
+    //This is a hack to auto set the water normals to reduce computaional time.
+    for (auto &v : vertices) {
+        v.normals = glm::vec3(0.0f, 1.0f, 0.0f);
+    }
+    //GenerateNormals(vertices, lake.indicies);
     lake.SetTexture(waterTextureID);
-    lake.SetupModel();
+    lake.SetupModel(vertices, indicies);
 }
 
-void Controller::TerrainFactory::GenerateVerticies(std::vector<Blue::Vertex> &terrain,
+void Controller::TerrainFactory::GenerateVertices(std::vector<Blue::Vertex> &terrain,
                                                    unsigned int xsize, unsigned int zsize) {
-    GenerateVerticies(terrain, xsize, zsize, 0, 0, 1);
+    GenerateVertices(terrain, xsize, zsize, 0, 0, 1);
 }
 
-void Controller::TerrainFactory::GenerateVerticies(std::vector<Blue::Vertex> &terrain,
+void Controller::TerrainFactory::GenerateVertices(std::vector<Blue::Vertex> &terrain,
                                                    unsigned int xsize, unsigned int zsize, unsigned int xstart, unsigned int zstart, unsigned int increment) {
     Blue::Vertex vertex{};
     for (unsigned i = xstart; i < xsize; i += increment) {
-        for (unsigned j = zstart; j < zsize; j+= increment) {
+        for (unsigned j = zstart; j < zsize; j += increment) {
             vertex.position.x = i;
             vertex.position.z = j;
             terrain.push_back(vertex);
@@ -148,7 +154,7 @@ void Controller::TerrainFactory::GenerateVerticies(std::vector<Blue::Vertex> &te
     }
 }
 
-void Controller::TerrainFactory::GenerateIndicies(std::vector<unsigned int> &terrain,
+void Controller::TerrainFactory::GenerateIndices(std::vector<unsigned int> &terrain,
                                                   unsigned int xsize, unsigned int zsize) {
     for (unsigned int x = 0; x < xsize - 1; ++x) {
         for (unsigned int y = 0; y < zsize - 1; ++y) {
@@ -164,14 +170,12 @@ void Controller::TerrainFactory::GenerateIndicies(std::vector<unsigned int> &ter
 
 void Controller::TerrainFactory::GenerateTextureCords(std::vector<Blue::Vertex> &terrain) {
     unsigned int tracker  = 0;
-    unsigned int switcher = 0;
-    float prevx           = 0;
+    float prevx           = terrain.at(0).position.x;
     int size              = 1;
     int x                 = 0;
     int y                 = 0;
-    prevx                 = terrain.at(0).position.x;
     for (auto &vert : terrain) {
-        if (prevx != vert.position.x) {
+        if (static_cast<int>(prevx) != static_cast<int>(vert.position.x)) {
             x++;
             y     = 0;
             prevx = vert.position.x;
@@ -190,16 +194,14 @@ void Controller::TerrainFactory::GenerateTextureCords(std::vector<Blue::Vertex> 
 }
 
 void Controller::TerrainFactory::GeneratePerlinNoise(int xsize, int zsize) {
-    fValues.resize(xsize);
-    int width     = xsize;
-    int height    = zsize;
-    float xFactor = 1.0f / (width - 1);
-    float yFactor = 1.0f / (height - 1);
+    fValues.resize(static_cast<size_t>(xsize));
+    float xFactor = 1.0f / (xsize - 1);
+    float yFactor = 1.0f / (zsize - 1);
     float a       = 5;
     float b       = 0.5;
 
-    for (int row = 0; row < height; row++) {
-        for (int col = 0; col < width; col++) {
+    for (int row = 0; row < zsize; row++) {
+        for (int col = 0; col < xsize; col++) {
             float x     = xFactor * col;
             float y     = yFactor * row;
             float sum   = 0.0f;
@@ -212,7 +214,8 @@ void Controller::TerrainFactory::GeneratePerlinNoise(int xsize, int zsize) {
                 float val = glm::perlin(p) / scale;
                 sum += val;
                 float result                   = (sum + 1.0f) / 2.0f;
-                fValues.at(row).at(col).height = result * 255.0f;
+                fValues.at(static_cast<size_t>(row)).at(static_cast<size_t>(col)).height =
+                    result * 255.0f;
                 freq *= 2.0f; // Double the frequency
                 scale *= b;   // Next power of b
             }
@@ -222,9 +225,7 @@ void Controller::TerrainFactory::GeneratePerlinNoise(int xsize, int zsize) {
 
 void Controller::TerrainFactory::AddDetail(std::vector<Blue::Vertex> &terrain, const Blue::Key& key, const int chunkSize) {
     int row = (height / 2) + key.first * chunkSize;
-    int max_row = row + chunkSize;
     int col = (width / 2) + key.second * chunkSize;
-    int max_col = col + chunkSize;
     auto y      = col;
     float x     = -1;
     for (auto &e : terrain) {
@@ -233,15 +234,16 @@ void Controller::TerrainFactory::AddDetail(std::vector<Blue::Vertex> &terrain, c
             ++row;
             x = e.position.x;
         }
-        e.position.y = fValues.at(row).at(y).height;
+        e.position.y = fValues.at(static_cast<size_t>(row)).at(static_cast<size_t>(y)).height;
         ++y;
     }
 }
 
 void Controller::TerrainFactory::CleanupChunk(Model::TerrainModel &terrain) {
-    terrain.verticies.clear();
-    terrain.verticies.shrink_to_fit();
-    terrain.indicie_size = terrain.indicies.size();
+    //terrain.vertices.clear();
+    //terrain.vertices.shrink_to_fit();
+    //terrain.water.vertices.clear();
+    //terrain.water.vertices.shrink_to_fit();
     //terrain.indicies.clear();
     //terrain.indicies.shrink_to_fit();
 }
@@ -251,13 +253,14 @@ void Controller::TerrainFactory::LoadPerlinNoise(const string& filename) {
     unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
     assert(data != nullptr);
 
-    fValues.resize(width + 1);
+    fValues.resize(static_cast<size_t>(width + 1));
     for (auto &e : fValues) {
-        e.resize(height + 1);
+        e.resize(static_cast<size_t>(height + 1));
     }
     for (auto x = 0; x <= height - 1; ++x) {
         for (auto y = 0; y <= width - 1; ++y) {
-            this->fValues.at(x).at(y).height = static_cast<float>(data[((x * width) + y) * 3]);
+            this->fValues.at(static_cast<size_t>(x)).at(static_cast<size_t> (y)).height =
+                static_cast<float>(data[((x * width) + y) * 3]);
         }
     }
     int runtime = 1;
@@ -282,41 +285,27 @@ int Controller::TerrainFactory::GetChunkSize() const {
     return this->ChunkSize;
 }
 
-void Controller::TerrainFactory::GenerateNormals(std::vector<Blue::Vertex> &verticies,
+void Controller::TerrainFactory::GenerateNormals(std::vector<Blue::Vertex> &vertices,
                                                  std::vector<unsigned int> indicies) {
-    std::vector<Blue::Faces> faces;
-    using Pair = std::pair<unsigned int, size_t>;
-    std::multimap<unsigned int, size_t> setFaces;
-
+    // append triangle normals to every vertex
     for (size_t index = 0; index < indicies.size(); index += 3) {
-        faces.push_back(Blue::Faces{});
-        auto &face       = faces.at(faces.size() - 1);
-        face.indicies[0] = indicies.at(index);
-        face.indicies[1] = indicies.at(index + 1);
-        face.indicies[2] = indicies.at(index + 2);
-        face.normal      = glm::triangleNormal(verticies.at(face.indicies[0]).position,
-                                          verticies.at(face.indicies[1]).position,
-                                          verticies.at(face.indicies[2]).position);
-        const auto size  = faces.size() - 1;
-        setFaces.emplace(face.indicies[0], size);
-        setFaces.emplace(face.indicies[1], size);
-        setFaces.emplace(face.indicies[2], size);
+        Blue::Vertex &vert1 = vertices[indicies[index]];
+        Blue::Vertex &vert2 = vertices[indicies[index + 1]];
+        Blue::Vertex &vert3 = vertices[indicies[index + 2]];
+        // glm::triangleNormal() probably returns normalized vector,
+        // which is better to compute unnormalized
+        glm::vec3 triNormal = glm::triangleNormal(vert1.position, vert2.position, vert3.position);
+        vert1.normals += triNormal;
+        vert2.normals += triNormal;
+        vert3.normals += triNormal;
     }
 
-    for (size_t index = 0; index < verticies.size(); ++index) {
-        int count      = 0;
-        auto itr1      = setFaces.lower_bound(index);
-        auto itr2      = setFaces.upper_bound(index);
-        auto avgNormal = glm::vec3{};
-        while (itr1 != itr2) {
-            if (itr1->first == index) {
-                avgNormal += faces.at(itr1->second).normal;
-                ++count;
-            }
-            ++itr1;
-        }
-        verticies.at(index).normals = avgNormal / static_cast<float>(count);
+    // normalize normal vectors
+    for (size_t vert = 0; vert < vertices.size(); ++vert) {
+        Blue::Vertex &vertBlue = vertices[vert];
+        vertBlue.normals       = glm::normalize(vertBlue.normals);
     }
+
 }
 
 int Controller::TerrainFactory::getWidth() const {
@@ -346,33 +335,210 @@ float *Controller::TerrainFactory::ExportHeightMap() {
 }
 
 void Controller::TerrainFactory::GenerateTerrainL2(Model::TerrainModel &newTerrain, const Blue::Key &key) {
-    int xsize = ChunkSize + 1;
-    int zsize = ChunkSize + 1;
+    unsigned int xsize = static_cast<unsigned int>(ChunkSize + 1);
+    unsigned int zsize = xsize;
+    std::vector<Blue::Vertex> vertices = {};
+    std::vector<unsigned int> indicies  = {};
+    /// Set the location of the chunk.
+    newTerrain.position.x = key.first * ChunkSize;
+    newTerrain.position.z = key.second * ChunkSize;
     /// Pass a shared pointer to our terrain.
     newTerrain.LoadShader(terrainShader);
     newTerrain.water.SetShader(waterShader);
-    /// Generate verticies to form a giant square.
-    GenerateVerticies(newTerrain.verticies, xsize, zsize, 4, 4, 4);
+    /// Generate vertices to form a giant square.
+    GenerateVertices(vertices, xsize, zsize, 0, 0, 5);
     /// Give heights to the y values using perlin noise.
-    std::vector<Blue::Vertex> detail = {};
-    AddDetail(detail, key, ChunkSize);
-    /// Generate indicies for the verticies.
-//    GenerateIndicies(newTerrain.indicies, xsize, zsize);
-//    /// Generate the texture coordinates of the squares.
-//    GenerateTextureCords(newTerrain.verticies);
-//    /// Generate Soft Normals
-//    GenerateNormals(newTerrain.verticies, newTerrain.indicies);
-//    /// Sets the height at which levels the textures will set.
-//    newTerrain.setHeightOffsets(snowHeight, dirtHeight, grassHeight, sandHeight);
-//    /// Send the chunk to OpenGL to be stored in the GPU.
-//    newTerrain.SetupModel();
-//    /// Set the location of the chunk.
-//    newTerrain.position.x = key.first * ChunkSize;
-//    newTerrain.position.z = key.second * ChunkSize;
-//    GenerateWater(newTerrain.water, key);
-//    newTerrain.water.position = glm::vec3{key.first * ChunkSize, waterHeight, key.second * ChunkSize};
-//    /// Load the textures for the model.
-//    newTerrain.setTextures(snowTextureID, grassTextureID, dirtTextureID, sandTextureID);
-//    /// Clean up the useless data to save room in ram.
-//    CleanupChunk(newTerrain);
+    AddDetailV2(vertices, key);
+    /// Generate indicies for the vertices.
+    auto sizeOfX = static_cast<unsigned int>(glm::sqrt(vertices.size()));
+    auto sizeOfY = sizeOfX;
+    GenerateIndices(indicies, sizeOfX, sizeOfY);
+    /// Generate the texture coordinates of the squares.
+    GenerateTextureCords(vertices);
+    /// Generate Soft Normals
+    GenerateNormals(vertices, indicies);
+    /// Sets the height at which levels the textures will set.
+    //StitchSeemedvertices(newTerrain, key);
+    newTerrain.setHeightOffsets(snowHeight, dirtHeight, grassHeight, sandHeight);
+    /// Send the chunk to OpenGL to be stored in the GPU.
+    newTerrain.SetupModel(vertices, indicies);
+    GenerateWater(newTerrain.water, key, xsize, zsize, 5);
+    newTerrain.water.position = glm::vec3{key.first * ChunkSize, waterHeight, key.second * ChunkSize};
+    /// Load the textures for the model.
+    newTerrain.setTextures(snowTextureID, grassTextureID, dirtTextureID, sandTextureID);
+    /// Clean up the useless data to save room in ram.
+    newTerrain.EBO_Size = indicies.size();
+    CleanupChunk(newTerrain);
+}
+
+void Controller::TerrainFactory::StitchSeemedVertices(Model::TerrainModel &newTerrain, const Blue::Key& key) {
+    /// This function is not working as of yet, it is designed to stitch a high quality chunk to a lower quality chunk.
+//    auto length = static_cast<unsigned int>(glm::sqrt(newTerrain.vertices.size()));
+//    auto size = newTerrain.vertices.size();
+//    size_t newSize = size;
+//    //Bottom row, left to right
+//    Blue::Vertex lowVertex = {};
+//    Blue::Vertex highVertex = {};
+//    lowVertex.position.x = 0.0f;
+//    highVertex.position.x = 1.0f;
+//    Blue::Vertex height1 = newTerrain.vertices.at(0);
+//    Blue::Vertex height2 = newTerrain.vertices.at(1);
+//    int count = 0;
+//    size_t oldIndex = 0;
+//    for (unsigned int index = 0; index <= ChunkSize; ++index) {
+//        if (count == 7) {
+//            count = 0;
+//            ++oldIndex;
+//            height1 = newTerrain.vertices.at(oldIndex);
+//            height2 = newTerrain.vertices.at(oldIndex + 1);
+//        }
+//        if (index == 0) {
+//            lowVertex.position.z = static_cast<float>(index);
+//            highVertex.position.z = static_cast<float>(index);
+//            lowVertex.position.y = GetDetailAt(key, lowVertex.position.x, lowVertex.position.z);
+//            highVertex.position.y = GetDetailAt(key, highVertex.position.x, highVertex.position.z);
+//            newTerrain.vertices.push_back(lowVertex);
+//            newTerrain.vertices.push_back(highVertex);
+//            newSize += 2;
+//        } else {
+//            lowVertex.position.z = static_cast<float>(index);
+//            highVertex.position.z = static_cast<float>(index);
+//            lowVertex.position.y = GetDetailAt(key, lowVertex.position.x, lowVertex.position.z);
+//            if (index == ChunkSize) {
+//                highVertex.position.y = GetDetailAt(key, highVertex.position.x, highVertex.position.z);
+//            } else {
+//                highVertex.position = height1.position;
+//            }
+//            newSize += 2;
+//            newTerrain.vertices.push_back(lowVertex);
+//            newTerrain.vertices.push_back(highVertex);
+//            newTerrain.indicies.push_back(newSize - 4);             // 0
+//            newTerrain.indicies.push_back(newSize - 2);       // 1
+//            newTerrain.indicies.push_back(newSize - 3);     // 3
+//            newTerrain.indicies.push_back(newSize - 2);       // 1
+//            newTerrain.indicies.push_back(newSize - 1); // 2
+//            newTerrain.indicies.push_back(newSize - 3);     // 3
+//        }
+//        ++count;
+//    }
+//    //Top row, left to right
+//    height1 = newTerrain.vertices.at(length * (length - 1));
+//    height2 = newTerrain.vertices.at(length * (length - 1) + 1);
+//    lowVertex.position = height1.position;
+//    lowVertex.position.x += 1;
+//    highVertex.position = height2.position;
+//    count = 0;
+//    oldIndex = length * (length - 1);
+//    for (unsigned int index = 0; index <= ChunkSize; ++index) {
+//        if (count == 7) {
+//            count = 0;
+//            ++oldIndex;
+//            height1 = newTerrain.vertices.at(oldIndex);
+//            height2 = newTerrain.vertices.at(oldIndex + 1);
+//        }
+//        if (index == 0) {
+//            lowVertex.position.z = static_cast<float>(index);
+//            highVertex.position.z = static_cast<float>(index);
+//            lowVertex.position.y = GetDetailAt(key, lowVertex.position.x, lowVertex.position.z);
+//            highVertex.position.y = GetDetailAt(key, highVertex.position.x, highVertex.position.z);
+//            newTerrain.vertices.push_back(lowVertex);
+//            newTerrain.vertices.push_back(highVertex);
+//            newSize += 2;
+//        } else {
+//            lowVertex.position.z = static_cast<float>(index);
+//            highVertex.position.z = static_cast<float>(index);
+//            lowVertex.position.y = GetDetailAt(key, lowVertex.position.x, lowVertex.position.z);
+//            if (index == ChunkSize) {
+//                highVertex.position.y = GetDetailAt(key, highVertex.position.x, highVertex.position.z);
+//            } else {
+//                highVertex.position = height1.position;
+//            }
+//            newSize += 2;
+//            newTerrain.vertices.push_back(lowVertex);
+//            newTerrain.vertices.push_back(highVertex);
+//            newTerrain.indicies.push_back(newSize - 4);     // 0
+//            newTerrain.indicies.push_back(newSize - 2);     // 1
+//            newTerrain.indicies.push_back(newSize - 3);     // 3
+//            newTerrain.indicies.push_back(newSize - 2);     // 1
+//            newTerrain.indicies.push_back(newSize - 1);     // 2
+//            newTerrain.indicies.push_back(newSize - 3);     // 3
+//        }
+//        ++count;
+//    }
+
+//    // Bottom, Left to Right stitch.
+//    for (unsigned int index = 0; index < length - 1; ++index) {
+//        Blue::Vertex first = newTerrain.vertices.at(index);
+//        Blue::Vertex second = newTerrain.vertices.at(index + 1);
+//        auto diff = static_cast<unsigned int>(second.position.z - first.position.z);
+//        for (unsigned i = 1; i < diff; ++i) {
+//            first.position.z += diff * 0.2;
+//            first.position.y = GetDetailAt(key, first.position.x, first.position.z);
+//            newTerrain.vertices.push_back(first);
+//            newTerrain.indicies.push_back(index);
+//            newTerrain.indicies.push_back(length + index);
+//            newTerrain.indicies.push_back(newSize);
+//            ++newSize;
+//        }
+//    }
+//    // Top row, left to right.
+//    for (unsigned int index = length * (length - 1); index < size - 1; ++index) {
+//        Blue::Vertex first = newTerrain.vertices.at(index);
+//        Blue::Vertex second = newTerrain.vertices.at(index + 1);
+//        auto diff = static_cast<unsigned int>(second.position.z - first.position.z);
+//        for (unsigned i = 1; i < diff; ++i) {
+//            first.position.z += diff * 0.2;
+//            first.position.y = GetDetailAt(key, first.position.x, first.position.z);
+//            newTerrain.vertices.push_back(first);
+//            newTerrain.indicies.push_back(index);
+//            newTerrain.indicies.push_back(index - length + 1);
+//            newTerrain.indicies.push_back(newSize);
+//            ++newSize;
+//        }
+//    }
+//
+//    // Left Side, Bottom to top.
+//    for (unsigned int index = 0; index < (size - length); index += length) {
+//        Blue::Vertex first = newTerrain.vertices.at(index);
+//        Blue::Vertex second = newTerrain.vertices.at(index + length);
+//        auto diff = static_cast<unsigned int>(second.position.x) - static_cast<unsigned int>(first.position.x);
+//        for (unsigned i = 1; i < diff; ++i) {
+//            first.position.x += diff * 0.2;
+//            first.position.y = GetDetailAt(key, first.position.x, first.position.z);
+//            newTerrain.vertices.push_back(first);
+//            newTerrain.indicies.push_back(index);
+//            newTerrain.indicies.push_back(index + 1);
+//            newTerrain.indicies.push_back(newSize);
+//            ++newSize;
+//        }
+//    }
+//
+//    // Right Side, Bottom to top.
+//    for (unsigned int index = length - 1; index < size - 1; index += length) {
+//        Blue::Vertex first = newTerrain.vertices.at(index);
+//        Blue::Vertex second = newTerrain.vertices.at(index + length);
+//        auto diff = static_cast<unsigned int>(second.position.x) - static_cast<unsigned int>(first.position.x);
+//        for (unsigned i = 1; i < diff; ++i) {
+//            first.position.x += diff * 0.2;
+//            first.position.y = GetDetailAt(key, first.position.x, first.position.z);
+//            newTerrain.vertices.push_back(first);
+//            newTerrain.indicies.push_back(index);
+//            newTerrain.indicies.push_back(index + length - 1);
+//            newTerrain.indicies.push_back(newSize);
+//            ++newSize;
+//        }
+//    }
+}
+
+float Controller::TerrainFactory::GetDetailAt(const Blue::Key &key, const int xcord, const int zcord) {
+    int row = (height / 2) + key.first * ChunkSize + xcord;
+    int col = (width / 2) + key.second * ChunkSize + zcord;
+    return fValues.at(static_cast<size_t>(row)).at(static_cast<size_t>(col)).height;
+}
+
+void Controller::TerrainFactory::AddDetailV2(std::vector<Blue::Vertex> &newTerrain, const Blue::Key &key) {
+    for (auto &vert : newTerrain) {
+        vert.position.y =
+            GetDetailAt(key, static_cast<int>(vert.position.x), static_cast<int>(vert.position.z));
+    }
 }
