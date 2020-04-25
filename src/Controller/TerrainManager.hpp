@@ -65,7 +65,19 @@ namespace Controller {
 		 */
 		void setCLODLevel(unsigned int newSize);
 
-		float getHeightCoord(glm::vec2 currentCord);
+		/**
+		 * Get the height at any point on the terrain.
+		 * @param currentCord X value and Z value in the world
+		 * @return Returns the given height on the terrain object.
+		 */
+        float GetBLHeight(glm::vec2 currentCord);
+
+        /**
+         * Generates a key from world coordinates. All values need to be rounded down.
+         * @param currentCord current X and Z cords.
+         * @return returns a key value.
+         */
+        Blue::Key GenerateKey(glm::ivec2 currentCord);
 
 	private:
 	    BlueEngine::ID id = 0;

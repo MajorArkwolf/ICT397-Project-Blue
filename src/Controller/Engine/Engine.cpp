@@ -15,8 +15,7 @@ using std::string;
 auto Engine::run() -> void {
     auto &engine = Engine::get();
     ResourceManager::getInstance().loadResources();
-    auto pScene = std::make_shared<PrototypeScene>(PrototypeScene());
-    engine.gameStack.AddToStack(pScene);
+    engine.gameStack.AddToStack(std::make_shared<PrototypeScene>());
 
     double t  = 0.0;
     double dt = 0.01;

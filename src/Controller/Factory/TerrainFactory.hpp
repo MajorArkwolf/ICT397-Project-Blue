@@ -75,13 +75,17 @@ namespace Controller {
          * Gets the maximum chunk size in a certain direction.
          * @return the max size.
          */
-        unsigned int getMaxKeySize();
+        unsigned int getMaxKeySize() const;
 
-        float getHeightAtCord(glm::vec2 currentCord);
+        /**
+         * Get a given height from the height map.
+         * @param currentKey A terrain chunk key.
+         * @param currentCord the current coordinates minus the chunk size and key values.
+         * @return the height at that given point.
+         */
+        float GetBLHeight(Blue::Key currentKey, glm::vec2 currentCord);
 
-        void crashTest(glm::vec2 currentCord);
-    /// change this back to private
-	public:
+	private:
 		/// Determines how many squares fit into a single chunk
 		int ChunkSize = 100;
 		/// Sets the max size of the play area

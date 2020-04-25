@@ -538,9 +538,13 @@ void Controller::TerrainFactory::StitchSeemedVertices(Model::TerrainModel &newTe
 }
 
 float Controller::TerrainFactory::GetDetailAt(const Blue::Key &key, const int xcord, const int zcord) {
-    int x = (height / 2) + key.first * ChunkSize + xcord;
-    int z = (width / 2) + key.second * ChunkSize + zcord;
-    return fValues.at(static_cast<size_t>(x)).at(static_cast<size_t>(z)).height;
+    float result = {};
+    if (abs(key.first) <= maxKeySize && abs(key.second) <= maxKeySize) {
+        int x = (height / 2) + key.first * ChunkSize + xcord;
+        int z = (width / 2) + key.second * ChunkSize + zcord;
+        result = fValues.at(static_cast<size_t>(x)).at(static_cast<size_t>(z)).height;
+    }
+    return result;
 }
 
 void Controller::TerrainFactory::AddDetailV2(std::vector<Blue::Vertex> &newTerrain, const Blue::Key &key) {
@@ -550,40 +554,24 @@ void Controller::TerrainFactory::AddDetailV2(std::vector<Blue::Vertex> &newTerra
     }
 }
 
-unsigned int Controller::TerrainFactory::getMaxKeySize() {
+unsigned int Controller::TerrainFactory::getMaxKeySize() const {
     return maxKeySize;
 }
 
-float Controller::TerrainFactory::getHeightAtCord(glm::vec2 currentCord) {
+float Controller::TerrainFactory::GetBLHeight(Blue::Key currentKey, glm::vec2 currentCord) {
+    float result_height = {};
+    auto intCord = glm::ivec2(floor(currentCord.x), floor(currentCord.y));
+    auto hBL = GetDetailAt(currentKey, currentCord.x, currentCord.y);
+    auto hBR = GetDetailAt(currentKey, intCord.x, intCord.y + 1);
+    auto hTL = GetDetailAt(currentKey, intCord.x + 1, intCord.y);
+    auto hTR = GetDetailAt(currentKey, intCord.x + 1, intCord.y + 1);
+    float x = currentCord.x - floor(currentCord.x);
+    float y = currentCord.y - floor(currentCord.y);
 
-//    auto BL = glm::vec3(0.0f, fValues.at(x).at(z).height, 0.0f);
-//    auto BR = glm::vec3(0.0f, fValues.at(x).at(z2).height, 1.0f);
-//    auto TL = glm::vec3(1.0f, fValues.at(x2).at(z).height, 0.0f);
-//    auto TR = glm::vec3(1.0f, fValues.at(x2).at(z2).height, 1.0f);
-
-    auto offSet = (maxKeySize * ChunkSize);
-    float x = currentCord.x + offSet;
-    float z = currentCord.y + offSet;
-    float x1 = static_cast<int>(floor(currentCord.x)) + offSet;
-    float z1 = static_cast<int>(floor(currentCord.y)) + offSet;
-    float x2 = x1 + 1;
-    float z2 = z1 + 1;
-    auto hBL = fValues.at(x1).at(z1).height;
-    auto hBR = fValues.at(x1).at(z2).height;
-    auto hTL = fValues.at(x2).at(z1).height;
-    auto hTR = fValues.at(x2).at(z2).height;
-    // x-axis
-    //auto resultX = ((( x - x1 )/( x2 - x1 )) * hBL) + ((( x2 - x)/( x2 - x1 )) * hTL);
-    // z-axis
-    //auto resultZ = ( z - z1 )/( z2 - z1 ) * hBL + ( z2 - z )/( z2-z1 ) * hBR;
-    auto result_height = hBL;
-    //auto result_height = hBL + (1 + x - x2) * hTL + (1 + z - z2) * hBR;
+    float R1 = ((1.0f - x) / (1.0f - 0.0f)) * hBL + ((x - 0.0f)/(1.0f - 0.0f)) * hBR;
+    // ((x2 – x)/(x2 – x1))*Q12 + ((x – x1)/(x2 – x1))*Q22
+    float R2 = ((1.0f - x)/(1.0f - 0.0f)) * hTL + ((x - 0.0f)/(1.0f - 0.0f)) * hTR;
+    // ((y2 – y)/(y2 – y1))*R1 + ((y – y1)/(y2 – y1))*R2
+    result_height = (((1.0f - y)/(1 - 0.0f))* R1) + (((y - 0.0f)/(1.0f - 0.0f)) * R2);
     return result_height;
-}
-
-void Controller::TerrainFactory::crashTest(glm::vec2 currentCord) {
-    int row = currentCord.x + maxKeySize * ChunkSize;
-    int col = currentCord.y + maxKeySize * ChunkSize;
-    std::cout << "Camera X: " << currentCord.x <<" Camera Z: " << currentCord.y << " Row & Col: " << row << " " << col << "\n";
-    auto hBL = fValues.at(row).at(col).height;
 }
