@@ -48,25 +48,48 @@ namespace Controller {
          */
         int GetChunkSize() const;
 
+        /**
+         * Loads information in from LUA.
+         */
         void LoadLua();
 
+        /**
+         * @brief Getter for width
+         * @param heightMap a float pointer array.
+         */
         int getWidth() const;
+
         /**
          * @brief Getter for height
          * @return the height of the height map
          */
         int getHeight() const;
+
         /**
-         * @brief Getter for height
-         * @param heightMap a float pointer array.
+         * Exports the height map
+         * @return a pointer to the height map, you must handle the memory that is exported of this function.
          */
         float * ExportHeightMap();
+
+        /**
+         * Gets the maximum chunk size in a certain direction.
+         * @return the max size.
+         */
+        unsigned int getMaxKeySize() const;
+
+        /**
+         * Get a given height from the height map.
+         * @param currentKey A terrain chunk key.
+         * @param currentCord the current coordinates minus the chunk size and key values.
+         * @return the height at that given point.
+         */
+        float GetBLHeight(Blue::Key currentKey, glm::vec2 currentCord);
 
 	private:
 		/// Determines how many squares fit into a single chunk
 		int ChunkSize = 100;
-		/// Sets the max side of the play area
-		int maxSize = 0;
+		/// Sets the max size of the play area
+		unsigned int maxKeySize = 0;
 		/// Max width of the height map
 		int width = 0;
 		/// Max height of the height map
@@ -150,10 +173,27 @@ namespace Controller {
         GenerateVertices(vector<Blue::Vertex> &terrain, unsigned int xsize, unsigned int zsize, unsigned int xstart,
                           unsigned int zstart, unsigned int increment);
 
+        /**
+         * Stitch a CLOD level 2 to a CLOD level 1
+         * @param newTerrain the chunk to stitch
+         * @param key the key position it sits on.
+         */
         void StitchSeemedVertices(Model::TerrainModel &newTerrain, const Blue::Key& key);
 
+        /**
+         * Get the detail at a given coordinate.
+         * @param key Key to the chunk.
+         * @param xcord the xpos of that chunk.
+         * @param zcord the zpos of that chunk.
+         * @return the ypos.
+         */
         float GetDetailAt(const Blue::Key &key, int xcord, int zcord);
 
+        /**
+         * Adds detain to an entire chunk.
+         * @param newTerrain chunk.
+         * @param key the location of the chunk.
+         */
         void AddDetailV2(std::vector<Blue::Vertex> &newTerrain, const Blue::Key& key);
     };
 }

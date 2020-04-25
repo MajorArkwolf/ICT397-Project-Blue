@@ -32,8 +32,11 @@ auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
 	if (moveRight) {
 		camera.ProcessKeyboard(Camera_Movement::RIGHT, dt);
 	}
-
+	//auto test = glm::vec2(camera.Position.x, camera.Position.z);
+    //std::cout << Controller::Factory::get().terrain.getHeightAtCord(test) << "\n";
+    //Controller::Factory::get().terrain.crashTest(test);
 	terrain.Update(camera.getLocation());
+	camera.Position.y = terrain.GetBLHeight(camera.getLocation()) + 5;
 }
 
 void PrototypeScene::Init() {

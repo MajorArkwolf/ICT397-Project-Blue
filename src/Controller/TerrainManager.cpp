@@ -9,14 +9,15 @@ Controller::TerrainManager::TerrainManager() {
 
 void Controller::TerrainManager::Init() {
     auto &factory = Controller::Factory::get().terrain;
+    maxKey = factory.getMaxKeySize();
     int mKey = static_cast<int>(maxKey);
     for (int key_x = mKey * -1; key_x < mKey; ++key_x) {
         for (int key_z = mKey * -1; key_z < mKey; ++key_z) {
-            Blue::Key key = Blue::Key(key_x, key_z);
-            map.emplace(key, std::make_shared<ChunkClod>());
-            auto&e = map.at(key);
-            factory.GenerateTerrain(e->level1, key);
-            factory.GenerateTerrainL2(e->level2, key);
+            auto e = std::make_shared<ChunkClod>();
+            e->key = Blue::Key(key_x, key_z);
+            factory.GenerateTerrain(e->level1, e->key);
+            factory.GenerateTerrainL2(e->level2, e->key);
+            chunks.push_back(e);
         }
     }
 }
@@ -38,60 +39,27 @@ void Controller::TerrainManager::GenerateHeightMap(Blue::HeightMap& heightMap) {
     heightMap.targetId = this->id;
     heightMap.width = terrainFactory.getWidth();
     heightMap.height = terrainFactory.getHeight();
-    heightMap.position.x = (static_cast<float>(terrainFactory.getWidth()) / 2.0f) * -1;
-    heightMap.position.z = ((static_cast<float>(terrainFactory.getHeight()) / 2.0f) * -1);
+    heightMap.position.x = static_cast<float>(terrainFactory.getWidth() / 2);
+    heightMap.position.z = static_cast<float>(terrainFactory.getHeight() / 2);
     heightMap.rotation = {};
     heightMap.terrain = terrainFactory.ExportHeightMap();
 }
 
 void Controller::TerrainManager::Update(glm::ivec2 key) {
     auto &factory = Controller::Factory::get().terrain;
-    Blue::Key updateKey{};
-	if (key.x < 0) {
-		updateKey.first = key.x / factory.GetChunkSize() - 1;
-	}
-	else {
-		updateKey.first = key.x / factory.GetChunkSize();
-	}
-	if (key.y < 0) {
-		updateKey.second = key.y / factory.GetChunkSize() - 1;
-	}
-	else {
-		updateKey.second = key.y / factory.GetChunkSize();
-	}
+    Blue::Key updateKey = GenerateKey(key);
 	if (abs(this->lastPos.first - updateKey.first) > reloadDistance || abs(this->lastPos.second - updateKey.second) > reloadDistance ) {
 		drawCircle.clear();
 		this->lastPos = updateKey;
-		auto max = static_cast<int>(maxKey);
-        int xlow = -1 * max;
-		int zlow = -1 * max;
-		int xhigh = max;
-		int zhigh = max;
 		auto updatedRadSize = static_cast<float>(radSize);
 
-		for (int x = xlow; x <= xhigh; ++x) {
-			for (int z = zlow; z <= zhigh; ++z) {
-                Blue::Key newKey(x, z);
-				if (abs(newKey.first) < maxKey && abs(newKey.second) < maxKey) {
-					float distance = Distance(updateKey, newKey);
-					if (updatedRadSize >= distance - 0.2f) {
-						if (map.find(newKey) == map.end()) {
-							map.emplace(newKey, std::make_shared<ChunkClod>());
-							auto& e = map.at(newKey);
-							factory.GenerateTerrain(e->level1, newKey);
-							factory.GenerateTerrainL2(e->level2, newKey);
-							drawCircle.push_back(&e->level1);
-						}
-						else {
-							drawCircle.push_back(&map.at(newKey)->level1);
-						}
-					} else {
-                        if(map.find(newKey) != map.end()) {
-                            drawCircle.push_back(&map.at(newKey)->level2);
-                        }
-                    }
-				}
-			}
+		for (auto &c : chunks) {
+            float distance = Distance(updateKey, c->key);
+            if (updatedRadSize >= distance - 0.2f) {
+                drawCircle.push_back(&c->level1);
+            } else {
+                drawCircle.push_back(&c->level2);
+            }
 		}
 	}
 }
@@ -100,4 +68,28 @@ void Controller::TerrainManager::AddToDraw() {
     for (const auto& e : drawCircle) {
         e->AddToDraw();
     }
+}
+
+void Controller::TerrainManager::setCLODLevel(unsigned int newSize) {
+    radSize = newSize;
+}
+
+float Controller::TerrainManager::GetBLHeight(glm::vec2 currentCord) {
+    auto &factory = Controller::Factory::get().terrain;
+    auto currentKey = GenerateKey(glm::ivec2(floor(currentCord.x), floor(currentCord.y)));
+    currentCord.x -= currentKey.first * factory.GetChunkSize();
+    currentCord.y -= currentKey.second * factory.GetChunkSize();
+    return factory.GetBLHeight(currentKey, currentCord);
+}
+
+Blue::Key Controller::TerrainManager::GenerateKey(glm::ivec2 currentCord) {
+    auto chunkSize = Controller::Factory::get().terrain.GetChunkSize();
+    Blue::Key key(currentCord.x / chunkSize, currentCord.y / chunkSize);
+    if (currentCord.x < 0) {
+        key.first -= 1;
+    }
+    if (currentCord.y < 0) {
+        key.second -= 1;
+    }
+    return key;
 }

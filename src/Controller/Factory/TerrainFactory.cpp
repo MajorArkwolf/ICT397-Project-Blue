@@ -27,6 +27,12 @@ void Controller::TerrainFactory::Init() {
     dirtTextureID    = texManager.getTexture("dirt").TextureID;
     sandTextureID    = texManager.getTexture("sand").TextureID;
     waterTextureID   = texManager.getTexture("water").TextureID;
+
+    if (this->width > this->height) {
+        maxKeySize = ((width / 2) / ChunkSize) - 1;
+    } else {
+        maxKeySize = ((height / 2) / ChunkSize) - 1;
+    }
 }
 
 void Controller::TerrainFactory::LoadLua() {
@@ -98,7 +104,8 @@ void Controller::TerrainFactory::GenerateTerrain(Model::TerrainModel &newTerrain
     /// Generate vertices to form a giant square.
     GenerateVertices(vertices, xsize, zsize);
     /// Give heights to the y values using perlin noise.
-    AddDetail(vertices, key, ChunkSize);
+    AddDetailV2(vertices, key);
+    //AddDetail(vertices, key, ChunkSize);
     /// Generate indicies for the vertices.
     GenerateIndices(indicies, xsize, zsize);
     /// Generate the texture coordinates of the squares.
@@ -127,7 +134,7 @@ void Controller::TerrainFactory::GenerateWater(Model::Water &lake, const Blue::K
     auto sizeOfX = static_cast<unsigned int>(glm::sqrt(vertices.size()));
     GenerateIndices(indicies, sizeOfX, sizeOfX);
     GenerateTextureCords(vertices);
-    //This is a hack to auto set the water normals to reduce computaional time.
+    //This is a hack to auto set the water normals to reduce computational time.
     for (auto &v : vertices) {
         v.normals = glm::vec3(0.0f, 1.0f, 0.0f);
     }
@@ -531,9 +538,13 @@ void Controller::TerrainFactory::StitchSeemedVertices(Model::TerrainModel &newTe
 }
 
 float Controller::TerrainFactory::GetDetailAt(const Blue::Key &key, const int xcord, const int zcord) {
-    int row = (height / 2) + key.first * ChunkSize + xcord;
-    int col = (width / 2) + key.second * ChunkSize + zcord;
-    return fValues.at(static_cast<size_t>(row)).at(static_cast<size_t>(col)).height;
+    float result = {};
+    if (abs(key.first) <= maxKeySize && abs(key.second) <= maxKeySize) {
+        int x = (height / 2) + key.first * ChunkSize + xcord;
+        int z = (width / 2) + key.second * ChunkSize + zcord;
+        result = fValues.at(static_cast<size_t>(x)).at(static_cast<size_t>(z)).height;
+    }
+    return result;
 }
 
 void Controller::TerrainFactory::AddDetailV2(std::vector<Blue::Vertex> &newTerrain, const Blue::Key &key) {
@@ -541,4 +552,26 @@ void Controller::TerrainFactory::AddDetailV2(std::vector<Blue::Vertex> &newTerra
         vert.position.y =
             GetDetailAt(key, static_cast<int>(vert.position.x), static_cast<int>(vert.position.z));
     }
+}
+
+unsigned int Controller::TerrainFactory::getMaxKeySize() const {
+    return maxKeySize;
+}
+
+float Controller::TerrainFactory::GetBLHeight(Blue::Key currentKey, glm::vec2 currentCord) {
+    float result_height = {};
+    auto intCord = glm::ivec2(floor(currentCord.x), floor(currentCord.y));
+    auto hBL = GetDetailAt(currentKey, currentCord.x, currentCord.y);
+    auto hBR = GetDetailAt(currentKey, intCord.x, intCord.y + 1);
+    auto hTL = GetDetailAt(currentKey, intCord.x + 1, intCord.y);
+    auto hTR = GetDetailAt(currentKey, intCord.x + 1, intCord.y + 1);
+    float x = currentCord.x - floor(currentCord.x);
+    float y = currentCord.y - floor(currentCord.y);
+
+    float R1 = ((1.0f - x) / (1.0f - 0.0f)) * hBL + ((x - 0.0f)/(1.0f - 0.0f)) * hBR;
+    // ((x2 – x)/(x2 – x1))*Q12 + ((x – x1)/(x2 – x1))*Q22
+    float R2 = ((1.0f - x)/(1.0f - 0.0f)) * hTL + ((x - 0.0f)/(1.0f - 0.0f)) * hTR;
+    // ((y2 – y)/(y2 – y1))*R1 + ((y – y1)/(y2 – y1))*R2
+    result_height = (((1.0f - y)/(1 - 0.0f))* R1) + (((y - 0.0f)/(1.0f - 0.0f)) * R2);
+    return result_height;
 }
