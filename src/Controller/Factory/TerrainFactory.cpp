@@ -329,9 +329,9 @@ float *Controller::TerrainFactory::ExportHeightMap() {
     auto *heightMap = new float[maxIndex];
     size_t count = 0;
     for (auto &x : fValues) {
-        for (auto & y : x) {
+        for (auto y = height - 1; y >= 0; --y) {
             if (count < maxIndex) {
-                heightMap[count] = y.height;
+                heightMap[count] = x.at(y).height;
                 ++count;
             } else {
                 std::cerr << "ERROR: TerrainFactory::ExportHeightMap out of bounds!\n";
