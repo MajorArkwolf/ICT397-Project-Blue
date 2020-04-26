@@ -91,6 +91,8 @@ namespace Controller {
          */
         float GetBLHeight(Blue::Key currentKey, glm::vec2 currentCord);
 
+        void ExportHeightMesh(Blue::SimpleMesh& simpleMesh);
+
 	private:
 		/// Determines how many squares fit into a single chunk
 		int ChunkSize = 100;

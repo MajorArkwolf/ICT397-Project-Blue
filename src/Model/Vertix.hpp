@@ -4,6 +4,7 @@
 #include <array>
 #include <glm/detail/type_quat.hpp>
 #include "Controller/Engine/IDTracker.hpp"
+#include <vector>
 
 namespace Blue {
     /// Used for chunk loading.
@@ -35,5 +36,10 @@ namespace Blue {
         int height = 0;
         float *terrain = nullptr;
         BlueEngine::ID targetId = 0;
+	};
+
+	struct SimpleMesh {
+	    std::vector<glm::vec3> vertex = {};
+	    std::vector<unsigned int> indices = {};
 	};
 }
