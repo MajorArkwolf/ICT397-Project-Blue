@@ -5,41 +5,41 @@
 #include "ReactHelper.hpp"
 using namespace rp3d;
 Physics::ReactShapes::~ReactShapes() {
-
-    //Handle destruction of heightfield float pointers allocated on the heap
-    for (auto &n : heightFields) {
-        delete(n);
-    }
 }
 size_t Physics::ReactShapes::createSphere(float radius) {
 
-    auto id = generateID();
-    shapeMap.emplace(id, std::make_unique<SphereShape>(radius));
+    auto id                  = generateID();
+    rp3d::SphereShape *shape = new rp3d::SphereShape(radius);
+    shapeMap.emplace(id, ReactCollisionShape(shape));
     return id;
 }
 
 size_t Physics::ReactShapes::createBox(glm::vec3 halfExtents) {
-    auto id = generateID();
-    shapeMap.emplace(id, std::make_unique<BoxShape>(ReactHelper::ConvertVec3(halfExtents)));
+    auto id               = generateID();
+    rp3d::BoxShape *shape = new rp3d::BoxShape(ReactHelper::ConvertVec3(halfExtents));
+    shapeMap.emplace(id, ReactCollisionShape(shape));
     return id;
 }
 
 size_t Physics::ReactShapes::createCapsule(float radius, float height) {
-    auto id = generateID();
-    shapeMap.emplace(id, (std::make_unique<rp3d::CapsuleShape>(radius, height)));
+    auto id                   = generateID();
+    rp3d::CapsuleShape *shape = new rp3d::CapsuleShape(radius, height);
+    shapeMap.emplace(id, ReactCollisionShape(shape));
     return id;
 }
 
 size_t Physics::ReactShapes::createHeightfield(int columns, int rows, float minHeight,
                                                float maxHeight, float *terrainData) {
     auto id = generateID();
-    shapeMap.emplace(id, (std::make_unique<rp3d::HeightFieldShape>(columns, rows, minHeight, maxHeight, terrainData, rp3d::HeightFieldShape::HeightDataType::HEIGHT_FLOAT_TYPE)));
-    heightFields.push_back(terrainData);
+    rp3d::HeightFieldShape *shape =
+        new rp3d::HeightFieldShape(columns, rows, minHeight, maxHeight, terrainData,
+                                   rp3d::HeightFieldShape::HeightDataType::HEIGHT_FLOAT_TYPE);
+    shapeMap.emplace(id, ReactCollisionShape(shape, terrainData));
     return id;
 }
 
-rp3d::CollisionShape *Physics::ReactShapes::GetShape(size_t id) const {
-    return nullptr;
+Physics::ReactCollisionShape& Physics::ReactShapes::GetShape(size_t id) {
+    return shapeMap.at(id);
 }
 
 size_t Physics::ReactShapes::generateID() {

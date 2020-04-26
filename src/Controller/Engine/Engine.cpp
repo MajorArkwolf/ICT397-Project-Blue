@@ -3,12 +3,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "BaseState.hpp"
-#include "Controller/GUIManager.hpp"
-#include "Controller/InputManager.hpp"
 #include "Controller/PhysicsFacade/React/ReactShapes.hpp"
-#include "Controller/ResourceManager.hpp"
-#include "GameStack.hpp"
 
 // Game States
 #include "Game/Prototype/PrototypeScene.hpp"
@@ -32,7 +27,7 @@ auto Engine::run() -> void {
     // State previous;
     // State current;
     // State state;
-    //glfwFocusWindow(engine.window);
+    // glfwFocusWindow(engine.window);
     engine.renderer.Init();
 
     while (engine.getIsRunning()) {
@@ -49,6 +44,7 @@ auto Engine::run() -> void {
             glfwPollEvents();
             engine.processInput();
             engine.gameStack.getTop()->update(t, dt);
+            engine.dynWorld.Update(dt);
             t += dt;
             accumulator -= dt;
         }
@@ -106,36 +102,6 @@ Engine::Engine() : dynWorld(glm::vec3{0, -9.8, 0}) {
     }
 
     this->guiManager.initialiseImGUI(window);
-    Physics::ReactShapes shapes;
-    auto id = shapes.createSphere(5);
-    //auto &asd = shapes.shapeMap.at(id);
-
-  
-    /*auto id = shapes.createSphere(5);
-    std::cout << id;
-
-    auto boxID = shapes.createBox(glm::vec3{29, 2, 2});
-    std::cout << boxID;*/
-
-    //auto capsuleID        = shapes.createCapsule(43, 123);
-
-    //auto &capsuleShape = shapes.shapeMap.at(capsuleID);
-    ///*auto &sphereShape = shapes.shapeMap.at(id);
-    //auto &boxShape = shapes.shapeMap.at(boxID);
-    //try {
-    //    auto &w = std::get<0>(sphereShape);
-    //    std::cout << w.getRadius();
-
-    //            auto &b = std::get<1>(boxShape);
-    //    std::cout << b.getExtent().x;
-
-    //                    auto &c = std::get<2>(capsuleShape);
-    //    std::cout << c.getRadius();
-    //} catch (std::bad_variant_access &) {
-    //}*/
-
-    //auto &c = std::get<rp3d::CapsuleShape>(capsuleShape);
-    //std::cout << c.getRadius();
 }
 
 Engine::~Engine() {

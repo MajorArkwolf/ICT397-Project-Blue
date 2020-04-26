@@ -18,6 +18,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     Controller/PhysicsFacade/React/ReactHelper.cpp
     Controller/PhysicsFacade/React/ReactShapes.cpp
     Controller/TextureManager.cpp
+    Controller/PhysicsFacade/React/ReactCollisionShape.cpp
     
     # Model
     Model/Models/Mesh.cpp

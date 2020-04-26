@@ -76,6 +76,7 @@ namespace BlueEngine {
          */
         ~Engine();
         Physics::ReactDynamicsWorld dynWorld;
+        Physics::ReactShapes shapes;
 
         /**
          * @brief Getter to the engine variables.

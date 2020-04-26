@@ -4,6 +4,7 @@
 #include "Controller/PhysicsFacade/RigidBody.hpp"
 #include  "Controller/PhysicsFacade/React/ReactShapes.hpp"
 
+
 namespace Physics {
 
     class ReactRigidBody : public RigidBody {
@@ -20,6 +21,9 @@ namespace Physics {
         void ApplyForceToCentre(glm::vec3 force) override;
         void ApplyForce(glm::vec3 force, glm::vec3 point) override;
         void Destroy() override;
+        void AddCollisionShape(ReactCollisionShape, glm::vec3 position, glm::quat orientation,
+                               float mass);
+        void SetBodyType(int type);
 
       private:
         rp3d::RigidBody *rigidBody = nullptr;

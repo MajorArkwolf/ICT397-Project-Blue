@@ -76,6 +76,8 @@ public:
 		 */
 	std::string gameObj_getModelPath();
 
+	void setPos(glm::vec3 &pos);
+
 		/*!
 		 * @brief Stores the current position of the GameObject in a 3D space.
 		 * @note Default value of { 0.0f, 0.0f, 0.0f }.

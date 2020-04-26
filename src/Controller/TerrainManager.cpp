@@ -33,7 +33,7 @@ float Controller::TerrainManager::Distance(const Blue::Key &left, const Blue::Ke
 	return std::sqrt(x_diff * x_diff + y_diff * y_diff);
 }
 
-void Controller::TerrainManager::GenerateHeightMap(Blue::HeightMap& heightMap) {
+void Controller::TerrainManager::GenerateHeightMap(Blue::HeightMap &heightMap) {
     auto& terrainFactory = Controller::Factory::get().terrain;
     heightMap.targetId = this->id;
     heightMap.width = terrainFactory.getWidth();

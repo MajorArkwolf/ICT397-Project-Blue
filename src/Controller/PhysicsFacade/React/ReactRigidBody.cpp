@@ -72,3 +72,26 @@ void Physics::ReactRigidBody::ApplyForce(glm::vec3 force, glm::vec3 point) {
 }
 
 void Physics::ReactRigidBody::Destroy() {}
+
+void Physics::ReactRigidBody::AddCollisionShape(ReactCollisionShape shape, glm::vec3 position,
+                                                glm::quat orientation, float mass) {
+    rp3d::Vector3 newPosition       = ReactHelper::ConvertVec3(position);
+    rp3d::Quaternion newOrientation = ReactHelper::ConvertQuaternion(orientation);
+    rp3d::Transform newTransform(newPosition, newOrientation);
+    rigidBody->addCollisionShape(shape.GetShape().get(), newTransform, mass);
+}
+
+void Physics::ReactRigidBody::SetBodyType(int type) {
+    switch (type) {
+        case 0: {
+            rigidBody->setType(rp3d::BodyType::KINEMATIC);
+        } break;
+        case 1: {
+            rigidBody->setType(rp3d::BodyType::DYNAMIC);
+        } break;
+        case 2: {
+            rigidBody->setType(rp3d::BodyType::STATIC);
+        } break;
+        default: break;
+    }
+}
