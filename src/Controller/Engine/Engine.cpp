@@ -16,9 +16,8 @@ auto Engine::run() -> void {
     auto &engine = Engine::get();
 
     ResourceManager::getInstance().loadResources();
-    auto pScene = std::make_shared<PrototypeScene>(PrototypeScene());
-    engine.gameStack.AddToStack(pScene);
-
+    engine.gameStack.AddToStack(std::make_shared<PrototypeScene>());
+    engine.gameStack.getTop()->Init();
 
     double t  = 0.0;
     double dt = 0.01;
@@ -31,6 +30,7 @@ auto Engine::run() -> void {
     // State state;
     //glfwFocusWindow(engine.window);
     engine.renderer.Init();
+
 
     while (engine.getIsRunning()) {
         double newTime   = glfwGetTime();
@@ -53,39 +53,6 @@ auto Engine::run() -> void {
 
         const double alpha = accumulator / dt;
         // state = currentState * alpha + previousState * (1.0 - alpha);
-
-        std::cout << std::endl;
-        std::cout << "raw newtime: " << newTime << " raw currentTime: " << currentTime << std::endl;
-        std::cout << "raw delta: " << frameTime << std::endl;
-        std::cout << "raw factor: " << alpha << std::endl;
-
-
-        // testing only pls delete
-        uint64_t currTime = glfwGetTime()*1000000;
-
-        //std::cout << "currTime: " << currTime << " prev time: " << prevTime << std::endl;
-        double freq = double(glfwGetTimerFrequency());
-        //std::cout << "frequency: " << freq << std::endl;
-
-        //double deltaTime = double(currTime - prevTime)/freq;
-        double deltaTime = frameTime /10;
-        //std::cout << "deltaTime: " << deltaTime << std::endl;
-
-        prevTime = currTime;
-
-        acc += deltaTime;
-
-        while(acc >= timeStep)
-        {
-            //testing only pls delete
-            engine.gameStack.getTop()->updateWorld(timeStep);
-            acc -= timeStep;
-        }
-
-        // to delete for testing physics
-        factor = acc / timeStep;
-        //std::cout << "factor: " << factor << std::endl;
-        engine.gameStack.getTop()->updatePhysics(factor);
 
         engine.gameStack.getTop()->display();
         engine.renderer.Draw();

@@ -27,9 +27,6 @@ public:
     auto display() -> void override;
     auto update(double t, double dt) -> void override;
 
-    auto updateWorld(double ts) -> void override;
-    auto updatePhysics(double f) -> void override;
-
     void Init() override;
     void unInit() override;
 
@@ -47,19 +44,19 @@ private:
 
     double getDeltaTime();
 
-    BeSettings settings;
-    Blue::HeightMap map;
-    float * blah;
-    glm::vec3  grav;
-    BeDynamicWorld *world;
-    BeAbstractPhysicsFactory *factory;
-    BeAbstractPhysicsLibrary *physics;
-    BeAbstractPhysics *cam;
-    //BeAbstractPhysics *body;
-    BeAbstractPhysics *testy;
-    BeAbstractPhysics *testx;
-    std::vector <BeAbstractPhysics *> bodies;
+    BeSettings settings = {};
+    Blue::HeightMap map = {};
+    float * blah = nullptr;
+    glm::vec3 grav = {};
+    BeDynamicWorld *world = nullptr;
+    BeAbstractPhysicsFactory *factory = nullptr;
+    BeAbstractPhysicsLibrary *physics = nullptr;
+    BeAbstractPhysics *cam = nullptr;
+    BeAbstractPhysics *body;
+//    BeAbstractPhysics *testy = nullptr;
+    BeAbstractPhysics *testx = nullptr;
+    std::vector <BeAbstractPhysics *> bodies = {};
 
-    BeTransform previousXTransform;
-    BeTransform previousYTransform;
+    BeTransform previousXTransform = {};
+    BeTransform previousYTransform = {};
 };

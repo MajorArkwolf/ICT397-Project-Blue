@@ -7,7 +7,10 @@ do
 	new_game_object = GameObject_Manager.get(identifier);
 
 	-- Set the newly created GameObject's model
+
 	new_game_object:setModel("res/model/nanosuit/nanosuit.obj");
+
+	-- new_game_object:setModel("res/model/player_male.obj");
 
 
 	-- Configure the newly created GameObject's position

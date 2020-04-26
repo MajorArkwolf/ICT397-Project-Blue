@@ -18,204 +18,42 @@ using Controller::Input::BLUE_InputAction;
 using Controller::Input::BLUE_InputType;
 
 PrototypeScene::PrototypeScene() {
-    Init();
 }
 
 PrototypeScene::~PrototypeScene() {
-    world->DestroyRigidBody(cam->GetBody());
-//    world->DestroyRigidBody(body->GetBody());
-    world->DestroyRigidBody(testy->GetBody());
-    world->DestroyRigidBody(testx->GetBody());
-    delete cam;
-//    delete body;
-    delete testy;
-    delete testx;
-    delete factory;
-    delete physics;
-    delete world;
-    delete blah;
+
 }
 
 auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
-	if (moveForward) {
-		camera.ProcessKeyboard(Camera_Movement::FORWARD, dt);
-	}
-	if (moveBackward) {
-		camera.ProcessKeyboard(Camera_Movement::BACKWARD, dt);
-	}
-	if (moveLeft) {
-		camera.ProcessKeyboard(Camera_Movement::LEFT, dt);
-	}
-	if (moveRight) {
-		camera.ProcessKeyboard(Camera_Movement::RIGHT, dt);
-	}
 
-	terrain.Update(camera.getLocation());
-    camera.Position.x = cam->GetTransform().GetPosition().x;
-    camera.Position.y = cam->GetTransform().GetPosition().y;
-    camera.Position.z = cam->GetTransform().GetPosition().z;
-
-    std::cout << "Camera position x:" << cam->GetTransform().GetPosition().x
-              << " y: " << cam->GetTransform().GetPosition().y
-              << " z: " << cam->GetTransform().GetPosition().z << std::endl;
-}
-
-void PrototypeScene::updateWorld(double ts) {
-    if (world != nullptr) {
-        world->Update(ts);
-    } else {
-        std::cout << "World not created" << std::endl;
+    if (moveForward) {
+        camera.ProcessKeyboard(Camera_Movement::FORWARD, dt);
     }
-}
+    if (moveBackward) {
+        camera.ProcessKeyboard(Camera_Movement::BACKWARD, dt);
+    }
+    if (moveLeft) {
+        camera.ProcessKeyboard(Camera_Movement::LEFT, dt);
+    }
+    if (moveRight) {
+        camera.ProcessKeyboard(Camera_Movement::RIGHT, dt);
+    }
 
-void PrototypeScene::updatePhysics(double f) {
+    terrain.Update(camera.getLocation());
 
-    BeTransform currentXTransform = testx->GetTransform();
-
-    BeTransform newXPosition =
-        BeTransform::InterPolateTransform(previousXTransform, currentXTransform, f);
-
-    previousXTransform = currentXTransform;
-
-    BeTransform currentYTransform = testy->GetTransform();
-
-    BeTransform newYPosition =
-        BeTransform::InterPolateTransform(previousYTransform, currentYTransform, f);
-
-    previousYTransform = currentYTransform;
-
-    // cam->SetTransform(camera.Position, glm::quat(1, 0, 0, 0));
-    bool test    = world->TestAABBOverlap(testx->GetBody(), testy->GetBody());
-    bool testcam = world->TestAABBOverlap(cam->GetBody(), testy->GetBody());
-
-    std::cout << "Collision test: " << test << " testcam: " << testcam << std::endl;
-
-    //    std::cout << "Terrain position x: " << body->GetTransform().GetPosition().x << " y: " << body->GetTransform().GetPosition().y
-    //                                    << " z: " << body->GetTransform().GetPosition().z << std::endl;
-
-    std::cout << "Testx Position x: " << testx->GetTransform().GetPosition().x
-              << " y: " << testx->GetTransform().GetPosition().y
-              << " z: " << testx->GetTransform().GetPosition().z << std::endl;
-    std::cout << "Testy Position x: " << testy->GetTransform().GetPosition().x
-              << " y: " << testy->GetTransform().GetPosition().y
-              << " z: " << testy->GetTransform().GetPosition().z << std::endl;
 }
 
 void PrototypeScene::Init() {
-	camera = View::Camera(glm::vec3(10.0f, 100.0f, 10.0f));
-	models.emplace_back("res/model/nanosuit/nanosuit.obj", false);
+
+    auto &resManager = ResourceManager::getInstance();
+    // terrain.Init();
+    // camera.Position.y = 100.0;
+    camera = View::Camera(glm::vec3(10.0f, 10.0f, 10.0f));
+    models.emplace_back("res/model/nanosuit/nanosuit.obj", false);
 
 	// Temporarily hard-code the external Lua script file while a proper implementation of Lua integration is on hold
 	GameObj_Manager::init();
 	luaL_dofile(LuaManager::getInstance().getLuaState(), "res/scripts/gameobjsSet.lua");
-
-    terrain.GenerateHeightMap(map);
-
-    if (map.terrain == nullptr) {
-        std::cout << "empty terrain pointer!!!" << std::endl;
-    } else {
-        std::cout << "Terrain filled" << std::endl;
-    }
-
-    settings.beSettings.isSleepingEnabled = true;
-    // settings.beSettings.defaultVelocitySolverNbIterations = 20;
-    grav = glm::vec3(0, -9.81, 0);
-    blah = new float[100];
-    for (int ii = 0; ii < 100; ii += 1) {
-        blah[ii] = 0;
-    }
-
-    // constructing world
-    world = new BeDynamicWorld(grav, settings);
-    if(world != nullptr)
-    {
-        std::cout << "World created" << std::endl;
-    }
-    else
-    {
-        std::cout << "world not created" << std::endl;
-    }
-
-    std::cout << " world gravity x: " << world->GetWorld()->getGravity().x
-              << " y: " << world->GetWorld()->getGravity().y
-              << " z: " << world->GetWorld()->getGravity().z << std::endl;
-
-    world->EnableGravity(true);
-    world->SetGravity(grav);
-    world->EnableSleeping(settings.beSettings.isSleepingEnabled);
-    world->SetSleepLinearVelocity(settings.beSettings.defaultSleepLinearVelocity);
-    world->SetSleepAngularVelocity(settings.beSettings.defaultSleepAngularVelocity);
-    world->SetNumIterationPositionSolver(settings.beSettings.defaultPositionSolverNbIterations);
-    world->SetNumIterationVelocitySolver(settings.beSettings.defaultVelocitySolverNbIterations);
-    world->SetTimeBeforeSleep(settings.beSettings.defaultTimeBeforeSleep);
-
-    std::cout << "gravity enabled: " << world->GetWorld()->isGravityEnabled() << std::endl;
-    std::cout << "sleep enabled: " << world->GetSleepToggle() << std::endl;
-
-    factory = new BeRP3DFactory();
-    if(factory != nullptr)
-    {
-        std::cout << "factory created" << std::endl;
-    } else {
-        std::cout << "factor not created" << std::endl;
-    }
-
-    physics = new BePhysicsLibrary(factory);
-    if(physics != nullptr)
-    {
-        std::cout << "library created" << std::endl;
-    } else {
-        std::cout << "library not created" << std::endl;
-    }
-
-    // constructing camera body
-    cam = physics->CreateBody(camera.Position, glm::quat(1, 0, 0, -1), glm::vec3(1, 1, 1), 1, 0, 0,
-                              0, 0, world, blah, ShapeType::Box, 1);
-    cam->EnableGravity(false);
-    cam->SetType(BeBodyType::DYNAMIC);
-    //    auto camMat = cam->GetMaterial();
-    //    camMat->SetBounciness(0.2);
-    bodies.emplace_back(cam);
-
-    // constructing height shape
-    //    glm::vec3 initPosition(-map.position.x * 2, map.position.y, -map.position.z * 2);
-    //    body = physics->CreateBody(initPosition, map.rotation, glm::vec3(0, 0, 0), map.mass, map.width,
-    //                               map.height, 0, 0, world, map.terrain, ShapeType::Height, map.targetId);
-    //    body->SetType(BeBodyType::STATIC);
-    //    bodies.emplace_back(body);
-
-    // constructing test body y
-    testy = physics->CreateBody(glm::vec3(0, 20000, 0), glm::quat(1, 0, 0, 0),
-                                glm::vec3(1000, 100, 1000), 100, 10, 10, 0, 0, world, blah,
-                                ShapeType::Box, 2);
-    //    testy->EnableGravity(true);
-    testy->SetType(BeBodyType::STATIC);
-    BeMaterial &testyMat = testy->GetMaterial();
-    testyMat.SetBounciness(0.2);
-    bodies.emplace_back(testy);
-    previousYTransform.SetToIdentity();
-
-    // constructing test body x
-    testx = physics->CreateBody(glm::vec3(10, 21000, 10), glm::quat(1, 0, 0, 0), glm::vec3(1, 1, 1),
-                                1, 0, 0, 0, 0, world, blah, ShapeType::Box, 3);
-    //    testx->EnableGravity(true);
-    // testx->SetSleep(true);
-    std::cout << "obj sleep: " << testx->IsSleepEnabled() << std::endl;
-    BeMaterial &testxMat = testx->GetMaterial();
-    testxMat.SetBounciness(0.2);
-    testx->SetType(BeBodyType::DYNAMIC);
-    bodies.emplace_back(testx);
-    previousXTransform.SetToIdentity();
-
-    // checking for location of the terrain shape
-    //    for(int ii = 0; ii < 4096; ii += 1)
-    //    {
-    //        for(int jj = 0; jj < 4096; jj += 1)
-    //        {
-    //            glm::vec3 check = body->GetVertexAt(ii, jj);
-    //            std::cout << "Terrain local position x: " << check.x << " y: " << check.y << " z: " << check.z << std::endl;
-    //        }
-    //    }
 
 }
 

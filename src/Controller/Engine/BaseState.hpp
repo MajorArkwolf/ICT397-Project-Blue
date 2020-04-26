@@ -47,15 +47,4 @@ class BaseState {
      */
     virtual void update(double t, double dt) = 0;
 
-    /**
-     * @brief to delete update function
-     */
-    virtual void updateWorld(double ts) = 0;
-
-    /**
-     * @brief to delete function to test physics
-     */
-    virtual void updatePhysics(double f) = 0;
-
-
 };

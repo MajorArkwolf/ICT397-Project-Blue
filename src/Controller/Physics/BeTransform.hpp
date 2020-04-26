@@ -10,6 +10,7 @@
 
 class BeTransform {
   public:
+
     /**
      * @brief default constructor
      */
@@ -69,8 +70,6 @@ class BeTransform {
      * @brief gets the physics object position
      */
     glm::vec3 GetPosition() const;
-
-
 
     /**
      * @brief getter for transform
