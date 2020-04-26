@@ -4,9 +4,10 @@ target_sources(${PROJECT_NAME} PRIVATE
     main.cpp
 
     # Controller/Engine/QuaternionCamera.cpp Not used, needs to be updated
+    Controller/Engine/Engine.cpp
+    Controller/Engine/IDTracker.cpp
     Controller/Engine/LuaManager.cpp
     Controller/InputManager.cpp
-    Controller/Engine/Engine.cpp
     Controller/GUIManager.cpp
     Controller/ResourceManager.cpp
     Controller/TerrainManager.cpp
@@ -16,6 +17,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     Controller/PhysicsFacade/React/ReactDynamicsWorld.cpp
     Controller/PhysicsFacade/React/ReactHelper.cpp
     Controller/PhysicsFacade/React/ReactShapes.cpp
+    Controller/TextureManager.cpp
     
     # Model
     Model/Models/Mesh.cpp
@@ -24,12 +26,20 @@ target_sources(${PROJECT_NAME} PRIVATE
     Model/TerrainModel.cpp
     Model/WaterModel.cpp
     Model/TextManager.cpp
+    Model/Texture.cpp
+
+    Model/GameObject/detail/Base.cpp
+    Model/GameObject/detail/Static.cpp
+    Model/GameObject/detail/Player.cpp
+    Model/GameObject/detail/NPC.cpp
+    Model/GameObject/detail/Manager.cpp
+    Model/GameObject/detail/LuaHelper.cpp
 
     # View
     View/Renderer/Shader.cpp
     View/EulerCamera.cpp
-    View/Renderer/Renderer.cpp
-    View/Renderer/OpenGLProxy.cpp
+    View/Renderer/OpenGL.cpp
+    View/Renderer/Skybox.cpp
 
     # Game
     Game/SceneManager.cpp

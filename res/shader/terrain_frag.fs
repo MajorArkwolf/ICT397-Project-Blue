@@ -15,27 +15,32 @@ uniform sampler2D texture1;
 uniform sampler2D texture2;
 uniform sampler2D texture3;
 uniform sampler2D texture4;
+uniform float tm_snowHeight;
+uniform float tm_dirtHeight;
+uniform float tm_grassHeight;
+uniform float tm_sandHeight;
 
 void main()
 {
-    vec4 t1 = texture(texture1, TexCoord);
-    vec4 t2 = texture(texture2, TexCoord);
-    vec4 t3 = texture(texture3, TexCoord);
-    vec4 t4 = texture(texture4, TexCoord);
+    float maxHeight = 255;
+    vec4 snow = texture(texture1, TexCoord);
+    vec4 grass = texture(texture2, TexCoord);
+    vec4 dirt = texture(texture3, TexCoord);
+    vec4 sand = texture(texture4, TexCoord);
 
-    if (HeightPoint[1] > 190) {
-        float blend_percent = (HeightPoint[1] - 190) / 65;
-        FragColor = mix(t3, t1, blend_percent);
-    } else if (HeightPoint[1] > 170) {
-        FragColor = t3;
-    } else if (HeightPoint[1] > 150) {
-        float blend_percent = (HeightPoint[1] - 150) / 20;
-        FragColor = mix(t2, t3, blend_percent);
+    if (HeightPoint[1] > tm_snowHeight) {
+        FragColor = snow;
+    } else if (HeightPoint[1] > tm_dirtHeight) {
+        float blend_percent = (HeightPoint[1] - tm_dirtHeight) / (tm_snowHeight - tm_dirtHeight);
+        FragColor = mix(dirt, snow, blend_percent);
+    } else if (HeightPoint[1] > tm_grassHeight) {
+        float blend_percent = (HeightPoint[1] - tm_grassHeight) / (tm_dirtHeight - tm_grassHeight);
+        FragColor = mix(grass, dirt, blend_percent);
     } else {
-        FragColor = t2;
+        FragColor = grass;
     }
-    if (HeightPoint[1] < 130) {
-        FragColor = t4;
+    if (HeightPoint[1] < tm_sandHeight) {
+        FragColor = sand;
 	}
 
     // ambient
@@ -49,7 +54,7 @@ void main()
     vec3 diffuse = diff * lightColor;
     
     // specular
-    float specularStrength = 0.2;
+    float specularStrength = 0.05;
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 reflectDir = reflect(-lightDir, norm);  
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
@@ -57,4 +62,4 @@ void main()
         
     vec3 result = (ambient + diffuse + specular);
     FragColor = FragColor * vec4(result, 1.0);
-} 
+}

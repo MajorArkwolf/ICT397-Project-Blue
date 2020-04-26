@@ -19,7 +19,7 @@ void ResourceManager::loadResources() {
     auto scriptPath = basePath + "res/scripts/LoadResources.lua";
     getGlobalNamespace(L).beginNamespace("resources").addFunction("loadString", &loadString).endNamespace();
     getGlobalNamespace(L).beginNamespace("resources").addFunction("loadModel", &loadModel).endNamespace();
-    std::cout << scriptPath;
+    getGlobalNamespace(L).beginNamespace("resources").addFunction("loadTexture", &loadTexture).endNamespace();
     luaL_dofile(L, scriptPath.c_str());
     lua_pcall(L, 0, 0, 0);
 
@@ -67,4 +67,9 @@ void ResourceManager::loadString(const std::string key) {
     } else {
         std::cout << "Failed to load string with id \"" << key << "\"\n";
     }
+}
+
+auto ResourceManager::loadTexture(const std::string filePath, const std::string textureName) -> void {
+    auto &texManger = TextureManager::getInstance();
+    texManger.loadTextureFromFile(filePath, textureName);
 }

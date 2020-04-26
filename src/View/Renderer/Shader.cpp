@@ -42,7 +42,7 @@ Shader::Shader(const char *vertexPath, const char *fragmentPath,
             gShaderFile.close();
             geometryCode = gShaderStream.str();
         }
-    } catch (std::ifstream::failure e) {
+    } catch (std::ifstream::failure& e) {
         std::cout << "Vertex Shader: " << vertexPath << " Fragment Shader: " << fragmentPath << "\n";
         std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ"
                   << "\n";
@@ -85,7 +85,7 @@ Shader::Shader(const char *vertexPath, const char *fragmentPath,
         glDeleteShader(geometry);
 }
 
-void Shader::use() {
+void Shader::use() const {
     glUseProgram(ID);
 }
 
@@ -121,7 +121,7 @@ void Shader::setVec4(const std::string &name, const glm::vec4 &value) const {
     glUniform4fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
 }
 
-void Shader::setVec4(const std::string &name, float x, float y, float z, float w) {
+void Shader::setVec4(const std::string &name, float x, float y, float z, float w) const {
     glUniform4f(glGetUniformLocation(ID, name.c_str()), x, y, z, w);
 }
 
@@ -140,9 +140,9 @@ void Shader::setMat4(const std::string &name, const glm::mat4 &mat) const {
                        &mat[0][0]);
 }
 
-void Shader::checkCompileErrors(GLuint shader, std::string type) {
-    GLint success;
-    GLchar infoLog[1024];
+void Shader::checkCompileErrors(GLuint shader, const std::string& type) {
+    GLint success = false;
+    GLchar infoLog[1024] = {};
     if (type != "PROGRAM") {
         glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
         if (!success) {
@@ -160,4 +160,8 @@ void Shader::checkCompileErrors(GLuint shader, std::string type) {
                       << std::endl;
         }
     }
+}
+
+unsigned int Shader::getId() const {
+    return ID;
 }

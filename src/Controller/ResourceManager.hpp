@@ -4,6 +4,7 @@
 #include "Controller/Engine/LuaManager.hpp"
 #include "Model/Models/ModelManager.hpp"
 #include "Model/TextManager.hpp"
+#include "Controller/TextureManager.hpp"
 
 class ResourceManager {
   public:
@@ -21,4 +22,5 @@ class ResourceManager {
     ResourceManager();
     static auto loadModel(const std::string &filePath) -> void;
     static auto loadString(const std::string key) -> void;
+    static auto loadTexture(const std::string filePath, const std::string textureName) -> void;
 };

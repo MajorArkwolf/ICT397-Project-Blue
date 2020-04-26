@@ -2,17 +2,23 @@
 #include <utility>
 #include <vector>
 
-#include "Model/Models/Mesh.hpp"
-#include "Shader.hpp"
-
-class Renderer {
-  public:
-    Renderer();
-    ~Renderer();
-    void draw(const glm::mat4 &view, const glm::mat4 &projection);
-    static void addToDraw(const glm::mat4 &modelMesh, const size_t &modelID);
-    static auto drawList() -> std::vector<std::pair<glm::mat4, size_t>> &;
-
-  private:
-    Shader *shader = nullptr;
-};
+namespace View {
+    class Renderer {
+        /**
+         * Initialises the renderer.
+         */
+        virtual void Init() = 0;
+        /**
+         * The default draw interface.
+         */
+        virtual void Draw() = 0;
+        /**
+         * The default de init interface.
+         */
+        virtual void DeInit() = 0;
+        /**
+         * The default toggle wire frame interface.
+         */
+        virtual void ToggleWireFrame() = 0;
+    };
+}

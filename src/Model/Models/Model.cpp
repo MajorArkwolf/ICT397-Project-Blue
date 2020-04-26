@@ -1,19 +1,20 @@
 #include "Model.hpp"
 
 #include <iostream>
-#include "View/Renderer/OpenGLProxy.hpp"
+#include "View/Renderer/OpenGL.hpp"
+#include "Controller/Engine/Engine.hpp"
 
 Model::Model::Model(char *path, bool gamma = false) : gammaCorrection(gamma) {
     loadModel(path);
 }
 
-Model::Model::Model(string path, bool gamma = false) : gammaCorrection(gamma) {
-    loadModel(path.c_str());
+Model::Model::Model(const string& path, bool gamma = false) : gammaCorrection(gamma) {
+    loadModel(path);
 }
 
-void Model::Model::Draw(Shader shader) {
-    for (unsigned int i = 0; i < meshes.size(); i++) {
-        meshes[i].Draw(shader);
+void Model::Model::Draw(Shader& shader) {
+    for (auto &mesh : meshes) {
+        mesh.Draw(shader);
     }
 }
 
@@ -56,11 +57,11 @@ Mesh Model::Model::processMesh(aiMesh *mesh, const aiScene *scene) {
     // data to fill
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
-    std::vector<Texture> textures;
+    std::vector<TextureB> textures;
 
     // Walk through each of the mesh's vertices
     for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
-        Vertex vertex;
+        Vertex vertex{};
         glm::vec3 vector{
             0, 0,
             0}; // we declare a placeholder vector since assimp uses
@@ -121,19 +122,19 @@ Mesh Model::Model::processMesh(aiMesh *mesh, const aiScene *scene) {
     // specular: texture_specularN normal: texture_normalN
 
     // 1. diffuse maps
-    std::vector<Texture> diffuseMaps =
+    std::vector<TextureB> diffuseMaps =
         loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
     textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
     // 2. specular maps
-    std::vector<Texture> specularMaps =
+    std::vector<TextureB> specularMaps =
         loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
     textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
     // 3. normal maps
-    std::vector<Texture> normalMaps =
+    std::vector<TextureB> normalMaps =
         loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
     textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
     // 4. height maps
-    std::vector<Texture> heightMaps =
+    std::vector<TextureB> heightMaps =
         loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
     textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
@@ -141,24 +142,24 @@ Mesh Model::Model::processMesh(aiMesh *mesh, const aiScene *scene) {
     return Mesh(vertices, indices, textures);
 }
 
-std::vector<Texture> Model::Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type,
-                                            string typeName) {
-    std::vector<Texture> textures;
+std::vector<TextureB> Model::Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type,
+                                            const string& typeName) {
+    std::vector<TextureB> textures;
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
         aiString str;
         mat->GetTexture(type, i, &str);
         // check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
         bool skip = false;
-        for (unsigned int j = 0; j < textures_loaded.size(); j++) {
-            if (std::strcmp(textures_loaded[j].path.data(), str.C_Str()) == 0) {
-                textures.push_back(textures_loaded[j]);
+        for (auto & j : textures_loaded) {
+            if (std::strcmp(j.path.data(), str.C_Str()) == 0) {
+                textures.push_back(j);
                 skip = true; // a texture with the same filepath has already been loaded, continue to next one. (optimization)
                 break;
             }
         }
         if (!skip) { // if texture hasn't been loaded already, load it
-            Texture texture;
-            texture.id   = BlueEngine::RenderCode::TextureFromFile(str.C_Str(), this->directory);
+            TextureB texture;
+            texture.id   = BlueEngine::Engine::get().renderer.TextureFromFile(str.C_Str(), this->directory, false);
             texture.type = typeName;
             texture.path = str.C_Str();
             textures.push_back(texture);
