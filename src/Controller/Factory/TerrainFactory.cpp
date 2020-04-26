@@ -33,6 +33,7 @@ void Controller::TerrainFactory::Init() {
     } else {
         maxKeySize = ((height / 2) / ChunkSize) - 1;
     }
+    GenerateHeightOffSet();
 }
 
 void Controller::TerrainFactory::LoadLua() {
@@ -256,13 +257,13 @@ void Controller::TerrainFactory::CleanupChunk(Model::TerrainModel &terrain) {
 }
 
 void Controller::TerrainFactory::LoadPerlinNoise(const string& filename) {
-    int nrComponents;
+    int nrComponents = {};
     unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
     assert(data != nullptr);
 
-    fValues.resize(static_cast<size_t>(width + 1));
+    fValues.resize(static_cast<size_t>(width));
     for (auto &e : fValues) {
-        e.resize(static_cast<size_t>(height + 1));
+        e.resize(static_cast<size_t>(height));
     }
     for (auto x = 0; x <= height - 1; ++x) {
         for (auto y = 0; y <= width - 1; ++y) {
@@ -272,8 +273,8 @@ void Controller::TerrainFactory::LoadPerlinNoise(const string& filename) {
     }
     int runtime = 1;
     for (auto run = 0; run < runtime; ++run) {
-        for (auto x = 1; x <= height - 1; ++x) {
-            for (auto y = 1; y <= width - 1; ++y) {
+        for (auto x = 1; x <= height - 2; ++x) {
+            for (auto y = 1; y <= width - 2; ++y) {
                 float sum = {};
                 sum += this->fValues.at(x).at(y).height;
                 sum += this->fValues.at(x - 1).at(y).height;
@@ -324,13 +325,13 @@ int Controller::TerrainFactory::getHeight() const {
 }
 
 float *Controller::TerrainFactory::ExportHeightMap() {
-    size_t maxIndex = (width + 1) * (height + 1);
+    size_t maxIndex = (width) * (height);
     auto *heightMap = new float[maxIndex];
     size_t count = 0;
     for (auto &x : fValues) {
-        for (auto & y : x) {
+        for (auto y = height - 1; y >= 0; --y) {
             if (count < maxIndex) {
-                heightMap[count] = y.height;
+                heightMap[count] = x.at(y).height;
                 ++count;
             } else {
                 std::cerr << "ERROR: TerrainFactory::ExportHeightMap out of bounds!\n";
@@ -575,3 +576,48 @@ float Controller::TerrainFactory::GetBLHeight(Blue::Key currentKey, glm::vec2 cu
     result_height = (((1.0f - y)/(1 - 0.0f))* R1) + (((y - 0.0f)/(1.0f - 0.0f)) * R2);
     return result_height;
 }
+
+Blue::HeightRange Controller::TerrainFactory::GetHeightData() const {
+    return heightValues;
+}
+
+void Controller::TerrainFactory::GenerateHeightOffSet() {
+    float min = fValues.at(0).at(0).height;
+    float max = fValues.at(0).at(0).height;
+    for (auto &x : fValues) {
+        for (auto &y : x) {
+            if(y.height > max) {
+                max = y.height;
+            } else if (y.height < min) {
+                min = y.height;
+            }
+        }
+    }
+    heightValues.min = min;
+    heightValues.max = max;
+    heightValues.range = max - min;
+}
+
+void Controller::TerrainFactory::ExportHeightMesh(Blue::SimpleMesh& simpleMesh) {
+    std::vector<Blue::Vertex> blueVert = {};
+    unsigned int xsize = static_cast<unsigned int>(ChunkSize + 1);
+    unsigned int zsize = xsize;
+    /// Generate vertices to form a giant square.
+    GenerateVertices(blueVert, width + 1, height + 1, 0, 0, 1);
+    /// Give heights to the y values using perlin noise.
+    size_t count = 0;
+    for (auto &x : fValues) {
+        for (auto &y : x) {
+            simpleMesh.vertex.emplace_back(glm::vec3(blueVert.at(count).position.x, y.height, blueVert.at(count).position.z));
+//            simpleMesh.vertex.at(count).x = blueVert.at(count).position.x;
+//            simpleMesh.vertex.at(count).y = y.height;
+//            simpleMesh.vertex.at(count).z = blueVert.at(count).position.z;
+            ++count;
+        }
+    }
+    /// Generate indicies for the vertices.
+    auto sizeOfX = static_cast<unsigned int>(glm::sqrt(blueVert.size()));
+    auto sizeOfY = sizeOfX;
+    GenerateIndices(simpleMesh.indices, sizeOfX, sizeOfY);
+}
+
