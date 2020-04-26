@@ -66,6 +66,12 @@ namespace Controller {
         int getHeight() const;
 
         /**
+         * Getter for the OffSet.
+         * @return the max minus the min values in the heightmap
+         */
+        Blue::HeightRange GetHeightData() const;
+
+        /**
          * Exports the height map
          * @return a pointer to the height map, you must handle the memory that is exported of this function.
          */
@@ -111,8 +117,10 @@ namespace Controller {
         /// Water Texture ID
         unsigned int waterTextureID = {};
         float snowHeight = 190.0f, dirtHeight = 150.0f, grassHeight = 128.0f, sandHeight = 108.0f, waterHeight = 105.0f;
-        ///Perlin Path
+        /// Perlin Path
         std::string perlinPath = {};
+        /// The height offset needed for collision.
+        Blue::HeightRange heightValues = {};
 
         void GenerateWater(Model::Water &lake, const Blue::Key &key, unsigned int xsize,
                            unsigned int zsize, unsigned int increment);
@@ -195,5 +203,10 @@ namespace Controller {
          * @param key the location of the chunk.
          */
         void AddDetailV2(std::vector<Blue::Vertex> &newTerrain, const Blue::Key& key);
+
+        /**
+         * Generate the height offset needed for physics.
+         */
+        void GenerateHeightOffSet();
     };
 }

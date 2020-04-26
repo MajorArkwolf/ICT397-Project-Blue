@@ -20,9 +20,16 @@ namespace Blue {
 		glm::vec3 color = {};
 	};
     /// Used to transfer information from terrain to react.
+    struct HeightRange {
+        float min = 0.0f;
+        float max = 0.0f;
+        float range = 0.0f;
+    };
+
 	struct HeightMap {
         glm::vec3 position = {};
         glm::quat rotation = {};
+        HeightRange heightRange = {};
         float mass = 1;
         int width = 0;
         int height = 0;

@@ -33,6 +33,7 @@ void Controller::TerrainFactory::Init() {
     } else {
         maxKeySize = ((height / 2) / ChunkSize) - 1;
     }
+    GenerateHeightOffSet();
 }
 
 void Controller::TerrainFactory::LoadLua() {
@@ -575,3 +576,25 @@ float Controller::TerrainFactory::GetBLHeight(Blue::Key currentKey, glm::vec2 cu
     result_height = (((1.0f - y)/(1 - 0.0f))* R1) + (((y - 0.0f)/(1.0f - 0.0f)) * R2);
     return result_height;
 }
+
+Blue::HeightRange Controller::TerrainFactory::GetHeightData() const {
+    return heightValues;
+}
+
+void Controller::TerrainFactory::GenerateHeightOffSet() {
+    float min = fValues.at(0).at(0).height;
+    float max = fValues.at(0).at(0).height;
+    for (auto &x : fValues) {
+        for (auto &y : x) {
+            if(y.height > max) {
+                max = y.height;
+            } else if (y.height < min) {
+                min = y.height;
+            }
+        }
+    }
+    heightValues.min = min;
+    heightValues.max = max;
+    heightValues.range = max - min;
+}
+
