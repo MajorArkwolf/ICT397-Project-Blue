@@ -17,7 +17,6 @@ auto Engine::run() -> void {
 
     ResourceManager::getInstance().loadResources();
     engine.gameStack.AddToStack(std::make_shared<PrototypeScene>());
-    engine.gameStack.getTop()->Init();
 
     double t  = 0.0;
     double dt = 0.01;
