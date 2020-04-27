@@ -41,7 +41,7 @@ namespace View {
          * Adds an item to the draw que.
          * @param drawItem Passes DrawItem into the que to be used for rendering purposes.
          */
-        void AddToQue(View::Data::DrawItem drawItem);
+        void AddToQue(View::Data::DrawItem& drawItem);
         /**
          * Setups a general mesh for the renderer in the OpenGL Context.
          * @param VAO buffer identity

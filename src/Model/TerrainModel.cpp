@@ -52,7 +52,6 @@ void Model::TerrainModel::Draw(const glm::mat4& projection, const glm::mat4& vie
     terrainShader->setFloat("tm_grassHeight", grassHeight);
     terrainShader->setFloat("tm_sandHeight", sandHeight);
     BlueEngine::Engine::get().renderer.DrawTerrain(VAO, textures, EBO_Size);
-    water.Draw(projection, view, cameraPos);
 }
 
 void Model::TerrainModel::AddToDraw() {
@@ -61,10 +60,11 @@ void Model::TerrainModel::AddToDraw() {
     std::function e = [&](const glm::mat4 &projection, const glm::mat4 &view, const glm::dvec3 &cameraPos) {
         this->Draw(projection, view, cameraPos);
     };
-    View::Data::DrawItem di;
+    View::Data::DrawItem di = {};
     di.drawPointer = e;
     di.pos = position;
     di.pos.x += chunkSize / 2.0f;
     di.pos.z += chunkSize / 2.0f;
     renderer.AddToQue(di);
+    water.AddToDraw();
 }

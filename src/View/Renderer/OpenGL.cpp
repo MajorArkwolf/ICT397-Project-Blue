@@ -149,14 +149,17 @@ void View::OpenGL::ResizeWindow() {
     glViewport(0, 0, width, height);
 }
 
-void View::OpenGL::AddToQue(View::Data::DrawItem drawItem) {
+void View::OpenGL::AddToQue(View::Data::DrawItem& drawItem) {
     drawQue.push_back(drawItem);
 }
 
 unsigned int View::OpenGL::TextureFromFile(const char *path, const std::string &directory,
                                                      [[maybe_unused]] bool gamma) {
     std::string filename = std::string(path);
-    filename             = directory + '/' + filename;
+    if (filename.find("..") < filename.length()) {
+        filename.erase(0, 2);
+    }
+    filename = directory + '/' + filename;
 
     unsigned int textureID;
     glGenTextures(1, &textureID);

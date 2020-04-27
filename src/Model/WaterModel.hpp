@@ -47,6 +47,11 @@ namespace Model {
 		/// position where to draw the water
 		glm::vec3 position = { 0, 105, 0 };
 
+		/**
+		 * Adds the water to the draw call.
+		 */
+		void AddToDraw();
+
 	private:
         /// Shader used to draw the water.
         std::shared_ptr<Shader> shader = nullptr;
