@@ -18,6 +18,7 @@ using Controller::Input::BLUE_InputAction;
 using Controller::Input::BLUE_InputType;
 
 PrototypeScene::PrototypeScene() {
+    Init();
 }
 
 PrototypeScene::~PrototypeScene() {
