@@ -12,6 +12,7 @@
 #include "Controller/Engine/LuaManager.hpp"
 #include "Controller/TextureManager.hpp"
 #include "stb_image.h"
+#include "GameAssetFactory.hpp"
 
 void Controller::TerrainFactory::Init() {
     terrainShader =
@@ -294,12 +295,12 @@ int Controller::TerrainFactory::GetChunkSize() const {
 }
 
 void Controller::TerrainFactory::GenerateNormals(std::vector<Blue::Vertex> &vertices,
-                                                 std::vector<unsigned int> indicies) {
+                                                 const std::vector<unsigned int>& indices) {
     // append triangle normals to every vertex
-    for (size_t index = 0; index < indicies.size(); index += 3) {
-        Blue::Vertex &vert1 = vertices[indicies[index]];
-        Blue::Vertex &vert2 = vertices[indicies[index + 1]];
-        Blue::Vertex &vert3 = vertices[indicies[index + 2]];
+    for (size_t index = 0; index < indices.size(); index += 3) {
+        Blue::Vertex &vert1 = vertices[indices[index]];
+        Blue::Vertex &vert2 = vertices[indices[index + 1]];
+        Blue::Vertex &vert3 = vertices[indices[index + 2]];
         // glm::triangleNormal() probably returns normalized vector,
         // which is better to compute unnormalized
         glm::vec3 triNormal = glm::triangleNormal(vert1.position, vert2.position, vert3.position);
@@ -639,3 +640,24 @@ std::vector<unsigned int> Controller::TerrainFactory::GetTerrainHeights() const 
     return std::move(terrainHeights);
 }
 
+float Controller::TerrainFactory::LuaBLHeight(float x, float y) {
+    auto &factory = Controller::Factory::get().terrain;
+    auto ChunkSize = factory.GetChunkSize();
+    auto currentKey = Blue::Key(floor(x), floor(y));
+    auto currentCord = glm::vec2(x, y);
+    currentKey.first /= ChunkSize;
+    currentKey.second /= ChunkSize;
+    if (currentKey.first < 0) {
+        currentKey.first -= 1;
+    }
+    if (currentKey.second < 0) {
+        currentKey.second -= 1;
+    }
+    currentCord.x -= currentKey.first * ChunkSize;
+    currentCord.y -= currentKey.second * ChunkSize;
+    return factory.GetBLHeight(currentKey, currentCord);
+}
+
+int Controller::TerrainFactory::LuaMapSize() {
+    return Controller::Factory::get().terrain.getMaxKeySize() * Controller::Factory::get().terrain.GetChunkSize();
+}

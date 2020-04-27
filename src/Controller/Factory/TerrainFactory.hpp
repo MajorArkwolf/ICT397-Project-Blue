@@ -107,6 +107,19 @@ namespace Controller {
          * @return heights of the terrain.
          */
         std::vector<unsigned int> GetTerrainHeights() const;
+        /**
+         * Lets LUA look at the height map
+         * @param x coordinate
+         * @param y coordinate
+         * @return height.
+         */
+        static float LuaBLHeight(float x, float y);
+
+        /**
+         * Gives Lua the max size of the map
+         * @return chunk size.
+         */
+        static int LuaMapSize();
 
 	private:
 		/// Determines how many squares fit into a single chunk
@@ -184,7 +197,7 @@ namespace Controller {
          * @param vertices the be soft normales.
          * @param indices to generate the hard normals
          */
-        void GenerateNormals(std::vector<Blue::Vertex> &vertices, std::vector<unsigned int> indices);
+        void GenerateNormals(std::vector<Blue::Vertex> &vertices, const std::vector<unsigned int>& indices);
         /**
          * Overloaded function to generate vertices for the terrain.
          * @param terrain The terrain model to add vertices to.
