@@ -18,3 +18,9 @@ do
 	-- Increment the counter to prevent infinite GameObject generation
 	i = i + 1;
 end
+
+identifier = GameObject_Manager.add(1);
+new_game_object = GameObject_Manager.get(identifier);
+new_game_object:setModel("res/model/vikings/SM_Env_Rock_01.fbx");
+new_game_object:setPos(100, 150, 100);
+new_game_object:setScale(1.0, 1.0, 1.0);
