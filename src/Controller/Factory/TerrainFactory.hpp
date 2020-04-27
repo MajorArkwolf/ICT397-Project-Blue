@@ -90,8 +90,23 @@ namespace Controller {
          * @return the height at that given point.
          */
         float GetBLHeight(Blue::Key currentKey, glm::vec2 currentCord);
-
+        /**
+         * Exports the height map as a terrain mash.
+         * @param simpleMesh mesh of the terrain map.
+         */
         void ExportHeightMesh(Blue::SimpleMesh& simpleMesh);
+
+        /**
+         * Returns all the textures loaded into the terrain factory.
+         * @return of texture ids.
+         */
+        std::vector<unsigned int> GetTextureID() const;
+
+        /**
+         * Returns all the heights of the terrain.
+         * @return heights of the terrain.
+         */
+        std::vector<unsigned int> GetTerrainHeights() const;
 
 	private:
 		/// Determines how many squares fit into a single chunk

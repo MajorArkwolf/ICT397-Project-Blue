@@ -79,6 +79,11 @@ namespace Controller {
          */
         Blue::Key GenerateKey(glm::ivec2 currentCord);
 
+        /**
+         * Tells the terrain manager to update the chunks.
+         */
+        void UpdateInfo();
+
 	private:
 	    BlueEngine::ID id = 0;
 		/// The max size a key can be to stop out of bound checks on the terrain.
@@ -93,6 +98,15 @@ namespace Controller {
         std::vector<Model::TerrainModel*> drawCircle = {};
         /// All the chunks in a scene.
         std::vector<std::shared_ptr<ChunkClod>> chunks = {};
+        /// Textures used for the chunks.
+        unsigned int snowTextureID = {}, grassTextureID = {}, dirtTextureID = {}, sandTextureID = {}, waterTextureID = {};
+
+    private:
+        /// Height of each element.
+        float snowHeight = 190.0f, dirtHeight = 150.0f, grassHeight = 128.0f, sandHeight = 108.0f, waterHeight = 105.0f;
+        /// Flag to check if values have been updated.
+        bool updateTerrain = false;
+
         /**
          * @brief Pythagoras function to determine the distance of 2 cartesian coordinates.
          * @param Key of the first square.
@@ -100,5 +114,46 @@ namespace Controller {
          * @return distance between the two keys.
          */
         float Distance(const Blue::Key &left, const Blue::Key &right) const;
+
+	public:
+        unsigned int getSnowTextureId() const;
+
+        void setSnowTextureId(unsigned int snowTextureId);
+
+        unsigned int getGrassTextureId() const;
+
+        void setGrassTextureId(unsigned int grassTextureId);
+
+        unsigned int getDirtTextureId() const;
+
+        void setDirtTextureId(unsigned int dirtTextureId);
+
+        unsigned int getSandTextureId() const;
+
+        void setSandTextureId(unsigned int sandTextureId);
+
+        unsigned int getWaterTextureId() const;
+
+        void setWaterTextureId(unsigned int waterTextureId);
+
+        float getSnowHeight() const;
+
+        void setSnowHeight(float snowHeight);
+
+        float getDirtHeight() const;
+
+        void setDirtHeight(float dirtHeight);
+
+        float getGrassHeight() const;
+
+        void setGrassHeight(float grassHeight);
+
+        float getSandHeight() const;
+
+        void setSandHeight(float sandHeight);
+
+        float getWaterHeight() const;
+
+        void setWaterHeight(float waterHeight);
     };
 }
