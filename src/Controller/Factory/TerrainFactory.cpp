@@ -600,8 +600,6 @@ void Controller::TerrainFactory::GenerateHeightOffSet() {
 
 void Controller::TerrainFactory::ExportHeightMesh(Blue::SimpleMesh& simpleMesh) {
     std::vector<Blue::Vertex> blueVert = {};
-    unsigned int xsize = static_cast<unsigned int>(ChunkSize + 1);
-    unsigned int zsize = xsize;
     /// Generate vertices to form a giant square.
     GenerateVertices(blueVert, width + 1, height + 1, 0, 0, 1);
     /// Give heights to the y values using perlin noise.
@@ -615,9 +613,29 @@ void Controller::TerrainFactory::ExportHeightMesh(Blue::SimpleMesh& simpleMesh) 
             ++count;
         }
     }
-    /// Generate indicies for the vertices.
+    /// Generate indices for the vertices.
     auto sizeOfX = static_cast<unsigned int>(glm::sqrt(blueVert.size()));
     auto sizeOfY = sizeOfX;
     GenerateIndices(simpleMesh.indices, sizeOfX, sizeOfY);
+}
+
+std::vector<unsigned int> Controller::TerrainFactory::GetTextureID() const {
+    std::vector<unsigned int> textureIDs = {};
+    textureIDs.push_back(snowTextureID);
+    textureIDs.push_back(grassTextureID);
+    textureIDs.push_back(dirtTextureID);
+    textureIDs.push_back(sandTextureID);
+    textureIDs.push_back(waterTextureID);
+    return std::move(textureIDs);
+}
+
+std::vector<unsigned int> Controller::TerrainFactory::GetTerrainHeights() const {
+    std::vector<unsigned int> terrainHeights = {};
+    terrainHeights.push_back(snowHeight);
+    terrainHeights.push_back(dirtHeight);
+    terrainHeights.push_back(grassHeight);
+    terrainHeights.push_back(sandHeight);
+    terrainHeights.push_back(waterHeight);
+    return std::move(terrainHeights);
 }
 

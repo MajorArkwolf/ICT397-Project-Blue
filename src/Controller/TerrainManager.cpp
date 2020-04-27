@@ -20,6 +20,19 @@ void Controller::TerrainManager::Init() {
             chunks.push_back(e);
         }
     }
+    auto textures = factory.GetTextureID();
+    snowTextureID = textures.at(0);
+    grassTextureID = textures.at(1);
+    dirtTextureID = textures.at(2);
+    sandTextureID = textures.at(3);
+    waterTextureID = textures.at(4);
+
+    auto heights = factory.GetTerrainHeights();
+    snowHeight = heights.at(0);
+    dirtHeight = heights.at(1);
+    grassHeight = heights.at(2);
+    sandHeight = heights.at(3);
+    waterHeight = heights.at(4);
 }
 
 void Controller::TerrainManager::Draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos) {
@@ -48,7 +61,16 @@ void Controller::TerrainManager::GenerateHeightMap(Blue::HeightMap& heightMap) {
 }
 
 void Controller::TerrainManager::Update(glm::ivec2 key) {
-    auto &factory = Controller::Factory::get().terrain;
+    if (updateTerrain) {
+        for (auto &c : chunks) {
+            c->level1.setTextures(snowTextureID, dirtTextureID, grassTextureID, sandTextureID);
+            c->level2.setTextures(snowTextureID, dirtTextureID, grassTextureID, sandTextureID);
+            c->level1.setHeightOffsets(snowHeight, dirtHeight, grassHeight, sandHeight);
+            c->level2.setHeightOffsets(snowHeight, dirtHeight, grassHeight, sandHeight);
+        }
+        updateTerrain = false;
+    }
+
     Blue::Key updateKey = GenerateKey(key);
 	if (abs(this->lastPos.first - updateKey.first) > reloadDistance || abs(this->lastPos.second - updateKey.second) > reloadDistance ) {
 		drawCircle.clear();
@@ -94,4 +116,88 @@ Blue::Key Controller::TerrainManager::GenerateKey(glm::ivec2 currentCord) {
         key.second -= 1;
     }
     return key;
+}
+
+void Controller::TerrainManager::UpdateInfo() {
+    updateTerrain = true;
+}
+
+unsigned int Controller::TerrainManager::getSnowTextureId() const {
+    return snowTextureID;
+}
+
+void Controller::TerrainManager::setSnowTextureId(unsigned int snowTextureId) {
+    snowTextureID = snowTextureId;
+}
+
+unsigned int Controller::TerrainManager::getGrassTextureId() const {
+    return grassTextureID;
+}
+
+void Controller::TerrainManager::setGrassTextureId(unsigned int grassTextureId) {
+    grassTextureID = grassTextureId;
+}
+
+unsigned int Controller::TerrainManager::getDirtTextureId() const {
+    return dirtTextureID;
+}
+
+void Controller::TerrainManager::setDirtTextureId(unsigned int dirtTextureId) {
+    dirtTextureID = dirtTextureId;
+}
+
+unsigned int Controller::TerrainManager::getSandTextureId() const {
+    return sandTextureID;
+}
+
+void Controller::TerrainManager::setSandTextureId(unsigned int sandTextureId) {
+    sandTextureID = sandTextureId;
+}
+
+unsigned int Controller::TerrainManager::getWaterTextureId() const {
+    return waterTextureID;
+}
+
+void Controller::TerrainManager::setWaterTextureId(unsigned int waterTextureId) {
+    waterTextureID = waterTextureId;
+}
+
+float Controller::TerrainManager::getSnowHeight() const {
+    return snowHeight;
+}
+
+void Controller::TerrainManager::setSnowHeight(float snowHeight) {
+    TerrainManager::snowHeight = snowHeight;
+}
+
+float Controller::TerrainManager::getDirtHeight() const {
+    return dirtHeight;
+}
+
+void Controller::TerrainManager::setDirtHeight(float dirtHeight) {
+    TerrainManager::dirtHeight = dirtHeight;
+}
+
+float Controller::TerrainManager::getGrassHeight() const {
+    return grassHeight;
+}
+
+void Controller::TerrainManager::setGrassHeight(float grassHeight) {
+    TerrainManager::grassHeight = grassHeight;
+}
+
+float Controller::TerrainManager::getSandHeight() const {
+    return sandHeight;
+}
+
+void Controller::TerrainManager::setSandHeight(float sandHeight) {
+    TerrainManager::sandHeight = sandHeight;
+}
+
+float Controller::TerrainManager::getWaterHeight() const {
+    return waterHeight;
+}
+
+void Controller::TerrainManager::setWaterHeight(float waterHeight) {
+    TerrainManager::waterHeight = waterHeight;
 }
