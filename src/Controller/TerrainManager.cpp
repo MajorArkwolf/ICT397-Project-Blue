@@ -39,9 +39,11 @@ void Controller::TerrainManager::GenerateHeightMap(Blue::HeightMap& heightMap) {
     heightMap.targetId = this->id;
     heightMap.width = terrainFactory.getWidth();
     heightMap.height = terrainFactory.getHeight();
-    heightMap.position.x = static_cast<float>(terrainFactory.getWidth() / 2);
-    heightMap.position.z = static_cast<float>(terrainFactory.getHeight() / 2);
-    heightMap.rotation = {};
+    heightMap.heightRange = terrainFactory.GetHeightData();
+    heightMap.position.x = 0;
+    heightMap.position.z = 0;
+    heightMap.position.y = (heightMap.heightRange.max + heightMap.heightRange.min) / 2;
+    heightMap.rotation = glm::angleAxis(glm::radians(90.f), glm::vec3(0.f, 1.f, 0.f));
     heightMap.terrain = terrainFactory.ExportHeightMap();
 }
 

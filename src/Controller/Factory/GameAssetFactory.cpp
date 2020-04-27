@@ -17,19 +17,23 @@ auto Controller::Factory::get() -> Factory & {
 
 std::shared_ptr<GameObj_Base> Controller::Factory::GameObject(GameObjType type) {
 	// Process the provided type key
+	std::shared_ptr<GameObj_Base> object = nullptr;
 	switch (type)
 	{
 	case (GAMEOBJ_STATIC):
-		return std::shared_ptr<GameObj_Base>(new GameObj_Static());
-
+		object = std::make_shared<GameObj_Static>();
+		break;
 	case (GAMEOBJ_PLAYER):
-		return std::shared_ptr<GameObj_Base>(new GameObj_Player());
-
+		object = std::make_shared<GameObj_Player>();
+		break;
 	case (GAMEOBJ_NPC):
-		return std::shared_ptr<GameObj_Base>(new GameObj_NPC());
+		object = std::make_shared<GameObj_NPC>();
+		break;
 
 	default:
 		// Catch an invalid type
-		return nullptr;
+		object = nullptr;
+		//return nullptr;
 	}
+	return object;
 }
