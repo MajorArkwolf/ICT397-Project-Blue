@@ -8,9 +8,7 @@ do
 
 	-- Set the newly created GameObject's model
 
-	new_game_object:setModel("res/model/nanosuit/nanosuit.obj");
-
-	-- new_game_object:setModel("res/model/player_male.obj");
+	new_game_object:setModel("res/model/player_male.obj");
 
 
 	-- Configure the newly created GameObject's position
