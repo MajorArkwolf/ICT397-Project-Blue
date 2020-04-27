@@ -19,6 +19,7 @@ void View::OpenGL::Draw() {
     guiManager.displayQuitScreen();
     guiManager.displayDevScreen(*camera);
     guiManager.displayTextureManager();
+    guiManager.displayTerrainSettings();
     int width = 0, height = 0;
     glfwGetWindowSize(engine.window, &width, &height);
     glm::mat4 projection =
