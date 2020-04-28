@@ -53,3 +53,4 @@ resources.loadTexture("res/images/sand.jpg", "sand")
 resources.loadTexture("res/images/dirt.jpg", "dirt")
 resources.loadTexture("res/images/snow.jpg", "snow")
 resources.loadTexture("res/images/endscene.jpg", "exitScreen")
+

@@ -46,4 +46,5 @@ class BaseState {
      * @param dt Delta time since last frame
      */
     virtual void update(double t, double dt) = 0;
+
 };

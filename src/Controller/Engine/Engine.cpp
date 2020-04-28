@@ -14,6 +14,7 @@ using std::string;
 
 auto Engine::run() -> void {
     auto &engine = Engine::get();
+
     ResourceManager::getInstance().loadResources();
     engine.gameStack.AddToStack(std::make_shared<PrototypeScene>());
 
@@ -29,9 +30,11 @@ auto Engine::run() -> void {
     //glfwFocusWindow(engine.window);
     engine.renderer.Init();
 
+
     while (engine.getIsRunning()) {
         double newTime   = glfwGetTime();
         double frameTime = newTime - currentTime;
+
         if (frameTime > 0.25)
             frameTime = 0.25;
         currentTime = newTime;
@@ -46,6 +49,7 @@ auto Engine::run() -> void {
             t += dt;
             accumulator -= dt;
         }
+
         const double alpha = accumulator / dt;
         // state = currentState * alpha + previousState * (1.0 - alpha);
 
@@ -98,7 +102,6 @@ Engine::Engine() {
     }
 
     this->guiManager.initialiseImGUI(window);
-
 
 }
 

@@ -62,7 +62,6 @@ void QuaternionCamera::Update(glm::vec3 inputVector, float deltaTime, float fps)
                      glm::normalize(glm::cross(cameraUp, cameraRotation)),
                      inputVector.y);
         CameraRotate(cameraRotation, cameraUp, inputVector.x);
-
     }
 
     cameraEye = cameraPosition + cameraRotation;
