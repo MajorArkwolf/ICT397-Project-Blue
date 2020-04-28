@@ -46,6 +46,8 @@ void PrototypeScene::Init() {
 	// Temporarily hard-code the external Lua script file while a proper implementation of Lua integration is on hold
 	GameObj_Manager::init();
 	luaL_dofile(LuaManager::getInstance().getLuaState(), "res/scripts/gameobjsSet.lua");
+
+	BlueEngine::Engine::get().getGuiManager().setTerrainManager(&terrain);
 }
 
 void PrototypeScene::handleWindowEvent() {
