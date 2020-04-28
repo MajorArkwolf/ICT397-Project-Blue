@@ -15,15 +15,14 @@
 #include "Controller/Enums.hpp"
 #include "gleq.h"
 
-namespace Controller {
-    namespace Input {
+namespace Controller::Input {
         /// Struct used to hold all input data required for a scene to handle
         struct InputData {
             glm::ivec2 mouseMotionRelative = {0, 0};
             glm::ivec2 mouseMotionAbsolute = {0, 0};
             float mouseWheelMotion         = 0.f;
-            BLUE_InputAction inputAction;
-            BLUE_InputType inputType;
+            BLUE_InputAction inputAction = {};
+            BLUE_InputType inputType = {};
         };
 
         /*
@@ -86,7 +85,7 @@ namespace Controller {
              * @param value The GLFW key to convert to a string
              * @return A string representing the GLFW key
              */
-            std::string hashGLFWKeyToString(const int value) const;
+            std::string hashGLFWKeyToString(int value) const;
 
             /*
              * @brief Hashes an input string to an GLFW key
@@ -170,4 +169,3 @@ namespace Controller {
             int KeyStates[GLFW_KEY_LAST];
         };
     }
-}
