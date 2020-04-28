@@ -43,5 +43,5 @@ private:
     bool moveRight = false;
 
     double getDeltaTime();
-    
+
 };
