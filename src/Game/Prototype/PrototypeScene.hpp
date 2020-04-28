@@ -13,7 +13,6 @@
 #include "Controller/Physics/BeConfig.hpp"
 #include "Controller/Physics/BeDynamicWorld.hpp"
 #include "Controller/Physics/BeMaterial.hpp"
-#include "Controller/Physics/BeTimer.hpp"
 
 #include "Controller/TerrainManager.hpp"
 #include "View/Renderer/Skybox.hpp"
