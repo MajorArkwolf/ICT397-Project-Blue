@@ -43,20 +43,5 @@ private:
     bool moveRight = false;
 
     double getDeltaTime();
-
-    BeSettings settings = {};
-    Blue::HeightMap map = {};
-    float * blah = nullptr;
-    glm::vec3 grav = {};
-    BeDynamicWorld *world = nullptr;
-    BeAbstractPhysicsFactory *factory = nullptr;
-    BeAbstractPhysicsLibrary *physics = nullptr;
-    BeAbstractPhysics *cam = nullptr;
-    BeAbstractPhysics *body;
-//    BeAbstractPhysics *testy = nullptr;
-    BeAbstractPhysics *testx = nullptr;
-    std::vector <BeAbstractPhysics *> bodies = {};
-
-    BeTransform previousXTransform = {};
-    BeTransform previousYTransform = {};
+    
 };
