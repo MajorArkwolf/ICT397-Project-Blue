@@ -106,6 +106,11 @@ void GameObj_Manager::init() {
 			.addFunction("clear", &GameObj_Manager::clear)
 		.endNamespace();
 
+    luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
+        .beginNamespace("TerrainFactory")
+            .addProperty ("chunkSize", &Controller::TerrainFactory::LuaMapSize)
+            .addFunction("heightAt", &Controller::TerrainFactory::LuaBLHeight)
+        .endNamespace();
 	// Prevent the registration with lua occuring multiple times
 	is_registered = true;
 }

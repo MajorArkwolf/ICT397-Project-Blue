@@ -1,5 +1,6 @@
 #include "WaterModel.hpp"
 #include <utility>
+#include <Controller/Factory/GameAssetFactory.hpp>
 
 void Model::Water::SetupModel(const std::vector<Blue::Vertex> &vertices,
                               const std::vector<unsigned int> &indices) {
@@ -34,4 +35,18 @@ void Model::Water::SetTexture(unsigned int newTex) {
 
 void Model::Water::SetWaterHeight(float newWaterHeight) {
     position.y = newWaterHeight;
+}
+
+void Model::Water::AddToDraw() {
+    auto &renderer = BlueEngine::Engine::get().renderer;
+    auto chunkSize = Controller::Factory::get().terrain.GetChunkSize();
+    std::function e = [&](const glm::mat4 &projection, const glm::mat4 &view, const glm::dvec3 &cameraPos) {
+        this->Draw(projection, view, cameraPos);
+    };
+    View::Data::DrawItem di = {};
+    di.drawPointer = e;
+    di.pos = position;
+    di.pos.x += chunkSize / 2.0f;
+    di.pos.z += chunkSize / 2.0f;
+    renderer.AddToQue(di);
 }
