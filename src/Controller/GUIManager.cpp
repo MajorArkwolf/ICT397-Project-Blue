@@ -2,6 +2,7 @@
 
 #include "Controller/Engine/Engine.hpp"
 #include "Controller/InputManager.hpp"
+#include "Controller/TerrainManager.hpp"
 #include "Controller/TextureManager.hpp"
 #include "Model/TextManager.hpp"
 
@@ -92,6 +93,9 @@ void GUIManager::displayEscapeMenu() {
         if (ImGui::Button("Textures")) {
             toggleWindow("texture");
         }
+        if (ImGui::Button("Terrain Settings")) {
+            toggleWindow("terrainSettings");
+        }
         if (ImGui::Button("Exit")) {
             toggleWindow("exit");
         }
@@ -154,55 +158,121 @@ void GUIManager::displayTextureManager() {
     bool &windowOpen     = windowOpenMap.at("texture");
     auto &texMap         = textureManager.textureMap;
     if (windowOpen) {
-        textureRebind();
-        ImGui::Begin("Terrain Textures", &windowOpen, ImGuiWindowFlags_NoCollapse);
-
-        /*auto *currentSelection = &(*texMap.begin());
-        if (ImGui::BeginCombo("asd", currentSelection->first.c_str())) {
-            for (auto &n : texMap) {
-                ImGui::PushID(n.first.c_str());
-                bool isSelected = currentSelection->first == n.first;
-                if (ImGui::Selectable(n.first.c_str(), isSelected)) {
-                    currentSelection = &n;
-                }
-                ImGui::PopID();
-            }
-            ImGui::EndCombo();
-        }*/
+        ImGui::Begin("Textures", &windowOpen, ImGuiWindowFlags_NoCollapse);
 
         for (auto &n : texMap) {
-            static char text[255];
-            std::string currentTexture;
             ImGui::Image((void *)(intptr_t)n.second.TextureID, ImVec2(100, 100));
             ImGui::SameLine();
-            ImGui::Text(n.first.c_str());
-            std::string buttonName = "Rebind###" + n.first;
-            if (ImGui::Button(buttonName.c_str())) {
-                texName                           = n.first;
-                windowOpenMap.at("textureRebind") = true;
-            }
-
+            ImGui::Text("Texture Name: %s\nTexture ID: %d\nWidth: %d\nHeight: %d", n.first.c_str(), n.second.TextureID, n.second.width, n.second.height);
             ImGui::Separator();
         }
         ImGui::End();
     }
 }
-void GUIManager::textureRebind() {
-    bool &windowOpen = windowOpenMap.at("textureRebind");
+
+void GUIManager::displayTerrainSettings() {
     auto &texManager = TextureManager::getInstance();
-    if (windowOpen) {
-        static char text[255];
-        std::string windowTitle = "New Texture Path for '" + texName + "'";
-        ImGui::Begin(windowTitle.c_str(), &windowOpen, ImGuiWindowFlags_AlwaysAutoResize);
-        ImGui::InputText(" ", text, IM_ARRAYSIZE(text));
-        if (ImGui::Button("Set")) {
-            std::string asd(text);
-            texManager.textureMap.erase(texName);
-            texManager.loadTextureFromFile(text, texName);
+
+    if (terrainManager != nullptr) {
+
+        bool &windowOpen        = windowOpenMap.at("terrainSettings");
+        constexpr int textLimit = 1000;
+
+        auto snowID  = terrainManager->getSnowTextureId();
+        auto grassID = terrainManager->getGrassTextureId();
+        auto sandID  = terrainManager->getSandTextureId();
+        auto dirtID  = terrainManager->getDirtTextureId();
+        auto waterID = terrainManager->getWaterTextureId();
+
+        auto snowHeight  = terrainManager->getSnowHeight();
+        auto grassHeight = terrainManager->getGrassHeight();
+        auto sandHeight  = terrainManager->getSandHeight();
+        auto dirtHeight  = terrainManager->getDirtHeight();
+        auto waterHeight = terrainManager->getWaterHeight();
+
+        static float snowSlider  = snowHeight;
+        static float grassSlider = grassHeight;
+        static float sandSlider  = sandHeight;
+        static float dirtSlider  = dirtHeight;
+        static float waterSlider = waterHeight;
+
+        static char snowMap[textLimit];
+        static char grassMap[textLimit];
+        static char dirtMap[textLimit];
+        static char waterMap[textLimit];
+        static char sandMap[textLimit];
+
+        auto showTextureInfo = [&](unsigned int textureID, std::string textureName,
+                                   char text[textLimit], std::function<void(unsigned int)> setTex) {
+            ImGui::Image((void *)(intptr_t)textureID, ImVec2(100, 100));
+            ImGui::SameLine();
+            ImGui::Text("%s Texture \nTexture ID: %d", textureName.c_str(), textureID);
+            std::string inputTextName = "ID ###" + textureName;
+            ImGui::InputText(textureName.c_str(), text, textLimit);
+            std::string buttonName = "Set Texture ###" + textureName;
+            if (ImGui::Button(buttonName.c_str())) {
+                auto id = texManager.getTexture(text);
+                setTex(id.TextureID);
+            }
+            ImGui::Separator();
+        };
+
+        std::function<void(int)> setSnow = [&](unsigned id) { terrainManager->setSnowTextureId(id); };
+        std::function<void(int)> setGrass = [&](unsigned id) {
+            terrainManager->setGrassTextureId(id);
+        };
+        std::function<void(int)> setWater = [&](unsigned id) {
+            terrainManager->setWaterTextureId(id);
+        };
+        std::function<void(int)> setDirt = [&](unsigned id) { terrainManager->setDirtTextureId(id); };
+        std::function<void(int)> setSand = [&](unsigned id) { terrainManager->setSnowTextureId(id); };
+
+        constexpr int minHeight = 0;
+        constexpr int maxHeight = 255;
+
+        if (windowOpen) {
+            ImGui::Begin("Terrain Settings", &windowOpen, ImGuiWindowFlags_AlwaysAutoResize);
+
+            showTextureInfo(snowID, "Snow", snowMap, setSnow);
+            showTextureInfo(grassID, "Grass", grassMap, setGrass);
+            showTextureInfo(sandID, "Sand", sandMap, setSand);
+            showTextureInfo(dirtID, "Dirt", dirtMap, setDirt);
+            showTextureInfo(waterID, "Water", waterMap, setWater);
+
+            ImGui::SliderFloat("Water Height", &waterSlider, minHeight, maxHeight);
+            ImGui::SliderFloat("Sand Height", &sandSlider, minHeight, grassSlider);
+            ImGui::SliderFloat("Grass Height", &grassSlider, sandSlider, dirtSlider);
+            ImGui::SliderFloat("Dirt Height", &dirtSlider, grassSlider, snowSlider);
+            ImGui::SliderFloat("Snow Height", &snowSlider, dirtSlider, maxHeight);
+
+            if (ImGui::Button("Submit")) {
+                terrainManager->setSandHeight(sandSlider);
+                terrainManager->setGrassHeight(grassSlider);
+                terrainManager->setDirtHeight(dirtSlider);
+                terrainManager->setSnowHeight(snowSlider);
+                terrainManager->setWaterHeight(waterSlider);
+                terrainManager->UpdateInfo();
+            }
+            ImGui::End();
         }
-        ImGui::End();
     }
 }
+//
+//void GUIManager::textureRebind() {
+//    bool &windowOpen = windowOpenMap.at("textureRebind");
+//    auto &texManager = TextureManager::getInstance();
+//    if (windowOpen) {
+//        static char text[255];
+//        std::string windowTitle = "New Texture Path for '" + texName + "'";
+//        ImGui::Begin(windowTitle.c_str(), &windowOpen, ImGuiWindowFlags_AlwaysAutoResize);
+//        ImGui::InputText(" ", text, IM_ARRAYSIZE(text));
+//        if (ImGui::Button("Set")) {
+//            texManager.textureMap.erase(texName);
+//            texManager.loadTextureFromFile(text, texName);
+//        }
+//        ImGui::End();
+//    }
+//}
 
 void GUIManager::startWindowFrame() {
 
@@ -224,6 +294,10 @@ void GUIManager::toggleWindow(std::string windowName) {
     }
 }
 
+void GUIManager::setTerrainManager(Controller::TerrainManager *terrain) {
+    terrainManager = terrain;
+}
+
 void GUIManager::initialiseWindowOpenMap() {
     windowOpenMap.insert(std::make_pair(std::string("menu"), false));
     windowOpenMap.insert(std::make_pair(std::string("controls"), false));
@@ -232,4 +306,5 @@ void GUIManager::initialiseWindowOpenMap() {
     windowOpenMap.insert(std::make_pair(std::string("dev"), false));
     windowOpenMap.insert(std::make_pair(std::string("texture"), false));
     windowOpenMap.insert(std::make_pair(std::string("textureRebind"), false));
+    windowOpenMap.insert(std::make_pair(std::string("terrainSettings"), false));
 }

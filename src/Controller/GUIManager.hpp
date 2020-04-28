@@ -10,6 +10,10 @@
 
 #include "View/EulerCamera.hpp"
 
+namespace Controller {
+    class TerrainManager;
+}
+
 class GUIManager {
   public:
     /**
@@ -60,6 +64,11 @@ class GUIManager {
     void displayTextureManager();
 
     /**
+     * @brief Displays the terrain settings
+     */
+    void displayTerrainSettings();
+
+    /**
      * @brief Starts an Imgui Window frame, must be called at the beginning of a display loop
      */
     static void startWindowFrame();
@@ -74,6 +83,12 @@ class GUIManager {
      */
     void toggleWindow(std::string windowName);
 
+    /**
+     * @brief Sets the terrain manager to use by the terrain texture manager
+     * @param terrain the Terrain Manager to manage
+     */
+    void setTerrainManager(Controller::TerrainManager *terrain);
+
   private:
     /// A mapping of a window name to a location in the window open array
     std::map<std::string, bool> windowOpenMap;
@@ -81,6 +96,6 @@ class GUIManager {
     /// Initialises the window open map
     void initialiseWindowOpenMap();
 
-    void textureRebind();
-    std::string texName{};
+    /// Pointer to the current terrain manager
+    Controller::TerrainManager *terrainManager;
 };

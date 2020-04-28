@@ -63,10 +63,12 @@ void Controller::TerrainManager::GenerateHeightMap(Blue::HeightMap& heightMap) {
 void Controller::TerrainManager::Update(glm::ivec2 key) {
     if (updateTerrain) {
         for (auto &c : chunks) {
-            c->level1.setTextures(snowTextureID, dirtTextureID, grassTextureID, sandTextureID);
-            c->level2.setTextures(snowTextureID, dirtTextureID, grassTextureID, sandTextureID);
+            c->level1.setTextures(snowTextureID, grassTextureID, dirtTextureID, sandTextureID);
+            c->level2.setTextures(snowTextureID, grassTextureID, dirtTextureID, sandTextureID);
             c->level1.setHeightOffsets(snowHeight, dirtHeight, grassHeight, sandHeight);
             c->level2.setHeightOffsets(snowHeight, dirtHeight, grassHeight, sandHeight);
+            c->level1.water.position.y = waterHeight;
+            c->level2.water.position.y = waterHeight;
         }
         updateTerrain = false;
     }
