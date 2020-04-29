@@ -225,7 +225,7 @@ void GUIManager::displayTerrainSettings() {
             terrainManager->setWaterTextureId(id);
         };
         std::function<void(int)> setDirt = [&](unsigned id) { terrainManager->setDirtTextureId(id); };
-        std::function<void(int)> setSand = [&](unsigned id) { terrainManager->setSnowTextureId(id); };
+        std::function<void(int)> setSand = [&](unsigned id) { terrainManager->setSandTextureId(id); };
 
         constexpr int minHeight = 0;
         constexpr int maxHeight = 255;

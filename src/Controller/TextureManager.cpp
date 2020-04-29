@@ -42,7 +42,10 @@ bool TextureManager::loadTextureFromFile(std::string filePath, std::string texNa
 }
 
 Texture &TextureManager::getTexture(std::string texName) {
-    return textureMap.at(texName);
+    if (textureMap.find(texName) != textureMap.end()) {
+        return textureMap.at(texName);
+    }
+    return textureMap.at("missing");
 }
 
 Texture &TextureManager::getTexture(unsigned int id) {
