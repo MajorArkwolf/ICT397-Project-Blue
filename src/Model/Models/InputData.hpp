@@ -2,6 +2,7 @@
 
 namespace Controller::Input {
 
+    ///Enum class used to represent a game action by the user
     enum class BLUE_InputAction {
         INPUT_DEFAULT,
         INPUT_JUMP,
@@ -22,6 +23,7 @@ namespace Controller::Input {
         INPUT_ACTION_4
     };
 
+    ///Enum classed used to represent the type of input sent by the user
     enum class BLUE_InputType {
         DEFAULT_TYPE,
         KEY_PRESS,
@@ -33,11 +35,17 @@ namespace Controller::Input {
         WINDOW_RESIZE
     };
 
+    ///A struct used to store an input event
     struct InputData {
+        ///The relative mouse motion in the event
         glm::ivec2 mouseMotionRelative = {0, 0};
+        ///The absolute mouse motion in the event
         glm::ivec2 mouseMotionAbsolute = {0, 0};
+        ///The amount of mouse wheel motion
         float mouseWheelMotion         = 0.f;
+        ///The type of action
         BLUE_InputAction inputAction = BLUE_InputAction::INPUT_DEFAULT;
+        ///The action type
         BLUE_InputType inputType = BLUE_InputType::DEFAULT_TYPE;
     };
 

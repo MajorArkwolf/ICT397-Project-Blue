@@ -48,8 +48,20 @@ class ResourceManager {
      */
     static auto getInstance() -> ResourceManager &;
 
+    /**
+     * @brief Returns the text manager
+     * @return The text manager
+     */
     TextManager &GetTextManager();
+    /**
+     * @brief Returns the model manager
+     * @return The model manager
+     */
     ModelManager &GetModelManager();
+    /**
+     * @brief Returns the texture manager
+     * @return The texture manager
+     */
     TextureManager &GetTextureManager();
 
   private:

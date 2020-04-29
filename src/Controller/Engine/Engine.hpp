@@ -21,6 +21,11 @@ constexpr unsigned int SCR_WIDTH  = 800;
 constexpr unsigned int SCR_HEIGHT = 600;
 
 namespace BlueEngine {
+
+    /**
+     * @class Engine
+     * @brief The main game engine
+     */
     class Engine {
       public:
         static constexpr auto FPS_UPDATE_INTERVAL = 0.5;
