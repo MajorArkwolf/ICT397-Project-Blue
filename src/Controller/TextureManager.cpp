@@ -55,10 +55,4 @@ Texture &TextureManager::getTexture(unsigned int id) {
     return temp;
 }
 
-TextureManager &TextureManager::getInstance() {
-    static auto instance = TextureManager{};
-
-    return instance;
-}
-
 TextureManager::TextureManager() {}

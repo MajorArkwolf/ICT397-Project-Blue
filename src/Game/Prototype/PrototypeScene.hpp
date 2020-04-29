@@ -3,7 +3,7 @@
 #include <vector>
 #include <reactphysics3d.h>
 
-#include "Controller/Engine/BaseState.hpp"
+#include "Model/BaseState.hpp"
 #include "View/Renderer/Renderer.hpp"
 #include "View/EulerCamera.hpp"
 #include "Controller/InputManager.hpp"

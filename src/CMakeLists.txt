@@ -57,7 +57,6 @@ target_sources(${PROJECT_NAME} PRIVATE
     View/Renderer/Skybox.cpp
 
     # Game
-    Game/SceneManager.cpp
     Game/Prototype/PrototypeScene.cpp
 
 

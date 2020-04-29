@@ -22,7 +22,7 @@ void Controller::TerrainFactory::Init() {
 
     LoadLua();
     LoadPerlinNoise(perlinPath);
-    auto &texManager = TextureManager::getInstance();
+    auto &texManager = ResourceManager::getInstance().GetTextureManager();
     snowTextureID    = texManager.getTexture("snow").TextureID;
     grassTextureID   = texManager.getTexture("grass").TextureID;
     dirtTextureID    = texManager.getTexture("dirt").TextureID;
@@ -45,11 +45,11 @@ void Controller::TerrainFactory::LoadLua() {
     if (!luaL_dofile(L, scriptPath.c_str())) {
 
         std::string heightMapPath;
-        std::string grassTexturePath;
-        std::string snowTexturePath;
-        std::string dirtTexturePath;
-        std::string sandTexturePath;
-        std::string waterTexturePath;
+        std::string grassTextureName;
+        std::string snowTextureName;
+        std::string dirtTextureName;
+        std::string sandTextureName;
+        std::string waterTextureName;
         bool generatePerlin   = false;
         size_t chunkSizeValue = {};
 
@@ -67,23 +67,23 @@ void Controller::TerrainFactory::LoadLua() {
             this->perlinPath = basePath + heightMapPath;
         }
         if (grassTexture.isString()) {
-            grassTexturePath = grassTexture.cast<string>();
+            grassTextureName = grassTexture.cast<string>();
 
         }
         if (snowTexture.isString()) {
-            snowTexturePath = snowTexture.cast<string>();
+            snowTextureName = snowTexture.cast<string>();
 
         }
         if (dirtTexture.isString()) {
-            dirtTexturePath = dirtTexture.cast<string>();
+            dirtTextureName = dirtTexture.cast<string>();
 
         }
         if (sandTexture.isString()) {
-            sandTexturePath = sandTexture.cast<string>();
+            sandTextureName = sandTexture.cast<string>();
 
         }
         if (waterTexture.isString()) {
-            waterTexturePath = waterTexture.cast<string>();
+            waterTextureName = waterTexture.cast<string>();
 
         }
         if (loadPerlin.isBool()) {

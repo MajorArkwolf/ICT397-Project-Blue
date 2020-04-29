@@ -12,19 +12,12 @@
 #include <glm/vec2.hpp>
 
 #include "Controller/Engine/LuaManager.hpp"
-#include "Controller/Enums.hpp"
+#include "Model/Models/InputData.hpp"
 #include "gleq.h"
 
 namespace Controller {
     namespace Input {
         /// Struct used to hold all input data required for a scene to handle
-        struct InputData {
-            glm::ivec2 mouseMotionRelative = {0, 0};
-            glm::ivec2 mouseMotionAbsolute = {0, 0};
-            float mouseWheelMotion         = 0.f;
-            BLUE_InputAction inputAction;
-            BLUE_InputType inputType;
-        };
 
         /*
          * @class InputManager

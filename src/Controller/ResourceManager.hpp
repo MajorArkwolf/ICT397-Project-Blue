@@ -44,16 +44,21 @@ class ResourceManager {
 
     /**
      * @brief Returns a static instance of the singleton Resource Manager
-     * @param
-     * @return
+     * @return A static instance of the resource manager
      */
     static auto getInstance() -> ResourceManager &;
+
+    TextManager &GetTextManager();
+    ModelManager &GetModelManager();
+    TextureManager &GetTextureManager();
 
   private:
     /// A manager for all text elements in the program
     TextManager textManager;
-    /// A manager for all models within the pgroam
+    /// A manager for all models within the program
     ModelManager modelManager;
+    /// A manager for all textures within the program
+    TextureManager textureManager;
 
     /// Private default constructor
     ResourceManager();
