@@ -29,7 +29,6 @@ class GUIManager {
     /**
      * @brief Initialises ImGUI stuff
      * @param window The SDL window to draw the gui in
-     * @param context The SDL context to draw the window in
      */
     void initialiseImGUI(GLFWwindow *window);
 

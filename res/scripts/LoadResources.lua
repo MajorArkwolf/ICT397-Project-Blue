@@ -18,7 +18,7 @@ Strings = {
 	OptionMenu_title = "Menu",
 	ControlMenu_title = "Controls",
 	InstructionMenu_title = "Instructions",
-	InstructionMenu_instructions = "Press escape to open the menu \nUse WASD to move around \nUse the mouse to look around",
+	InstructionMenu_instructions = "Press escape to open the menu \nUse WASD to move around \nUse the mouse to look around\nPress 'F1' to enable moving the mouse",
 	Control_MoveForward_description = " ",
 	Control_MoveBackward_description = " ",
 	Control_MoveLeft_description = " ",
@@ -53,4 +53,5 @@ resources.loadTexture("res/images/sand.jpg", "sand")
 resources.loadTexture("res/images/dirt.jpg", "dirt")
 resources.loadTexture("res/images/snow.jpg", "snow")
 resources.loadTexture("res/images/endscene.jpg", "exitScreen")
+resources.loadTexture("res/images/missing.jpg", "missing")
 

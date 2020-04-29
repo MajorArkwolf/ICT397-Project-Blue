@@ -9,26 +9,26 @@ namespace Controller {
       public:
         /**
          * @brief Default move constructor, defaulted
-         * @param Factory&& the factory to be moved in.
+         * @param rhs the factory to be moved in.
          */
-        Factory(Factory &&)    = default;
+        Factory(Factory && rhs)    = default;
         /**
          * @brief Default copy constructor, deleted
-         * @param Factory&& the factory to be moved in.
+         * @param rhs the factory to be moved in.
          */
-        Factory(const Factory &) = delete;
+        Factory(const Factory & rhs) = delete;
         /**
          * @brief Default copy assignment, deleted
-         * @param Factory&& the factory to be moved in.
+         * @param rhs the factory to be moved in.
          * @return LHS value
          */
-        Factory &operator=(const Factory &) = delete;
+        Factory &operator=(const Factory & rhs) = delete;
         /**
          * @brief Default move assignment, defaulted
-         * @param Factory&& the factory to be moved in.
+         * @param rhs the factory to be moved in.
          * @return LHS value
          */
-        Factory &operator=(Factory &&) = default;
+        Factory &operator=(Factory && rhs) = default;
         /**
          * @brief Default Destructor.
          */

@@ -15,7 +15,7 @@ auto TextManager::GetString(std::string key) -> std::string {
     if (TextMap().find(key) != TextMap().end()) {
         return TextMap().at(key);
     }
-    return std::string(" ");
+    return std::string("'" + key + "'" + " Not Found");
 }
 
 auto TextManager::TextMap() -> std::map<std::string, std::string> & {

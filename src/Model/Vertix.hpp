@@ -2,7 +2,7 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <array>
-#include <glm/detail/type_quat.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include "Controller/Engine/IDTracker.hpp"
 #include <vector>
 
