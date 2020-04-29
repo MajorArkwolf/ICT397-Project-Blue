@@ -34,7 +34,7 @@ GameObjType GameObj_Player::_gameObj_getTypeID() {
 
 void GameObj_Player::gameObj_addToDraw() {
 	// Create a function pointer of the GameObject's draw call for the DrawItem
-	std::function e = [&](const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos) {
+	std::function<void(const glm::mat4 &projection, const glm::mat4 &view, const glm::dvec3 &cameraPos)> e = [&](const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos) {
 		this->Draw(projection, view, cameraPos);
 	};
 

@@ -57,7 +57,7 @@ void Model::TerrainModel::Draw(const glm::mat4& projection, const glm::mat4& vie
 void Model::TerrainModel::AddToDraw() {
     auto &renderer = BlueEngine::Engine::get().renderer;
     auto chunkSize = Controller::Factory::get().terrain.GetChunkSize();
-    std::function e = [&](const glm::mat4 &projection, const glm::mat4 &view, const glm::dvec3 &cameraPos) {
+    std::function<void(const glm::mat4 &projection, const glm::mat4 &view, const glm::dvec3 &cameraPos)> e = [&](const glm::mat4 &projection, const glm::mat4 &view, const glm::dvec3 &cameraPos) {
         this->Draw(projection, view, cameraPos);
     };
     View::Data::DrawItem di = {};
