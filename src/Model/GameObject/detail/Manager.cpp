@@ -46,6 +46,19 @@ void GameObj_Manager::clear() {
 	managedGameObjects.clear();
 }
 
+void GameObj_Manager::process_all(GameObj_ProcessFunc function) {
+	// Catch invalid function pointer
+	if (function == nullptr)
+		return;
+
+	// Loop through all of the stored GameObjects
+	for (auto i = managedGameObjects.begin(); i != managedGameObjects.end(); ++i)
+	{
+		// Pass the currently processed GameObject to the provided function
+		function(i->second);
+	}
+}
+
 BlueEngine::ID GameObj_Manager::lua_add(GameObjType type) {
 	// Call the Factory Constructor to generate and insert a new GameObject
 	std::shared_ptr<GameObj_Base> temp = Controller::Factory::get().GameObject(type);
