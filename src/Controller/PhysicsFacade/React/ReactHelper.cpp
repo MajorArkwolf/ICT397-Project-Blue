@@ -1,6 +1,6 @@
 #include "ReactHelper.hpp"
 
-glm::quat Physics::ReactHelper::ConvertQuaternion(rp3d::Quaternion quat) {
+glm::quat Physics::ReactHelper::ConvertQuaternion(rp3d::Quaternion& quat) {
     glm::quat conversion{};
     conversion.x = quat.x;
     conversion.y = quat.y;
@@ -9,7 +9,7 @@ glm::quat Physics::ReactHelper::ConvertQuaternion(rp3d::Quaternion quat) {
     return conversion;
 }
 
-rp3d::Quaternion Physics::ReactHelper::ConvertQuaternion(glm::quat quat) {
+rp3d::Quaternion Physics::ReactHelper::ConvertQuaternion(glm::quat& quat) {
     rp3d::Quaternion conversion{};
     conversion.x = quat.x;
     conversion.y = quat.y;
@@ -18,7 +18,7 @@ rp3d::Quaternion Physics::ReactHelper::ConvertQuaternion(glm::quat quat) {
     return conversion;
 }
 
-glm::vec3 Physics::ReactHelper::ConvertVec3(rp3d::Vector3 vec) {
+glm::vec3 Physics::ReactHelper::ConvertVec3(rp3d::Vector3& vec) {
     glm::vec3 conversion{};
     conversion.x = vec.x;
     conversion.y = vec.y;
@@ -26,7 +26,7 @@ glm::vec3 Physics::ReactHelper::ConvertVec3(rp3d::Vector3 vec) {
     return conversion;
 }
 
-rp3d::Vector3 Physics::ReactHelper::ConvertVec3(glm::vec3 vec) {
+rp3d::Vector3 Physics::ReactHelper::ConvertVec3(glm::vec3& vec) {
     rp3d::Vector3 conversion{};
     conversion.x = vec.x;
     conversion.y = vec.y;
