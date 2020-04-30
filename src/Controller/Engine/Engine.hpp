@@ -83,8 +83,6 @@ namespace BlueEngine {
          * Destructor for the engine
          */
         ~Engine();
-        Physics::ReactDynamicsWorld dynWorld;
-        Physics::ReactShapes shapes;
 
         /**
          * @brief Getter to the engine variables.

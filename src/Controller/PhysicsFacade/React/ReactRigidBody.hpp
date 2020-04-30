@@ -24,6 +24,7 @@ namespace Physics {
         void AddCollisionShape(ReactCollisionShape, glm::vec3 position, glm::quat orientation,
                                float mass);
         void SetBodyType(int type);
+        void SetMass(float mass);
 
       private:
         rp3d::RigidBody *rigidBody = nullptr;

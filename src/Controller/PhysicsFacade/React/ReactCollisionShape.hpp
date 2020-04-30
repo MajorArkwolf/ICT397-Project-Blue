@@ -11,9 +11,7 @@ namespace Physics {
       public:
         ReactCollisionShape(rp3d::CollisionShape *ptr);
         ReactCollisionShape(rp3d::CollisionShape *, float *heights);
-        ~ReactCollisionShape() {
-            
-        };
+        ~ReactCollisionShape();
         std::shared_ptr<rp3d::CollisionShape> GetShape();
 
       private:

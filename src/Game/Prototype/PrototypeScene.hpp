@@ -40,7 +40,9 @@ private:
     bool moveBackward = false;
     bool moveLeft = false;
     bool moveRight = false;
+    float curremtRot = 0;
 
     double getDeltaTime();
-
+    Physics::ReactDynamicsWorld dynWorld;
+    Physics::ReactShapes shapes;
 };

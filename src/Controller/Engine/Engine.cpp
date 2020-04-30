@@ -46,7 +46,6 @@ auto Engine::run() -> void {
             glfwPollEvents();
             engine.processInput();
             engine.gameStack.getTop()->update(t, dt);
-            engine.dynWorld.Update(dt);
             t += dt;
             accumulator -= dt;
         }
@@ -67,7 +66,7 @@ GUIManager &BlueEngine::Engine::getGuiManager() {
 /**
  * @brief Game engine default constructor, sets up all variables and settings required for operation
  */
-Engine::Engine() : dynWorld(glm::vec3{0, -9.8, 0}) {
+Engine::Engine(){
     getBasePath();
     if (!glfwInit()) {
         std::cerr << "GLFW FAILED TO INIT \n";

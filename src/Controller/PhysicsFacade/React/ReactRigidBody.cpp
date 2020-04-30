@@ -42,13 +42,15 @@ void Physics::ReactRigidBody::SetPositionAndOrientation(glm::vec3 position, glm:
 
 glm::vec3 Physics::ReactRigidBody::GetPosition() {
     auto transform = this->rigidBody->getTransform();
-    return ReactHelper::ConvertVec3(transform.getPosition());
+    auto pos       = transform.getPosition();
+    return ReactHelper::ConvertVec3(pos);
 
 }
 
 glm::quat Physics::ReactRigidBody::GetOrientation() {
     auto transform = this->rigidBody->getTransform();
-    return ReactHelper::ConvertQuaternion(transform.getOrientation());
+    auto orien     = transform.getOrientation();
+    return ReactHelper::ConvertQuaternion(orien);
 }
 
 void Physics::ReactRigidBody::SetSleeping(bool sleeping) {
@@ -94,4 +96,8 @@ void Physics::ReactRigidBody::SetBodyType(int type) {
         } break;
         default: break;
     }
+}
+
+void Physics::ReactRigidBody::SetMass(float mass) {
+    rigidBody->setMass(mass);
 }

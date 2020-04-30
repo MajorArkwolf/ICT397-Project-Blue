@@ -7,6 +7,10 @@ Physics::ReactCollisionShape::ReactCollisionShape(rp3d::CollisionShape *ptr, flo
     heightField = heights;
 }
 
+Physics::ReactCollisionShape::~ReactCollisionShape() {
+
+}
+
 std::shared_ptr<rp3d::CollisionShape> Physics::ReactCollisionShape::GetShape() {
     return shape;
 }
