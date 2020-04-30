@@ -50,7 +50,7 @@ auto Engine::run() -> void {
             accumulator -= dt;
         }
 
-        const double alpha = accumulator / dt;
+        // const double alpha = accumulator / dt;
         // state = currentState * alpha + previousState * (1.0 - alpha);
 
         engine.gameStack.getTop()->display();
@@ -73,7 +73,7 @@ Engine::Engine(){
     }
     gleqInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
     glfwWindowHint(GLFW_FOCUS_ON_SHOW, GLFW_TRUE);
@@ -85,7 +85,8 @@ Engine::Engine(){
 
     // glfw window creation
     // --------------------
-    window = glfwCreateWindow(1920, 1080, "Project Blue", /*glfwGetPrimaryMonitor()*/ nullptr, nullptr);
+    const GLFWvidmode * mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    window = glfwCreateWindow(mode->width, mode->height, "Project Blue", glfwGetPrimaryMonitor(), nullptr);
     if (window == nullptr) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
