@@ -58,6 +58,7 @@ void GameObj_NPC::Draw(const glm::mat4& projection, const glm::mat4& view, const
 	// Generate and configure the GameObject's model matrix
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, gameObj_pos);
+    
 	model = glm::rotate(model, glm::radians(gameObj_rotation[0]), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::rotate(model, glm::radians(gameObj_rotation[1]), glm::vec3(1.0f, 0.0f, 0.0f));
 	model = glm::rotate(model, glm::radians(gameObj_rotation[2]), glm::vec3(0.0f, 0.0f, 1.0f));

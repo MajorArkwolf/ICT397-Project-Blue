@@ -116,7 +116,7 @@ void GUIManager::displayInstructionMenu() {
 }
 
 void GUIManager::displayQuitScreen() {
-    auto &textures   = TextureManager::getInstance();
+    auto &textures   = ResourceManager::getInstance().GetTextureManager();
     auto &texture    = textures.getTexture("exitScreen");
     bool &windowOpen = windowOpenMap.at("exit");
     auto &engine     = BlueEngine::Engine::get();
@@ -154,7 +154,7 @@ void GUIManager::displayDevScreen(View::Camera &camera) {
 }
 
 void GUIManager::displayTextureManager() {
-    auto &textureManager = TextureManager::getInstance();
+    auto &textureManager = ResourceManager::getInstance().GetTextureManager();
     bool &windowOpen     = windowOpenMap.at("texture");
     auto &texMap         = textureManager.textureMap;
     if (windowOpen) {
@@ -171,7 +171,7 @@ void GUIManager::displayTextureManager() {
 }
 
 void GUIManager::displayTerrainSettings() {
-    auto &texManager = TextureManager::getInstance();
+    auto &texManager = ResourceManager::getInstance().GetTextureManager();
 
     if (terrainManager != nullptr) {
 
@@ -225,7 +225,7 @@ void GUIManager::displayTerrainSettings() {
             terrainManager->setWaterTextureId(id);
         };
         std::function<void(int)> setDirt = [&](unsigned id) { terrainManager->setDirtTextureId(id); };
-        std::function<void(int)> setSand = [&](unsigned id) { terrainManager->setSnowTextureId(id); };
+        std::function<void(int)> setSand = [&](unsigned id) { terrainManager->setSandTextureId(id); };
 
         constexpr int minHeight = 0;
         constexpr int maxHeight = 255;

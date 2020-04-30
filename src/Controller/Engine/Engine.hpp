@@ -9,18 +9,25 @@
 #include "gleq.h"
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
-#include "BaseState.hpp"
+#include "Model/BaseState.hpp"
 #include "Controller/Physics/BeRP3DFactory.hpp"
 #include "Controller/Physics/BePhysicsLibrary.hpp"
 #include "Controller/GUIManager.hpp"
 #include "Controller/ResourceManager.hpp"
 #include "GameStack.hpp"
+#include "Controller/PhysicsFacade/React/ReactDynamicsWorld.hpp"
+
 #include "View/Renderer/OpenGL.hpp"
 
 constexpr unsigned int SCR_WIDTH  = 800;
 constexpr unsigned int SCR_HEIGHT = 600;
 
 namespace BlueEngine {
+
+    /**
+     * @class Engine
+     * @brief The main game engine
+     */
     class Engine {
       public:
         static constexpr auto FPS_UPDATE_INTERVAL = 0.5;

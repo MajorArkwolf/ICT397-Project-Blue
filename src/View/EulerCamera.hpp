@@ -94,6 +94,8 @@ namespace View {
          */
         glm::ivec2 getLocation() const;
 
+        glm::dvec3 GetRightVector();
+
     private:
         /**
          * Calculates the front vector from the Camera's (updated) Euler Angles

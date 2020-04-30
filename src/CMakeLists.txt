@@ -30,9 +30,13 @@ target_sources(${PROJECT_NAME} PRIVATE
     Controller/ResourceManager.cpp
     Controller/TerrainManager.cpp
     Controller/Factory/GameAssetFactory.cpp
-    Controller/Factory/TerrainFactory.cpp
+    Controller/Factory/TerrainFactory.cpp    
+    Controller/PhysicsFacade/React/ReactRigidBody.cpp
+    Controller/PhysicsFacade/React/ReactDynamicsWorld.cpp
+    Controller/PhysicsFacade/React/ReactHelper.cpp
+    Controller/PhysicsFacade/React/ReactShapes.cpp
     Controller/TextureManager.cpp
-
+    Controller/PhysicsFacade/React/ReactCollisionShape.cpp
     
     # Model
     Model/Models/Mesh.cpp
@@ -41,7 +45,6 @@ target_sources(${PROJECT_NAME} PRIVATE
     Model/TerrainModel.cpp
     Model/WaterModel.cpp
     Model/TextManager.cpp
-    Model/Texture.cpp
 
     Model/GameObject/detail/Base.cpp
     Model/GameObject/detail/Static.cpp
@@ -57,7 +60,6 @@ target_sources(${PROJECT_NAME} PRIVATE
     View/Renderer/Skybox.cpp
 
     # Game
-    Game/SceneManager.cpp
     Game/Prototype/PrototypeScene.cpp
 
 

@@ -91,3 +91,7 @@ glm::ivec2 View::Camera::getLocation() const {
     auto key = glm::ivec2(static_cast<int>(Position.x), static_cast<int>(Position.z));
     return key;
 }
+
+glm::dvec3 View::Camera::GetRightVector() {
+    return glm::normalize(glm::cross(Front, WorldUp)); // Normalize the vectors, because their length gets
+}

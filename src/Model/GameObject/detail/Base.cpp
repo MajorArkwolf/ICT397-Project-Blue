@@ -34,6 +34,10 @@ GameObj_Base::GameObj_Base(std::string path, unsigned long int physBody, glm::ve
 	gameObj_uniqueId = BlueEngine::IDTracker::getInstance().getID();
 }
 
+void GameObj_Base::setPos(glm::vec3 &pos) {
+    this->gameObj_pos = pos;
+}
+
 GameObj_Base::~GameObj_Base() {
 	// GameObj_Base has no unique destruction procedure yet.
 }
