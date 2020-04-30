@@ -22,7 +22,7 @@ PrototypeScene::PrototypeScene() : dynWorld(glm::vec3(0, -9.8f, 0)) {
 PrototypeScene::~PrototypeScene() {}
 
 auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
-    double scalar = 100.f;
+    double scalar = 100.0;
     auto &engine  = BlueEngine::Engine::get();
     auto sphere   = dynWorld.GetRigidBody(1);
 
@@ -32,12 +32,13 @@ auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
     camera.Position = sphere->GetPosition() + glm::vec3(10, 10, 10);
 
     auto radians      = curremtRot * ((std::atan(1) * 4) / 180);
-    camera.Position.x = std::cos(radians) * 10;
-    camera.Position.z = std::sin(radians) * 10;
+    camera.Position.x = std::cos(radians) * 15;
+    camera.Position.z = std::sin(radians) * 15;
 
     camera.Position += sphere->GetPosition();
-    camera.Position.y = sphere->GetPosition().y + 10;
+    camera.Position.y = sphere->GetPosition().y + 5;
     camera.Front = glm::normalize(static_cast<glm::dvec3>(sphere->GetPosition()) - camera.Position);
+    camera.Position.y += 5;
 
     if (moveForward) {
         sphere->ApplyForceToCentre(camera.Front * scalar);
@@ -56,11 +57,18 @@ auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
         // camera.ProcessKeyboard(Camera_Movement::RIGHT, dt);
     }
 
-    std::function updateObjects = [&](std::shared_ptr<GameObj_Base> object) { 
-        //auto bodu
+    std::function updateObjects = [&](std::shared_ptr<GameObj_Base> object) {
+        if (object->gameObj_getTypeID() == 1u || object->gameObj_getTypeID() == 3u) {
+            auto id             = object->gameObj_physBody;
+            auto pos            = dynWorld.GetRigidBody(id)->GetPosition();
+            auto rot            = dynWorld.GetRigidBody(id)->GetOrientation();
+            object->gameObj_pos = pos;
+            // object->gameObj_rotation = glm::rotate(rot, object->gameObj_rotation);
+            // glm::rotate()
+        }
     };
 
-
+    GameObj_Manager::process_all(updateObjects);
 }
 
 void PrototypeScene::Init() {
@@ -72,7 +80,7 @@ void PrototypeScene::Init() {
     luaL_dofile(LuaManager::getInstance().getLuaState(), "res/scripts/gameobjsSet.lua");
 
     auto sphereID     = shapes.createSphere(2.5f);
-    auto sphereBodyID = dynWorld.CreateRigidBody(glm::vec3{20, 200, 20}, glm::quat(1, 0, 0, 0));
+    auto sphereBodyID = dynWorld.CreateRigidBody(glm::vec3{20, 170, 20}, glm::quat(1, 0, 0, 0));
     auto *reactBodySphere =
         dynamic_cast<Physics::ReactRigidBody *>(dynWorld.GetRigidBody(sphereBodyID));
     reactBodySphere->AddCollisionShape(shapes.GetShape(sphereID), glm::vec3{0, 0, 0},
@@ -92,25 +100,33 @@ void PrototypeScene::Init() {
                                         glm::quat(1, 0, 0, 0), 1.f);
     reactBodyheights->SetBodyType(2);
 
-    auto BoxShapeID = shapes.createBox(glm::vec3(1, 1, 1));
-    /*
-    For all game objects n
-      d
-    */
-    std::function PhysicsOp = [&](std::shared_ptr<GameObj_Base> object) {
+    auto TreeShapeID = shapes.createBox(glm::vec3(2, 10, 2));
+    auto RockShapeID = shapes.createBox(glm::vec3(3, 2, 3));
+
+    std::function<void(std::shared_ptr<GameObj_Base>)> PhysicsOp =
+        [&](std::shared_ptr<GameObj_Base> object) -> void {
+        auto gameObjBodyID =
+            dynWorld.CreateRigidBody(object->gameObj_pos, glm::quat(object->gameObj_rotation));
+        auto *reactBody =
+            dynamic_cast<Physics::ReactRigidBody *>(dynWorld.GetRigidBody(gameObjBodyID));
         if (object->gameObj_getTypeID() == 1u) {
-            auto gameObjBodyID =
-                dynWorld.CreateRigidBody(object->gameObj_pos, glm::quat(object->gameObj_rotation));
-            auto *reactBody =
-                dynamic_cast<Physics::ReactRigidBody *>(dynWorld.GetRigidBody(gameObjBodyID));
-            reactBody->AddCollisionShape(shapes.GetShape(BoxShapeID), glm::vec3{0, 0, 0},
+            if (object->gameObj_getModelPath().find("Tree") != std::string::npos) {
+                reactBody->AddCollisionShape(shapes.GetShape(TreeShapeID), glm::vec3{0, 0, 0},
+                                             glm::quat(1, 0, 0, 0), 1.f);
+            } else {
+                reactBody->AddCollisionShape(shapes.GetShape(RockShapeID), glm::vec3{0, 0, 0},
+                                             glm::quat(1, 0, 0, 0), 1.f);
+            }
+            reactBody->SetBodyType(2);
+        } else {
+            reactBody->AddCollisionShape(shapes.GetShape(sphereID), glm::vec3{0, 0, 0},
                                          glm::quat(1, 0, 0, 0), 1.f);
-            object->gameObj_physBody = static_cast<unsigned long long>(gameObjBodyID);
+            reactBody->SetBodyType(3);
         }
+
+        object->gameObj_physBody = static_cast<unsigned long long>(gameObjBodyID);
     };
-    
-
-
+    GameObj_Manager::process_all(PhysicsOp);
 }
 
 void PrototypeScene::handleWindowEvent() {
@@ -205,8 +221,6 @@ auto PrototypeScene::display() -> void {
     terrain.AddToDraw();
     GameObj_Manager::addAllToDraw();
     auto sphere = dynWorld.GetRigidBody(1)->GetPosition();
-    std::cout << static_cast<int>(sphere.x) << ',' << static_cast<int>(sphere.y) << ','
-              << static_cast<int>(sphere.z) << '\n';
     GameObj_Manager::get(3)->setPos(sphere);
 
     // glm::vec3 orientation(engine.dynWorld.GetRigidBody(1)->GetOrientation());

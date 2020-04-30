@@ -5,8 +5,7 @@ File used to map keys to input actions via lua
 Will read mappings from this file if UseLuaInputs is set to true
 
 ]]
-UseLuaInputs = true
-
+UseLuaInputs = false
 InputBindings = {
 	JUMP="SPACE",
 	SPRINT="LSHIFT",

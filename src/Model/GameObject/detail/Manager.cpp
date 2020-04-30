@@ -46,7 +46,7 @@ void GameObj_Manager::clear() {
 	managedGameObjects.clear();
 }
 
-void GameObj_Manager::process_all(GameObj_ProcessFunc function) {
+void GameObj_Manager::process_all(std::function<void(std::shared_ptr<GameObj_Base> GameObj_In)> function) {
 	// Catch invalid function pointer
 	if (function == nullptr)
 		return;

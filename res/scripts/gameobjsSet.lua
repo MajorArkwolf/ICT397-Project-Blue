@@ -4,8 +4,8 @@ local sandHeight = 110;
 local dirtHeight = 150;
 while (i < 15)
 do
-	-- Generate the new GameObject (of type Static)
-	identifier = GameObject_Manager.add(1);
+	-- Generate the new GameObject (of type NPC)
+	identifier = GameObject_Manager.add(3);
 	new_game_object = GameObject_Manager.get(identifier);
 
 	-- Set the newly created GameObject's model
@@ -16,7 +16,7 @@ do
 	-- Configure the newly created GameObject's position
 	local x = i * 5;
 	local z = 0;
-	local y = TerrainFactory.heightAt(x, z);
+	local y = TerrainFactory.heightAt(x, z) + 2;
 	new_game_object:setPos(x, y, z);
 
 	-- Configure the newly created GameObject's scale
