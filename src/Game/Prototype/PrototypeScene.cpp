@@ -61,9 +61,9 @@ void PrototypeScene::Init() {
     Blue::HeightMap heightMap;
 
     terrain.GenerateHeightMap(heightMap);
-    auto terrainID = engine.shapes.createHeightfield(heightMap.width - 1, heightMap.height - 1, 0.f,
-                                                     217.f, heightMap.terrain);
-    auto heightbodyID = engine.dynWorld.CreateRigidBody(glm::vec3{0, 128, 0}, glm::quat(glm::vec3(0,180,0)));
+    auto terrainID = engine.shapes.createHeightfield(heightMap.width, heightMap.height, heightMap.heightRange.min,
+                                                     heightMap.heightRange.max, heightMap.terrain);
+    auto heightbodyID = engine.dynWorld.CreateRigidBody(heightMap.position, heightMap.rotation);
     auto *reactBodyheights =
         dynamic_cast<Physics::ReactRigidBody *>(engine.dynWorld.GetRigidBody(heightbodyID));
     reactBodyheights->AddCollisionShape(engine.shapes.GetShape(terrainID), glm::vec3{0, 0, 0},
