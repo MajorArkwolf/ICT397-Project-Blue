@@ -65,9 +65,11 @@ class PrototypeScene : public BaseState {
     bool moveForward  = false;
     /// Boolean logic for the camera, soon to be deprecated
     bool moveBackward = false;
-    /// Boolean logic for the camera, soon to be deprecated
-    bool moveLeft     = false;
-    /// Boolean logic for the camera, soon to be deprecated
-    bool moveRight    = false;
+    bool moveLeft = false;
+    bool moveRight = false;
+    float curremtRot = 0;
 
+    double getDeltaTime();
+    Physics::ReactDynamicsWorld dynWorld;
+    Physics::ReactShapes shapes;
 };

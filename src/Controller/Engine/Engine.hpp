@@ -15,6 +15,8 @@
 #include "Controller/GUIManager.hpp"
 #include "Controller/ResourceManager.hpp"
 #include "GameStack.hpp"
+#include "Controller/PhysicsFacade/React/ReactDynamicsWorld.hpp"
+
 #include "View/Renderer/OpenGL.hpp"
 
 constexpr unsigned int SCR_WIDTH  = 800;

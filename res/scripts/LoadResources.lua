@@ -46,7 +46,7 @@ Load all models by passing their file path in 'resources.loadString("filePath")'
 resources.loadModel("res/models/ironman.obj")
 
 --]]
-
+resources.loadModel("res/model/ball.obj")
 resources.loadTexture("res/images/grass.jpg", "grass")
 resources.loadTexture("res/images/water.jpg", "water")
 resources.loadTexture("res/images/sand.jpg", "sand")
