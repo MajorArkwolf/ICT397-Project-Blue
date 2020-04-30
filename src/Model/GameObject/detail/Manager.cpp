@@ -49,9 +49,8 @@ void GameObj_Manager::clear() {
 BlueEngine::ID GameObj_Manager::lua_add(GameObjType type) {
 	// Call the Factory Constructor to generate and insert a new GameObject
 	std::shared_ptr<GameObj_Base> temp = Controller::Factory::get().GameObject(type);
-
 	// Catch any error from the Factory output
-	if (temp.get() == nullptr)
+	if (temp == nullptr)
 	{
 		// Don't store anything, just return an indicator of failure
 		return 0u;
@@ -59,7 +58,7 @@ BlueEngine::ID GameObj_Manager::lua_add(GameObjType type) {
 
 	// On success, store the factory output and return the GameObject's identifier
 	insert(temp);
-	return temp.get()->gameObj_getUniqueID();
+	return temp->gameObj_getUniqueID();
 }
 
 GameObj_LuaHelper GameObj_Manager::lua_get(BlueEngine::ID identifier) {
@@ -107,6 +106,11 @@ void GameObj_Manager::init() {
 			.addFunction("clear", &GameObj_Manager::clear)
 		.endNamespace();
 
+    luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
+        .beginNamespace("TerrainFactory")
+            .addProperty ("chunkSize", &Controller::TerrainFactory::LuaMapSize)
+            .addFunction("heightAt", &Controller::TerrainFactory::LuaBLHeight)
+        .endNamespace();
 	// Prevent the registration with lua occuring multiple times
 	is_registered = true;
 }

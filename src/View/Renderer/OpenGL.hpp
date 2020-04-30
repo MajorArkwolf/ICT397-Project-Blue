@@ -9,6 +9,7 @@
 #include "View/EulerCamera.hpp"
 #include "Model/Models/Model.hpp"
 #include "Model/Vertix.hpp"
+
 namespace View {
     class OpenGL: public View::Renderer {
       public:
@@ -40,7 +41,7 @@ namespace View {
          * Adds an item to the draw que.
          * @param drawItem Passes DrawItem into the que to be used for rendering purposes.
          */
-        void AddToQue(View::Data::DrawItem drawItem);
+        void AddToQue(View::Data::DrawItem& drawItem);
         /**
          * Setups a general mesh for the renderer in the OpenGL Context.
          * @param VAO buffer identity
@@ -95,7 +96,7 @@ namespace View {
          * @param ebo_size The size of the indices buffer.
          */
         void DrawTerrain(unsigned int &VAO, const std::vector<unsigned int> &textures,
-                         unsigned int ebo_size);
+                         const unsigned int& ebo_size);
 
 
     private:

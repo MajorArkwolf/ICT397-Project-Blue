@@ -47,11 +47,10 @@ resources.loadModel("res/models/ironman.obj")
 
 --]]
 
-resources.loadModel("res/model/IronMan/IronMan.obj")
-
 resources.loadTexture("res/images/grass.jpg", "grass")
 resources.loadTexture("res/images/water.jpg", "water")
 resources.loadTexture("res/images/sand.jpg", "sand")
 resources.loadTexture("res/images/dirt.jpg", "dirt")
 resources.loadTexture("res/images/snow.jpg", "snow")
 resources.loadTexture("res/images/endscene.jpg", "exitScreen")
+

@@ -12,11 +12,16 @@
 #include "View/Renderer/OpenGL.hpp"
 #include "View/Renderer/Renderer.hpp"
 
+
 using Controller::Input::BLUE_InputAction;
 using Controller::Input::BLUE_InputType;
 
 PrototypeScene::PrototypeScene() {
     Init();
+}
+
+PrototypeScene::~PrototypeScene() {
+
 }
 
 auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
@@ -100,7 +105,7 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
 
         } break;
         case BLUE_InputType::KEY_RELEASE: { // Key Release events
-            switch (inputData.inputAction) { 
+            switch (inputData.inputAction) {
                 case BLUE_InputAction::INPUT_MOVE_FORWARD: {
                     moveForward = false;
                 } break;
@@ -113,16 +118,12 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
                 case BLUE_InputAction::INPUT_MOVE_RIGHT: {
                     moveRight = false;
                 } break;
-                case BLUE_InputAction::INPUT_ACTION_1: {
-                    engine.dynWorld.GetRigidBody(1)->SetPosition(camera.Position);
-
-
-                } break;
                 case BLUE_InputAction::INPUT_ACTION_2: {
-                    engine.dynWorld.GetRigidBody(1)->SetSleeping(true);
+                    auto &renderer = BlueEngine::Engine::get().renderer;
+                    renderer.ToggleWireFrame();
                 } break;
                 case BLUE_InputAction::INPUT_ACTION_3: {
-                    engine.dynWorld.GetRigidBody(1)->SetSleeping(false);
+                    guiManager.toggleWindow("instructions");
                 } break;
                 case BLUE_InputAction::INPUT_ACTION_4: {
                     guiManager.toggleWindow("exit");

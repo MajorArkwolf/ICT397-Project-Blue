@@ -55,13 +55,13 @@ void Model::Model::processNode(aiNode *node, const aiScene *scene) {
 
 Mesh Model::Model::processMesh(aiMesh *mesh, const aiScene *scene) {
     // data to fill
-    std::vector<Vertex> vertices;
-    std::vector<unsigned int> indices;
-    std::vector<TextureB> textures;
+    std::vector<Vertex> vertices = {};
+    std::vector<unsigned int> indices = {};
+    std::vector<TextureB> textures = {};
 
     // Walk through each of the mesh's vertices
     for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
-        Vertex vertex{};
+        Vertex vertex = {};
         glm::vec3 vector{
             0, 0,
             0}; // we declare a placeholder vector since assimp uses
@@ -144,9 +144,9 @@ Mesh Model::Model::processMesh(aiMesh *mesh, const aiScene *scene) {
 
 std::vector<TextureB> Model::Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type,
                                             const string& typeName) {
-    std::vector<TextureB> textures;
+    std::vector<TextureB> textures = {};
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
-        aiString str;
+        aiString str = {};
         mat->GetTexture(type, i, &str);
         // check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
         bool skip = false;
@@ -158,7 +158,7 @@ std::vector<TextureB> Model::Model::loadMaterialTextures(aiMaterial *mat, aiText
             }
         }
         if (!skip) { // if texture hasn't been loaded already, load it
-            TextureB texture;
+            TextureB texture = {};
             texture.id   = BlueEngine::Engine::get().renderer.TextureFromFile(str.C_Str(), this->directory, false);
             texture.type = typeName;
             texture.path = str.C_Str();

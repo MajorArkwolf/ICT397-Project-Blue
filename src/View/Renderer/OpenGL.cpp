@@ -1,10 +1,6 @@
 #include "OpenGL.hpp"
 #include <iostream>
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
-#include <glad/glad.h>
 #include "Controller/Engine/Engine.hpp"
-#include "Controller/GUIManager.hpp"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include <algorithm>
@@ -23,6 +19,7 @@ void View::OpenGL::Draw() {
     guiManager.displayQuitScreen();
     guiManager.displayDevScreen(*camera);
     guiManager.displayTextureManager();
+    guiManager.displayTerrainSettings();
     int width = 0, height = 0;
     glfwGetWindowSize(engine.window, &width, &height);
     glm::mat4 projection =
@@ -37,6 +34,7 @@ void View::OpenGL::Draw() {
     } else {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
+
     for (auto &m : drawQue) {
         m.drawPointer(projection, view, camera->Position);
     }
@@ -152,14 +150,17 @@ void View::OpenGL::ResizeWindow() {
     glViewport(0, 0, width, height);
 }
 
-void View::OpenGL::AddToQue(View::Data::DrawItem drawItem) {
+void View::OpenGL::AddToQue(View::Data::DrawItem& drawItem) {
     drawQue.push_back(drawItem);
 }
 
 unsigned int View::OpenGL::TextureFromFile(const char *path, const std::string &directory,
                                                      [[maybe_unused]] bool gamma) {
     std::string filename = std::string(path);
-    filename             = directory + '/' + filename;
+    if (filename.find("..") < filename.length()) {
+        filename.erase(0, 2);
+    }
+    filename = directory + '/' + filename;
 
     unsigned int textureID;
     glGenTextures(1, &textureID);
@@ -194,7 +195,7 @@ unsigned int View::OpenGL::TextureFromFile(const char *path, const std::string &
 
         stbi_image_free(data);
     } else {
-        std::cout << "Texture failed to load at path: " << path << std::endl;
+        std::cout << "Texture failed to load at path: " << filename << std::endl;
         stbi_image_free(data);
     }
     return textureID;
@@ -248,7 +249,7 @@ void View::OpenGL::SetupTerrainModel(unsigned int &VAO, unsigned &VBO, unsigned 
 }
 
 void View::OpenGL::DrawTerrain(unsigned int &VAO, const std::vector<unsigned int> &textures,
-                               const unsigned int ebo_size) {
+                               const unsigned int& ebo_size) {
     GLint count = 0;
     for (auto &e : textures) {
         glActiveTexture(GL_TEXTURE0 + count);

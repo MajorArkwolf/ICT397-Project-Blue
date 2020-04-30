@@ -12,6 +12,7 @@
 #include "Controller/Engine/LuaManager.hpp"
 #include "Controller/TextureManager.hpp"
 #include "stb_image.h"
+#include "GameAssetFactory.hpp"
 
 void Controller::TerrainFactory::Init() {
     terrainShader =
@@ -27,6 +28,13 @@ void Controller::TerrainFactory::Init() {
     dirtTextureID    = texManager.getTexture("dirt").TextureID;
     sandTextureID    = texManager.getTexture("sand").TextureID;
     waterTextureID   = texManager.getTexture("water").TextureID;
+
+    if (this->width > this->height) {
+        maxKeySize = ((width / 2) / ChunkSize) - 1;
+    } else {
+        maxKeySize = ((height / 2) / ChunkSize) - 1;
+    }
+    GenerateHeightOffSet();
 }
 
 void Controller::TerrainFactory::LoadLua() {
@@ -98,7 +106,8 @@ void Controller::TerrainFactory::GenerateTerrain(Model::TerrainModel &newTerrain
     /// Generate vertices to form a giant square.
     GenerateVertices(vertices, xsize, zsize);
     /// Give heights to the y values using perlin noise.
-    AddDetail(vertices, key, ChunkSize);
+    AddDetailV2(vertices, key);
+    //AddDetail(vertices, key, ChunkSize);
     /// Generate indicies for the vertices.
     GenerateIndices(indicies, xsize, zsize);
     /// Generate the texture coordinates of the squares.
@@ -127,7 +136,7 @@ void Controller::TerrainFactory::GenerateWater(Model::Water &lake, const Blue::K
     auto sizeOfX = static_cast<unsigned int>(glm::sqrt(vertices.size()));
     GenerateIndices(indicies, sizeOfX, sizeOfX);
     GenerateTextureCords(vertices);
-    //This is a hack to auto set the water normals to reduce computaional time.
+    //This is a hack to auto set the water normals to reduce computational time.
     for (auto &v : vertices) {
         v.normals = glm::vec3(0.0f, 1.0f, 0.0f);
     }
@@ -249,13 +258,13 @@ void Controller::TerrainFactory::CleanupChunk(Model::TerrainModel &terrain) {
 }
 
 void Controller::TerrainFactory::LoadPerlinNoise(const string& filename) {
-    int nrComponents;
+    int nrComponents = {};
     unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
     assert(data != nullptr);
 
-    fValues.resize(static_cast<size_t>(width + 1));
+    fValues.resize(static_cast<size_t>(width));
     for (auto &e : fValues) {
-        e.resize(static_cast<size_t>(height + 1));
+        e.resize(static_cast<size_t>(height));
     }
     for (auto x = 0; x <= height - 1; ++x) {
         for (auto y = 0; y <= width - 1; ++y) {
@@ -265,8 +274,8 @@ void Controller::TerrainFactory::LoadPerlinNoise(const string& filename) {
     }
     int runtime = 1;
     for (auto run = 0; run < runtime; ++run) {
-        for (auto x = 1; x <= height - 1; ++x) {
-            for (auto y = 1; y <= width - 1; ++y) {
+        for (auto x = 1; x <= height - 2; ++x) {
+            for (auto y = 1; y <= width - 2; ++y) {
                 float sum = {};
                 sum += this->fValues.at(x).at(y).height;
                 sum += this->fValues.at(x - 1).at(y).height;
@@ -286,12 +295,12 @@ int Controller::TerrainFactory::GetChunkSize() const {
 }
 
 void Controller::TerrainFactory::GenerateNormals(std::vector<Blue::Vertex> &vertices,
-                                                 std::vector<unsigned int> indicies) {
+                                                 const std::vector<unsigned int>& indices) {
     // append triangle normals to every vertex
-    for (size_t index = 0; index < indicies.size(); index += 3) {
-        Blue::Vertex &vert1 = vertices[indicies[index]];
-        Blue::Vertex &vert2 = vertices[indicies[index + 1]];
-        Blue::Vertex &vert3 = vertices[indicies[index + 2]];
+    for (size_t index = 0; index < indices.size(); index += 3) {
+        Blue::Vertex &vert1 = vertices[indices[index]];
+        Blue::Vertex &vert2 = vertices[indices[index + 1]];
+        Blue::Vertex &vert3 = vertices[indices[index + 2]];
         // glm::triangleNormal() probably returns normalized vector,
         // which is better to compute unnormalized
         glm::vec3 triNormal = glm::triangleNormal(vert1.position, vert2.position, vert3.position);
@@ -317,13 +326,13 @@ int Controller::TerrainFactory::getHeight() const {
 }
 
 float *Controller::TerrainFactory::ExportHeightMap() {
-    size_t maxIndex = (width + 1) * (height + 1);
+    size_t maxIndex = (width) * (height);
     auto *heightMap = new float[maxIndex];
     size_t count = 0;
     for (auto &x : fValues) {
-        for (auto & y : x) {
+        for (auto y = height - 1; y >= 0; --y) {
             if (count < maxIndex) {
-                heightMap[count] = y.height;
+                heightMap[count] = x.at(y).height;
                 ++count;
             } else {
                 std::cerr << "ERROR: TerrainFactory::ExportHeightMap out of bounds!\n";
@@ -531,9 +540,13 @@ void Controller::TerrainFactory::StitchSeemedVertices(Model::TerrainModel &newTe
 }
 
 float Controller::TerrainFactory::GetDetailAt(const Blue::Key &key, const int xcord, const int zcord) {
-    int row = (height / 2) + key.first * ChunkSize + xcord;
-    int col = (width / 2) + key.second * ChunkSize + zcord;
-    return fValues.at(static_cast<size_t>(row)).at(static_cast<size_t>(col)).height;
+    float result = {};
+    if (abs(key.first) <= maxKeySize && abs(key.second) <= maxKeySize) {
+        int x = (height / 2) + key.first * ChunkSize + xcord;
+        int z = (width / 2) + key.second * ChunkSize + zcord;
+        result = fValues.at(static_cast<size_t>(x)).at(static_cast<size_t>(z)).height;
+    }
+    return result;
 }
 
 void Controller::TerrainFactory::AddDetailV2(std::vector<Blue::Vertex> &newTerrain, const Blue::Key &key) {
@@ -541,4 +554,110 @@ void Controller::TerrainFactory::AddDetailV2(std::vector<Blue::Vertex> &newTerra
         vert.position.y =
             GetDetailAt(key, static_cast<int>(vert.position.x), static_cast<int>(vert.position.z));
     }
+}
+
+unsigned int Controller::TerrainFactory::getMaxKeySize() const {
+    return maxKeySize;
+}
+
+float Controller::TerrainFactory::GetBLHeight(Blue::Key currentKey, glm::vec2 currentCord) {
+    float result_height = {};
+    auto intCord = glm::ivec2(floor(currentCord.x), floor(currentCord.y));
+    auto hBL = GetDetailAt(currentKey, currentCord.x, currentCord.y);
+    auto hBR = GetDetailAt(currentKey, intCord.x, intCord.y + 1);
+    auto hTL = GetDetailAt(currentKey, intCord.x + 1, intCord.y);
+    auto hTR = GetDetailAt(currentKey, intCord.x + 1, intCord.y + 1);
+    float x = currentCord.x - floor(currentCord.x);
+    float y = currentCord.y - floor(currentCord.y);
+
+    float R1 = ((1.0f - x) / (1.0f - 0.0f)) * hBL + ((x - 0.0f)/(1.0f - 0.0f)) * hBR;
+    // ((x2 – x)/(x2 – x1))*Q12 + ((x – x1)/(x2 – x1))*Q22
+    float R2 = ((1.0f - x)/(1.0f - 0.0f)) * hTL + ((x - 0.0f)/(1.0f - 0.0f)) * hTR;
+    // ((y2 – y)/(y2 – y1))*R1 + ((y – y1)/(y2 – y1))*R2
+    result_height = (((1.0f - y)/(1 - 0.0f))* R1) + (((y - 0.0f)/(1.0f - 0.0f)) * R2);
+    return result_height;
+}
+
+Blue::HeightRange Controller::TerrainFactory::GetHeightData() const {
+    return heightValues;
+}
+
+void Controller::TerrainFactory::GenerateHeightOffSet() {
+    float min = fValues.at(0).at(0).height;
+    float max = fValues.at(0).at(0).height;
+    for (auto &x : fValues) {
+        for (auto &y : x) {
+            if(y.height > max) {
+                max = y.height;
+            } else if (y.height < min) {
+                min = y.height;
+            }
+        }
+    }
+    heightValues.min = min;
+    heightValues.max = max;
+    heightValues.range = max - min;
+}
+
+void Controller::TerrainFactory::ExportHeightMesh(Blue::SimpleMesh& simpleMesh) {
+    std::vector<Blue::Vertex> blueVert = {};
+    /// Generate vertices to form a giant square.
+    GenerateVertices(blueVert, width + 1, height + 1, 0, 0, 1);
+    /// Give heights to the y values using perlin noise.
+    size_t count = 0;
+    for (auto &x : fValues) {
+        for (auto &y : x) {
+            simpleMesh.vertex.emplace_back(glm::vec3(blueVert.at(count).position.x, y.height, blueVert.at(count).position.z));
+//            simpleMesh.vertex.at(count).x = blueVert.at(count).position.x;
+//            simpleMesh.vertex.at(count).y = y.height;
+//            simpleMesh.vertex.at(count).z = blueVert.at(count).position.z;
+            ++count;
+        }
+    }
+    /// Generate indices for the vertices.
+    auto sizeOfX = static_cast<unsigned int>(glm::sqrt(blueVert.size()));
+    auto sizeOfY = sizeOfX;
+    GenerateIndices(simpleMesh.indices, sizeOfX, sizeOfY);
+}
+
+std::vector<unsigned int> Controller::TerrainFactory::GetTextureID() const {
+    std::vector<unsigned int> textureIDs = {};
+    textureIDs.push_back(snowTextureID);
+    textureIDs.push_back(grassTextureID);
+    textureIDs.push_back(dirtTextureID);
+    textureIDs.push_back(sandTextureID);
+    textureIDs.push_back(waterTextureID);
+    return std::move(textureIDs);
+}
+
+std::vector<unsigned int> Controller::TerrainFactory::GetTerrainHeights() const {
+    std::vector<unsigned int> terrainHeights = {};
+    terrainHeights.push_back(snowHeight);
+    terrainHeights.push_back(dirtHeight);
+    terrainHeights.push_back(grassHeight);
+    terrainHeights.push_back(sandHeight);
+    terrainHeights.push_back(waterHeight);
+    return std::move(terrainHeights);
+}
+
+float Controller::TerrainFactory::LuaBLHeight(float x, float y) {
+    auto &factory = Controller::Factory::get().terrain;
+    auto ChunkSize = factory.GetChunkSize();
+    auto currentKey = Blue::Key(floor(x), floor(y));
+    auto currentCord = glm::vec2(x, y);
+    currentKey.first /= ChunkSize;
+    currentKey.second /= ChunkSize;
+    if (currentKey.first < 0) {
+        currentKey.first -= 1;
+    }
+    if (currentKey.second < 0) {
+        currentKey.second -= 1;
+    }
+    currentCord.x -= currentKey.first * ChunkSize;
+    currentCord.y -= currentKey.second * ChunkSize;
+    return factory.GetBLHeight(currentKey, currentCord);
+}
+
+int Controller::TerrainFactory::LuaMapSize() {
+    return Controller::Factory::get().terrain.getMaxKeySize() * Controller::Factory::get().terrain.GetChunkSize();
 }

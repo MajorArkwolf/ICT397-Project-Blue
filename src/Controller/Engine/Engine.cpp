@@ -14,9 +14,9 @@ using std::string;
 
 auto Engine::run() -> void {
     auto &engine = Engine::get();
+
     ResourceManager::getInstance().loadResources();
-    auto pScene = std::make_shared<PrototypeScene>(PrototypeScene());
-    engine.gameStack.AddToStack(pScene);
+    engine.gameStack.AddToStack(std::make_shared<PrototypeScene>());
 
     double t  = 0.0;
     double dt = 0.01;
@@ -30,9 +30,11 @@ auto Engine::run() -> void {
     // glfwFocusWindow(engine.window);
     engine.renderer.Init();
 
+
     while (engine.getIsRunning()) {
         double newTime   = glfwGetTime();
         double frameTime = newTime - currentTime;
+
         if (frameTime > 0.25)
             frameTime = 0.25;
         currentTime = newTime;
@@ -48,6 +50,7 @@ auto Engine::run() -> void {
             t += dt;
             accumulator -= dt;
         }
+
         const double alpha = accumulator / dt;
         // state = currentState * alpha + previousState * (1.0 - alpha);
 
@@ -102,6 +105,7 @@ Engine::Engine() : dynWorld(glm::vec3{0, -9.8, 0}) {
     }
 
     this->guiManager.initialiseImGUI(window);
+
 }
 
 Engine::~Engine() {

@@ -1,29 +1,28 @@
 #pragma once
 
 #define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
 #include <map>
 #include <string>
 #include <vector>
 
+#include <GLFW/glfw3.h>
+
 #define GLEQ_IMPLEMENTATION
 #define GLEQ_STATIC
-#include "gleq.h"
-
 #include <glm/vec2.hpp>
 
 #include "Controller/Engine/LuaManager.hpp"
 #include "Controller/Enums.hpp"
+#include "gleq.h"
 
-namespace Controller {
-    namespace Input {
+namespace Controller::Input {
         /// Struct used to hold all input data required for a scene to handle
         struct InputData {
             glm::ivec2 mouseMotionRelative = {0, 0};
             glm::ivec2 mouseMotionAbsolute = {0, 0};
             float mouseWheelMotion         = 0.f;
-            BLUE_InputAction inputAction;
-            BLUE_InputType inputType;
+            BLUE_InputAction inputAction = {};
+            BLUE_InputType inputType = {};
         };
 
         /*
@@ -40,9 +39,9 @@ namespace Controller {
             static InputManager &getInstance();
 
             /*
-             * @brief Converts an SDL_Event into an InputData struct usable by a scene
+             * @brief Converts a GLEQEvent into an InputData struct usable by a scene
              * Chooses which action enum to use based on the mapping contained within InputMap
-             * @param event The SDL_Event that is read from in order to map a user input to an actionable event based on the mapping currently set
+             * @param event The GLEQEvent that is read from in order to map a user input to an actionable event based on the mapping currently set
              * @return An InputData struct containing the information required to act on user input for a scene
              */
 
@@ -65,7 +64,7 @@ namespace Controller {
             std::map<BLUE_InputAction, int> &getInputMap();
 
             /*
-             * @brief Creates all pairings between strings and sdl scancodes, and strings and input actions
+             * @brief Creates all pairings between strings and GLFW keys, and strings and input actions
              */
             void createEnumStringPairs();
 
@@ -75,21 +74,21 @@ namespace Controller {
              */
             const std::vector<std::pair<std::string, int>> &getStringScancodePairs() const;
             /*
-             * @brief Hashes an input string to an SDL_Scancode enum
-             * @param value  The string to convert to an SDL_Scancode enum if the equivalent exists
-             * @return An SDL scancode
+             * @brief Hashes an input string to a GLFW key
+             * @param value  The string to convert to an GLFW int if the equivalent exists
+             * @return A GLFW key
              */
             int hashStringToGLFWKey(const std::string &value) const;
 
             /*
-             * @brief Hashes an SDL scancode to a string
-             * @param value The SDL Scancode to convert to a string
-             * @return A string representing thethe SDL scancode
+             * @brief Hashes an GLFW key to a string
+             * @param value The GLFW key to convert to a string
+             * @return A string representing the GLFW key
              */
-            std::string hashGLFWKeyToString(const int value) const;
+            std::string hashGLFWKeyToString(int value) const;
 
             /*
-             * @brief Hashes an input string to an SDL_Scancode enum
+             * @brief Hashes an input string to an GLFW key
              * @param value The string to convert to a BLUE_InputAction of one exists
              * @return The equivalent InputAction
              */
@@ -101,9 +100,21 @@ namespace Controller {
              */
             void bindKey(BLUE_InputAction action, int key);
 
+            /*
+             * @brief Resets the current key state array
+             */
             void resetKeyStates();
+            /*
+             * @brief Records the keys that have been pressed for a particular frame
+             * @param event the GleqEvent to read the key states from
+             */
             void recordKeyStates(GLEQevent &event);
-            const int* getKeyStates();
+
+            /*
+             * @brief Returns the keys that have been pressed for a particular frame
+             * @return A pointer to the key states
+             */
+            const int *getKeyStates();
 
           private:
             /// A map containing key value pairs between a game action and a particular key
@@ -154,7 +165,7 @@ namespace Controller {
             /// A vector of pairs linking a string and an input action
             std::vector<std::pair<std::string, BLUE_InputAction>> stringActionPairs;
 
+            /// The key states array
             int KeyStates[GLFW_KEY_LAST];
         };
     }
-}
