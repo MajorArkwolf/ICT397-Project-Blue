@@ -50,7 +50,7 @@ auto Engine::run() -> void {
             accumulator -= dt;
         }
 
-        const double alpha = accumulator / dt;
+        // const double alpha = accumulator / dt;
         // state = currentState * alpha + previousState * (1.0 - alpha);
 
         engine.gameStack.getTop()->display();
@@ -85,7 +85,7 @@ Engine::Engine(){
 
     // glfw window creation
     // --------------------
-    window = glfwCreateWindow(800, 600, "Project Blue", /*glfwGetPrimaryMonitor()*/ nullptr, nullptr);
+    window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Project Blue", glfwGetPrimaryMonitor(), nullptr);
     if (window == nullptr) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();

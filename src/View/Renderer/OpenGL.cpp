@@ -161,6 +161,7 @@ unsigned int View::OpenGL::TextureFromFile(const char *path, const std::string &
         filename.erase(0, 2);
     }
     filename = directory + '/' + filename;
+    std::replace(filename.begin(), filename.end(), '\\', '/');
 
     unsigned int textureID;
     glGenTextures(1, &textureID);
