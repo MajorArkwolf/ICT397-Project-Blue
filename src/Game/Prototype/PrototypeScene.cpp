@@ -127,6 +127,7 @@ void PrototypeScene::Init() {
         object->gameObj_physBody = static_cast<unsigned long long>(gameObjBodyID);
     };
     GameObj_Manager::process_all(PhysicsOp);
+    engine.getGuiManager().setTerrainManager(&terrain);
 }
 
 void PrototypeScene::handleWindowEvent() {
