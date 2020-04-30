@@ -9,6 +9,18 @@ auto ResourceManager::getInstance() -> ResourceManager & {
     return instance;
 }
 
+TextManager &ResourceManager::GetTextManager() {
+    return textManager;
+}
+
+ModelManager &ResourceManager::GetModelManager() {
+    return modelManager;
+}
+
+TextureManager &ResourceManager::GetTextureManager() {
+    return textureManager;
+}
+
 ResourceManager::ResourceManager() {}
 
 void ResourceManager::loadResources() {
@@ -70,6 +82,5 @@ void ResourceManager::loadString(const std::string key) {
 }
 
 auto ResourceManager::loadTexture(const std::string filePath, const std::string textureName) -> void {
-    auto &texManger = TextureManager::getInstance();
-    texManger.loadTextureFromFile(filePath, textureName);
+    getInstance().textureManager.loadTextureFromFile(filePath, textureName);
 }

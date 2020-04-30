@@ -8,6 +8,13 @@
 #include "Base.hpp"
 #include "LuaHelper.hpp"
 
+	/*!
+	 * @brief Type declaration for a function pointer used by the GameObj_Manager.
+	 * @param [in] GameObj_In A smart pointer to a GameObject.
+	 * @return Never returns anything.
+	 */
+using GameObj_ProcessFunc = void(*)(std::shared_ptr<GameObj_Base> GameObj_In);
+
 	//! A manager class for GameObject's creation and storage.
 class GameObj_Manager {
 public:
@@ -55,6 +62,13 @@ public:
 	static void clear();
 
 		/*!
+		 * @brief Passes a smart pointer to a provided function for each managed GameObject.
+		 * @param [in] function A function to process all of the stored GameObjects in the Manager.
+		 * @see GameObj_ProcessFunc
+		 */
+	static void process_all(GameObj_ProcessFunc function);
+
+		/*!
 		 * @brief Calls upon the Factory Methods to generate a new GameObject of a specific type.
 		 * @param [in] type A GameObject Type Identifier to declare what form of GameObject to generate.
 		 * @return The unique identifier for the newly created GameObject, or 0u on error.
@@ -64,7 +78,7 @@ public:
 		/*!
 		 * @brief Gathers a non-smart pointer, which is actually compatible with Lua.
 		 * @param [in] identifier A GameObject identifier.
-		 * @return A pointer to 
+		 * @return A GameObject wrapped in a Lua Helper class.
 		 */
 	static GameObj_LuaHelper lua_get(BlueEngine::ID identifier);
 

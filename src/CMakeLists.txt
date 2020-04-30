@@ -45,7 +45,6 @@ target_sources(${PROJECT_NAME} PRIVATE
     Model/TerrainModel.cpp
     Model/WaterModel.cpp
     Model/TextManager.cpp
-    Model/Texture.cpp
 
     Model/GameObject/detail/Base.cpp
     Model/GameObject/detail/Static.cpp
@@ -61,7 +60,6 @@ target_sources(${PROJECT_NAME} PRIVATE
     View/Renderer/Skybox.cpp
 
     # Game
-    Game/SceneManager.cpp
     Game/Prototype/PrototypeScene.cpp
 
 

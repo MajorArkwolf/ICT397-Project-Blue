@@ -33,15 +33,10 @@ class TextureManager {
      */
     Texture &getTexture(unsigned int id);
 
-    /**
-     * @brief Returns a static instance of the texture manager
-     * @return  A static instance of the texture manager
-     */
-    static TextureManager &getInstance();
-
     /// A map containing pairs of keys and textures
     std::map<std::string, Texture> textureMap;
 
-  private:
     TextureManager();
+  private:
+
 };
