@@ -10,7 +10,7 @@ do
 
 	-- Set the newly created GameObject's model
 
-	new_game_object:setModel("res/model/ball.obj");
+	new_game_object:setModel("res/model/ball.fbx");
 
 
 	-- Configure the newly created GameObject's position

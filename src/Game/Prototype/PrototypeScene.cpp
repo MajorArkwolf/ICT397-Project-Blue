@@ -79,7 +79,7 @@ void PrototypeScene::Init() {
     GameObj_Manager::init();
     luaL_dofile(LuaManager::getInstance().getLuaState(), "res/scripts/gameobjsSet.lua");
 
-    auto sphereID     = shapes.createSphere(2.5f);
+    auto sphereID     = shapes.createSphere(1);
     auto sphereBodyID = dynWorld.CreateRigidBody(glm::vec3{20, 170, 20}, glm::quat(1, 0, 0, 0));
     auto *reactBodySphere =
         dynamic_cast<Physics::ReactRigidBody *>(dynWorld.GetRigidBody(sphereBodyID));
