@@ -6,40 +6,44 @@
 #include <algorithm>
 
 void View::OpenGL::Draw() {
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     auto &engine = BlueEngine::Engine::get();
-    auto& guiManager = engine.getGuiManager();
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    GUIManager::startWindowFrame();
-    guiManager.displayInputRebindWindow();
-    guiManager.displayEscapeMenu();
-    guiManager.displayInstructionMenu();
-    guiManager.displayQuitScreen();
-    guiManager.displayDevScreen(*camera);
-    guiManager.displayTextureManager();
-    guiManager.displayTerrainSettings();
-    int width = 0, height = 0;
-    glfwGetWindowSize(engine.window, &width, &height);
-    glm::mat4 projection =
-            glm::perspective(glm::radians(camera->Zoom),
-                             static_cast<double>(width) / static_cast<double>(height), 0.1, 100000.0);
-    glm::mat4 view = camera->GetViewMatrix();
-    glm::mat4 skyboxView = glm::mat4(glm::mat3(camera->GetViewMatrix()));
-    sortDrawDistance();
-    if(wireFrame)
-    {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    } else {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    }
+    if (!windowMinimized()) {
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    for (auto &m : drawQue) {
-        m.drawPointer(projection, view, camera->Position);
+        auto& guiManager = engine.getGuiManager();
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        GUIManager::startWindowFrame();
+        guiManager.displayInputRebindWindow();
+        guiManager.displayEscapeMenu();
+        guiManager.displayInstructionMenu();
+        guiManager.displayQuitScreen();
+        guiManager.displayDevScreen(*camera);
+        guiManager.displayTextureManager();
+        guiManager.displayTerrainSettings();
+        int width = 0, height = 0;
+        glfwGetWindowSize(engine.window, &width, &height);
+
+
+        glm::mat4 projection =
+                glm::perspective(glm::radians(camera->Zoom),
+                                 static_cast<double>(width) / static_cast<double>(height), 0.1, 100000.0);
+        glm::mat4 view = camera->GetViewMatrix();
+        glm::mat4 skyboxView = glm::mat4(glm::mat3(camera->GetViewMatrix()));
+        sortDrawDistance();
+        if (wireFrame) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        } else {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        }
+
+        for (auto &m : drawQue) {
+            m.drawPointer(projection, view, camera->Position);
+        }
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        skyBox.draw(skyboxView, projection);
     }
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    skyBox.draw(skyboxView, projection);
     GUIManager::endWindowFrame();
     glfwSwapBuffers(engine.window);
     drawQue.clear();
@@ -261,4 +265,14 @@ void View::OpenGL::DrawTerrain(unsigned int &VAO, const std::vector<unsigned int
     glDrawElements(GL_TRIANGLES, ebo_size, GL_UNSIGNED_INT, nullptr);
     glBindVertexArray(0);
     glActiveTexture(GL_TEXTURE0);
+}
+
+bool View::OpenGL::windowMinimized() {
+    auto &engine = BlueEngine::Engine::get();
+    int width = 0, height = 0;
+    glfwGetWindowSize(engine.window, &width, &height);
+    if (width == 0 || height == 0) {
+        return true;
+    }
+    return false;
 }
