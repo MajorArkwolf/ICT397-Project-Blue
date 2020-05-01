@@ -63,9 +63,6 @@ GUIManager &BlueEngine::Engine::getGuiManager() {
     return guiManager;
 }
 
-/**
- * @brief Game engine default constructor, sets up all variables and settings required for operation
- */
 Engine::Engine(){
     getBasePath();
     if (!glfwInit()) {
@@ -80,7 +77,7 @@ Engine::Engine(){
 
 #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,
-                   GL_TRUE); // uncomment this statement to fix compilation on OS X
+                   GL_TRUE);
 #endif
 
     // glfw window creation
