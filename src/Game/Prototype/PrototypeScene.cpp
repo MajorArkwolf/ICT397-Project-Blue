@@ -36,7 +36,7 @@ auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
     camera.Position.z = std::sin(radians) * 15;
 
     camera.Position += sphere->GetPosition();
-    camera.Position.y = sphere->GetPosition().y + 5;
+    camera.Position.y = sphere->GetPosition().y + currentDist;
     camera.Front = glm::normalize(static_cast<glm::dvec3>(sphere->GetPosition()) - camera.Position);
     camera.Position.y += 5;
 
@@ -195,7 +195,14 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
                 auto x = static_cast<double>(inputData.mouseMotionRelative.x);
                 auto y = static_cast<double>(inputData.mouseMotionRelative.y);
                 y      = y * -1.0;
-                curremtRot += x;
+                curremtRot += x * 0.5;
+                currentDist += y *0.5;
+                if (currentDist < 5) {
+                    currentDist = 5;
+                }
+                if (currentDist > 40) {
+                    currentDist = 40;
+                    }
                 // camera.ProcessMouseMovement(x, y);
                 handledMouse = true;
             }

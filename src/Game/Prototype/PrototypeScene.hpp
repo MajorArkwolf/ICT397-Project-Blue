@@ -68,6 +68,7 @@ class PrototypeScene : public BaseState {
     bool moveLeft = false;
     bool moveRight = false;
     float curremtRot = 0;
+    float currentDist = 10;
 
     double getDeltaTime();
     Physics::ReactDynamicsWorld dynWorld;
