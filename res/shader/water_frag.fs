@@ -1,4 +1,4 @@
-#version 430 core
+#version 410 core
 
 out vec4 w_FragColor;
 
@@ -31,5 +31,5 @@ void main(void) {
     vec3 specular = specularStrength * spec * lightColor;  
         
     vec3 result = (ambient + diffuse + specular);
-    w_FragColor = w_FragColor * vec4(result, 0.8);
+    w_FragColor = w_FragColor * vec4(result, 0.6);
 }

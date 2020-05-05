@@ -87,22 +87,30 @@ namespace Controller::Input {
     }
 
     void InputManager::ReadBindings() {
-        std::string basePath = ".";
+        bool useLuaInputs        = 0;
+        std::string basePath = BlueEngine::Engine::get().basepath;
 
         auto &LuaManager = LuaManager::getInstance();
 
         auto luaState          = LuaManager.getLuaState();
-        std::string scriptPath = basePath + "scripts//InputBindings.lua";
+        std::string scriptPath = basePath + "res/scripts/InputBindings.lua";
         if (luaL_dofile(luaState, scriptPath.c_str())) {
             std::cout << "No script file found at '" << scriptPath << "', aborting input binding."
                       << std::endl;
         }
         lua_pcall(luaState, 0, 0, 0);
         luaL_openlibs(luaState);
-        luabridge::LuaRef table = luabridge::getGlobal(luaState, "InputBindings");
-        if (!table.isNil()) {
-            readLuaInputTable(table);
+        luabridge::LuaRef luaOverride = luabridge::getGlobal(luaState, "UseLuaInputs");
+        if (luaOverride.isBool()) {
+            useLuaInputs = luaOverride.cast<bool>();
         }
+        if (useLuaInputs) {
+            luabridge::LuaRef table = luabridge::getGlobal(luaState, "InputBindings");
+            if (!table.isNil()) {
+                readLuaInputTable(table);
+            }
+        }
+
     }
 
     int InputManager::hashStringToGLFWKey(const std::string &value) const {
@@ -139,9 +147,9 @@ namespace Controller::Input {
         luabridge::LuaRef inputRef = inputTable[value];
 
         if (inputRef.isString()) {
-            std::string input = inputRef.cast<std::string>();
-            std::cout << input << std::endl;
-            InputMap.insert(std::pair<BLUE_InputAction, int>(action, hashStringToGLFWKey(input)));
+            std::string input   = inputRef.cast<std::string>();
+            InputMap.at(action) = hashStringToGLFWKey(input);
+            // InputMap.insert(std::pair<BLUE_InputAction, int>(action, hashStringToGLFWKey(input)));
         }
     }
 
@@ -180,6 +188,13 @@ namespace Controller::Input {
         bindKey(BLUE_InputAction::INPUT_MOVE_LEFT, inputTable, "MOVE_LEFT");
         bindKey(BLUE_InputAction::INPUT_MOVE_RIGHT, inputTable, "MOVE_RIGHT");
         bindKey(BLUE_InputAction::INPUT_MOVE_BACKWARD, inputTable, "MOVE_BACKWARD");
+        bindKey(BLUE_InputAction::INPUT_ACTION_1, inputTable, "ACTION_1");
+        bindKey(BLUE_InputAction::INPUT_ACTION_2, inputTable, "ACTION_2");
+        bindKey(BLUE_InputAction::INPUT_ACTION_3, inputTable, "ACTION_3");
+        bindKey(BLUE_InputAction::INPUT_ACTION_4, inputTable, "ACTION_4");
+        bindKey(BLUE_InputAction::INPUT_ESCAPE, inputTable, "ESCAPE");
+        bindKey(BLUE_InputAction::INPUT_CROUCH, inputTable, "CROUCH");
+        bindKey(BLUE_InputAction::INPUT_SPRINT, inputTable, "SPRINT");
     }
 
     void InputManager::DefaultInputMap() {
@@ -189,9 +204,11 @@ namespace Controller::Input {
         InputMap.at(BLUE_InputAction::INPUT_MOVE_LEFT)     = GLFW_KEY_A;
         InputMap.at(BLUE_InputAction::INPUT_MOVE_RIGHT)    = GLFW_KEY_D;
         InputMap.at(BLUE_InputAction::INPUT_ACTION_1)      = GLFW_KEY_E;
-        InputMap.at(BLUE_InputAction::INPUT_ACTION_2)      = GLFW_KEY_R;
-        InputMap.at(BLUE_InputAction::INPUT_SPRINT)        = GLFW_MOD_SHIFT;
-        InputMap.at(BLUE_InputAction::INPUT_CROUCH)        = GLFW_MOD_CONTROL;
+        InputMap.at(BLUE_InputAction::INPUT_ACTION_2)      = GLFW_KEY_K;
+        InputMap.at(BLUE_InputAction::INPUT_ACTION_3)      = GLFW_KEY_M;
+        InputMap.at(BLUE_InputAction::INPUT_ACTION_4)      = GLFW_KEY_X;
+        InputMap.at(BLUE_InputAction::INPUT_SPRINT)        = GLFW_KEY_LEFT_SHIFT;
+        InputMap.at(BLUE_InputAction::INPUT_CROUCH)        = GLFW_KEY_LEFT_CONTROL;
         InputMap.at(BLUE_InputAction::INPUT_ESCAPE)        = GLFW_KEY_ESCAPE;
     }
 
@@ -201,7 +218,16 @@ namespace Controller::Input {
 
     void InputManager::createEnumStringPairs() {
         stringScancodePairs.clear();
-        stringScancodePairs.clear();
+        stringScancodePairs.push_back(std::pair<std::string, int>("1", GLFW_KEY_1));
+        stringScancodePairs.push_back(std::pair<std::string, int>("2", GLFW_KEY_2));
+        stringScancodePairs.push_back(std::pair<std::string, int>("3", GLFW_KEY_3));
+        stringScancodePairs.push_back(std::pair<std::string, int>("4", GLFW_KEY_4));
+        stringScancodePairs.push_back(std::pair<std::string, int>("5", GLFW_KEY_5));
+        stringScancodePairs.push_back(std::pair<std::string, int>("6", GLFW_KEY_6));
+        stringScancodePairs.push_back(std::pair<std::string, int>("7", GLFW_KEY_7));
+        stringScancodePairs.push_back(std::pair<std::string, int>("8", GLFW_KEY_8));
+        stringScancodePairs.push_back(std::pair<std::string, int>("9", GLFW_KEY_9));
+        stringScancodePairs.push_back(std::pair<std::string, int>("0", GLFW_KEY_0));
         stringScancodePairs.push_back(std::pair<std::string, int>("A", GLFW_KEY_A));
         stringScancodePairs.push_back(std::pair<std::string, int>("B", GLFW_KEY_B));
         stringScancodePairs.push_back(std::pair<std::string, int>("C", GLFW_KEY_C));
@@ -229,10 +255,10 @@ namespace Controller::Input {
         stringScancodePairs.push_back(std::pair<std::string, int>("Y", GLFW_KEY_Y));
         stringScancodePairs.push_back(std::pair<std::string, int>("Z", GLFW_KEY_Z));
         stringScancodePairs.push_back(std::pair<std::string, int>("Space", GLFW_KEY_SPACE));
-        stringScancodePairs.push_back(std::pair<std::string, int>("LSHIFT", GLFW_MOD_SHIFT));
-        stringScancodePairs.push_back(std::pair<std::string, int>("LCTRL", GLFW_MOD_CONTROL));
+        stringScancodePairs.push_back(std::pair<std::string, int>("LSHIFT", GLFW_KEY_LEFT_SHIFT));
+        stringScancodePairs.push_back(std::pair<std::string, int>("LCTRL", GLFW_KEY_LEFT_CONTROL));
         stringScancodePairs.push_back(std::pair<std::string, int>("TAB", GLFW_KEY_TAB));
-        stringScancodePairs.push_back(std::pair<std::string, int>("LALT", GLFW_MOD_ALT));
+        stringScancodePairs.push_back(std::pair<std::string, int>("LALT", GLFW_KEY_LEFT_ALT));
         stringScancodePairs.push_back(std::pair<std::string, int>("ESCAPE", GLFW_KEY_ESCAPE));
 
         stringActionPairs.push_back(std::pair<std::string, BLUE_InputAction>(
@@ -266,6 +292,7 @@ namespace Controller::Input {
     }
 
     InputManager::~InputManager() {}
+
     void InputManager::populateInputMap() { // Populates Input map with all actions to allow mapping inputs to them
 
         InputMap.insert(std::pair<BLUE_InputAction, int>(BLUE_InputAction::INPUT_JUMP, GLFW_KEY_UNKNOWN));
@@ -310,5 +337,6 @@ namespace Controller::Input {
         DefaultInputMap();
         createEnumStringPairs();
         resetKeyStates();
+        ReadBindings();
     }
 }

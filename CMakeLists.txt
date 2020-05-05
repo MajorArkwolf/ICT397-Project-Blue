@@ -102,7 +102,7 @@ target_link_options(${PROJECT_NAME} PRIVATE
 )
 
 # Include and link against dependencies.
-target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL glfw assimp glm lua LuaBridge reactphysics3d glad imgui)
+target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL glfw assimp glm lua LuaBridge reactphysics3d glad imgui ${CMAKE_DL_LIBS})
 #  ${GLFW_LIBRARIES}
 
 # Symlink or copy the resources to the binary location.

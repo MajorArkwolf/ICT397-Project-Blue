@@ -1,18 +1,9 @@
 #include "Controller/Engine/Engine.hpp"
 
-#include <iomanip>
 #include <iostream>
 #include <stdexcept>
-#include <string>
 
-#include "BaseState.hpp"
-#include "GameStack.hpp"
-
-#include "Controller/InputManager.hpp"
-#include "Controller/GUIManager.hpp"
-#include "Controller/ResourceManager.hpp"
-
-
+#include "Controller/PhysicsFacade/React/ReactShapes.hpp"
 
 // Game States
 #include "Game/Prototype/PrototypeScene.hpp"
@@ -21,14 +12,11 @@ using BlueEngine::Engine;
 using std::runtime_error;
 using std::string;
 
-/**
- * @brief The game engine main loop
- */
 auto Engine::run() -> void {
     auto &engine = Engine::get();
 
-    auto *prototype = new PrototypeScene();
-    engine.gameStack.AddToStack(prototype);
+    ResourceManager::getInstance().loadResources();
+    engine.gameStack.AddToStack(std::make_shared<PrototypeScene>());
 
     double t  = 0.0;
     double dt = 0.01;
@@ -39,11 +27,14 @@ auto Engine::run() -> void {
     // State previous;
     // State current;
     // State state;
-    glfwFocusWindow(engine.window);
-    ResourceManager::getInstance().loadResources();
+    // glfwFocusWindow(engine.window);
+    engine.renderer.Init();
+
+
     while (engine.getIsRunning()) {
         double newTime   = glfwGetTime();
         double frameTime = newTime - currentTime;
+
         if (frameTime > 0.25)
             frameTime = 0.25;
         currentTime = newTime;
@@ -58,49 +49,49 @@ auto Engine::run() -> void {
             t += dt;
             accumulator -= dt;
         }
-        const double alpha = accumulator / dt;
+
+        // const double alpha = accumulator / dt;
         // state = currentState * alpha + previousState * (1.0 - alpha);
 
         engine.gameStack.getTop()->display();
+        engine.renderer.Draw();
     }
     glfwDestroyWindow(engine.window);
 }
 
-GUIManager& BlueEngine::Engine::getGuiManager() {
+GUIManager &BlueEngine::Engine::getGuiManager() {
     return guiManager;
 }
 
-/**
- * @brief Game engine default constructor, sets up all variables and settings required for operation
- */
-Engine::Engine() {
+Engine::Engine(){
     getBasePath();
     if (!glfwInit()) {
         std::cerr << "GLFW FAILED TO INIT \n";
     }
     gleqInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
     glfwWindowHint(GLFW_FOCUS_ON_SHOW, GLFW_TRUE);
-    
 
 #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,
-                   GL_TRUE); // uncomment this statement to fix compilation on OS X
+                   GL_TRUE);
 #endif
 
     // glfw window creation
     // --------------------
-    window = glfwCreateWindow(800, 600, "Project Blue", nullptr, nullptr);
+    const GLFWvidmode * mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    window = glfwCreateWindow(mode->width, mode->height, "Project Blue", glfwGetPrimaryMonitor(), nullptr);
     if (window == nullptr) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
     }
+
     gleqTrackWindow(window);
     glfwMakeContextCurrent(window);
-    
+
     // tell GLFW to capture our mouse
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -112,21 +103,12 @@ Engine::Engine() {
 
     this->guiManager.initialiseImGUI(window);
 
-
 }
 
-/**
- * @brief Engine default destructor
- * Safely closes Engine and frees memory
- */
 Engine::~Engine() {
     glfwTerminate();
 }
 
-/**
- * @brief Returns the current instance of the engine
- * @return The current engine instance
- */
 auto Engine::get() -> Engine & {
     static auto instance = Engine{};
 
@@ -135,9 +117,8 @@ auto Engine::get() -> Engine & {
 
 auto Engine::processInput() -> void {
     GLEQevent event;
-    auto handledMouse = true;
+    auto handledMouse  = true;
     auto &inputManager = Controller::Input::InputManager::getInstance();
-
 
     while (gleqNextEvent(&event)) {
         if (event.type == GLEQ_KEY_PRESSED || event.type == GLEQ_KEY_RELEASED) {
@@ -151,7 +132,7 @@ auto Engine::processInput() -> void {
                         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
                     } else {
                         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-                    }                     
+                    }
                 }
             } break;
             case GLEQ_WINDOW_CLOSED: {
@@ -170,11 +151,7 @@ auto Engine::processInput() -> void {
 
 bool BlueEngine::Engine::getMouseMode() {
     auto mouseMode = glfwGetInputMode(window, GLFW_CURSOR);
-    if (mouseMode == GLFW_CURSOR_NORMAL) {
-        return true;
-    } else {
-        return false;
-    }
+    return mouseMode == GLFW_CURSOR_NORMAL;
 }
 
 void BlueEngine::Engine::setMouseMode(bool mode) {
@@ -189,14 +166,13 @@ auto Engine::getIsRunning() const -> bool {
     return this->isRunning;
 }
 
-auto Engine::endEngine() -> void {    
+auto Engine::endEngine() -> void {
     isRunning = false;
-
 }
 
 auto Engine::getBasePath() -> void {
-    //char *base_path = SDL_GetBasePath();
-    //basepath        = std::string(base_path);
-    //SDL_free(base_path);
+    // char *base_path = SDL_GetBasePath();
+    // basepath        = std::string(base_path);
+    // SDL_free(base_path);
     basepath = "./";
 }

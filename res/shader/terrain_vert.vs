@@ -1,4 +1,4 @@
-#version 430 core
+#version 410 core
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec2 aTexCoord;
 layout (location = 2) in vec3 normals;
@@ -17,6 +17,6 @@ void main()
 	FragPos = vec3(model * vec4(aPos, 1.0));
 	gl_Position = projection * view * model * vec4(aPos, 1.0f);
 	Normals = mat3(transpose(inverse(model))) * normals;  
-	HeightPoint = projection * model * vec4(aPos, 1.0f);
+	HeightPoint = vec4(aPos, 1.0f);
 	TexCoord = vec2(aTexCoord.x, aTexCoord.y);	
 }

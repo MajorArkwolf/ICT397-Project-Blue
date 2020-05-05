@@ -1,14 +1,18 @@
 #pragma once
 
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
-
+#include <imgui.h>
 #include <map>
 #include <string>
-
-#include <imgui.h>
-#include <examples/imgui_impl_opengl3.h>
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
 #include <examples/imgui_impl_glfw.h>
+#include <examples/imgui_impl_opengl3.h>
+
+#include "View/EulerCamera.hpp"
+
+namespace Controller {
+    class TerrainManager;
+}
 
 class GUIManager {
   public:
@@ -25,7 +29,6 @@ class GUIManager {
     /**
      * @brief Initialises ImGUI stuff
      * @param window The SDL window to draw the gui in
-     * @param context The SDL context to draw the window in
      */
     void initialiseImGUI(GLFWwindow *window);
 
@@ -45,25 +48,53 @@ class GUIManager {
     void displayInstructionMenu();
 
     /**
+     * @brief Displays the quit screen
+     */
+    void displayQuitScreen();
+
+    /**
+     * @brief Displays the dev screen
+     */
+    void displayDevScreen(View::Camera &camera);
+
+    /**
+     * @brief Displays the texture manager
+     */
+    void displayTextureManager();
+
+    /**
+     * @brief Displays the terrain settings
+     */
+    void displayTerrainSettings();
+
+    /**
      * @brief Starts an Imgui Window frame, must be called at the beginning of a display loop
      */
-    void startWindowFrame();
+    static void startWindowFrame();
 
     /**
      * @brief Ends an Imgui window frame, must be called at the end of a display loop before swapping window
      */
-    void endWindowFrame();
+    static void endWindowFrame();
 
     /**
      * @brief Toggles a window given its name in the map
      */
     void toggleWindow(std::string windowName);
 
-  private:
+    /**
+     * @brief Sets the terrain manager to use by the terrain texture manager
+     * @param terrain the Terrain Manager to manage
+     */
+    void setTerrainManager(Controller::TerrainManager *terrain);
 
+  private:
     /// A mapping of a window name to a location in the window open array
     std::map<std::string, bool> windowOpenMap;
 
     /// Initialises the window open map
     void initialiseWindowOpenMap();
+
+    /// Pointer to the current terrain manager
+    Controller::TerrainManager *terrainManager;
 };

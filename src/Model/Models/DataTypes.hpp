@@ -11,7 +11,7 @@ struct Vertex {
     glm::vec2 TexCoords;
 };
 
-struct Texture {
+struct TextureB {
     std::string type;
     std::string path;
     unsigned int id = 0;

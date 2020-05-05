@@ -1,11 +1,7 @@
 #include "TerrainModel.hpp"
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-Model::TerrainModel::TerrainModel() {
-}
+#include <functional>
+#include <Controller/Factory/GameAssetFactory.hpp>
+#include <utility>
 
 Model::TerrainModel::~TerrainModel() {
     glDeleteVertexArrays(1, &VAO);
@@ -13,44 +9,28 @@ Model::TerrainModel::~TerrainModel() {
     glDeleteBuffers(1, &EBO);
 }
 
-void Model::TerrainModel::SetupModel() {
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, verticies.size() * sizeof(Blue::Vertex), &verticies[0],
-                 GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicies.size() * sizeof(unsigned int), &indicies[0], GL_STATIC_DRAW);
-
-    // Vertex Positions
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Blue::Vertex), (void *)0);
-
-    // TexCords
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Blue::Vertex),
-                          (void *)offsetof(Blue::Vertex, texCoords));
-
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Blue::Vertex),
-                          (void *)offsetof(Blue::Vertex, normals));
-    glBindVertexArray(0);
+void Model::TerrainModel::SetupModel(const std::vector<Blue::Vertex>& vertices, const std::vector<unsigned int>& indices) {
+    BlueEngine::Engine::get().renderer.SetupTerrainModel(VAO, VBO, EBO, vertices, indices);
+    this->EBO_Size = static_cast<unsigned int>(indices.size());
 }
 
 void Model::TerrainModel::LoadShader(std::shared_ptr<Shader> newTerrain) {
-    this->terrainShader = newTerrain;
+    this->terrainShader = std::move(newTerrain);
 }
 
-void Model::TerrainModel::setTextures(unsigned int tex1, unsigned int tex2, unsigned int tex3, unsigned int tex4) {
-    this->textureID = tex1;
-    this->textureID2 = tex2;
-    this->textureID3 = tex3;
-    this->textureID4 = tex4;
+void Model::TerrainModel::setHeightOffsets(float newSnowHeight, float newDirtHeight, float newGrassHeight, float newSandHeight) {
+    this->snowHeight = newSnowHeight;
+    this->dirtHeight = newDirtHeight;
+    this->grassHeight = newGrassHeight;
+    this->sandHeight = newSandHeight;
+}
+
+void Model::TerrainModel::setTextures(unsigned int& snowTex, unsigned int& grassTex, unsigned int& dirtTex, unsigned int& sandTex) {
+    textures.resize(4);
+    textures.at(0) = snowTex;
+    textures.at(1) = grassTex;
+    textures.at(2) = dirtTex;
+    textures.at(3) = sandTex;
 
     terrainShader->use();
     terrainShader->setInt("texture1", 0);
@@ -59,25 +39,32 @@ void Model::TerrainModel::setTextures(unsigned int tex1, unsigned int tex2, unsi
     terrainShader->setInt("texture4", 3);
 }
 
-void Model::TerrainModel::Draw(glm::mat4 projection, glm::mat4 view, const glm::dvec3& cameraPos) {
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, textureID);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, textureID2);
-    glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, textureID3);
-    glActiveTexture(GL_TEXTURE3);
-    glBindTexture(GL_TEXTURE_2D, textureID4);
+void Model::TerrainModel::Draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos) {
     terrainShader->use();
     terrainShader->setMat4("projection", projection);
     terrainShader->setMat4("view", view);
     terrainShader->setMat4("model", glm::translate(model, position));   
     terrainShader->setVec3("lightColor", 1.0f, 1.0f, 1.0f);
-    terrainShader->setVec3("lightPos", 1.0f, 200.0f, 1.0f);
+    terrainShader->setVec3("lightPos", 1.0f, 400.0f, 1.0f);
     terrainShader->setVec3("viewPos", cameraPos);
-    glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, indicie_size, GL_UNSIGNED_INT, nullptr);
-    glBindVertexArray(0);
-    glActiveTexture(GL_TEXTURE0);
-    water.Draw(projection, view, cameraPos);
+    terrainShader->setFloat("tm_snowHeight", snowHeight);
+    terrainShader->setFloat("tm_dirtHeight", dirtHeight);
+    terrainShader->setFloat("tm_grassHeight", grassHeight);
+    terrainShader->setFloat("tm_sandHeight", sandHeight);
+    BlueEngine::Engine::get().renderer.DrawTerrain(VAO, textures, EBO_Size);
+}
+
+void Model::TerrainModel::AddToDraw() {
+    auto &renderer = BlueEngine::Engine::get().renderer;
+    auto chunkSize = Controller::Factory::get().terrain.GetChunkSize();
+    std::function<void(const glm::mat4 &projection, const glm::mat4 &view, const glm::dvec3 &cameraPos)> e = [&](const glm::mat4 &projection, const glm::mat4 &view, const glm::dvec3 &cameraPos) {
+        this->Draw(projection, view, cameraPos);
+    };
+    View::Data::DrawItem di = {};
+    di.drawPointer = e;
+    di.pos = position;
+    di.pos.x += chunkSize / 2.0f;
+    di.pos.z += chunkSize / 2.0f;
+    renderer.AddToQue(di);
+    water.AddToDraw();
 }
