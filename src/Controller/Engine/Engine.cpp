@@ -83,7 +83,7 @@ Engine::Engine(){
     // glfw window creation
     // --------------------
     const GLFWvidmode * mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-    window = glfwCreateWindow(mode->width, mode->height, "Project Blue", glfwGetPrimaryMonitor(), nullptr);
+    window = glfwCreateWindow(mode->width / 2, mode->height / 2, "Project Blue", nullptr, nullptr);
     if (window == nullptr) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();

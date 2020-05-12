@@ -4,11 +4,6 @@
 #include <vector>
 
 #include "Controller/InputManager.hpp"
-#include "Controller/Physics/BeAbstractPhysicsFactory.hpp"
-#include "Controller/Physics/BeAbstractPhysicsLibrary.hpp"
-#include "Controller/Physics/BeConfig.hpp"
-#include "Controller/Physics/BeDynamicWorld.hpp"
-#include "Controller/Physics/BeMaterial.hpp"
 #include "Controller/TerrainManager.hpp"
 #include "Model/BaseState.hpp"
 #include "View/EulerCamera.hpp"
