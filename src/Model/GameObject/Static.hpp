@@ -19,7 +19,10 @@ public:
 		 */
 	GameObj_Static(BlueEngine::ID model_in, BlueEngine::ID physBody_in);
 
-		//! GameObj_Static destructor
+		/*!
+		 * @brief GameObj_Static destructor.
+		 * @note Currently stubbed out, does not extend destructor behaviour for this GameObject.
+		 */
 	~GameObj_Static();
 
 		/*!
