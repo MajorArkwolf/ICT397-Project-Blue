@@ -35,6 +35,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     Model/GameObject/detail/NPC.cpp
     Model/GameObject/detail/Manager.cpp
     Model/GameObject/detail/LuaHelper.cpp
+    Model/GameState.cpp
 
     # View
     View/Renderer/Shader.cpp
