@@ -5,6 +5,7 @@
 
 	/// Internal Dependencies
 #include "Controller/Engine/IDTracker.hpp"
+#include "View/Renderer/Shader.hpp"
 
 	//! The parent class for all child GameObjects.
 class GameObj_Base
@@ -41,9 +42,10 @@ public:
 		 * @param [in] projection The rendering projection for rendering.
 		 * @param [in] view The rendering view for rendering.
 		 * @param [in] cameraPos The position of the camera for rendering.
+		 * @param [in] program The shader program to use for rendering.
 		 * @warning Must be implemented by inheritors!
 		 */
-	virtual void draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos) = 0;
+	virtual void draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos, Shader& program) = 0;
 
 		/*!
 		 * @brief Stores the identifier for the GameObject's physics body.
