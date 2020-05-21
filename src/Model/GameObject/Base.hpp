@@ -1,123 +1,66 @@
 #pragma once
 
-	/// System Dependencies
-#include <string>
-
 	/// External Dependencies
-#include <glm/glm.hpp>
+#include "glm/glm.hpp"
 
 	/// Internal Dependencies
 #include "Controller/Engine/IDTracker.hpp"
-
-	/*!
-	 * @brief Declaration of the type for identifying different GameObject classes.
-	 * @warning 0 is reserved for invalid identifiers and error reporting.
-	 */
-using GameObjType = unsigned int;
 
 	//! The parent class for all child GameObjects.
 class GameObj_Base
 {
 public:
-		//! Initialises class attributes to their defaults.
-	GameObj_Base();
-
 		/*!
 		 * @brief Initialises class attributes to custom values.
-		 * @param [in] path The path to a target external model file for this GameObject.
-		 * @param [in] physBody The identifier for the physical body for this GameObject.
-		 * @param [in] position The position of the GameObject in the 3D environment.
-		 * @param [in] rotation The GameObject's rotation, in degrees, for the pitch, yaw, and roll.
-		 * @param [in] scale The scale of the GameObject for its x, y, and z co-ordinates.
+		 * @param [in] model_in The identifier for a model loaded into the engine.
+		 * @param [in] physbody_in The identifier for a physics body loaded into the engine.
 		 */
-	GameObj_Base(std::string path, unsigned long int physBody, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
+	GameObj_Base(BlueEngine::ID model_in, BlueEngine::ID physBody_in);
 
-		//! Virtual destructor.
+		/*!
+		 * @brief Virtual destructor.
+		 * @warning Must be implemented by inheritors!
+		 */
 	virtual ~GameObj_Base() = 0;
 
 		/*!
 		 * @brief Returns a copy of this GameObject's unique identifier.
-		 * @return An identifier value.
+		 * @return A copy of GameObj_Base::uniqueID.
 		 */
-	BlueEngine::ID gameObj_getUniqueID();
+	BlueEngine::ID id();
 
 		/*!
 		 * @brief Identifies the GameObject's type.
-		 * @return Always returns GAMEOBJ_INVALID for GameObj_Base.
+		 * @return Always returns GameObj_Type::Invalid for GameObj_Base.
 		 * @warning Must be implemented by inheritors!
 		 */
-	virtual GameObjType gameObj_getTypeID() const = 0;
+	virtual BlueEngine::ID type() const = 0;
 
 		/*!
-		 * @brief Adds the GameObject to the draw queue.
-		 * @warning Behaviour must be implemented by inheritors!
+		 * @brief Renders the GameObject within the engine.
+		 * @param [in] projection The rendering projection for rendering.
+		 * @param [in] view The rendering view for rendering.
+		 * @param [in] cameraPos The position of the camera for rendering.
+		 * @warning Must be implemented by inheritors!
 		 */
-	virtual void gameObj_addToDraw() = 0;
-
-		/*!
-		 * @brief Tracks and calls for the loading of an external model file.
-		 * @param [in] path The path to a target external model file for this GameObject.
-		 * @see gameObj_modelId
-		 * @see gameObj_modelPath
-		 */
-	void gameObj_setModel(std::string path);
-
-		/*!
-		 * @brief Returns the model for this GameObject.
-		 * @return The ID of the tracked model.
-		 * @see gameObj_modelId
-		 */
-	std::size_t gameObj_getModelID();
-
-		/*!
-		 * @brief Returns the model for this GameObject.
-		 * @return The ID of the tracked model.
-		 * @see gameObj_modelPath
-		 */
-	std::string gameObj_getModelPath();
-
-	void setPos(glm::vec3 &pos);
-
-		/*!
-		 * @brief Stores the current position of the GameObject in a 3D space.
-		 * @note Default value of { 0.0f, 0.0f, 0.0f }.
-		 */
-	glm::vec3 gameObj_pos;
-
-		/*!
-		 * @brief The GameObject's rotation, in degrees, for the pitch, yaw, and roll.
-		 * @note Default value of { 0.0f, 0.0f, 0.0f }.
-		 */
-	glm::vec3 gameObj_rotation;
-
-		/*!
-		 * @brief Stores the scale of the GameObject in all 3 coordinates.
-		 * @brief Default value of { 0.0f, 0.0f, 0.0f }.
-		 */
-	glm::vec3 gameObj_scale;
+	virtual void draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos) = 0;
 
 		/*!
 		 * @brief Stores the identifier for the GameObject's physics body.
-		 * @note Default value of 0ul.
+		 * @note A value of 0 indicates the GameObject has no physics body.
 		 */
-	long unsigned int gameObj_physBody;
-
-protected:
-		/*!
-		 * @brief Stores the identifier of the model for the GameObject.
-		 * @note Defaults to the lowest possible value for the ID type.
-		 */
-	std::size_t gameObj_modelId;
+	BlueEngine::ID physBody;
 
 		/*!
-		 * @brief Stores the external path to the model on the disk for the GameObject.
-		 * @note Defaults to "".
+		 * @brief Stores the identifier for the GameObject's model.
+		 * @note A value of 0 indicates the GameObject has no model.
 		 */
-	std::string gameObj_modelPath;
+	BlueEngine::ID model;
 
+private:
 		/*!
-		 * @brief Stores the unique Identifier for the GameObject.
+		 * @brief Stores the GameObject's unique identifier.
 		 * @note Defaults to BlueEngine::IDTracker.getID().
 		 */
-	BlueEngine::ID gameObj_uniqueId;
+	BlueEngine::ID uniqueID;
 };
