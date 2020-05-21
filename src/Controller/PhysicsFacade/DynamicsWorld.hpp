@@ -36,7 +36,7 @@ namespace Physics {
          * @param rotation The starting rotation of the rigid body
          * @return The ID of the created rigid body
          */
-        virtual RigidBodyID CreateRigidBody(glm::vec3 position, glm::quat rotation) = 0;
+        virtual void CreateRigidBody(glm::vec3 position, glm::quat rotation, size_t gameObjectID) = 0;
 
         /**
          * @brief Returns a rigid body with the id given

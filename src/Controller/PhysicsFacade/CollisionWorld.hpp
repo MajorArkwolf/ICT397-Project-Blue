@@ -29,7 +29,7 @@ namespace Physics {
          * @param rotation The starting rotation of the rigid body
          * @return The ID of the created rigid body
          */
-        virtual CollisionBodyID CreateCollisionBody(glm::vec3 position, glm::quat rotation) = 0;
+        virtual void CreateCollisionBody(glm::vec3 position, glm::quat rotation, size_t gameObjectID) = 0;
 
         /**
          * @brief Returns a rigid body with the id given
@@ -38,9 +38,7 @@ namespace Physics {
          */
         virtual CollisionBody *GetCollisionBody(CollisionBodyID id) = 0;
 
-        virtual bool TestCollision(CollisionBodyID first, CollisionBodyID second)   = 0;
         virtual bool TestOverlap(CollisionBodyID first, CollisionBodyID seconds)    = 0;
         virtual bool TestAABBOverlap(CollisionBodyID first, CollisionBodyID second) = 0;
-        virtual bool TestPointInside(glm::dvec3 point, CollisionBodyID bodyID)      = 0;
     };
 }

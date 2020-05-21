@@ -18,7 +18,9 @@ namespace Physics {
         void Destroy() override;
         void AddCollisionShape(ReactCollisionShape shape, glm::vec3 position, glm::quat orientation);
 
+
       private:
+        friend class ReactCollisionWorld;
         rp3d::CollisionBody *collisionBody = nullptr;
     };
 }

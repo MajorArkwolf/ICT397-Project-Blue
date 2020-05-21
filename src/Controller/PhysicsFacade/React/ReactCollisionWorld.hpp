@@ -7,14 +7,16 @@
 namespace Physics {
     class ReactCollisionWorld : public CollisionWorld {
       public:
-        ReactCollisionWorld(glm::vec3 gravity);
+        ReactCollisionWorld();
         ~ReactCollisionWorld();
         void InitialiseWorld() override;
-        CollisionBodyID CreateCollisionBody(glm::vec3 position, glm::quat) override;
-        CollisionBody* GetCollisionBody(CollisionBodyID bodyID) override;
+        void CreateCollisionBody(glm::vec3 position, glm::quat orientation, size_t gameObjectID) override;
+        CollisionBody *GetCollisionBody(CollisionBodyID bodyID) override;
+        bool TestOverlap(CollisionBodyID first, CollisionBodyID seconds) override;
+        bool TestAABBOverlap(CollisionBodyID first, CollisionBodyID second) override;
 
       private:
-        std::map<size_t, ReactCollisionBody> rigidBodies;
+        std::map<size_t, ReactCollisionBody> collisionBodies;
         rp3d::CollisionWorld collisionWorld;
     };
 }

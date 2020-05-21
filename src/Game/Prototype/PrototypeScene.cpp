@@ -24,7 +24,7 @@ PrototypeScene::~PrototypeScene() {}
 auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
     double scalar = 100.0;
     auto &engine  = BlueEngine::Engine::get();
-    auto sphere   = dynWorld.GetRigidBody(1);
+    auto sphere   = dynWorld.GetRigidBody(0);
 
     terrain.Update(camera.getLocation());
     dynWorld.Update(dt);
@@ -80,7 +80,8 @@ void PrototypeScene::Init() {
     luaL_dofile(LuaManager::getInstance().getLuaState(), "res/scripts/gameobjsSet.lua");
 
     auto sphereID     = shapes.createSphere(1);
-    auto sphereBodyID = dynWorld.CreateRigidBody(glm::vec3{20, 170, 20}, glm::quat(1, 0, 0, 0));
+    size_t sphereBodyID = 0;
+    dynWorld.CreateRigidBody(glm::vec3{20, 170, 20}, glm::quat(1, 0, 0, 0), sphereBodyID);
     auto *reactBodySphere =
         dynamic_cast<Physics::ReactRigidBody *>(dynWorld.GetRigidBody(sphereBodyID));
     reactBodySphere->AddCollisionShape(shapes.GetShape(sphereID), glm::vec3{0, 0, 0},
@@ -93,7 +94,8 @@ void PrototypeScene::Init() {
     auto terrainID =
         shapes.createHeightfield(heightMap.width, heightMap.height, heightMap.heightRange.min,
                                  heightMap.heightRange.max, heightMap.terrain);
-    auto heightbodyID = dynWorld.CreateRigidBody(heightMap.position, heightMap.rotation);
+    size_t heightbodyID = 1;
+    dynWorld.CreateRigidBody(heightMap.position, heightMap.rotation, heightbodyID );
     auto *reactBodyheights =
         dynamic_cast<Physics::ReactRigidBody *>(dynWorld.GetRigidBody(heightbodyID));
     reactBodyheights->AddCollisionShape(shapes.GetShape(terrainID), glm::vec3{0, 0, 0},
@@ -105,8 +107,9 @@ void PrototypeScene::Init() {
 
     std::function<void(std::shared_ptr<GameObj_Base>)> PhysicsOp =
         [&](std::shared_ptr<GameObj_Base> object) -> void {
-        auto gameObjBodyID =
-            dynWorld.CreateRigidBody(object->gameObj_pos, glm::quat(object->gameObj_rotation));
+        static size_t  gameObjBodyID = 2;
+        
+            dynWorld.CreateRigidBody(object->gameObj_pos, glm::quat(object->gameObj_rotation), ++gameObjBodyID);
         auto *reactBody =
             dynamic_cast<Physics::ReactRigidBody *>(dynWorld.GetRigidBody(gameObjBodyID));
         if (object->gameObj_getTypeID() == 1u) {
@@ -124,7 +127,7 @@ void PrototypeScene::Init() {
             reactBody->SetBodyType(3);
         }
 
-        object->gameObj_physBody = static_cast<unsigned long long>(gameObjBodyID);
+        object->gameObj_physBody = static_cast<unsigned long>(gameObjBodyID);
     };
     GameObj_Manager::process_all(PhysicsOp);
     engine.getGuiManager().setTerrainManager(&terrain);
