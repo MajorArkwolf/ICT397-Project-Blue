@@ -27,3 +27,5 @@ BlueEngine::ID GameObj_Base::type() const {
 	// The Base GameObject will always return an indicator that its type is not valid.
 	return BlueEngine::ID(GameObj_Type::Invalid);
 }
+
+Shader GameObj_Base::program = Shader("res/shader/vertshader.vs", "res/shader/fragshader.fs");

@@ -42,10 +42,9 @@ public:
 		 * @param [in] projection The rendering projection for rendering.
 		 * @param [in] view The rendering view for rendering.
 		 * @param [in] cameraPos The position of the camera for rendering.
-		 * @param [in] program The shader program to use for rendering.
 		 * @warning Must be implemented by inheritors!
 		 */
-	virtual void draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos, Shader& program) = 0;
+	virtual void draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos) = 0;
 
 		/*!
 		 * @brief Stores the identifier for the GameObject's physics body.
@@ -58,6 +57,13 @@ public:
 		 * @note A value of 0 indicates the GameObject has no model.
 		 */
 	BlueEngine::ID model;
+
+protected:
+		/*!
+		 * @brief Manages the shader program to be used for all GameObject rendering.
+		 * @note This is shared across all child GameObjects.
+		 */
+	static Shader program;
 
 private:
 		/*!
