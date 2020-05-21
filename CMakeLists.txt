@@ -45,7 +45,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG    ${PROJECT_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE  ${PROJECT_BINARY_DIR}/lib)
 
 # Define the executable.
-add_executable(${PROJECT_NAME} src/Model/GameState.cpp src/Model/GameState.hpp)
+add_executable(${PROJECT_NAME})
 
 # Set C++ standard.
 set_target_properties(${PROJECT_NAME} PROPERTIES
