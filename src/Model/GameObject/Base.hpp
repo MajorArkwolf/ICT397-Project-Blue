@@ -7,9 +7,11 @@
 #include "Controller/Engine/IDTracker.hpp"
 #include "View/Renderer/Shader.hpp"
 
-	//! The parent class for all child GameObjects.
-class GameObj_Base
-{
+	/*!
+	 * @brief The parent class for all child GameObjects.
+	 * @note Acts as the base polymorphic structure for use with all derived GameObjects.
+	 */
+class GameObj_Base {
 public:
 		/*!
 		 * @brief Initialises class attributes to custom values.
