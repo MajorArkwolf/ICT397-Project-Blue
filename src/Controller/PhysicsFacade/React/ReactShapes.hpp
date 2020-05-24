@@ -8,19 +8,19 @@
 namespace Physics {
     class ReactShapes : ShapeFactory{
       public:
-        ReactShapes(){};
+        ReactShapes() = default;;
         ~ReactShapes();
-        size_t createSphere(float radius);
-        size_t createBox(glm::vec3 halfExtents);
-        size_t createCapsule(float radius, float height);
+        size_t createSphere(float radius) override;
+        size_t createBox(glm::vec3 halfExtents) override;
+        size_t createCapsule(float radius, float height) override;
         size_t createHeightfield(int columns, int rows, float minHeight, float maxHeight,
-                                  float *terrainData);
+                                  float *terrainData) override;
         ReactCollisionShape& GetShape(size_t id);
 
       private:
 
         std::map<size_t, ReactCollisionShape> shapeMap;
-        size_t generateID();
+        size_t GenerateId();
 
 
         

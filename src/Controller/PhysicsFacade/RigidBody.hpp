@@ -61,6 +61,8 @@ namespace Physics {
          * @param point The point to apply the force
          */
         virtual void ApplyForce(glm::vec3 force, glm::vec3 point)                         = 0;
+
+        virtual void SetAngularDamping(double damping)                                        = 0;
         /**
          * @brief Destroys the rigid body when no longer needed
          */

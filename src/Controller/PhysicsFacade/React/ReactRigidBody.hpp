@@ -25,6 +25,7 @@ namespace Physics {
                                float mass);
         void SetBodyType(int type);
         void SetMass(float mass);
+        void SetAngularDamping(double damping) override;
 
       private:
         rp3d::RigidBody *rigidBody = nullptr;
