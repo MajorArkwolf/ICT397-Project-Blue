@@ -15,8 +15,8 @@ GameObj_Static::~GameObj_Static() {
 }
 
 BlueEngine::ID GameObj_Static::type() const {
-	// The Base GameObject will always return an indicator that its type is not valid.
-	return BlueEngine::ID(GameObj_Type::Invalid);
+	// Return the GameObject's type
+	return BlueEngine::ID(GameObj_Type::Static);
 }
 
 void GameObj_Static::draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos[[maybe_unused]]) {

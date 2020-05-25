@@ -11,7 +11,7 @@
 	 * @brief A sub-parent class for inteligent and controlled actor GameObjects.
 	 * @note This is only a polymorphic base, and can not be instantiated on its own.
 	 */
-class GameObj_Character : public GameObj_Base {
+class GameObj_Character : virtual public GameObj_Base {
 public:
 		/*!
 		 * @brief Identifies the GameObject's type.

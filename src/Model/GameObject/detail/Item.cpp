@@ -7,16 +7,16 @@
 
 GameObj_Item::GameObj_Item(BlueEngine::ID model_in, BlueEngine::ID physBody_in)
 	: GameObj_Base(model_in, physBody_in) {
-	// GameObj_Static has no unique construction procedure yet.
+	// GameObj_Item has no unique construction procedure yet.
 }
 
 GameObj_Item::~GameObj_Item() {
-	// GameObj_Static has no unique destruction procedure yet.
+	// GameObj_Item has no unique destruction procedure yet.
 }
 
 BlueEngine::ID GameObj_Item::type() const {
-	// The Base GameObject will always return an indicator that its type is not valid.
-	return BlueEngine::ID(GameObj_Type::Invalid);
+	// Return the GameObject's type
+	return BlueEngine::ID(GameObj_Type::Item);
 }
 
 void GameObj_Item::draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos [[maybe_unused]] ) {

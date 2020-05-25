@@ -5,7 +5,7 @@
 #include "../Types.hpp"
 
 BlueEngine::ID GameObj_Character::type() const {
-	// The Base GameObject will always return an indicator that its type is not valid.
+	// The Character GameObject will always return an indicator that its type is not valid.
 	return BlueEngine::ID(GameObj_Type::Invalid);
 }
 
