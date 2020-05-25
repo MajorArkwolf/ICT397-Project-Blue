@@ -31,10 +31,11 @@ target_sources(${PROJECT_NAME} PRIVATE
 
     Model/GameObject/detail/Base.cpp
     Model/GameObject/detail/Static.cpp
+    Model/GameObject/detail/Item.cpp
     Model/GameObject/detail/Player.cpp
     Model/GameObject/detail/NPC.cpp
     Model/GameObject/detail/Manager.cpp
-    Model/GameObject/detail/LuaHelper.cpp
+
     Model/GameState.cpp
 
     # View
