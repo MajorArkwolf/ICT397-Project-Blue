@@ -8,7 +8,7 @@
 
 	/*!
 	 * @brief A non-moving Gameobject.
-	 * @note Used for populating a scene with furnishings.
+	 * @note Used for populating a scene with non-interactive furnishings.
 	 */
 class GameObj_Static : public GameObj_Base {
 public:
