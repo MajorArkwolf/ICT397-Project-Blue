@@ -29,9 +29,11 @@ target_sources(${PROJECT_NAME} PRIVATE
     Model/WaterModel.cpp
     Model/TextManager.cpp
 
+        # Game Objects
     Model/GameObject/detail/Base.cpp
     Model/GameObject/detail/Static.cpp
     Model/GameObject/detail/Item.cpp
+    Model/GameObject/detail/Character.cpp
     Model/GameObject/detail/Player.cpp
     Model/GameObject/detail/NPC.cpp
     Model/GameObject/detail/Manager.cpp

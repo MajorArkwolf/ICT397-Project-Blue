@@ -20,7 +20,7 @@ public:
 		 * @note If the status key does not exist, it will be created.
 		 * @note If the status key does exist, its assigned value will be overwritten.
 		 */
-	void status_assign();
+	void status_assign(std::string key, float value);
 
 		/*!
 		 * @brief Checks if the character has a specific status.
