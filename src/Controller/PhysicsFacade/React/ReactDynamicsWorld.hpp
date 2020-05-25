@@ -11,7 +11,7 @@ namespace Physics {
         ~ReactDynamicsWorld();
         void InitialiseWorld(glm::vec3 gravity) override;
         void Update(double deltaTime) override;
-        RigidBodyID CreateRigidBody(glm::vec3 position, glm::quat) override;
+        void CreateRigidBody(glm::vec3 position, glm::quat orientation, size_t gameObjectID) override;
         RigidBody* GetRigidBody(RigidBodyID bodyID) override;
 
       private:
