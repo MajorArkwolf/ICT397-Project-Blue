@@ -22,6 +22,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     Controller/PhysicsFacade/React/ReactCollisionShape.cpp
     Controller/PhysicsFacade/React/ReactCollisionBody.cpp
     Controller/PhysicsFacade/React/ReactCollisionWorld.cpp
+    Controller/PhysicsManager.cpp
     
     # Model
     Model/Models/Mesh.cpp
