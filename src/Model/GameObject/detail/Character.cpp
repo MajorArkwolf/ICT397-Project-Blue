@@ -1,6 +1,14 @@
 	/// Declaration Include
 #include "../Character.hpp"
 
+	/// Internal Dependencies
+#include "../Types.hpp"
+
+BlueEngine::ID GameObj_Character::type() const {
+	// The Base GameObject will always return an indicator that its type is not valid.
+	return BlueEngine::ID(GameObj_Type::Invalid);
+}
+
 void GameObj_Character::status_assign(std::string key, float value) {
 	// Perform the operation on the map
 	statuses[key] = value;

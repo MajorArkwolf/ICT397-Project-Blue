@@ -14,6 +14,13 @@
 class GameObj_Character : public GameObj_Base {
 public:
 		/*!
+		 * @brief Identifies the GameObject's type.
+		 * @return Always returns GameObj_Type::Invalid for GameObj_Character.
+		 * @warning Must be implemented by inheritors!
+		 */
+	BlueEngine::ID type() const = 0;
+
+		/*!
 		 * @brief Assigns a status (with a value) to the character.
 		 * @param [in] key The string to identify the status by.
 		 * @param [in] value The value to assign to the status.
