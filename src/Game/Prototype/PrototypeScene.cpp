@@ -47,18 +47,8 @@ auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
          camera.ProcessKeyboard(Camera_Movement::RIGHT, dt);
     }
 
-    //std::function updateObjects = [&](std::shared_ptr<GameObj_Base> object) {
-    //    if (object->gameObj_getTypeID() == 1u || object->gameObj_getTypeID() == 3u) {
-    //        auto id             = object->gameObj_physBody;
-    //        auto pos            = dynWorld.GetRigidBody(id)->GetPosition();
-    //        auto rot            = dynWorld.GetRigidBody(id)->GetOrientation();
-    //        object->gameObj_pos = pos;
-    //        // object->gameObj_rotation = glm::rotate(rot, object->gameObj_rotation);
-    //        // glm::rotate()
-    //    }
-    //};
-
-    //GameObj_Manager::process_all(updateObjects);
+    // Update the Dynamic Physics world
+    Physics::PhysicsManager::GetInstance().GetDynamicsWorld()->Update(dt);
 }
 
 void PrototypeScene::Init() {
