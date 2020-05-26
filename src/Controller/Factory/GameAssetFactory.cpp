@@ -30,7 +30,7 @@ std::shared_ptr<GameObj_Base> Controller::Factory::GameObject(BlueEngine::ID typ
 		{
 			// Create a new physics body for the GameObject, assigining default properties
 			auto phys_id = id_assigner.getID();
-			Physics::PhysicsManager::GetInstance().GetCollisionWorld()->CreateCollisionBody(glm::vec3(0.0f), glm::quat(), phys_id);
+			Physics::PhysicsManager::GetInstance().GetCollisionWorld()->CreateCollisionBody(glm::vec3(0.0f), glm::quat(1, 0, 0, 0), phys_id);
 
 			// Create a configured the GameObject
 			object = std::make_shared<GameObj_Static>(0u, phys_id);
@@ -41,7 +41,7 @@ std::shared_ptr<GameObj_Base> Controller::Factory::GameObject(BlueEngine::ID typ
 		{
 			// Create a new physics body for the GameObject, assigining default properties
 			auto phys_id = id_assigner.getID();
-			Physics::PhysicsManager::GetInstance().GetCollisionWorld()->CreateCollisionBody(glm::vec3(0.0f), glm::quat(), phys_id);
+			Physics::PhysicsManager::GetInstance().GetCollisionWorld()->CreateCollisionBody(glm::vec3(0.0f), glm::quat(1, 0, 0, 0), phys_id);
 
 			// Create a configured the GameObject
 			object = std::make_shared<GameObj_Item>(0u, phys_id);
@@ -52,7 +52,7 @@ std::shared_ptr<GameObj_Base> Controller::Factory::GameObject(BlueEngine::ID typ
 		{
 			// Create a new physics body for the GameObject, assigining default properties
 			auto phys_id = id_assigner.getID();
-			Physics::PhysicsManager::GetInstance().GetDynamicsWorld()->CreateRigidBody(glm::vec3(0.0f), glm::quat(), phys_id);
+			Physics::PhysicsManager::GetInstance().GetDynamicsWorld()->CreateRigidBody(glm::vec3(0.0f), glm::quat(1, 0, 0, 0), phys_id);
 
 			// Create a configured the GameObject
 			object = std::make_shared<GameObj_Player>(0u, phys_id);
@@ -63,7 +63,7 @@ std::shared_ptr<GameObj_Base> Controller::Factory::GameObject(BlueEngine::ID typ
 		{
 			// Create a new physics body for the GameObject, assigining default properties
 			auto phys_id = id_assigner.getID();
-			Physics::PhysicsManager::GetInstance().GetDynamicsWorld()->CreateRigidBody(glm::vec3(0.0f), glm::quat(), phys_id);
+			Physics::PhysicsManager::GetInstance().GetDynamicsWorld()->CreateRigidBody(glm::vec3(0.0f), glm::quat(1, 0, 0, 0), phys_id);
 
 			//TODO: Finish AI system and generate a FSM for the GameObject
 
