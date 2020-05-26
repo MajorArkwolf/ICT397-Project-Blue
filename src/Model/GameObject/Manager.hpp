@@ -6,7 +6,6 @@
 
 	/// Internal Dependencies
 #include "Base.hpp"
-#include "LuaHelper.hpp"
 #include <functional>
 
 	/*!
@@ -23,7 +22,7 @@ public:
 		 * @brief Registers the GameObject Manager and LuaHelper classes into the engine's Lua VM.
 		 * @note Only performs the initialisation once, even if called multiple times.
 		 */
-	static void init();
+	//static void init();
 
 		/*!
 		 * @brief Adds a new GameObject to be managed.
@@ -67,21 +66,7 @@ public:
 		 * @param [in] function A function to process all of the stored GameObjects in the Manager.
 		 * @see GameObj_ProcessFunc
 		 */
-    static void process_all(GameObj_ProcessFunc function);
-
-		/*!
-		 * @brief Calls upon the Factory Methods to generate a new GameObject of a specific type.
-		 * @param [in] type A GameObject Type Identifier to declare what form of GameObject to generate.
-		 * @return The unique identifier for the newly created GameObject, or 0u on error.
-		 */
-	static BlueEngine::ID lua_add(GameObjType type);
-
-		/*!
-		 * @brief Gathers a non-smart pointer, which is actually compatible with Lua.
-		 * @param [in] identifier A GameObject identifier.
-		 * @return A GameObject wrapped in a Lua Helper class.
-		 */
-	static GameObj_LuaHelper lua_get(BlueEngine::ID identifier);
+	static void process_all(GameObj_ProcessFunc function);
 
 private:
 		//! Stores a collection of unique GameObjects, mapped to their identifier.

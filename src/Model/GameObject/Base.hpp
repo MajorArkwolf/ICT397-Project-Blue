@@ -1,5 +1,8 @@
 #pragma once
 
+	/// System Dependencies
+#include <memory>
+
 	/// External Dependencies
 #include "glm/glm.hpp"
 
@@ -16,7 +19,7 @@ public:
 		/*!
 		 * @brief Initialises class attributes to custom values.
 		 * @param [in] model_in The identifier for a model loaded into the engine.
-		 * @param [in] physbody_in The identifier for a physics body loaded into the engine.
+		 * @param [in] physBody_in The identifier for a physics body loaded into the engine.
 		 */
 	GameObj_Base(BlueEngine::ID model_in, BlueEngine::ID physBody_in);
 
@@ -40,13 +43,10 @@ public:
 	virtual BlueEngine::ID type() const = 0;
 
 		/*!
-		 * @brief Renders the GameObject within the engine.
-		 * @param [in] projection The rendering projection for rendering.
-		 * @param [in] view The rendering view for rendering.
-		 * @param [in] cameraPos The position of the camera for rendering.
-		 * @warning Must be implemented by inheritors!
+		 * @brief Adds the GameObject to the draw queue.
+		 * @warning Behaviour must be implemented by inheritors!
 		 */
-	virtual void draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos) = 0;
+	virtual void addToDraw() = 0;
 
 		/*!
 		 * @brief Stores the identifier for the GameObject's physics body.
@@ -63,9 +63,9 @@ public:
 protected:
 		/*!
 		 * @brief Manages the shader program to be used for all GameObject rendering.
-		 * @note This is shared across all child GameObjects.
+		 * @note Shared across all types and instances of Game Objects.
 		 */
-	static Shader program;
+	std::shared_ptr<Shader> program;
 
 private:
 		/*!

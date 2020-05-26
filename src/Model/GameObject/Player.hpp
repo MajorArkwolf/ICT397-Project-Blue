@@ -28,6 +28,9 @@ public:
 		 */
 	BlueEngine::ID type() const;
 
+		//! Adds the GameObject to the draw queue.
+	void addToDraw();
+
 		/*!
 		 * @brief The draw call for a GameObj_Player.
 		 * @param [in] projection The rendering projection for rendering.

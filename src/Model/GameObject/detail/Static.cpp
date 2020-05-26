@@ -2,8 +2,9 @@
 #include "../Static.hpp"
 
 	/// Internal Dependencies
-#include "../Types.hpp"
 #include "Controller/Engine/Engine.hpp"
+#include "Controller/PhysicsManager.hpp"
+#include "../Types.hpp"
 
 GameObj_Static::GameObj_Static(BlueEngine::ID model_in, BlueEngine::ID physBody_in)
 	: GameObj_Base(model_in, physBody_in) {
@@ -19,22 +20,39 @@ BlueEngine::ID GameObj_Static::type() const {
 	return BlueEngine::ID(GameObj_Type::Static);
 }
 
+void GameObj_Static::addToDraw() {
+	// Create a function pointer of the GameObject's draw call for the DrawItem
+	std::function<void(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos)> e = [&](const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos) {
+		this->draw(projection, view, cameraPos);
+	};
+
+	// Here the DrawItem for the GameObject is generated and configured
+	View::Data::DrawItem drawItem = {};
+	drawItem.drawPointer = e;
+	drawItem.pos = Physics::PhysicsManager::GetInstance().GetCollisionWorld()->GetCollisionBody(physBody)->GetPosition();
+
+	// Finally the DrawItem is added to the renderer queue
+	auto& renderer = BlueEngine::Engine::get().renderer;
+	renderer.AddToQue(drawItem);
+}
+
 void GameObj_Static::draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos[[maybe_unused]]) {
+	// Attempt to gather the Game Object's physics body
+	auto phys_world = Physics::PhysicsManager::GetInstance().GetCollisionWorld();
+	auto phys_body = phys_world->GetCollisionBody(physBody);
+
 	// Generate and configure the GameObject's model matrix
 	glm::mat4 model_matrix = glm::mat4(1.0f);
-	model_matrix = glm::translate(model_matrix, gameObj_pos);
-	model_matrix = glm::rotate(model_matrix, glm::radians(gameObj_rotation[0]), glm::vec3(0.0f, 1.0f, 0.0f));
-	model_matrix = glm::rotate(model_matrix, glm::radians(gameObj_rotation[1]), glm::vec3(1.0f, 0.0f, 0.0f));
-	model_matrix = glm::rotate(model_matrix, glm::radians(gameObj_rotation[2]), glm::vec3(0.0f, 0.0f, 1.0f));
-	model_matrix = glm::scale(model_matrix, gameObj_scale);
+	model_matrix = glm::translate(model_matrix, phys_body->GetPosition());
+	model_matrix = model_matrix * glm::mat4_cast(phys_body->GetOrientation());
 
 	// Enable the shader and pass it the values for its uniforms
-	program.use();
-	program.setMat4("projection", projection);
-	program.setMat4("view", view);
-	program.setMat4("model", model_matrix);
+	program.get()->use();
+	program.get()->setMat4("projection", projection);
+	program.get()->setMat4("view", view);
+	program.get()->setMat4("model", model_matrix);
 
 	// Get the resource manager and call for it to draw the model
 	auto& res_manager = ResourceManager::getInstance();
-	res_manager.drawModel(model, &program);
+	res_manager.drawModel(model, program.get());
 }

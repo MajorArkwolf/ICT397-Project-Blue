@@ -4,6 +4,7 @@
 	/// Internal Dependencies
 #include "Controller/Engine/LuaManager.hpp"
 #include "Controller/Factory/GameAssetFactory.hpp"
+#include "Controller/PhysicsManager.hpp"
 
 void GameObj_Manager::insert(std::shared_ptr<GameObj_Base> object) {
 	// Catch and stop processing nullptr
@@ -11,7 +12,7 @@ void GameObj_Manager::insert(std::shared_ptr<GameObj_Base> object) {
 		return;
 	
 	// Assign the new object for management into the map
-	managedGameObjects[object.get()->gameObj_getUniqueID()] = object;
+	managedGameObjects[object.get()->id()] = object;
 }
 
 std::shared_ptr<GameObj_Base> GameObj_Manager::get(BlueEngine::ID identifier)
@@ -32,7 +33,7 @@ void GameObj_Manager::addAllToDraw() {
 	for (auto i = managedGameObjects.begin(); i != managedGameObjects.end(); ++i)
 	{
 		// Call the currently accessed GameObject's addToDraw function
-		i->second.get()->gameObj_addToDraw();
+		i->second.get()->addToDraw();
 	}
 }
 
@@ -59,27 +60,7 @@ void GameObj_Manager::process_all(std::function<void(std::shared_ptr<GameObj_Bas
 	}
 }
 
-BlueEngine::ID GameObj_Manager::lua_add(GameObjType type) {
-	// Call the Factory Constructor to generate and insert a new GameObject
-	std::shared_ptr<GameObj_Base> temp = Controller::Factory::get().GameObject(type);
-	// Catch any error from the Factory output
-	if (temp == nullptr)
-	{
-		// Don't store anything, just return an indicator of failure
-		return 0u;
-	}
-
-	// On success, store the factory output and return the GameObject's identifier
-	insert(temp);
-	return temp->gameObj_getUniqueID();
-}
-
-GameObj_LuaHelper GameObj_Manager::lua_get(BlueEngine::ID identifier) {
-	//Return the outcome from get() encapsulated in a LuaHelper GameObject
-	return GameObj_LuaHelper(get(identifier));
-}
-
-void GameObj_Manager::init() {
+/*void GameObj_Manager::init() {
 	// Prevent registering multiple times
 	static bool is_registered = false;
 	if (is_registered)
@@ -126,7 +107,7 @@ void GameObj_Manager::init() {
         .endNamespace();
 	// Prevent the registration with lua occuring multiple times
 	is_registered = true;
-}
+}*/
 
 	/// Static Initialisation
 std::map<BlueEngine::ID, std::shared_ptr<GameObj_Base>> GameObj_Manager::managedGameObjects = std::map<BlueEngine::ID, std::shared_ptr<GameObj_Base>>();
