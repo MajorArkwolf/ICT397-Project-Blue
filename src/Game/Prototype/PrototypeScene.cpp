@@ -6,7 +6,9 @@
 #include "Controller/Engine/LuaManager.hpp"
 #include "Controller/Factory/GameAssetFactory.hpp"
 #include "Controller/TextureManager.hpp"
+#include "Controller/PhysicsManager.hpp"
 #include "Model/GameObject/Manager.hpp"
+#include "Model/GameObject/Types.hpp"
 #include "Model/Models/Model.hpp"
 #include "Model/Models/ModelManager.hpp"
 #include "View/Renderer/OpenGL.hpp"
@@ -63,9 +65,51 @@ void PrototypeScene::Init() {
     auto &engine = BlueEngine::Engine::get();
     camera       = View::Camera(glm::vec3(0.0f, 150.0f, 3.0f));
 
+    // Initialise the Physics system
+    auto phys_sys = &(Physics::PhysicsManager::GetInstance());
+    phys_sys->InitialiseCollisionWorld();
+    phys_sys->InitialiseDynamicsWorld();
+
+    // Testing C++ implementation of Game Objects system revision
+    vector<BlueEngine::ID> gameObj_ids;
+    {
+        auto resmanager = ResourceManager::getInstance();
+        auto model_id = resmanager.getModelID("res/model/ball.fbx");
+        auto phys_world_collision = phys_sys->GetCollisionWorld();
+        auto phys_world_dynamics = phys_sys->GetDynamicsWorld();
+
+        auto temp = Controller::Factory::get().GameObject(BlueEngine::ID(GameObj_Type::Static));
+        gameObj_ids.push_back(temp->id());
+        temp->model = BlueEngine::ID(model_id);
+        auto phys_obj_collision = phys_world_collision->GetCollisionBody(temp->physBody);
+        phys_obj_collision->SetPosition(glm::vec3(0.0f, 150.0f, -20.0f));
+        GameObj_Manager::insert(temp);
+
+        temp = Controller::Factory::get().GameObject(BlueEngine::ID(GameObj_Type::Item));
+        gameObj_ids.push_back(temp->id());
+        temp->model = BlueEngine::ID(model_id);
+        phys_obj_collision = phys_world_collision->GetCollisionBody(temp->physBody);
+        phys_obj_collision->SetPosition(glm::vec3(5.0f, 150.0f, -20.0f));
+        GameObj_Manager::insert(temp);
+
+        temp = Controller::Factory::get().GameObject(BlueEngine::ID(GameObj_Type::Player));
+        gameObj_ids.push_back(temp->id());
+        temp->model = BlueEngine::ID(model_id);
+        auto phys_obj_rigid = phys_world_dynamics->GetRigidBody(temp->physBody);
+        phys_obj_rigid->SetPosition(glm::vec3(10.0f, 150.0f, -20.0f));
+        GameObj_Manager::insert(temp);
+
+        temp = Controller::Factory::get().GameObject(BlueEngine::ID(GameObj_Type::NPC));
+        gameObj_ids.push_back(temp->id());
+        temp->model = BlueEngine::ID(model_id);
+        phys_obj_rigid = phys_world_dynamics->GetRigidBody(temp->physBody);
+        phys_obj_rigid->SetPosition(glm::vec3(15.0f, 150.0f, -20.0f));
+        GameObj_Manager::insert(temp);
+    }
+
     // Temporarily hard-code the external Lua script file while a proper implementation of Lua integration is on hold
-    GameObj_Manager::init();
-   luaL_dofile(LuaManager::getInstance().getLuaState(), "res/scripts/gameobjsSet.lua");
+   //GameObj_Manager::init();
+   //luaL_dofile(LuaManager::getInstance().getLuaState(), "res/scripts/gameobjsSet.lua");
 
     /*std::function<void(std::shared_ptr<GameObj_Base>)> PhysicsOp =
         [&](std::shared_ptr<GameObj_Base> object) -> void {
