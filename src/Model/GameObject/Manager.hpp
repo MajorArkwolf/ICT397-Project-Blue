@@ -71,7 +71,6 @@ public:
 		/*!
 		 * @brief Updates the managed GameObjects' collisions bodies to match their rigid bidies.
 		 * @warning Must be called after the physics system delta-updates its rigid bodies!
-		 * @note Should be replaced by the physics system, this is a hacky solution.
 		 */
 	static void updatePhys();
 
