@@ -61,6 +61,9 @@ void PrototypeScene::Init() {
     phys_sys->InitialiseCollisionWorld();
     phys_sys->InitialiseDynamicsWorld();
 
+    // Initialise the GameObject system
+    GameObj_Manager::init();
+
     // Testing C++ implementation of Game Objects system revision
     vector<BlueEngine::ID> gameObj_ids;
     {

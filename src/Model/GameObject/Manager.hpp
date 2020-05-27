@@ -19,10 +19,10 @@ using GameObj_ProcessFunc = std::function<void(std::shared_ptr<GameObj_Base> Gam
 class GameObj_Manager {
 public:
 		/*!
-		 * @brief Registers the GameObject Manager and LuaHelper classes into the engine's Lua VM.
+		 * @brief Registers the GameObject system with the engine's scripting system.
 		 * @note Only performs the initialisation once, even if called multiple times.
 		 */
-	//static void init();
+	static void init();
 
 		/*!
 		 * @brief Adds a new GameObject to be managed.
