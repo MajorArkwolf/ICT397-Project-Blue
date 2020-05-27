@@ -72,28 +72,28 @@ void PrototypeScene::Init() {
         auto phys_world_collision = phys_sys->GetCollisionWorld();
         auto phys_world_dynamics = phys_sys->GetDynamicsWorld();
 
-        auto temp = Controller::Factory::get().GameObject(BlueEngine::ID(GameObj_Type::Static));
+        auto temp = Controller::Factory::get().GameObject(GameObj_Type::Static);
         gameObj_ids.push_back(temp->id());
         temp->model = BlueEngine::ID(model_id);
         auto phys_obj_rigid = phys_world_dynamics->GetRigidBody(temp->physBody);
         phys_obj_rigid->SetPosition(glm::vec3(0.0f, 150.0f, -20.0f));
         GameObj_Manager::insert(temp);
 
-        temp = Controller::Factory::get().GameObject(BlueEngine::ID(GameObj_Type::Item));
+        temp = Controller::Factory::get().GameObject(GameObj_Type::Item);
         gameObj_ids.push_back(temp->id());
         temp->model = BlueEngine::ID(model_id);
         auto phys_obj_collision = phys_world_collision->GetCollisionBody(temp->physBody);
         phys_obj_collision->SetPosition(glm::vec3(5.0f, 150.0f, -20.0f));
         GameObj_Manager::insert(temp);
 
-        temp = Controller::Factory::get().GameObject(BlueEngine::ID(GameObj_Type::Player));
+        temp = Controller::Factory::get().GameObject(GameObj_Type::Player);
         gameObj_ids.push_back(temp->id());
         temp->model = BlueEngine::ID(model_id);
         phys_obj_rigid = phys_world_dynamics->GetRigidBody(temp->physBody);
         phys_obj_rigid->SetPosition(glm::vec3(10.0f, 150.0f, -20.0f));
         GameObj_Manager::insert(temp);
 
-        temp = Controller::Factory::get().GameObject(BlueEngine::ID(GameObj_Type::NPC));
+        temp = Controller::Factory::get().GameObject(GameObj_Type::NPC);
         gameObj_ids.push_back(temp->id());
         temp->model = BlueEngine::ID(model_id);
         phys_obj_rigid = phys_world_dynamics->GetRigidBody(temp->physBody);

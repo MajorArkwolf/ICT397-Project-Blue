@@ -4,6 +4,7 @@
 	/// Internal Dependencies
 #include "Controller/Engine/LuaManager.hpp"
 #include "Controller/PhysicsManager.hpp"
+#include "Controller/Factory/GameAssetFactory.hpp"
 #include "../Types.hpp"
 #include "../Base.hpp"
 #include "../Static.hpp"
@@ -85,8 +86,8 @@ void GameObj_Manager::init() {
 	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
 		.beginNamespace("GameObject_Manager")
 			//.beginClass<GameObj_Manager>("GameObj_Manager")
-				.addFunction("insert", &GameObj_Manager::insert)
-				.addFunction("get", &GameObj_Manager::get)
+				.addFunction("create", &GameObj_Manager::lua_create)
+				.addFunction("get", &GameObj_Manager::lua_get)
 				.addFunction("remove", &GameObj_Manager::remove)
 				.addFunction("clear", &GameObj_Manager::clear)
 				.addFunction("syncPhys", &GameObj_Manager::syncPhys)
@@ -225,6 +226,29 @@ void GameObj_Manager::syncPhys() {
 		// Update the collision body to match the rigid body
 		body_collision->SetPositionAndOrientation(body_rigid->GetPosition(), body_rigid->GetOrientation());
 	}
+}
+
+BlueEngine::ID GameObj_Manager::lua_create(GameObj_Type type) {
+	// Attempt to generate the GameObject from the Factory, and hold onto its output
+	auto temp = Controller::Factory::get().GameObject(type);
+
+	// Catch if the Factory output is valid
+	if (temp == nullptr)
+	{
+		// Return 0u in cases where the GameObject would not be valid
+		return BlueEngine::ID(0u);
+	}
+
+	// Store the GameObject into the Manager
+	GameObj_Manager::insert(temp);
+
+	// Return the GameObject's identifier
+	return temp->id();
+}
+
+GameObj_Base* GameObj_Manager::lua_get(BlueEngine::ID identifier) {
+	// Just return the same outcome, but without the smart pointer wrapper
+	return GameObj_Manager::get(identifier).get();
 }
 
 	/// Static Initialisation

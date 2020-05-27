@@ -30,7 +30,6 @@ public:
 		/*!
 		 * @brief Adds a new GameObject to be managed.
 		 * @param [in] object A smart pointer to the target GameObject.
-		 * @note This is not registered with Lua.
 		 * @warning Assigning a new GameObject with an existing identifier will overwrite the old GameObject!
 		 */
 	static void insert(std::shared_ptr<GameObj_Base> object);
@@ -40,7 +39,6 @@ public:
 		 * @param [in] identifier A GameObject identifier.
 		 * @return A pointer to the specified GameObject, or nullptr on error.
 		 * @note Can be used to check if a GameObject is being managed.
-		 * @note This is not registered with Lua.
 		 */
 	static std::shared_ptr<GameObj_Base> get(BlueEngine::ID identifier);
 
@@ -76,6 +74,23 @@ public:
 		 * @warning Must be called after the physics system delta-updates its rigid bodies!
 		 */
 	static void syncPhys();
+
+protected:
+		/*!
+		 * @brief Invokes the use of the GameObject Factory and automates the process of storing its output.
+		 * @param [in] type The Type of GameObject to create and store.
+		 * @return The identifier of the newly created GameObject.
+		 */
+	static BlueEngine::ID lua_create(GameObj_Type type);
+
+		/*!
+		 * @brief Gather a reference to a managed GameObject, in a format compatible with Lua.
+		 * @param [in] identifier A GameObject identifier.
+		 * @return A pointer to the specified GameObject, or nullptr on error.
+		 * @note Can be used to check if a GameObject is being managed.
+		 * @warning The pointer provided is not managed, and the data may go out of scope!
+		 */
+	static GameObj_Base* lua_get(BlueEngine::ID identifier);
 
 private:
 		//! Stores a collection of unique generic GameObjects, mapped to their identifier.
