@@ -2,25 +2,47 @@
 #include "../Manager.hpp"
 
 	/// Internal Dependencies
-#include "Controller/Engine/LuaManager.hpp"
-#include "Controller/Factory/GameAssetFactory.hpp"
 #include "Controller/PhysicsManager.hpp"
+#include "../Types.hpp"
 
 void GameObj_Manager::insert(std::shared_ptr<GameObj_Base> object) {
 	// Catch and stop processing nullptr
 	if (!object)
 		return;
 	
-	// Assign the new object for management into the map
-	managedGameObjects[object.get()->id()] = object;
+	// Optimizatin storage split
+	switch (object->type())
+	{
+	case (BlueEngine::ID(GameObj_Type::Invalid)):
+		// Do nothing, this is an invalid GameObject
+		break;
+
+	case (BlueEngine::ID(GameObj_Type::Static)):
+	case (BlueEngine::ID(GameObj_Type::Item)):
+		// Store into the generic GameObject map
+		generic_objs[object.get()->id()] = object;
+		break;
+
+	case (BlueEngine::ID(GameObj_Type::Player)):
+	case (BlueEngine::ID(GameObj_Type::NPC)):
+		// Store into the character GameObject map
+		character_objs[object.get()->id()] = object;
+		break;
+	}
 }
 
 std::shared_ptr<GameObj_Base> GameObj_Manager::get(BlueEngine::ID identifier)
 {
 	// Catch any errors thrown
 	try {
+		if (generic_objs.find(identifier) != generic_objs.end())
+		{
+			// Attempt to find and return a copy of the requested GameObject
+			return generic_objs.at(identifier);
+		}
+
 		// Attempt to find and return a copy of the requested GameObject
-		return managedGameObjects.at(identifier);
+		return character_objs.at(identifier);
 	}
 	catch (...) {
 		// Indicate no element with specified found
@@ -28,23 +50,24 @@ std::shared_ptr<GameObj_Base> GameObj_Manager::get(BlueEngine::ID identifier)
 	}
 }
 
-void GameObj_Manager::addAllToDraw() {
-	// Process all of the stored GameObjects
-	for (auto i = managedGameObjects.begin(); i != managedGameObjects.end(); ++i)
-	{
-		// Call the currently accessed GameObject's addToDraw function
-		i->second.get()->addToDraw();
-	}
-}
-
 void GameObj_Manager::remove(BlueEngine::ID identifier) {
-	// Just remove the specified GameObject from the manager, don't directly call for it to be removed from memory
-	managedGameObjects.erase(identifier);
+	// Check if the target GameObject is generic
+	if (generic_objs.find(identifier) != generic_objs.end())
+	{
+		// Just remove the specified GameObject from the manager, don't directly call for it to be removed from memory
+		generic_objs.erase(identifier);
+	}
+	else
+	{
+		// Just remove the specified GameObject from the manager, don't directly call for it to be removed from memory
+		character_objs.erase(identifier);
+	}
 }
 
 void GameObj_Manager::clear() {
 	// Just remove the GameObjects from the manager, don't directly call for it to be removed from memory
-	managedGameObjects.clear();
+	generic_objs.clear();
+	character_objs.clear();
 }
 
 void GameObj_Manager::process_all(std::function<void(std::shared_ptr<GameObj_Base> GameObj_In)> function) {
@@ -52,62 +75,69 @@ void GameObj_Manager::process_all(std::function<void(std::shared_ptr<GameObj_Bas
 	if (function == nullptr)
 		return;
 
-	// Loop through all of the stored GameObjects
-	for (auto i = managedGameObjects.begin(); i != managedGameObjects.end(); ++i)
+	// Loop through all of the generic GameObjects
+	for (auto i = generic_objs.begin(); i != generic_objs.end(); ++i)
+	{
+		// Pass the currently processed GameObject to the provided function
+		function(i->second);
+	}
+
+	// Loop through all of the character GameObjects
+	for (auto i = character_objs.begin(); i != character_objs.end(); ++i)
 	{
 		// Pass the currently processed GameObject to the provided function
 		function(i->second);
 	}
 }
 
-/*void GameObj_Manager::init() {
-	// Prevent registering multiple times
-	static bool is_registered = false;
-	if (is_registered)
-		return;
+void GameObj_Manager::addAllToDraw() {
+	// Process all of the generic GameObjects
+	for (auto i = generic_objs.begin(); i != generic_objs.end(); ++i)
+	{
+		// Call the currently accessed GameObject's addToDraw function
+		i->second.get()->addToDraw();
+	}
 
-	// Register the LuaHelper class
-	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
-		.beginClass<GameObj_LuaHelper>("GameObject")
-			.addFunction("isValid", &GameObj_LuaHelper::gameObj_isValid)
-			.addFunction("getUniqueID", &GameObj_LuaHelper::gameObj_getUniqueID)
-			.addFunction("getTypeID", &GameObj_LuaHelper::gameObj_getTypeID)
-			.addFunction("setModel", &GameObj_LuaHelper::gameObj_setModel)
-			.addFunction("getModelID", &GameObj_LuaHelper::gameObj_getModelID)
-			.addFunction("getModelPath", &GameObj_LuaHelper::gameObj_getModelPath)
-			.addFunction("getPos_X", &GameObj_LuaHelper::gameObj_getPos_X)
-			.addFunction("getPos_Y", &GameObj_LuaHelper::gameObj_getPos_Y)
-			.addFunction("getPos_Z", &GameObj_LuaHelper::gameObj_getPos_Z)
-			.addFunction("setPos", &GameObj_LuaHelper::gameObj_setPos)
-			.addFunction("getRotation_yaw", &GameObj_LuaHelper::gameObj_getRotation_yaw)
-			.addFunction("getRotation_pitch", &GameObj_LuaHelper::gameObj_getRotation_pitch)
-			.addFunction("getRotation_roll", &GameObj_LuaHelper::gameObj_getRotation_roll)
-			.addFunction("getScale_X", &GameObj_LuaHelper::gameObj_getScale_X)
-			.addFunction("getScale_Y", &GameObj_LuaHelper::gameObj_getScale_Y)
-			.addFunction("getScale_Z", &GameObj_LuaHelper::gameObj_getScale_Z)
-			.addFunction("setScale", &GameObj_LuaHelper::gameObj_setScale)
-			.addFunction("setRotation", &GameObj_LuaHelper::gameObj_setRotation)
-			.addFunction("getPhysBody", &GameObj_LuaHelper::gameObj_getPhysBody)
-			.addFunction("setPhysBody", &GameObj_LuaHelper::gameObj_setPhysBody)
-		.endClass();
+	// Process all of the character GameObjects
+	for (auto i = character_objs.begin(); i != character_objs.end(); ++i)
+	{
+		// Call the currently accessed GameObject's addToDraw function
+		i->second.get()->addToDraw();
+	}
+}
 
-	// Register the Manager class
-	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
-		.beginNamespace("GameObject_Manager")
-			.addFunction("add", &GameObj_Manager::lua_add)
-			.addFunction("get", &GameObj_Manager::lua_get)
-			.addFunction("remove", &GameObj_Manager::remove)
-			.addFunction("clear", &GameObj_Manager::clear)
-		.endNamespace();
+void GameObj_Manager::updatePhys() {
+	// Keep track of the collision and dynamics physics worlds
+	auto world_collision = Physics::PhysicsManager::GetInstance().GetCollisionWorld();
+	auto world_dynamics = Physics::PhysicsManager::GetInstance().GetDynamicsWorld();
 
-    luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
-        .beginNamespace("TerrainFactory")
-            .addProperty ("chunkSize", &Controller::TerrainFactory::LuaMapSize)
-            .addFunction("heightAt", &Controller::TerrainFactory::LuaBLHeight)
-        .endNamespace();
-	// Prevent the registration with lua occuring multiple times
-	is_registered = true;
-}*/
+	// Loop through all of the generic GameObjects
+	for (auto i = generic_objs.begin(); i != generic_objs.end(); ++i)
+	{
+		// Only process the generic GameObjects with a rigid body
+		if (i->second->type() == BlueEngine::ID(GameObj_Type::Static))
+		{
+			// Track the engine physics bodies for the current GameObject
+			auto body_collision = world_collision->GetCollisionBody(i->second->physBody);
+			auto body_rigid = world_dynamics->GetRigidBody(i->second->physBody);
+
+			// Update the collision body to match the rigid body
+			body_collision->SetPositionAndOrientation(body_rigid->GetPosition(), body_rigid->GetOrientation());
+		}
+	}
+
+	// Loop through all of the character GameObjects
+	for (auto i = character_objs.begin(); i != character_objs.end(); ++i)
+	{
+		// Track the engine physics bodies for the current GameObject
+		auto body_collision = world_collision->GetCollisionBody(i->second->physBody);
+		auto body_rigid = world_dynamics->GetRigidBody(i->second->physBody);
+
+		// Update the collision body to match the rigid body
+		body_collision->SetPositionAndOrientation(body_rigid->GetPosition(), body_rigid->GetOrientation());
+	}
+}
 
 	/// Static Initialisation
-std::map<BlueEngine::ID, std::shared_ptr<GameObj_Base>> GameObj_Manager::managedGameObjects = std::map<BlueEngine::ID, std::shared_ptr<GameObj_Base>>();
+std::map<BlueEngine::ID, std::shared_ptr<GameObj_Base>> GameObj_Manager::generic_objs = std::map<BlueEngine::ID, std::shared_ptr<GameObj_Base>>();
+std::map<BlueEngine::ID, std::shared_ptr<GameObj_Base>> GameObj_Manager::character_objs = std::map<BlueEngine::ID, std::shared_ptr<GameObj_Base>>();

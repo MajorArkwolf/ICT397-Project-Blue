@@ -42,12 +42,6 @@ public:
 	static std::shared_ptr<GameObj_Base> get(BlueEngine::ID identifier);
 
 		/*!
-		 * @brief Calls the addToDraw function on all managed GameObjects.
-		 * @note No calls will occur if the Manager isn't managing any GameObjects.
-		 */
-	static void addAllToDraw();
-
-		/*!
 		 * @brief Calls for a specific GameObject to be removed from the manager.
 		 * @param [in] identifier A GameObject identifier.
 		 * @note No effect will occur if the requested GameObject is not managed.
@@ -68,7 +62,23 @@ public:
 		 */
 	static void process_all(GameObj_ProcessFunc function);
 
+		/*!
+		 * @brief Calls the addToDraw function on all managed GameObjects.
+		 * @note No calls will occur if the Manager isn't managing any GameObjects.
+		 */
+	static void addAllToDraw();
+
+		/*!
+		 * @brief Updates the managed GameObjects' collisions bodies to match their rigid bidies.
+		 * @warning Must be called after the physics system delta-updates its rigid bodies!
+		 * @note Should be replaced by the physics system, this is a hacky solution.
+		 */
+	static void updatePhys();
+
 private:
-		//! Stores a collection of unique GameObjects, mapped to their identifier.
-	static std::map<BlueEngine::ID, std::shared_ptr<GameObj_Base>> managedGameObjects;
+		//! Stores a collection of unique generic GameObjects, mapped to their identifier.
+	static std::map<BlueEngine::ID, std::shared_ptr<GameObj_Base>> generic_objs;
+
+		//! Stores a collection of unique character GameObjects, mapped to their identifier.
+	static std::map<BlueEngine::ID, std::shared_ptr<GameObj_Base>> character_objs;
 };
