@@ -18,7 +18,7 @@ auto Controller::Factory::get() -> Factory & {
     return instance;
 }
 
-std::shared_ptr<GameObj_Base> Controller::Factory::GameObject(BlueEngine::ID type) {
+std::shared_ptr<GameObj_Base> Controller::Factory::GameObject(GameObj_Type type) {
 	// Keep track of the engine id generator
 	auto id_assigner = BlueEngine::IDTracker::getInstance();
 
@@ -26,7 +26,7 @@ std::shared_ptr<GameObj_Base> Controller::Factory::GameObject(BlueEngine::ID typ
 	std::shared_ptr<GameObj_Base> object = nullptr;
 	switch (type)
 	{
-	case (BlueEngine::ID(GameObj_Type::Static)):
+	case (GameObj_Type::Static):
 		{
 			// Create a new physics body for the GameObject, assigining default properties
 			auto phys_id = id_assigner.getID();
@@ -41,7 +41,7 @@ std::shared_ptr<GameObj_Base> Controller::Factory::GameObject(BlueEngine::ID typ
 		}
 		break;
 
-	case (BlueEngine::ID(GameObj_Type::Item)):
+	case (GameObj_Type::Item):
 		{
 			// Create a new physics body for the GameObject, assigining default properties
 			auto phys_id = id_assigner.getID();
@@ -52,7 +52,7 @@ std::shared_ptr<GameObj_Base> Controller::Factory::GameObject(BlueEngine::ID typ
 		}
 		break;
 
-	case (BlueEngine::ID(GameObj_Type::Player)):
+	case (GameObj_Type::Player):
 		{
 			// Create a new physics body for the GameObject, assigining default properties
 			auto phys_id = id_assigner.getID();
@@ -64,7 +64,7 @@ std::shared_ptr<GameObj_Base> Controller::Factory::GameObject(BlueEngine::ID typ
 		}
 		break;
 
-	case (BlueEngine::ID(GameObj_Type::NPC)):
+	case (GameObj_Type::NPC):
 		{
 			// Create a new physics body for the GameObject, assigining default properties
 			auto phys_id = id_assigner.getID();
