@@ -16,9 +16,9 @@ GameObj_NPC::~GameObj_NPC() {
 	// GameObj_NPC has no unique destruction procedure yet.
 }
 
-BlueEngine::ID GameObj_NPC::type() const {
+GameObj_Type GameObj_NPC::type() const {
 	// Return the GameObject's type
-	return BlueEngine::ID(GameObj_Type::NPC);
+	return GameObj_Type::NPC;
 }
 
 void GameObj_NPC::addToDraw() {

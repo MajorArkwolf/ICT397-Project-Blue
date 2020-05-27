@@ -15,9 +15,9 @@ GameObj_Player::~GameObj_Player() {
 	// GameObj_Player has no unique destruction procedure yet.
 }
 
-BlueEngine::ID GameObj_Player::type() const {
+GameObj_Type GameObj_Player::type() const {
 	// Return the GameObject's type
-	return BlueEngine::ID(GameObj_Type::Player);
+	return GameObj_Type::Player;
 }
 
 void GameObj_Player::addToDraw() {

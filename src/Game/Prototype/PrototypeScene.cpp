@@ -49,7 +49,7 @@ auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
 
     // Update the Dynamic Physics world
     Physics::PhysicsManager::GetInstance().GetDynamicsWorld()->Update(dt);
-    GameObj_Manager::updatePhys();
+    GameObj_Manager::syncPhys();
 }
 
 void PrototypeScene::Init() {
@@ -101,7 +101,7 @@ void PrototypeScene::Init() {
         GameObj_Manager::insert(temp);
 
             // Make sure that the physics bodies stay in sync
-        GameObj_Manager::updatePhys();
+        GameObj_Manager::syncPhys();
     }
 
     // Temporarily hard-code the external Lua script file while a proper implementation of Lua integration is on hold

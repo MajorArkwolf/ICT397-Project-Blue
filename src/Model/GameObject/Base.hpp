@@ -9,6 +9,7 @@
 	/// Internal Dependencies
 #include "Controller/Engine/IDTracker.hpp"
 #include "View/Renderer/Shader.hpp"
+#include "Types.hpp"
 
 	/*!
 	 * @brief The parent class for all child GameObjects.
@@ -40,7 +41,7 @@ public:
 		 * @return Always returns GameObj_Type::Invalid for GameObj_Base.
 		 * @warning Must be implemented by inheritors!
 		 */
-	virtual BlueEngine::ID type() const = 0;
+	virtual GameObj_Type type() const = 0;
 
 		/*!
 		 * @brief Adds the GameObject to the draw queue.

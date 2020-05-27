@@ -15,9 +15,9 @@ GameObj_Static::~GameObj_Static() {
 	// GameObj_Static has no unique destruction procedure yet.
 }
 
-BlueEngine::ID GameObj_Static::type() const {
+GameObj_Type GameObj_Static::type() const {
 	// Return the GameObject's type
-	return BlueEngine::ID(GameObj_Type::Static);
+	return GameObj_Type::Static;
 }
 
 void GameObj_Static::addToDraw() {

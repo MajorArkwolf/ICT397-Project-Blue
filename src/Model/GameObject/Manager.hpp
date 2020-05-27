@@ -72,7 +72,7 @@ public:
 		 * @brief Updates the managed GameObjects' collisions bodies to match their rigid bidies.
 		 * @warning Must be called after the physics system delta-updates its rigid bodies!
 		 */
-	static void updatePhys();
+	static void syncPhys();
 
 private:
 		//! Stores a collection of unique generic GameObjects, mapped to their identifier.

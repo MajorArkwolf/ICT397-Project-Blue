@@ -26,7 +26,7 @@ public:
 		 * @brief Identifies the GameObject's type.
 		 * @return Always returns GameObj_Type::Player for GameObj_Player.
 		 */
-	BlueEngine::ID type() const;
+	GameObj_Type type() const;
 
 		//! Adds the GameObject to the draw queue.
 	void addToDraw();

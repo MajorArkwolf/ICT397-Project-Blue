@@ -4,9 +4,9 @@
 	/// Internal Dependencies
 #include "../Types.hpp"
 
-BlueEngine::ID GameObj_Character::type() const {
+GameObj_Type GameObj_Character::type() const {
 	// The Character GameObject will always return an indicator that its type is not valid.
-	return BlueEngine::ID(GameObj_Type::Invalid);
+	return GameObj_Type::Invalid;
 }
 
 void GameObj_Character::status_assign(std::string key, float value) {

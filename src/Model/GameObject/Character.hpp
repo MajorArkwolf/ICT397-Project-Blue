@@ -18,7 +18,7 @@ public:
 		 * @return Always returns GameObj_Type::Invalid for GameObj_Character.
 		 * @warning Must be implemented by inheritors!
 		 */
-	BlueEngine::ID type() const = 0;
+	GameObj_Type type() const = 0;
 
 		/*!
 		 * @brief Assigns a status (with a value) to the character.

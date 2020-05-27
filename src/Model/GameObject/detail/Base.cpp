@@ -30,7 +30,7 @@ BlueEngine::ID GameObj_Base::id()
 	return uniqueID;
 }
 
-BlueEngine::ID GameObj_Base::type() const {
+GameObj_Type GameObj_Base::type() const {
 	// The Base GameObject will always return an indicator that its type is not valid.
-	return BlueEngine::ID(GameObj_Type::Invalid);
+	return GameObj_Type::Invalid;
 }

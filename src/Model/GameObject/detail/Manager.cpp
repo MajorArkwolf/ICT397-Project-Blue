@@ -89,6 +89,7 @@ void GameObj_Manager::init() {
 				.addStaticFunction("get", &GameObj_Manager::get)
 				.addStaticFunction("remove", &GameObj_Manager::remove)
 				.addStaticFunction("clear", &GameObj_Manager::clear)
+				.addStaticFunction("syncPhys", &GameObj_Manager::syncPhys)
 			.endClass();
 		//.endNamespace();
 }
@@ -101,18 +102,18 @@ void GameObj_Manager::insert(std::shared_ptr<GameObj_Base> object) {
 	// Optimizatin storage split
 	switch (object->type())
 	{
-	case (BlueEngine::ID(GameObj_Type::Invalid)):
+	case (GameObj_Type::Invalid):
 		// Do nothing, this is an invalid GameObject
 		break;
 
-	case (BlueEngine::ID(GameObj_Type::Static)):
-	case (BlueEngine::ID(GameObj_Type::Item)):
+	case (GameObj_Type::Static):
+	case (GameObj_Type::Item):
 		// Store into the generic GameObject map
 		generic_objs[object.get()->id()] = object;
 		break;
 
-	case (BlueEngine::ID(GameObj_Type::Player)):
-	case (BlueEngine::ID(GameObj_Type::NPC)):
+	case (GameObj_Type::Player):
+	case (GameObj_Type::NPC):
 		// Store into the character GameObject map
 		character_objs[object.get()->id()] = object;
 		break;
@@ -194,7 +195,7 @@ void GameObj_Manager::addAllToDraw() {
 	}
 }
 
-void GameObj_Manager::updatePhys() {
+void GameObj_Manager::syncPhys() {
 	// Keep track of the collision and dynamics physics worlds
 	auto world_collision = Physics::PhysicsManager::GetInstance().GetCollisionWorld();
 	auto world_dynamics = Physics::PhysicsManager::GetInstance().GetDynamicsWorld();
@@ -203,7 +204,7 @@ void GameObj_Manager::updatePhys() {
 	for (auto i = generic_objs.begin(); i != generic_objs.end(); ++i)
 	{
 		// Only process the generic GameObjects with a rigid body
-		if (i->second->type() == BlueEngine::ID(GameObj_Type::Static))
+		if (i->second->type() == GameObj_Type::Static)
 		{
 			// Track the engine physics bodies for the current GameObject
 			auto body_collision = world_collision->GetCollisionBody(i->second->physBody);
