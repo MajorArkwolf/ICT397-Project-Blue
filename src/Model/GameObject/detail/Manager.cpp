@@ -27,7 +27,7 @@ void GameObj_Manager::init() {
 	// Register the Base GameObject class
 	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
 		//.beginNamespace("GameObject")
-			.beginClass<GameObj_Base>("GO_Base")
+			.beginClass<GameObj_Base>("GameObj_Base")
 				.addFunction("id", &GameObj_Base::id)
 				.addFunction("type", &GameObj_Base::type)
 				.addProperty("physBody", &GameObj_Base::physBody)
@@ -38,7 +38,7 @@ void GameObj_Manager::init() {
 	// Register the Static GameObject class
 	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
 		//.beginNamespace("GameObject")
-			.deriveClass<GameObj_Static, GameObj_Base>("GO_Static")
+			.deriveClass<GameObj_Static, GameObj_Base>("GameObj_Static")
 				.addFunction("type", &GameObj_Static::type)
 			.endClass();
 		//.endNamespace();
@@ -46,7 +46,7 @@ void GameObj_Manager::init() {
 	// Register the Item GameObject class
 	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
 		//.beginNamespace("GameObject")
-			.deriveClass<GameObj_Item, GameObj_Base>("GO_Item")
+			.deriveClass<GameObj_Item, GameObj_Base>("GameObj_Item")
 				.addFunction("type", &GameObj_Item::type)
 			.endClass();
 		//.endNamespace();
@@ -54,7 +54,7 @@ void GameObj_Manager::init() {
 	// Register the Character GameObject class
 	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
 		//.beginNamespace("GameObject")
-			.deriveClass<GameObj_Character, GameObj_Base>("GO_Character")
+			.deriveClass<GameObj_Character, GameObj_Base>("GameObj_Character")
 				.addFunction("type", &GameObj_Character::type)
 				.addFunction("status_assign", &GameObj_Character::status_assign)
 				.addFunction("status_has", &GameObj_Character::status_has)
@@ -67,7 +67,7 @@ void GameObj_Manager::init() {
 	// Register the Player GameObject class
 	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
 		//.beginNamespace("GameObject")
-			.deriveClass<GameObj_Player, GameObj_Character>("GO_Player")
+			.deriveClass<GameObj_Player, GameObj_Character>("GameObj_Player")
 				.addFunction("type", &GameObj_Player::type)
 			.endClass();
 		//.endNamespace();
@@ -75,7 +75,7 @@ void GameObj_Manager::init() {
 	// Register the NPC GameObject class
 	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
 		//.beginNamespace("GameObject")
-			.deriveClass<GameObj_NPC, GameObj_Character>("GO_Player")
+			.deriveClass<GameObj_NPC, GameObj_Character>("GameObj_NPC")
 				.addFunction("type", &GameObj_NPC::type)
 				.addFunction("context", &GameObj_NPC::context)
 			.endClass();
@@ -83,15 +83,15 @@ void GameObj_Manager::init() {
 
 	// Register this GameObject Manager class
 	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
-		//.beginNamespace("GameObject")
-			.beginClass<GameObj_Manager>("GO_Manager")
-				.addStaticFunction("insert", &GameObj_Manager::insert)
-				.addStaticFunction("get", &GameObj_Manager::get)
-				.addStaticFunction("remove", &GameObj_Manager::remove)
-				.addStaticFunction("clear", &GameObj_Manager::clear)
-				.addStaticFunction("syncPhys", &GameObj_Manager::syncPhys)
-			.endClass();
-		//.endNamespace();
+		.beginNamespace("GameObject_Manager")
+			//.beginClass<GameObj_Manager>("GameObj_Manager")
+				.addFunction("insert", &GameObj_Manager::insert)
+				.addFunction("get", &GameObj_Manager::get)
+				.addFunction("remove", &GameObj_Manager::remove)
+				.addFunction("clear", &GameObj_Manager::clear)
+				.addFunction("syncPhys", &GameObj_Manager::syncPhys)
+			//.endClass();
+		.endNamespace();
 }
 
 void GameObj_Manager::insert(std::shared_ptr<GameObj_Base> object) {

@@ -18,6 +18,9 @@ using GameObj_ProcessFunc = std::function<void(std::shared_ptr<GameObj_Base> Gam
 	//! A manager class for GameObject's creation and storage.
 class GameObj_Manager {
 public:
+		//! The GameObj_Manager class constructor use is not allowed.
+	GameObj_Manager() = delete;
+
 		/*!
 		 * @brief Registers the GameObject system with the engine's scripting system.
 		 * @note Only performs the initialisation once, even if called multiple times.
