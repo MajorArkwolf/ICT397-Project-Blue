@@ -12,6 +12,12 @@
 #include "../Player.hpp"
 #include "../NPC.hpp"
 
+	// Registratiion of Enum GameObj_Type
+namespace luabridge {
+	template <>
+	struct luabridge::Stack <GameObj_Type> : EnumWrapper <GameObj_Type> {};
+}
+
 void GameObj_Manager::init() {
 	// Prevent registering multiple times
 	static bool is_registered = false;
@@ -20,34 +26,34 @@ void GameObj_Manager::init() {
 
 	// Register the Base GameObject class
 	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
-		.beginNamespace("GameObject")
+		//.beginNamespace("GameObject")
 			.beginClass<GameObj_Base>("GO_Base")
 				.addFunction("id", &GameObj_Base::id)
 				.addFunction("type", &GameObj_Base::type)
 				.addProperty("physBody", &GameObj_Base::physBody)
 				.addProperty("model", &GameObj_Base::model)
-			.endClass()
-		.endNamespace();
+			.endClass();
+		//.endNamespace();
 
 	// Register the Static GameObject class
 	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
-		.beginNamespace("GameObject")
+		//.beginNamespace("GameObject")
 			.deriveClass<GameObj_Static, GameObj_Base>("GO_Static")
 				.addFunction("type", &GameObj_Static::type)
-			.endClass()
-		.endNamespace();
+			.endClass();
+		//.endNamespace();
 
 	// Register the Item GameObject class
 	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
-		.beginNamespace("GameObject")
+		//.beginNamespace("GameObject")
 			.deriveClass<GameObj_Item, GameObj_Base>("GO_Item")
 				.addFunction("type", &GameObj_Item::type)
-			.endClass()
-		.endNamespace();
+			.endClass();
+		//.endNamespace();
 
 	// Register the Character GameObject class
 	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
-		.beginNamespace("GameObject")
+		//.beginNamespace("GameObject")
 			.deriveClass<GameObj_Character, GameObj_Base>("GO_Character")
 				.addFunction("type", &GameObj_Character::type)
 				.addFunction("status_assign", &GameObj_Character::status_assign)
@@ -55,25 +61,36 @@ void GameObj_Manager::init() {
 				.addFunction("status_get", &GameObj_Character::status_get)
 				.addFunction("status_delete", &GameObj_Character::status_delete)
 				.addFunction("status_clear", &GameObj_Character::status_clear)
-			.endClass()
-		.endNamespace();
+			.endClass();
+		//.endNamespace();
 
 	// Register the Player GameObject class
 	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
-		.beginNamespace("GameObject")
+		//.beginNamespace("GameObject")
 			.deriveClass<GameObj_Player, GameObj_Character>("GO_Player")
 				.addFunction("type", &GameObj_Player::type)
-			.endClass()
-		.endNamespace();
+			.endClass();
+		//.endNamespace();
 
 	// Register the NPC GameObject class
 	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
-		.beginNamespace("GameObject")
+		//.beginNamespace("GameObject")
 			.deriveClass<GameObj_NPC, GameObj_Character>("GO_Player")
 				.addFunction("type", &GameObj_NPC::type)
 				.addFunction("context", &GameObj_NPC::context)
-			.endClass()
-		.endNamespace();
+			.endClass();
+		//.endNamespace();
+
+	// Register this GameObject Manager class
+	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
+		//.beginNamespace("GameObject")
+			.beginClass<GameObj_Manager>("GO_Manager")
+				.addStaticFunction("insert", &GameObj_Manager::insert)
+				.addStaticFunction("get", &GameObj_Manager::get)
+				.addStaticFunction("remove", &GameObj_Manager::remove)
+				.addStaticFunction("clear", &GameObj_Manager::clear)
+			.endClass();
+		//.endNamespace();
 }
 
 void GameObj_Manager::insert(std::shared_ptr<GameObj_Base> object) {
