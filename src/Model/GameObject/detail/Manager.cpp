@@ -12,12 +12,7 @@
 #include "../Character.hpp"
 #include "../Player.hpp"
 #include "../NPC.hpp"
-
-	// Registratiion of Enum GameObj_Type
-namespace luabridge {
-	template <>
-	struct luabridge::Stack <GameObj_Type> : EnumWrapper <GameObj_Type> {};
-}
+#include "LuaAssist.hpp"
 
 void GameObj_Manager::init() {
 	// Prevent registering multiple times
@@ -84,7 +79,7 @@ void GameObj_Manager::init() {
 
 	// Register this GameObject Manager class
 	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
-		.beginNamespace("GameObject_Manager")
+		.beginNamespace("GameObject")
 			//.beginClass<GameObj_Manager>("GameObj_Manager")
 				.addFunction("create", &GameObj_Manager::lua_create)
 				.addFunction("get", &GameObj_Manager::lua_get)
@@ -92,6 +87,18 @@ void GameObj_Manager::init() {
 				.addFunction("clear", &GameObj_Manager::clear)
 				.addFunction("syncPhys", &GameObj_Manager::syncPhys)
 			//.endClass();
+		.endNamespace();
+
+	// Register the GameObj_Type enum spawning functions
+	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
+		.beginNamespace("GameObject")
+			.beginNamespace("Types")
+				.addFunction("Invalid", &GameObj_Type_LuaHelper::Invalid)
+				.addFunction("Static", &GameObj_Type_LuaHelper::Static)
+				.addFunction("Item", &GameObj_Type_LuaHelper::Item)
+				.addFunction("Player", &GameObj_Type_LuaHelper::Player)
+				.addFunction("NPC", &GameObj_Type_LuaHelper::NPC)
+			.endNamespace()
 		.endNamespace();
 }
 

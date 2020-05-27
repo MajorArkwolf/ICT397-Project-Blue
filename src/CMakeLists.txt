@@ -40,6 +40,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     Model/GameObject/detail/Player.cpp
     Model/GameObject/detail/NPC.cpp
     Model/GameObject/detail/Manager.cpp
+    Model/GameObject/detail/LuaAssist.cpp
 
     Model/GameState.cpp
 

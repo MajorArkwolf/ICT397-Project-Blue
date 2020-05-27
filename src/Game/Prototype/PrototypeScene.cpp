@@ -64,8 +64,14 @@ void PrototypeScene::Init() {
     // Initialise the GameObject system
     GameObj_Manager::init();
 
+    // Run the GameObject initialisation script
+    if (luaL_dofile(LuaManager::getInstance().getLuaState(), "res/scripts/gameObjsInit.lua"))
+    {
+        printf("%s\n", lua_tostring(LuaManager::getInstance().getLuaState(), -1));
+    }
+
     // Testing C++ implementation of Game Objects system revision
-    vector<BlueEngine::ID> gameObj_ids;
+    /*vector<BlueEngine::ID> gameObj_ids;
     {
         auto resmanager = ResourceManager::getInstance();
         auto model_id = resmanager.getModelID("res/model/ball.fbx");
@@ -102,11 +108,7 @@ void PrototypeScene::Init() {
 
             // Make sure that the physics bodies stay in sync
         GameObj_Manager::syncPhys();
-    }
-
-    // Temporarily hard-code the external Lua script file while a proper implementation of Lua integration is on hold
-   //GameObj_Manager::init();
-   //luaL_dofile(LuaManager::getInstance().getLuaState(), "res/scripts/gameobjsSet.lua");
+    }*/
 
     /*std::function<void(std::shared_ptr<GameObj_Base>)> PhysicsOp =
         [&](std::shared_ptr<GameObj_Base> object) -> void {
