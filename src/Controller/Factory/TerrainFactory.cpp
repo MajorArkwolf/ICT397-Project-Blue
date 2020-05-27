@@ -34,7 +34,22 @@ void Controller::TerrainFactory::Init() {
     } else {
         maxKeySize = ((height / 2) / ChunkSize) - 1;
     }
+    AddWallBoundary();
     GenerateHeightOffSet();
+}
+
+void Controller::TerrainFactory::AddWallBoundary() {
+    size_t maxXSize = fValues.size();
+    size_t maxZSize = fValues.at(0).size();
+    auto playArea = maxKeySize * static_cast<unsigned>(ChunkSize);
+    auto depth = (maxXSize - playArea) / 2;
+    //South
+    for (size_t x = 0; x < fValues.size(); ++x) {
+        fValues.at(depth).at(x).height = 245.0f;
+        fValues.at(depth + 1).at(x).height = 230.0f;
+    }
+    //North
+
 }
 
 void Controller::TerrainFactory::LoadLua() {
