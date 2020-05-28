@@ -92,5 +92,5 @@ class ResourceManager {
      */
     static auto loadTexture(const std::string filePath, const std::string textureName) -> void;
 
-    static auto getModelId(const std::string key) -> void;
+    static auto getModelId(const std::string key) -> size_t;
 };

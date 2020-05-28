@@ -86,7 +86,7 @@ auto ResourceManager::loadTexture(const std::string filePath, const std::string 
     getInstance().textureManager.loadTextureFromFile(filePath, textureName);
 }
 
-auto ResourceManager::getModelId(const std::string key) ->void {
+auto ResourceManager::getModelId(const std::string key) -> size_t {
 
-    getInstance().getModelID(key);
+    return getInstance().getModelID(key);
 }
