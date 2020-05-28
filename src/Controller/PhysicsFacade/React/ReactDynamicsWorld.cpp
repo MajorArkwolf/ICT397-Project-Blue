@@ -20,16 +20,12 @@ void Physics::ReactDynamicsWorld::CreateRigidBody(glm::vec3 position, glm::quat 
     rp3d::Vector3 bodyPosition = ReactHelper::ConvertVec3(position);
     rp3d::Quaternion bodyOrientation = ReactHelper::ConvertQuaternion(orientation);
     rp3d::Transform transform(bodyPosition, bodyOrientation);
-    rp3d::RigidBody *body;
 
     //Creates a react rigid body in this dynamics world
-    body = dynamicsWorld.createRigidBody(transform);
-
-
-    ReactRigidBody reactRigidBody = ReactRigidBody(body);
+    rp3d::RigidBody *body = dynamicsWorld.createRigidBody(transform);
 
     //Adds the rigid body to the map of rigid bodies
-    rigidBodies.insert(std::make_pair(gameObjectID, reactRigidBody));
+    rigidBodies.emplace(std::make_pair(gameObjectID, ReactRigidBody(body)));
     
 }
 

@@ -28,6 +28,6 @@ namespace Physics {
         void SetAngularDamping(double damping) override;
 
       private:
-        rp3d::RigidBody *rigidBody = nullptr;
+        rp3d::RigidBody* rigidBody = nullptr;
     };
 }

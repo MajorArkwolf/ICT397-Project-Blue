@@ -62,10 +62,4 @@ class PrototypeScene : public BaseState {
     bool moveBackward = false;
     bool moveLeft = false;
     bool moveRight = false;
-    float curremtRot = 0;
-    float currentDist = 10;
-
-    double getDeltaTime();
-    Physics::ReactDynamicsWorld dynWorld;
-    Physics::ReactShapes shapes;
 };

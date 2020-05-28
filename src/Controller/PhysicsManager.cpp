@@ -6,17 +6,21 @@ auto Physics::PhysicsManager::GetInstance() -> PhysicsManager & {
 }
 
 Physics::DynamicsWorld *Physics::PhysicsManager::GetDynamicsWorld() {
-    return dynWorld;
+    return dynamicsWorld.get();
 }
 
 Physics::CollisionWorld *Physics::PhysicsManager::GetCollisionWorld() {
-    return colWorld;
+    return collisionWorld.get();
+}
+
+Physics::ShapeFactory *Physics::PhysicsManager::GetShapeFactory() {
+    return shapeFactory.get();
 }
 
 void Physics::PhysicsManager::InitialiseCollisionWorld(PhysicsLibrary type) {
     switch (type) {
         case PhysicsLibrary::REACT: {
-            colWorld = new ReactCollisionWorld();
+            collisionWorld = std::make_unique<ReactCollisionWorld>();
         } break;
         default: break;
     }
@@ -25,7 +29,16 @@ void Physics::PhysicsManager::InitialiseCollisionWorld(PhysicsLibrary type) {
 void Physics::PhysicsManager::InitialiseDynamicsWorld(PhysicsLibrary type, glm::vec3 gravity) {
     switch (type) {
         case PhysicsLibrary::REACT: {
-            dynWorld = new ReactDynamicsWorld(gravity);
+            dynamicsWorld = std::make_unique<ReactDynamicsWorld>(gravity);
+        } break;
+    }
+}
+
+void Physics::PhysicsManager::InitialiseShapeFactory(PhysicsLibrary type) {
+
+    switch (type) {
+        case PhysicsLibrary::REACT: {
+            shapeFactory = std::make_unique<ReactShapes>();
         } break;
     }
 }

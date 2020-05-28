@@ -16,6 +16,6 @@ namespace Physics {
 
       private:
         std::shared_ptr<rp3d::CollisionShape> shape;
-        float *heightField;
+        std::shared_ptr<float> heightField;
     };
 }

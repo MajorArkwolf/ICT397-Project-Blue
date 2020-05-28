@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Controller/PhysicsFacade/CollisionWorld.hpp"
-#include "Controller/PhysicsFacade/DynamicsWorld.hpp"
+
 #include "Controller/PhysicsFacade/React/ReactCollisionWorld.hpp"
 #include "Controller/PhysicsFacade/React/ReactDynamicsWorld.hpp"
+#include "Controller/PhysicsFacade/React/ReactShapes.hpp"
 
 namespace Physics {
     /**
@@ -32,6 +32,7 @@ namespace Physics {
          */
         CollisionWorld *GetCollisionWorld();
 
+        ShapeFactory *GetShapeFactory();
         /**
          *@brief Initialises the collision world using the specified library type
          *@param type The type of physics library to use
@@ -47,13 +48,17 @@ namespace Physics {
         void InitialiseDynamicsWorld(PhysicsLibrary type = PhysicsLibrary::REACT,
                                      glm::vec3 gravity   = glm::vec3(0, -9.8f, 0));
 
+        void InitialiseShapeFactory(PhysicsLibrary type = PhysicsLibrary::REACT);
       private:
         PhysicsManager() = default;
 
         /// Dynamics world pointer
-        DynamicsWorld *dynWorld;
+        std::unique_ptr<DynamicsWorld> dynamicsWorld;
 
         ///Collision world pointer
-        CollisionWorld *colWorld;
+        std::unique_ptr<CollisionWorld> collisionWorld;
+
+        ///Shape factory pointer
+        std::unique_ptr<ShapeFactory> shapeFactory;
     };
 }
