@@ -51,9 +51,13 @@ namespace Physics {
 
         void InitialiseShapeFactory(PhysicsLibrary type = PhysicsLibrary::REACT);
       private:
+
+        static void lua_initialiseReact();
+        static CollisionWorld* lua_getCollisionWorld();
+        static DynamicsWorld* lua_getDynamicsWorld();
         void LuaInit();
 
-        PhysicsManager() = default;
+        PhysicsManager();
 
         /// Dynamics world pointer
         std::unique_ptr<DynamicsWorld> dynamicsWorld;
