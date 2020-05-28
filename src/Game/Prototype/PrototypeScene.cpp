@@ -5,8 +5,8 @@
 #include "Controller/Engine/Engine.hpp"
 #include "Controller/Engine/LuaManager.hpp"
 #include "Controller/Factory/GameAssetFactory.hpp"
-#include "Controller/TextureManager.hpp"
 #include "Controller/PhysicsManager.hpp"
+#include "Controller/TextureManager.hpp"
 #include "Model/GameObject/Manager.hpp"
 #include "Model/GameObject/Types.hpp"
 #include "Model/Models/Model.hpp"
@@ -17,7 +17,7 @@
 using Controller::Input::BLUE_InputAction;
 using Controller::Input::BLUE_InputType;
 
-PrototypeScene::PrototypeScene() : dynWorld(glm::vec3(0, -9.8f, 0)) {
+PrototypeScene::PrototypeScene() {
     PrototypeScene::Init();
 }
 
@@ -28,23 +28,22 @@ auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
     auto &engine  = BlueEngine::Engine::get();
 
     terrain.Update(camera.getLocation());
-    dynWorld.Update(dt);
 
     if (moveForward) {
 
-         camera.ProcessKeyboard(Camera_Movement::FORWARD, dt);
+        camera.ProcessKeyboard(Camera_Movement::FORWARD, dt);
     }
     if (moveBackward) {
 
-         camera.ProcessKeyboard(Camera_Movement::BACKWARD, dt);
+        camera.ProcessKeyboard(Camera_Movement::BACKWARD, dt);
     }
     if (moveLeft) {
 
-         camera.ProcessKeyboard(Camera_Movement::LEFT, dt);
+        camera.ProcessKeyboard(Camera_Movement::LEFT, dt);
     }
     if (moveRight) {
-        
-         camera.ProcessKeyboard(Camera_Movement::RIGHT, dt);
+
+        camera.ProcessKeyboard(Camera_Movement::RIGHT, dt);
     }
 
     // Update the Dynamic Physics world
@@ -60,70 +59,89 @@ void PrototypeScene::Init() {
     auto phys_sys = &(Physics::PhysicsManager::GetInstance());
     phys_sys->InitialiseCollisionWorld();
     phys_sys->InitialiseDynamicsWorld();
+    phys_sys->InitialiseShapeFactory();
 
     // Initialise the GameObject system
     GameObj_Manager::init();
 
     // Run the GameObject initialisation script
-    if (luaL_dofile(LuaManager::getInstance().getLuaState(), "res/scripts/gameObjsInit.lua"))
-    {
+    if (luaL_dofile(LuaManager::getInstance().getLuaState(), "./res/scripts/gameObjsInit.lua")) {
         printf("%s\n", lua_tostring(LuaManager::getInstance().getLuaState(), -1));
     }
 
     // Testing C++ implementation of Game Objects system revision
-    /*vector<BlueEngine::ID> gameObj_ids;
-    {
-        auto resmanager = ResourceManager::getInstance();
-        auto model_id = resmanager.getModelID("res/model/ball.fbx");
-        auto phys_world_collision = phys_sys->GetCollisionWorld();
-        auto phys_world_dynamics = phys_sys->GetDynamicsWorld();
+    //vector<BlueEngine::ID> gameObj_ids;
+    //{
+    //    const auto ballShape      = phys_sys->GetShapeFactory()->createCapsule(1, 3);
+    //    auto resmanager           = ResourceManager::getInstance();
+    //    auto model_id             = resmanager.getModelID("res/model/ball.fbx");
+    //    auto phys_world_collision = phys_sys->GetCollisionWorld();
+    //    auto phys_world_dynamics  = phys_sys->GetDynamicsWorld();
 
-        auto temp = Controller::Factory::get().GameObject(GameObj_Type::Static);
-        gameObj_ids.push_back(temp->id());
-        temp->model = BlueEngine::ID(model_id);
-        auto phys_obj_rigid = phys_world_dynamics->GetRigidBody(temp->physBody);
-        phys_obj_rigid->SetPosition(glm::vec3(0.0f, 150.0f, -20.0f));
-        GameObj_Manager::insert(temp);
+    //    auto temp = Controller::Factory::get().GameObject(GameObj_Type::NPC);
+    //    gameObj_ids.push_back(temp->id());
+    //    temp->model          = BlueEngine::ID(model_id);
+    //    auto *phys_obj_rigid = phys_world_dynamics->GetRigidBody(temp->physBody);
+    //    auto *reactBodyheights = dynamic_cast<Physics::ReactRigidBody *>(phys_obj_rigid);
+    //    reactBodyheights->AddCollisionShape(dynamic_cast<Physics::ReactShapes*>(phys_sys->GetShapeFactory())->GetShape(ballShape), glm::vec3(0, 0, 0),
+    //                                        glm::quat(glm::vec3(0, 0, 0)), 1);
+    //    phys_obj_rigid->SetPosition(glm::vec3(0.0f, 150.0f, -20.0f));
+    //    phys_obj_rigid->SetAngularDamping(1.0);
+    //    GameObj_Manager::insert(temp);
 
-        temp = Controller::Factory::get().GameObject(GameObj_Type::Item);
-        gameObj_ids.push_back(temp->id());
-        temp->model = BlueEngine::ID(model_id);
-        auto phys_obj_collision = phys_world_collision->GetCollisionBody(temp->physBody);
-        phys_obj_collision->SetPosition(glm::vec3(5.0f, 150.0f, -20.0f));
-        GameObj_Manager::insert(temp);
+    //    temp = Controller::Factory::get().GameObject(GameObj_Type::Item);
+    //    gameObj_ids.push_back(temp->id());
+    //    temp->model             = BlueEngine::ID(model_id);
+    //    auto phys_obj_collision = phys_world_collision->GetCollisionBody(temp->physBody);
+    //    phys_obj_collision->SetPosition(glm::vec3(5.0f, 150.0f, -20.0f));
+    //    GameObj_Manager::insert(temp);
 
-        temp = Controller::Factory::get().GameObject(GameObj_Type::Player);
-        gameObj_ids.push_back(temp->id());
-        temp->model = BlueEngine::ID(model_id);
-        phys_obj_rigid = phys_world_dynamics->GetRigidBody(temp->physBody);
-        phys_obj_rigid->SetPosition(glm::vec3(10.0f, 150.0f, -20.0f));
-        GameObj_Manager::insert(temp);
+    //    temp = Controller::Factory::get().GameObject(GameObj_Type::Player);
+    //    gameObj_ids.push_back(temp->id());
+    //    temp->model    = BlueEngine::ID(model_id);
+    //    phys_obj_rigid = phys_world_dynamics->GetRigidBody(temp->physBody);
+    //    phys_obj_rigid->SetPosition(glm::vec3(10.0f, 150.0f, -20.0f));
+    //    GameObj_Manager::insert(temp);
 
-        temp = Controller::Factory::get().GameObject(GameObj_Type::NPC);
-        gameObj_ids.push_back(temp->id());
-        temp->model = BlueEngine::ID(model_id);
-        phys_obj_rigid = phys_world_dynamics->GetRigidBody(temp->physBody);
-        phys_obj_rigid->SetPosition(glm::vec3(15.0f, 150.0f, -20.0f));
-        GameObj_Manager::insert(temp);
+    //    temp = Controller::Factory::get().GameObject(GameObj_Type::NPC);
+    //    gameObj_ids.push_back(temp->id());
+    //    temp->model    = BlueEngine::ID(model_id);
+    //    phys_obj_rigid = phys_world_dynamics->GetRigidBody(temp->physBody);
+    //    phys_obj_rigid->SetPosition(glm::vec3(15.0f, 150.0f, -20.0f));
+    //    GameObj_Manager::insert(temp);
 
-            // Make sure that the physics bodies stay in sync
-        GameObj_Manager::syncPhys();
-    }*/
+    //    // Make sure that the physics bodies stay in sync
+    //    GameObj_Manager::syncPhys();
+
+    //        Blue::HeightMap heightMap;
+    //    auto id_assigner = BlueEngine::IDTracker::getInstance();
+    //    terrain.GenerateHeightMap(heightMap);
+    //    const auto terrainID =
+    //        phys_sys->GetShapeFactory()->createHeightField(heightMap.width, heightMap.height, heightMap.heightRange.min,
+    //                                 heightMap.heightRange.max, heightMap.terrain);
+    //    const auto terrainPhysID = id_assigner.getID();
+    //    phys_world_dynamics->CreateRigidBody(heightMap.position, heightMap.rotation, terrainPhysID);
+    //    auto *reactBodyHeights =
+    //        dynamic_cast<Physics::ReactRigidBody *>(phys_world_dynamics->GetRigidBody(terrainPhysID));
+    //    reactBodyHeights->AddCollisionShape(
+    //        dynamic_cast<Physics::ReactShapes *>(phys_sys->GetShapeFactory())->GetShape(terrainID),
+    //        glm::vec3{0, 0, 0},
+    //                                        glm::quat(1, 0, 0, 0), 1.f);
+    //    reactBodyHeights->SetBodyType(2);
+    //}
+
 
     /*std::function<void(std::shared_ptr<GameObj_Base>)> PhysicsOp =
         [&](std::shared_ptr<GameObj_Base> object) -> void {
         static size_t  gameObjBodyID = 1;
-        
-            dynWorld.CreateRigidBody(object->gameObj_pos, glm::quat(object->gameObj_rotation), ++gameObjBodyID);
-        auto *reactBody =
-            dynamic_cast<Physics::ReactRigidBody *>(dynWorld.GetRigidBody(gameObjBodyID));
-        if (object->gameObj_getTypeID() == 1u) {
-            if (object->gameObj_getModelPath().find("Tree") != std::string::npos) {
-                reactBody->AddCollisionShape(shapes.GetShape(TreeShapeID), glm::vec3{0, 0, 0},
-                                             glm::quat(1, 0, 0, 0), 1.f);
-            } else {
-                reactBody->AddCollisionShape(shapes.GetShape(RockShapeID), glm::vec3{0, 0, 0},
-                                             glm::quat(1, 0, 0, 0), 1.f);
+
+            dynWorld.CreateRigidBody(object->gameObj_pos, glm::quat(object->gameObj_rotation),
+    ++gameObjBodyID); auto *reactBody = dynamic_cast<Physics::ReactRigidBody
+    *>(dynWorld.GetRigidBody(gameObjBodyID)); if (object->gameObj_getTypeID() == 1u) { if
+    (object->gameObj_getModelPath().find("Tree") != std::string::npos) {
+    reactBody->AddCollisionShape(shapes.GetShape(TreeShapeID), glm::vec3{0, 0, 0}, glm::quat(1, 0,
+    0, 0), 1.f); } else { reactBody->AddCollisionShape(shapes.GetShape(RockShapeID), glm::vec3{0, 0,
+    0}, glm::quat(1, 0, 0, 0), 1.f);
             }
             reactBody->SetBodyType(2);
         } else {
@@ -203,7 +221,7 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
                 auto x = static_cast<double>(inputData.mouseMotionRelative.x);
                 auto y = static_cast<double>(inputData.mouseMotionRelative.y);
                 y      = y * -1.0;
-                 camera.ProcessMouseMovement(x, y);
+                camera.ProcessMouseMovement(x, y);
                 handledMouse = true;
             }
 
@@ -228,7 +246,6 @@ auto PrototypeScene::display() -> void {
     renderer.SetCameraOnRender(camera);
     terrain.AddToDraw();
     GameObj_Manager::addAllToDraw();
-
 }
 
 void PrototypeScene::unInit() {}

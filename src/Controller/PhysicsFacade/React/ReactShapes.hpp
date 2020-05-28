@@ -6,14 +6,14 @@
 #include "Controller/PhysicsFacade/React/ReactCollisionShape.hpp"
 
 namespace Physics {
-    class ReactShapes : ShapeFactory{
+    class ReactShapes final : public ShapeFactory{
       public:
-        ReactShapes() = default;;
-        ~ReactShapes();
+        ReactShapes() = default;
+        ~ReactShapes() = default;
         size_t createSphere(float radius) override;
         size_t createBox(glm::vec3 halfExtents) override;
         size_t createCapsule(float radius, float height) override;
-        size_t createHeightfield(int columns, int rows, float minHeight, float maxHeight,
+        size_t createHeightField(int columns, int rows, float minHeight, float maxHeight,
                                   float *terrainData) override;
         ReactCollisionShape& GetShape(size_t id);
 

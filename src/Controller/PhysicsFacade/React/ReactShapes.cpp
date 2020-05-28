@@ -4,8 +4,7 @@
 
 #include "ReactHelper.hpp"
 using namespace rp3d;
-Physics::ReactShapes::~ReactShapes() {
-}
+
 size_t Physics::ReactShapes::createSphere(float radius) {
 
     auto id                  = GenerateId();
@@ -28,7 +27,7 @@ size_t Physics::ReactShapes::createCapsule(float radius, float height) {
     return id;
 }
 
-size_t Physics::ReactShapes::createHeightfield(int columns, int rows, float minHeight,
+size_t Physics::ReactShapes::createHeightField(int columns, int rows, float minHeight,
                                                float maxHeight, float *terrainData) {
     auto id = GenerateId();
     rp3d::HeightFieldShape *shape =
