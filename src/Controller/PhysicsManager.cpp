@@ -42,3 +42,19 @@ void Physics::PhysicsManager::InitialiseShapeFactory(PhysicsLibrary type) {
         } break;
     }
 }
+
+void Physics::PhysicsManager::LuaInit() {
+
+    luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
+        .beginClass<PhysicsManager>("PhysicsManager")
+        .addFunction("id", &PhysicsManager::GetDynamicsWorld)
+        .addFunction("type", &PhysicsManager::GetCollisionWorld)
+        .addFunction("physBody", &PhysicsManager::GetShapeFactory)
+        .endClass();
+
+        luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
+        .deriveClass<ReactDynamicsWorld, DynamicsWorld>( "")
+        .addFunction("GetRigidBody", &ReactDynamicsWorld::GetRigidBody)
+        .addFunction("CreateRigidBody", &ReactDynamicsWorld::CreateRigidBody)
+        .endClass();
+}

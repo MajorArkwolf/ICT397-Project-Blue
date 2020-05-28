@@ -4,6 +4,7 @@
 #include "Controller/PhysicsFacade/React/ReactCollisionWorld.hpp"
 #include "Controller/PhysicsFacade/React/ReactDynamicsWorld.hpp"
 #include "Controller/PhysicsFacade/React/ReactShapes.hpp"
+#include "Controller/Engine/LuaManager.hpp"
 
 namespace Physics {
     /**
@@ -50,6 +51,8 @@ namespace Physics {
 
         void InitialiseShapeFactory(PhysicsLibrary type = PhysicsLibrary::REACT);
       private:
+        void LuaInit();
+
         PhysicsManager() = default;
 
         /// Dynamics world pointer

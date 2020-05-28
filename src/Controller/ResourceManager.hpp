@@ -91,4 +91,6 @@ class ResourceManager {
      * @param textureName The key to use to store the texture
      */
     static auto loadTexture(const std::string filePath, const std::string textureName) -> void;
+
+    static auto getModelId(const std::string key) -> void;
 };
