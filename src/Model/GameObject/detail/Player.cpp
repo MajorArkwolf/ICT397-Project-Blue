@@ -7,12 +7,8 @@
 #include "../Types.hpp"
 
 GameObj_Player::GameObj_Player(BlueEngine::ID model_in, BlueEngine::ID physBody_in)
-	: GameObj_Base(model_in, physBody_in) {
+	: GameObj_Base(model_in, physBody_in), GameObj_Character() {
 	// GameObj_Player has no unique construction procedure yet.
-}
-
-GameObj_Player::~GameObj_Player() {
-	// GameObj_Player has no unique destruction procedure yet.
 }
 
 GameObj_Type GameObj_Player::type() const {

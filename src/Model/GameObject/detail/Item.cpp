@@ -11,10 +11,6 @@ GameObj_Item::GameObj_Item(BlueEngine::ID model_in, BlueEngine::ID physBody_in)
 	// GameObj_Item has no unique construction procedure yet.
 }
 
-GameObj_Item::~GameObj_Item() {
-	// GameObj_Item has no unique destruction procedure yet.
-}
-
 GameObj_Type GameObj_Item::type() const {
 	// Return the GameObject's type
 	return GameObj_Type::Item;

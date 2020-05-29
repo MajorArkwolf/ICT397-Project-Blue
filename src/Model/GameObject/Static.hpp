@@ -10,7 +10,7 @@
 	 * @brief A non-moving Gameobject.
 	 * @note Used for populating a scene with non-interactive furnishings.
 	 */
-class GameObj_Static : public GameObj_Base {
+class GameObj_Static : virtual public GameObj_Base {
 public:
 		/*!
 		 * @brief Sets initial class contents and calls the inherited class constructor.
@@ -18,12 +18,6 @@ public:
 		 * @param [in] physbody_in The identifier for a physics body loaded into the engine.
 		 */
 	GameObj_Static(BlueEngine::ID model_in, BlueEngine::ID physBody_in);
-
-		/*!
-		 * @brief GameObj_Static destructor.
-		 * @note Currently stubbed out, does not extend destructor behaviour for this GameObject.
-		 */
-	~GameObj_Static();
 
 		/*!
 		 * @brief Identifies the GameObject's type.

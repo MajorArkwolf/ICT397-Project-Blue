@@ -7,7 +7,7 @@
 	 * @brief A non-moving Gameobject.
 	 * @note Used for populating a scene with furnishings.
 	 */
-class GameObj_NPC : public GameObj_Character {
+class GameObj_NPC : virtual public GameObj_Character {
 public:
 		/*!
 		 * @brief Sets initial class contents and calls the inherited class constructor.
@@ -16,12 +16,6 @@ public:
 		 * @param [in] context_in The identifier for a finite state machine loaded into the engine.
 		 */
 	GameObj_NPC(BlueEngine::ID model_in, BlueEngine::ID physBody_in, BlueEngine::ID context_in);
-
-		/*!
-		 * @brief GameObj_Player destructor.
-		 * @note Currently stubbed out, does not extend destructor behaviour for this GameObject.
-		 */
-	~GameObj_NPC();
 
 		/*!
 		 * @brief Identifies the GameObject's type.

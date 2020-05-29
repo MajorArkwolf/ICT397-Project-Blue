@@ -4,9 +4,11 @@
 #include <map>
 #include <memory>
 
-	/// Internal Dependencies
-#include "Base.hpp"
+	/// System Dependencies
 #include <functional>
+
+	/// Internal Dependencies
+#include "detail/LuaAssist.hpp"
 
 	/*!
 	 * @brief Type declaration for a function pointer used by the GameObj_Manager.
@@ -84,18 +86,23 @@ protected:
 	static BlueEngine::ID lua_create(GameObj_Type type);
 
 		/*!
-		 * @brief Gather a reference to a managed GameObject, in a format compatible with Lua.
+		 * @brief Gathers a reference to a managed GameObject, in a format compatible with Lua.
 		 * @param [in] identifier A GameObject identifier.
 		 * @return A pointer to the specified GameObject, or nullptr on error.
-		 * @note Can be used to check if a GameObject is being managed.
+		 * @note Can gather ANY type of managed GameObject.
 		 * @warning The pointer provided is not managed, and the data may go out of scope!
 		 */
 	static GameObj_Base* lua_get(BlueEngine::ID identifier);
 
-private:
-		//! Stores a collection of unique generic GameObjects, mapped to their identifier.
-	static std::map<BlueEngine::ID, std::shared_ptr<GameObj_Base>> generic_objs;
+		/*!
+		 * @brief Gathers an encapsulated GameObject with extended Character attributes and operations.
+		 * @param [in] identifier A GameObject identifier.
+		 * @brief A CharacterWrapper storing the pointer to the requested GameObject, or storing nullptr.
+		 * @note Passes to Lua by value, but encapsulates the actual GameObject in C++ scope via a smart pointer.
+		 */
+	static GameObj_LuaHelper::CharacterWrapper lua_charData(BlueEngine::ID identifier);
 
-		//! Stores a collection of unique character GameObjects, mapped to their identifier.
-	static std::map<BlueEngine::ID, std::shared_ptr<GameObj_Base>> character_objs;
+private:
+		//! Stores a collection of unique GameObjects, mapped to their identifier.
+	static std::map<BlueEngine::ID, std::shared_ptr<GameObj_Base>> managed_objs;
 };

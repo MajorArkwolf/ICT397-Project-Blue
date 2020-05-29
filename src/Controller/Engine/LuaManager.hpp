@@ -6,6 +6,7 @@ extern "C" {
 #include "lualib.h"
 }
 #include "LuaBridge/LuaBridge.h"
+#include "LuaBridge/Vector.h"
 
 /**
  * @class LuaManager

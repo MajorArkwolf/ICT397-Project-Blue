@@ -25,12 +25,6 @@ public:
 	GameObj_Base(BlueEngine::ID model_in, BlueEngine::ID physBody_in);
 
 		/*!
-		 * @brief Virtual destructor.
-		 * @warning Must be implemented by inheritors!
-		 */
-	virtual ~GameObj_Base() = 0;
-
-		/*!
 		 * @brief Returns a copy of this GameObject's unique identifier.
 		 * @return A copy of GameObj_Base::uniqueID.
 		 */

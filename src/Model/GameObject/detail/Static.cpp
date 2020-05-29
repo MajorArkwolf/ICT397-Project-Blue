@@ -11,10 +11,6 @@ GameObj_Static::GameObj_Static(BlueEngine::ID model_in, BlueEngine::ID physBody_
 	// GameObj_Static has no unique construction procedure yet.
 }
 
-GameObj_Static::~GameObj_Static() {
-	// GameObj_Static has no unique destruction procedure yet.
-}
-
 GameObj_Type GameObj_Static::type() const {
 	// Return the GameObject's type
 	return GameObj_Type::Static;
