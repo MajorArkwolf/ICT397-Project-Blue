@@ -49,7 +49,6 @@ void Controller::TerrainFactory::AddWallBoundary() {
         for (size_t y = 0; y <= 50; ++y) {
             newheight -= 1.0f;
             x.at(depth + y).height = newheight;
-            x.at(depth - y).height = newheight;
         }
     }
     //North
@@ -58,7 +57,6 @@ void Controller::TerrainFactory::AddWallBoundary() {
         auto newheight = 300.f;
         for (size_t y = 0; y <= 50; ++y) {
             newheight -= 1.0f;
-            x.at(oppDepth + y).height = newheight;
             x.at(oppDepth - y).height = newheight;
         }
     }
@@ -69,7 +67,6 @@ void Controller::TerrainFactory::AddWallBoundary() {
         for (size_t y = 0; y <= 50; ++y) {
             newheight -= 1.0f;
             fValues.at(depth + y).at(z).height = newheight;
-            fValues.at(depth - y).at(z).height = newheight;
         }
         fValues.at(depth).at(z).height = 300.f;
     }
@@ -79,7 +76,6 @@ void Controller::TerrainFactory::AddWallBoundary() {
         auto newheight = 300.f;
         for (size_t y = 0; y <= 50; ++y) {
             newheight -= 1.0f;
-            fValues.at(maxZSize - depth + y).at(z).height = newheight;
             fValues.at(maxZSize - depth - y).at(z).height = newheight;
         }
         fValues.at(depth).at(z).height = 300.f;
