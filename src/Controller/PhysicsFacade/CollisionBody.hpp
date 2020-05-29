@@ -4,16 +4,14 @@
 
 namespace Physics {
 
-    enum class RigidBodyType { Static, Kinematic, Dynamic };
-
     /** 
     * @class RigidBody
     * A pure virtual class that represents a RigidBody for use within a dynamics world
     */
-    class RigidBody {
+    class CollisionBody {
       public:
-        RigidBody(){};
-        virtual ~RigidBody(){};
+        CollisionBody(){};
+        virtual ~CollisionBody(){};
         /**
          * @brief Sets the position of the rigid body
          * @param position THe position to set the rigid body to
@@ -41,34 +39,9 @@ namespace Physics {
          */
         virtual glm::quat GetOrientation()                                                = 0;
         /**
-         * @brief Sets wheter physics should be updated on this body
-         * @param sleeping Set to true if the body should not be updated
-         */
-        virtual void SetSleeping(bool sleeping)                                           = 0;
-        /**
-         * @brief Returns whether the body is currently not being udpated
-         * @return Whether the body is sleeping
-         */
-        virtual bool GetSleeping()                                                        = 0;
-        /**
-         * @brief Applies a give force to the centre of the object
-         * @param force The amount of force and direction to apply
-         */
-        virtual void ApplyForceToCentre(glm::vec3 force)                                  = 0;
-        /**
-         * @brief Applies force to a given point of the body
-         * @param force The amount of force to apply
-         * @param point The point to apply the force
-         */
-        virtual void ApplyForce(glm::vec3 force, glm::vec3 point)                         = 0;
-
-        virtual void SetAngularDamping(double damping)                                        = 0;
-        /**
          * @brief Destroys the rigid body when no longer needed
          */
         virtual void Destroy()                                                            = 0;
-
-      private:
       
     };
 }

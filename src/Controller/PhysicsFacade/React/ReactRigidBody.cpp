@@ -21,7 +21,7 @@ void Physics::ReactRigidBody::SetPosition(glm::vec3 position) {
 
 void Physics::ReactRigidBody::SetOrientation(glm::quat orientation) {
 
-    rp3d::Transform currentTransform = rigidBody->getTransform();
+    const rp3d::Transform currentTransform = rigidBody->getTransform();
 
     rp3d::Transform newTransform;
     rp3d::Quaternion newOrientation = ReactHelper::ConvertQuaternion(orientation);
@@ -101,3 +101,8 @@ void Physics::ReactRigidBody::SetBodyType(int type) {
 void Physics::ReactRigidBody::SetMass(float mass) {
     rigidBody->setMass(mass);
 }
+
+void Physics::ReactRigidBody::SetAngularDamping(double damping) {
+    rigidBody->setAngularDamping(damping);
+}
+
