@@ -16,7 +16,7 @@ GameObj_Type GameObj_LuaHelper::Player()
 GameObj_Type GameObj_LuaHelper::NPC()
 { return GameObj_Type::NPC; };
 
-GameObj_LuaHelper::CharacterWrapper::CharacterWrapper(std::shared_ptr<GameObj_Character> target) {
+GameObj_LuaHelper::CharacterWrapper::CharacterWrapper(GameObj_Character* target) {
 	// Just store the pointer
 	gameObj = target;
 }
@@ -66,7 +66,7 @@ BlueEngine::ID GameObj_LuaHelper::CharacterWrapper::npc_context() {
 	if (gameObj->type() == GameObj_Type::NPC)
 	{
 		// Perform the operation on the wrapped GameObject
-		return dynamic_cast<GameObj_NPC*>(gameObj.get())->context();
+		return dynamic_cast<GameObj_NPC*>(gameObj)->context();
 	}
 
 	// Return default if not the proper type

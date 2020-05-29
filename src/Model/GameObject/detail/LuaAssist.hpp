@@ -43,7 +43,7 @@ namespace GameObj_LuaHelper {
 			 * @brief Class constructor, guarantees that an object address to proxy is assigned.
 			 * @param [in] target A pointer to an existing GameObj_Character.
 			 */
-		CharacterWrapper(std::shared_ptr<GameObj_Character> target);
+		CharacterWrapper(GameObj_Character* target);
 
 			/*!
 			 * @brief Calls type() on the encalsulated GameObj_Character.
@@ -112,7 +112,7 @@ namespace GameObj_LuaHelper {
 
 	private:
 			//! Keeps track of the GameObj_Character to encapsulate from Lua.
-		std::shared_ptr<GameObj_Character> gameObj;
+		GameObj_Character* gameObj;
 	};
 };
 

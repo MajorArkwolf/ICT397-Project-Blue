@@ -184,7 +184,7 @@ GameObj_LuaHelper::CharacterWrapper GameObj_Manager::lua_charData(BlueEngine::ID
 	}
 
 	// Encapculate the GameObject and return it
-	std::shared_ptr<GameObj_Character> temp_out(dynamic_cast<GameObj_Character*>(temp_reference.get()));
+	GameObj_Character* temp_out = dynamic_cast<GameObj_Character*>(temp_reference.get());
 	return GameObj_LuaHelper::CharacterWrapper(temp_out);
 }
 
