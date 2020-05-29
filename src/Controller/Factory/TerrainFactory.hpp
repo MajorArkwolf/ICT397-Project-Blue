@@ -238,5 +238,6 @@ namespace Controller {
          * Generate the height offset needed for physics.
          */
         void GenerateHeightOffSet();
+        void AddWallBoundary();
     };
 }
