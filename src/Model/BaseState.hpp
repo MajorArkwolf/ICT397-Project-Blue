@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Controller/InputManager.hpp"
+#include "View/EulerCamera.hpp"
 
 /**
  * @class BaseState
@@ -47,5 +48,7 @@ class BaseState {
      * @param t The time since the program was started
      */
     virtual void update(double t, double dt) = 0;
+
+    View::Camera camera;
 
 };

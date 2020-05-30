@@ -8,7 +8,6 @@ namespace Physics {
     class ReactDynamicsWorld : public DynamicsWorld {
       public:
         ReactDynamicsWorld(glm::vec3 gravity);
-        ~ReactDynamicsWorld();
         void InitialiseWorld(glm::vec3 gravity) override;
         void Update(double deltaTime) override;
         void CreateRigidBody(glm::vec3 position, glm::quat orientation, size_t gameObjectID) override;

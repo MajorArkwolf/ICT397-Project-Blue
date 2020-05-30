@@ -44,9 +44,12 @@ namespace BlueEngine {
         /// Base path to the program.
         std::string basepath = "";
 
-      private:
         /// The game stack to allow to switch between scenes.
+        ///
         GameStack<std::shared_ptr<BaseState>> gameStack;
+      private:
+
+
         /// GUI Manager for our GUI interface.
         GUIManager guiManager;
         /// Flag used to determine if the engine should shutdown.

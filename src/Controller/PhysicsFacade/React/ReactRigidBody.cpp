@@ -94,7 +94,6 @@ void Physics::ReactRigidBody::SetBodyType(RigidBodyType type) {
         case RigidBodyType::STATIC: {
             rigidBody->setType(rp3d::BodyType::STATIC);
         } break;
-        default: break;
     }
 }
 
@@ -104,5 +103,19 @@ void Physics::ReactRigidBody::SetMass(float mass) {
 
 void Physics::ReactRigidBody::SetAngularDamping(double damping) {
     rigidBody->setAngularDamping(damping);
+}
+
+void Physics::ReactRigidBody::SetBounciness(float bounciness) {
+    rigidBody->getMaterial().setBounciness(bounciness);
+
+}
+
+void Physics::ReactRigidBody::SetFrictionCoefficient(float friction) {
+
+        rigidBody->getMaterial().setFrictionCoefficient(friction);
+}
+
+void Physics::ReactRigidBody::SetRollingResistance(float resistance) {
+    rigidBody->getMaterial().setRollingResistance(resistance);
 }
 

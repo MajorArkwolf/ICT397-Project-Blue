@@ -17,8 +17,23 @@
 using Controller::Input::BLUE_InputAction;
 using Controller::Input::BLUE_InputType;
 
+View::Camera &getCamera() {
+    return BlueEngine::Engine::get().gameStack.getTop()->camera;
+}
+
+void toggleWireframe() {
+    auto &render = BlueEngine::Engine::get().renderer;
+    render.ToggleWireFrame();
+}
+
+
+
 PrototypeScene::PrototypeScene() {
     PrototypeScene::Init();
+
+    luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
+        .addFunction("getCamera", &getCamera)
+        .addFunction("toggleWireframe", &toggleWireframe);
 }
 
 PrototypeScene::~PrototypeScene() {}
@@ -70,20 +85,21 @@ void PrototypeScene::Init() {
     }
 
     // Testing C++ implementation of Game Objects system revision
-    //vector<BlueEngine::ID> gameObj_ids;
+    // vector<BlueEngine::ID> gameObj_ids;
     //{
     //    const auto ballShape      = phys_sys->GetShapeFactory()->createCapsule(1, 3);
     //    auto resmanager           = ResourceManager::getInstance();
     //    auto model_id             = resmanager.getModelID("res/model/ball.fbx");
     //    auto phys_world_collision = phys_sys->GetCollisionWorld();
-        auto phys_world_dynamics  = phys_sys->GetDynamicsWorld();
+    auto phys_world_dynamics = phys_sys->GetDynamicsWorld();
 
     //    auto temp = Controller::Factory::get().GameObject(GameObj_Type::NPC);
     //    gameObj_ids.push_back(temp->id());
     //    temp->model          = BlueEngine::ID(model_id);
     //    auto *phys_obj_rigid = phys_world_dynamics->GetRigidBody(temp->physBody);
     //    auto *reactBodyheights = dynamic_cast<Physics::ReactRigidBody *>(phys_obj_rigid);
-    //    reactBodyheights->AddCollisionShape(dynamic_cast<Physics::ReactShapes*>(phys_sys->GetShapeFactory())->GetShape(ballShape), glm::vec3(0, 0, 0),
+    //    reactBodyheights->AddCollisionShape(dynamic_cast<Physics::ReactShapes*>(phys_sys->GetShapeFactory())->GetShape(ballShape),
+    //    glm::vec3(0, 0, 0),
     //                                        glm::quat(glm::vec3(0, 0, 0)), 1);
     //    phys_obj_rigid->SetPosition(glm::vec3(0.0f, 150.0f, -20.0f));
     //    phys_obj_rigid->SetAngularDamping(1.0);
@@ -113,23 +129,21 @@ void PrototypeScene::Init() {
     //    // Make sure that the physics bodies stay in sync
     //    GameObj_Manager::syncPhys();
 
-            Blue::HeightMap heightMap;
-        auto id_assigner = BlueEngine::IDTracker::getInstance();
-            terrain.GenerateHeightMap(heightMap);
-        const auto terrainID =
-            phys_sys->GetShapeFactory()->createHeightField(heightMap.width, heightMap.height, heightMap.heightRange.min,
-                                     heightMap.heightRange.max, heightMap.terrain);
-        const auto terrainPhysID = id_assigner.getID();
-        phys_world_dynamics->CreateRigidBody(heightMap.position, heightMap.rotation, terrainPhysID);
-        auto *reactBodyHeights =
-            dynamic_cast<Physics::ReactRigidBody *>(phys_world_dynamics->GetRigidBody(terrainPhysID));
-        reactBodyHeights->AddCollisionShape(
-            dynamic_cast<Physics::ReactShapes *>(phys_sys->GetShapeFactory())->GetShape(terrainID),
-            glm::vec3{0, 0, 0},
-                                            glm::quat(1, 0, 0, 0), 1.f);
-        reactBodyHeights->SetBodyType(Physics::ReactRigidBody::RigidBodyType::STATIC);
+    Blue::HeightMap heightMap;
+    auto id_assigner = BlueEngine::IDTracker::getInstance();
+    terrain.GenerateHeightMap(heightMap);
+    const auto terrainID = phys_sys->GetShapeFactory()->createHeightField(
+        heightMap.width, heightMap.height, heightMap.heightRange.min, heightMap.heightRange.max,
+        heightMap.terrain);
+    const auto terrainPhysID = id_assigner.getID();
+    phys_world_dynamics->CreateRigidBody(heightMap.position, heightMap.rotation, terrainPhysID);
+    auto *reactBodyHeights =
+        dynamic_cast<Physics::ReactRigidBody *>(phys_world_dynamics->GetRigidBody(terrainPhysID));
+    reactBodyHeights->AddCollisionShape(
+        dynamic_cast<Physics::ReactShapes *>(phys_sys->GetShapeFactory())->GetShape(terrainID),
+        glm::vec3{0, 0, 0}, glm::quat(1, 0, 0, 0), 1.f);
+    reactBodyHeights->SetBodyType(Physics::ReactRigidBody::RigidBodyType::STATIC);
     //}
-
 
     /*std::function<void(std::shared_ptr<GameObj_Base>)> PhysicsOp =
         [&](std::shared_ptr<GameObj_Base> object) -> void {
@@ -161,6 +175,16 @@ void PrototypeScene::handleWindowEvent() {
 }
 
 void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
+
+    if (luaL_dofile(LuaManager::getInstance().getLuaState(), "./res/scripts/luaFunctions.lua")) {
+        printf("%s\n", lua_tostring(LuaManager::getInstance().getLuaState(), -1));
+    }
+    luabridge::LuaRef luaInput =
+        luabridge::LuaRef::getGlobal(LuaManager::getInstance().getLuaState(), "handleInput");
+    if (!luaInput.isNil()) {
+        luaInput(inputData);
+    }
+
     auto &engine      = BlueEngine::Engine::get();
     auto &guiManager  = engine.getGuiManager();
     auto handledMouse = false;
@@ -181,9 +205,6 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
                 case BLUE_InputAction::INPUT_MOVE_RIGHT: {
                     moveRight = true;
                 } break;
-                case BLUE_InputAction::INPUT_ESCAPE: {
-                    guiManager.toggleWindow("menu");
-                } break;
 
                 default: break;
             }
@@ -203,15 +224,15 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
                 case BLUE_InputAction::INPUT_MOVE_RIGHT: {
                     moveRight = false;
                 } break;
+                case BLUE_InputAction::INPUT_JUMP: {
+                } break;
+                case BLUE_InputAction::INPUT_CROUCH: {
+                } break;
                 case BLUE_InputAction::INPUT_ACTION_2: {
-                    auto &renderer = BlueEngine::Engine::get().renderer;
-                    renderer.ToggleWireFrame();
                 } break;
                 case BLUE_InputAction::INPUT_ACTION_3: {
-                    guiManager.toggleWindow("instructions");
                 } break;
                 case BLUE_InputAction::INPUT_ACTION_4: {
-                    guiManager.toggleWindow("exit");
                 } break;
                 default: break;
             }

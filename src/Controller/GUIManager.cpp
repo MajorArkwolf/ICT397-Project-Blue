@@ -8,6 +8,9 @@
 
 GUIManager::GUIManager() {
     initialiseWindowOpenMap();
+
+    luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
+        .addFunction("toggleGUIWindow", &GUIManager::luaToggleWindow);
 }
 
 GUIManager::~GUIManager() {
@@ -163,7 +166,8 @@ void GUIManager::displayTextureManager() {
         for (auto &n : texMap) {
             ImGui::Image((void *)(intptr_t)n.second.TextureID, ImVec2(100, 100));
             ImGui::SameLine();
-            ImGui::Text("Texture Name: %s\nTexture ID: %d\nWidth: %d\nHeight: %d", n.first.c_str(), n.second.TextureID, n.second.width, n.second.height);
+            ImGui::Text("Texture Name: %s\nTexture ID: %d\nWidth: %d\nHeight: %d", n.first.c_str(),
+                        n.second.TextureID, n.second.width, n.second.height);
             ImGui::Separator();
         }
         ImGui::End();
@@ -258,7 +262,7 @@ void GUIManager::displayTerrainSettings() {
     }
 }
 //
-//void GUIManager::textureRebind() {
+// void GUIManager::textureRebind() {
 //    bool &windowOpen = windowOpenMap.at("textureRebind");
 //    auto &texManager = TextureManager::getInstance();
 //    if (windowOpen) {
@@ -307,4 +311,10 @@ void GUIManager::initialiseWindowOpenMap() {
     windowOpenMap.insert(std::make_pair(std::string("texture"), false));
     windowOpenMap.insert(std::make_pair(std::string("textureRebind"), false));
     windowOpenMap.insert(std::make_pair(std::string("terrainSettings"), false));
+}
+
+void GUIManager::luaToggleWindow(std::string window) {
+
+    auto &guiManager = BlueEngine::Engine::get().getGuiManager();
+    guiManager.toggleWindow(window);
 }

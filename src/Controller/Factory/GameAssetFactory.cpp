@@ -86,6 +86,7 @@ std::shared_ptr<GameObj_Base> Controller::Factory::GameObject(GameObj_Type type)
 
 			// Create a configured the GameObject
 			object = std::make_shared<GameObj_NPC>(0u, phys_id, 0u);
+
 		}
 		break;
     default:
