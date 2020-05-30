@@ -4,10 +4,11 @@
 #include <map>
 #include <memory>
 
-	/// Internal Dependencies
-#include "Base.hpp"
-#include "LuaHelper.hpp"
+	/// System Dependencies
 #include <functional>
+
+	/// Internal Dependencies
+#include "detail/LuaAssist.hpp"
 
 	/*!
 	 * @brief Type declaration for a function pointer used by the GameObj_Manager.
@@ -19,8 +20,11 @@ using GameObj_ProcessFunc = std::function<void(std::shared_ptr<GameObj_Base> Gam
 	//! A manager class for GameObject's creation and storage.
 class GameObj_Manager {
 public:
+		//! The GameObj_Manager class constructor use is not allowed.
+	GameObj_Manager() = delete;
+
 		/*!
-		 * @brief Registers the GameObject Manager and LuaHelper classes into the engine's Lua VM.
+		 * @brief Registers the GameObject system with the engine's scripting system.
 		 * @note Only performs the initialisation once, even if called multiple times.
 		 */
 	static void init();
@@ -28,7 +32,6 @@ public:
 		/*!
 		 * @brief Adds a new GameObject to be managed.
 		 * @param [in] object A smart pointer to the target GameObject.
-		 * @note This is not registered with Lua.
 		 * @warning Assigning a new GameObject with an existing identifier will overwrite the old GameObject!
 		 */
 	static void insert(std::shared_ptr<GameObj_Base> object);
@@ -38,15 +41,8 @@ public:
 		 * @param [in] identifier A GameObject identifier.
 		 * @return A pointer to the specified GameObject, or nullptr on error.
 		 * @note Can be used to check if a GameObject is being managed.
-		 * @note This is not registered with Lua.
 		 */
 	static std::shared_ptr<GameObj_Base> get(BlueEngine::ID identifier);
-
-		/*!
-		 * @brief Calls the addToDraw function on all managed GameObjects.
-		 * @note No calls will occur if the Manager isn't managing any GameObjects.
-		 */
-	static void addAllToDraw();
 
 		/*!
 		 * @brief Calls for a specific GameObject to be removed from the manager.
@@ -67,23 +63,46 @@ public:
 		 * @param [in] function A function to process all of the stored GameObjects in the Manager.
 		 * @see GameObj_ProcessFunc
 		 */
-    static void process_all(GameObj_ProcessFunc function);
+	static void process_all(GameObj_ProcessFunc function);
 
 		/*!
-		 * @brief Calls upon the Factory Methods to generate a new GameObject of a specific type.
-		 * @param [in] type A GameObject Type Identifier to declare what form of GameObject to generate.
-		 * @return The unique identifier for the newly created GameObject, or 0u on error.
+		 * @brief Calls the addToDraw function on all managed GameObjects.
+		 * @note No calls will occur if the Manager isn't managing any GameObjects.
 		 */
-	static BlueEngine::ID lua_add(GameObjType type);
+	static void addAllToDraw();
 
 		/*!
-		 * @brief Gathers a non-smart pointer, which is actually compatible with Lua.
+		 * @brief Updates the managed GameObjects' collisions bodies to match their rigid bidies.
+		 * @warning Must be called after the physics system delta-updates its rigid bodies!
+		 */
+	static void syncPhys();
+
+protected:
+		/*!
+		 * @brief Invokes the use of the GameObject Factory and automates the process of storing its output.
+		 * @param [in] type The Type of GameObject to create and store.
+		 * @return The identifier of the newly created GameObject.
+		 */
+	static BlueEngine::ID lua_create(GameObj_Type type);
+
+		/*!
+		 * @brief Gathers a reference to a managed GameObject, in a format compatible with Lua.
 		 * @param [in] identifier A GameObject identifier.
-		 * @return A GameObject wrapped in a Lua Helper class.
+		 * @return A pointer to the specified GameObject, or nullptr on error.
+		 * @note Can gather ANY type of managed GameObject.
+		 * @warning The pointer provided is not managed, and the data may go out of scope!
 		 */
-	static GameObj_LuaHelper lua_get(BlueEngine::ID identifier);
+	static GameObj_Base* lua_get(BlueEngine::ID identifier);
+
+		/*!
+		 * @brief Gathers an encapsulated GameObject with extended Character attributes and operations.
+		 * @param [in] identifier A GameObject identifier.
+		 * @brief A CharacterWrapper storing the pointer to the requested GameObject, or storing nullptr.
+		 * @note Passes to Lua by value, but encapsulates the actual GameObject in C++ scope via a smart pointer.
+		 */
+	static GameObj_LuaHelper::CharacterWrapper lua_charData(BlueEngine::ID identifier);
 
 private:
 		//! Stores a collection of unique GameObjects, mapped to their identifier.
-	static std::map<BlueEngine::ID, std::shared_ptr<GameObj_Base>> managedGameObjects;
+	static std::map<BlueEngine::ID, std::shared_ptr<GameObj_Base>> managed_objs;
 };

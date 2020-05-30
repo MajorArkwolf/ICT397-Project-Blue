@@ -1,14 +1,16 @@
 #pragma once
 #include <reactphysics3d.h>
 
+#include "Controller/PhysicsFacade/React/ReactShapes.hpp"
 #include "Controller/PhysicsFacade/RigidBody.hpp"
-#include  "Controller/PhysicsFacade/React/ReactShapes.hpp"
-
 
 namespace Physics {
 
     class ReactRigidBody : public RigidBody {
+
       public:
+        enum class RigidBodyType { STATIC, DYNAMIC, KINEMATIC };
+
         ReactRigidBody(rp3d::RigidBody *body);
         ~ReactRigidBody();
         void SetPosition(glm::vec3 position) override;
@@ -23,7 +25,7 @@ namespace Physics {
         void Destroy() override;
         void AddCollisionShape(ReactCollisionShape, glm::vec3 position, glm::quat orientation,
                                float mass);
-        void SetBodyType(int type);
+        void SetBodyType(RigidBodyType type);
         void SetMass(float mass);
         void SetAngularDamping(double damping) override;
 

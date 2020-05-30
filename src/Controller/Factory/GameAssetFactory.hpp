@@ -2,7 +2,8 @@
 #include "TerrainFactory.hpp"
 
     /// Internal Dependencies
-#include "Model/GameObject/GameObject.hpp"
+#include "Controller/Engine/IDTracker.hpp"
+#include "Model/GameObject/Base.hpp"
 
 namespace Controller {
     class Factory {
@@ -47,7 +48,7 @@ namespace Controller {
              * @param [in] type A GameObject type identifier for the target factory output.
              * @return A pointer to a newly assigned GameObject, or nullptr on error.
              */
-        std::shared_ptr<GameObj_Base> GameObject(GameObjType type);
+        std::shared_ptr<GameObj_Base> GameObject(GameObj_Type type);
       private:
         /**
          * @brief Default constructor, privatised due to singleton pattern.

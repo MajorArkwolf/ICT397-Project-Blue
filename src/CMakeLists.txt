@@ -22,6 +22,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     Controller/PhysicsFacade/React/ReactCollisionShape.cpp
     Controller/PhysicsFacade/React/ReactCollisionBody.cpp
     Controller/PhysicsFacade/React/ReactCollisionWorld.cpp
+    Controller/PhysicsManager.cpp
     
     # Model
     Model/Models/Mesh.cpp
@@ -31,12 +32,16 @@ target_sources(${PROJECT_NAME} PRIVATE
     Model/WaterModel.cpp
     Model/TextManager.cpp
 
+        # Game Objects
     Model/GameObject/detail/Base.cpp
     Model/GameObject/detail/Static.cpp
+    Model/GameObject/detail/Item.cpp
+    Model/GameObject/detail/Character.cpp
     Model/GameObject/detail/Player.cpp
     Model/GameObject/detail/NPC.cpp
     Model/GameObject/detail/Manager.cpp
-    Model/GameObject/detail/LuaHelper.cpp
+    Model/GameObject/detail/LuaAssist.cpp
+
     Model/GameState.cpp
 
     # View
