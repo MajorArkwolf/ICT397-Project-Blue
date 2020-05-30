@@ -17,6 +17,10 @@ Physics::ShapeFactory *Physics::PhysicsManager::GetShapeFactory() {
     return shapeFactory.get();
 }
 
+Physics::ReactShapes *Physics::PhysicsManager::GetReactShapeFactory() {
+    return dynamic_cast<ReactShapes *>(shapeFactory.get());
+}
+
 void Physics::PhysicsManager::InitialiseCollisionWorld(PhysicsLibrary type) {
     switch (type) {
         case PhysicsLibrary::REACT: {
@@ -56,8 +60,20 @@ Physics::CollisionWorld *Physics::PhysicsManager::lua_getCollisionWorld() {
     return GetInstance().collisionWorld.get();
 }
 
-void GLOBAL_PRINT(int a) {
-    std::cout << a;
+glm::vec3 normaliseVector(glm::vec3 vector) {
+    return glm::normalize(vector);
+}
+
+glm::vec3 crossProduct(glm::vec3 vec1, glm::vec3 vec2) {
+    return glm::cross(vec1, vec2);
+}
+
+double dotProduct(glm::vec3 vec1, glm::vec3 vec2) {
+    return glm::dot(vec1, vec2);
+}
+
+void printVector(glm::vec3 vec) {
+    std::cout << "X: " << vec.x << " Y: " << vec.y << " Z: " << vec.z << std::endl;
 }
 
 void Physics::PhysicsManager::LuaInit() {
@@ -65,7 +81,12 @@ void Physics::PhysicsManager::LuaInit() {
     luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
         .addFunction("InitialisePhysics", &lua_initialiseReact)
         .beginNamespace("debug")
-        .addFunction("print", &GLOBAL_PRINT)
+        .addFunction("printVector", &printVector)
+        .endNamespace()
+        .beginNamespace("math")
+        .addFunction("normaliseVector", &normaliseVector)
+        .addFunction("vectorCross", &crossProduct)
+        .addFunction("vectorDot", &dotProduct)
         .endNamespace();
 
     // Add glm vectors to lua
@@ -137,6 +158,7 @@ void Physics::PhysicsManager::LuaInit() {
         .addFunction("createCapsule", &ReactShapes::createCapsule)
         .addFunction("createBox", &ReactShapes::createBox)
         .addFunction("createSphere", &ReactShapes::createSphere)
+        .addFunction("GetShape", &ReactShapes::GetShape)
         .endClass();
 
     luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
@@ -155,11 +177,20 @@ void Physics::PhysicsManager::LuaInit() {
         .endClass();
 
     luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
+        .deriveClass<ReactCollisionBody, CollisionBody>("CollisionBody")
+        .addFunction("GetPosition", &ReactCollisionBody::GetPosition)
+        .addFunction("GetOrientation", &ReactCollisionBody::GetOrientation)
+        .addFunction("SetOrientation", &ReactCollisionBody::SetOrientation)
+        .addFunction("SetPosition", &ReactCollisionBody::SetPosition)
+        .addFunction("SetPositionAndOrientation", &ReactCollisionBody::SetPositionAndOrientation)
+        .addFunction("AddCollisionShape", &ReactCollisionBody::AddCollisionShape)
+        .endClass();
+
+    luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
         .beginClass<CollisionWorld>("CollisionWorld")
         .addFunction("GetCollisionBody", &CollisionWorld::GetCollisionBody)
         .addFunction("CreateCollisionBody", &CollisionWorld::CreateCollisionBody)
         .endClass();
-
 
     luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
         .beginClass<PhysicsManager>("PhysicsManager")
@@ -167,7 +198,15 @@ void Physics::PhysicsManager::LuaInit() {
         .addFunction("GetCollisionWorld", &PhysicsManager::GetCollisionWorld)
         .addFunction("GetDynamicsWorld", &PhysicsManager::GetDynamicsWorld)
         .addFunction("GetShapeFactory", &PhysicsManager::GetShapeFactory)
+        .addFunction("GetReactShapeFactory", &PhysicsManager::GetReactShapeFactory)
         .endClass();
+
+    luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
+        .addFunction("getReactRigidBody", &getReactRigid);
+}
+
+Physics::ReactRigidBody *Physics::PhysicsManager::getReactRigid(RigidBody *ptr) {
+    return dynamic_cast<ReactRigidBody *>(ptr);
 }
 
 Physics::PhysicsManager::PhysicsManager() {

@@ -34,6 +34,8 @@ namespace Physics {
         CollisionWorld *GetCollisionWorld();
 
         ShapeFactory *GetShapeFactory();
+
+        ReactShapes *GetReactShapeFactory();
         /**
          *@brief Initialises the collision world using the specified library type
          *@param type The type of physics library to use
@@ -50,12 +52,17 @@ namespace Physics {
                                      glm::vec3 gravity   = glm::vec3(0, -9.8f, 0));
 
         void InitialiseShapeFactory(PhysicsLibrary type = PhysicsLibrary::REACT);
+
+        void UpdateDynamicsWorld(double deltaTime);
       private:
 
         static void lua_initialiseReact();
         static CollisionWorld* lua_getCollisionWorld();
         static DynamicsWorld* lua_getDynamicsWorld();
+        static ReactCollisionWorld *lua_getReactCollisionWorld();
+        static ReactDynamicsWorld *lua_getReactDynamicsWorld();
         void LuaInit();
+        static ReactRigidBody *getReactRigid(RigidBody* ptr);
 
         PhysicsManager();
 

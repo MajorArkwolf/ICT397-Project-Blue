@@ -83,15 +83,15 @@ void Physics::ReactRigidBody::AddCollisionShape(ReactCollisionShape shape, glm::
     rigidBody->addCollisionShape(shape.GetShape().get(), newTransform, mass);
 }
 
-void Physics::ReactRigidBody::SetBodyType(int type) {
+void Physics::ReactRigidBody::SetBodyType(RigidBodyType type) {
     switch (type) {
-        case 0: {
+        case RigidBodyType::KINEMATIC: {
             rigidBody->setType(rp3d::BodyType::KINEMATIC);
         } break;
-        case 1: {
+        case RigidBodyType::DYNAMIC: {
             rigidBody->setType(rp3d::BodyType::DYNAMIC);
         } break;
-        case 2: {
+        case RigidBodyType::STATIC: {
             rigidBody->setType(rp3d::BodyType::STATIC);
         } break;
         default: break;

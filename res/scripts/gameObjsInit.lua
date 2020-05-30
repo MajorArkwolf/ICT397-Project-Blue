@@ -1,6 +1,6 @@
 InitialisePhysics();
 physManager = PhysicsManager:GetInstance();
-shapeFactory = physManager:GetShapeFactory();
+shapeFactory = physManager:GetReactShapeFactory();
 collisionWorld = physManager:GetCollisionWorld();
 dynamicsWorld = physManager:GetDynamicsWorld();
 
@@ -68,7 +68,8 @@ gameObj_raw = GameObject.get(gameObj_id);
 gameObj_raw.model = resources.getModel("res/model/ball.fbx");
 position = vector(20,200,20);
 dynamicsWorld:GetRigidBody(gameObj_raw.physBody):SetPosition(position);
-dynamicsWorld:GetRigidBody(gameObj_raw.physBody):AddCollisionShape(sphereShape, vector(0,0,0), quaternion(1,0,0,0), 1);
+rigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(gameObj_raw.physBody));
+rigidBody:AddCollisionShape(shapeFactory:GetShape(sphereShape), vector(0,0,0), quaternion(1,0,0,0), 1);
 
 -- Output a report on the actual GameObject
 GameObject_Report(gameObj_raw);
@@ -99,8 +100,6 @@ gameObj_id = GameObject.create(GameObject.Types.Player());
 -- Gather the actual GameObject and configure it
 gameObj_raw = GameObject.get(gameObj_id);
 gameObj_raw.model = resources.getModel("res/model/ball.fbx");
-dynamicsWorld:GetRigidBody(gameObj_raw.physBody):SetPosition(vector(20,200,0));
-dynamicsWorld:GetRigidBody(gameObj_raw.physBody):AddCollisionShape(sphereShape, vector(0,0,0), quaternion(1,0,0,0), 1);
 
 -- Output a report on the actual GameObject
 GameObject_Report(gameObj_raw);
@@ -110,14 +109,20 @@ print("\n------------------------");
 print(" NPC GameObject Example ");
 print("------------------------");
 
--- Create a GameObject and store the returned identifier
+for i = 0, 200, 1
+do
 gameObj_id = GameObject.create(GameObject.Types.NPC());
 
 -- Gather the actual GameObject and configure it
 gameObj_raw = GameObject.get(gameObj_id);
 gameObj_raw.model = resources.getModel("res/model/ball.fbx");
-dynamicsWorld:GetRigidBody(gameObj_raw.physBody):SetPosition(vector(20,200,0));
-dynamicsWorld:GetRigidBody(gameObj_raw.physBody):AddCollisionShape(sphereShape, vector(0,0,0), quaternion(1,0,0,0), 1);
+position = vector(5,200,20);
+debug.printVector(math.normaliseVector(position));
+dynamicsWorld:GetRigidBody(gameObj_raw.physBody):SetPosition(position);
+rigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(gameObj_raw.physBody));
+rigidBody:AddCollisionShape(shapeFactory:GetShape(sphereShape), vector(0,0,0), quaternion(1,0,0,0), 1);
+
+end
 
 
 -- Output a report on the actual GameObject
