@@ -20,10 +20,6 @@ GameObj_Base::GameObj_Base(BlueEngine::ID model_in, BlueEngine::ID physBody_in) 
 	uniqueID = BlueEngine::IDTracker::getInstance().getID();
 }
 
-GameObj_Base::~GameObj_Base() {
-	// GameObj_Base has no unique destruction procedure yet.
-}
-
 BlueEngine::ID GameObj_Base::id()
 {
 	// Return a copy of the GameObject's unique identifier.

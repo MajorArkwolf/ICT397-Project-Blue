@@ -7,7 +7,7 @@
 	 * @brief A non-static and non-playable GameObject.
 	 * @note Used for interactable objects within scenes.
 	 */
-class GameObj_Item : public GameObj_Base {
+class GameObj_Item : virtual public GameObj_Base {
 public:
 		/*!
 		 * @brief Sets initial class contents and calls the inherited class constructor.
@@ -15,12 +15,6 @@ public:
 		 * @param [in] physbody_in The identifier for a physics body loaded into the engine.
 		 */
 	GameObj_Item(BlueEngine::ID model_in, BlueEngine::ID physBody_in);
-
-		/*!
-		* @brief GameObj_Item destructor.
-		* @note Currently stubbed out, does not extend destructor behaviour for this GameObject.
-		*/
-	~GameObj_Item();
 
 		/*!
 		 * @brief Identifies the GameObject's type.

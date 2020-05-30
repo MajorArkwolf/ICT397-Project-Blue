@@ -2,6 +2,7 @@
 
 	/// System Dependencies
 #include <string>
+#include <vector>
 #include <map>
 
 	/// Internal Dependencies
@@ -30,11 +31,24 @@ public:
 	void status_assign(std::string key, float value);
 
 		/*!
+		 * @brief Counts the amount of unique statuses are assigned to the GameObject.
+		 * @return The amount of unique status keys stored in this GameObject.
+		 */
+	unsigned long long status_count();
+
+		/*!
 		 * @brief Checks if the character has a specific status.
 		 * @param [in] key The string to identify the status by.
 		 * @return True if the character has the specified status key, False otherwise.
 		 */
 	bool status_has(std::string key);
+
+		/*!
+		 * @brief Generates a list of unique status keys stored in this GameObject.
+		 * @return A vector of the GameObject's status key strings.
+		 * @note Any modifications to the returned list will not affect the stored statuses.
+		 */
+	std::vector<std::string> status_list();
 
 		/*!
 		 * @brief Returns a copy of the value assigned to the character's status.

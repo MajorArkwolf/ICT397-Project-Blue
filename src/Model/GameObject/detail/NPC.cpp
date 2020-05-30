@@ -7,13 +7,9 @@
 #include "../Types.hpp"
 
 GameObj_NPC::GameObj_NPC(BlueEngine::ID model_in, BlueEngine::ID physBody_in, BlueEngine::ID context_in)
-	: GameObj_Base(model_in, physBody_in) {
+	: GameObj_Base(model_in, physBody_in), GameObj_Character() {
 	// Store the NPC's FSM identifier
 	contextID = context_in;
-}
-
-GameObj_NPC::~GameObj_NPC() {
-	// GameObj_NPC has no unique destruction procedure yet.
 }
 
 GameObj_Type GameObj_NPC::type() const {

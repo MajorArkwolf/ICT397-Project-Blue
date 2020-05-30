@@ -7,7 +7,7 @@
 	 * @brief A GameObject containing player-specific features.
 	 * @note Used for extendible and efficient characters that the players can control.
 	 */
-class GameObj_Player : public GameObj_Character {
+class GameObj_Player : virtual public GameObj_Character {
 public:
 		/*!
 		 * @brief Sets initial class contents and calls the inherited class constructor.
@@ -15,12 +15,6 @@ public:
 		 * @param [in] physbody_in The identifier for a physics body loaded into the engine.
 		 */
 	GameObj_Player(BlueEngine::ID model_in, BlueEngine::ID physBody_in);
-
-		/*!
-		 * @brief GameObj_Player destructor.
-		 * @note Currently stubbed out, does not extend destructor behaviour for this GameObject.
-		 */
-	~GameObj_Player();
 
 		/*!
 		 * @brief Identifies the GameObject's type.
