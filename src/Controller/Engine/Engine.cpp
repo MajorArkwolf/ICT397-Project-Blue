@@ -2,8 +2,7 @@
 
 #include <iostream>
 #include <stdexcept>
-
-#include "Controller/PhysicsFacade/React/ReactShapes.hpp"
+#include <filesystem>
 
 // Game States
 #include "Game/Prototype/PrototypeScene.hpp"
@@ -173,8 +172,6 @@ auto Engine::endEngine() -> void {
 }
 
 auto Engine::getBasePath() -> void {
-    // char *base_path = SDL_GetBasePath();
-    // basepath        = std::string(base_path);
-    // SDL_free(base_path);
-    basepath = "./";
+    std::string bp = std::filesystem::current_path();
+    basepath = bp + "/";
 }
