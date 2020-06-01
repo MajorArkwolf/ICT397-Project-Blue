@@ -55,6 +55,12 @@ public:
 		 */
 	BlueEngine::ID model;
 
+		/*!
+		 * @brief Registers this GameObject class to the Lua subscripting system.
+		 * @note Called in the constructor, constructor is responsible for only calling once.
+		 */
+	static void lua_init_register();
+
 protected:
 		/*!
 		 * @brief Manages the shader program to be used for all GameObject rendering.
