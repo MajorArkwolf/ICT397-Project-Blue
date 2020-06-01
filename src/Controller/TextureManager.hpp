@@ -2,7 +2,7 @@
 #include <map>
 
 #include "Model/Texture.hpp"
-#include "stb_image.h"
+
 
 /**
  * @class TextureManager
@@ -17,14 +17,14 @@ class TextureManager {
      * @param texName The key to give to the texture for later access
      * @return True if succeeded
      */
-    bool loadTextureFromFile(std::string filePath, std::string texName);
+    bool loadTextureFromFile(const std::string& filePath, const std::string& texName);
 
     /**
      * @brief Returns a texture with the given name/key
      * @param texName The key/name to look for in the texture map
      * @return The texture at the given key location
      */
-    Texture &getTexture(std::string texName);
+    Texture &getTexture(const std::string& texName);
 
     /**
      * @brief Returns a texture with the given OpenGL ID

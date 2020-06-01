@@ -1,16 +1,16 @@
 #include "TextureManager.hpp"
 
 #include <iostream>
-
+#include "stb_image.h"
 #include "Controller/Engine/Engine.hpp"
 
-bool TextureManager::loadTextureFromFile(std::string filePath, std::string texName) {
+bool TextureManager::loadTextureFromFile(const std::string& filePath, const std::string& texName) {
     auto &basePath = BlueEngine::Engine::get().basepath;
     auto path      = basePath + filePath;
-    unsigned int textureID;
+    unsigned int textureID = 0;
     glGenTextures(1, &textureID);
 
-    int width, height, nrComponents;
+    int width = 0, height = 0, nrComponents = 0;
     unsigned char *image = stbi_load(path.c_str(), &width, &height, &nrComponents, 0);
     if (image) {
         GLenum format = 1;
@@ -41,7 +41,7 @@ bool TextureManager::loadTextureFromFile(std::string filePath, std::string texNa
     return true;
 }
 
-Texture &TextureManager::getTexture(std::string texName) {
+Texture &TextureManager::getTexture(const std::string& texName) {
     if (textureMap.find(texName) != textureMap.end()) {
         return textureMap.at(texName);
     }
