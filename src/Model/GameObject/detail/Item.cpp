@@ -1,22 +1,22 @@
 	/// Definition Include
-#include "../Static.hpp"
+#include "../Item.hpp"
 
 	/// Internal Dependencies
 #include "Controller/Engine/Engine.hpp"
 #include "Controller/PhysicsManager.hpp"
 #include "../Types.hpp"
 
-GameObj_Static::GameObj_Static(BlueEngine::ID model_in, BlueEngine::ID physBody_in)
+GameObj_Item::GameObj_Item(BlueEngine::ID model_in, BlueEngine::ID physBody_in)
 	: GameObj_Base(model_in, physBody_in) {
-	// GameObj_Static has no unique construction procedure yet.
+	// GameObj_Item has no unique construction procedure yet.
 }
 
-GameObj_Type GameObj_Static::type() const {
+GameObj_Type GameObj_Item::type() const {
 	// Return the GameObject's type
-	return GameObj_Type::Static;
+	return GameObj_Type::Item;
 }
 
-void GameObj_Static::addToDraw() {
+void GameObj_Item::addToDraw() {
 	// Create a function pointer of the GameObject's draw call for the DrawItem
 	std::function<void(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos)> e = [&](const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos) {
 		this->draw(projection, view, cameraPos);
@@ -32,7 +32,7 @@ void GameObj_Static::addToDraw() {
 	renderer.AddToQue(drawItem);
 }
 
-void GameObj_Static::draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos[[maybe_unused]]) {
+void GameObj_Item::draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos [[maybe_unused]] ) {
 	// Attempt to gather the Game Object's physics body
 	auto phys_world = Physics::PhysicsManager::GetInstance().GetCollisionWorld();
 	auto phys_body = phys_world->GetCollisionBody(physBody);

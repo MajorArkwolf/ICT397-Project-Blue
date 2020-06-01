@@ -4,31 +4,24 @@
 #include <glm/gtc/quaternion.hpp>
 #include <glm/vec3.hpp>
 
-#include "RigidBody.hpp"
+#include "CollisionBody.hpp"
 
 namespace Physics {
-    using RigidBodyID = size_t;
+    using CollisionBodyID = size_t;
     /**
      * @class DynamicsWorld
      * @brief Represents a physics dynamics world, handles access to all associated rigid bodies
      */
-    class DynamicsWorld {
+    class CollisionWorld {
       public:
         /// Constructor
-        DynamicsWorld(){};
+        CollisionWorld(){};
         /// Desttructor
-        virtual ~DynamicsWorld(){};
+        virtual ~CollisionWorld(){};
         /**
          * @brief Used to intialise a dynamics world with a certain gravity level
-         * @param gravity
          */
-        virtual void InitialiseWorld(glm::vec3 gravity) = 0;
-
-        /**
-         * @brief Updates the dynamic world with the given delta time
-         * @param deltaTime The amount of time since the last physics update
-         */
-        virtual void Update(double deltaTime) = 0;
+        virtual void InitialiseWorld() = 0;
 
         /**
          * @brief Creates a rigid body in the dyanmics world and returns the id needed to access it
@@ -36,13 +29,16 @@ namespace Physics {
          * @param rotation The starting rotation of the rigid body
          * @return The ID of the created rigid body
          */
-        virtual void CreateRigidBody(glm::vec3 position, glm::quat rotation, size_t gameObjectID) = 0;
+        virtual void CreateCollisionBody(glm::vec3 position, glm::quat rotation, size_t gameObjectID) = 0;
 
         /**
          * @brief Returns a rigid body with the id given
          * @param id The ID of the rigid Body to return
          * @return The Rigid body associated with the given id, nullptr if not found
          */
-        virtual RigidBody *GetRigidBody(RigidBodyID id) = 0;
+        virtual CollisionBody *GetCollisionBody(CollisionBodyID id) = 0;
+
+        virtual bool TestOverlap(CollisionBodyID first, CollisionBodyID seconds)    = 0;
+        virtual bool TestAABBOverlap(CollisionBodyID first, CollisionBodyID second) = 0;
     };
 }

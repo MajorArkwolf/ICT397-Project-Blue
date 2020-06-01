@@ -32,6 +32,7 @@ void ResourceManager::loadResources() {
     getGlobalNamespace(L).beginNamespace("resources").addFunction("loadString", &loadString).endNamespace();
     getGlobalNamespace(L).beginNamespace("resources").addFunction("loadModel", &loadModel).endNamespace();
     getGlobalNamespace(L).beginNamespace("resources").addFunction("loadTexture", &loadTexture).endNamespace();
+    getGlobalNamespace(L).beginNamespace("resources").addFunction("getModel", &getModelId).endNamespace();
     luaL_dofile(L, scriptPath.c_str());
     lua_pcall(L, 0, 0, 0);
 
@@ -83,4 +84,9 @@ void ResourceManager::loadString(const std::string key) {
 
 auto ResourceManager::loadTexture(const std::string filePath, const std::string textureName) -> void {
     getInstance().textureManager.loadTextureFromFile(filePath, textureName);
+}
+
+auto ResourceManager::getModelId(const std::string key) -> size_t {
+
+    return getInstance().getModelID(key);
 }

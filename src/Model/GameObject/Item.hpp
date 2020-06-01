@@ -1,24 +1,24 @@
-#pragma once
+#include <memory>
 
-	/// Internal Dependencies
-#include "Character.hpp"
+/// Internal Dependencies
+#include "Base.hpp"
 
 	/*!
-	 * @brief A GameObject containing player-specific features.
-	 * @note Used for extendible and efficient characters that the players can control.
+	 * @brief A non-static and non-playable GameObject.
+	 * @note Used for interactable objects within scenes.
 	 */
-class GameObj_Player : virtual public GameObj_Character {
+class GameObj_Item : virtual public GameObj_Base {
 public:
 		/*!
 		 * @brief Sets initial class contents and calls the inherited class constructor.
 		 * @param [in] model_in The identifier for a model loaded into the engine.
 		 * @param [in] physbody_in The identifier for a physics body loaded into the engine.
 		 */
-	GameObj_Player(BlueEngine::ID model_in, BlueEngine::ID physBody_in);
+	GameObj_Item(BlueEngine::ID model_in, BlueEngine::ID physBody_in);
 
 		/*!
 		 * @brief Identifies the GameObject's type.
-		 * @return Always returns GameObj_Type::Player for GameObj_Player.
+		 * @return Always returns GameObj_Type::Item for GameObj_Item.
 		 */
 	GameObj_Type type() const;
 
@@ -26,7 +26,7 @@ public:
 	void addToDraw();
 
 		/*!
-		 * @brief The draw call for a GameObj_Player.
+		 * @brief The draw call for a GameObj_Item.
 		 * @param [in] projection The rendering projection for rendering.
 		 * @param [in] view The rendering view for rendering.
 		 * @param [in] cameraPos The position of the camera for rendering.

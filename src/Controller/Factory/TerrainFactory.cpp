@@ -34,7 +34,52 @@ void Controller::TerrainFactory::Init() {
     } else {
         maxKeySize = ((height / 2) / ChunkSize) - 1;
     }
+    AddWallBoundary();
     GenerateHeightOffSet();
+}
+
+void Controller::TerrainFactory::AddWallBoundary() {
+    size_t maxXSize = fValues.size();
+    size_t maxZSize = fValues.at(0).size();
+    auto playArea = maxKeySize * static_cast<unsigned>(ChunkSize) * 2;
+    auto depth = (maxXSize - playArea) / 2;
+    //South
+    for (auto &x : fValues) {
+        auto newheight = 300.f;
+        for (size_t y = 0; y <= 50; ++y) {
+            newheight -= 1.0f;
+            x.at(depth + y).height = newheight;
+        }
+    }
+    //North
+    auto oppDepth = maxXSize - depth;
+    for (auto &x : fValues) {
+        auto newheight = 300.f;
+        for (size_t y = 0; y <= 50; ++y) {
+            newheight -= 1.0f;
+            x.at(oppDepth - y).height = newheight;
+        }
+    }
+
+    //East
+    for (size_t z = 0; z < maxZSize; ++z) {
+        auto newheight = 300.f;
+        for (size_t y = 0; y <= 50; ++y) {
+            newheight -= 1.0f;
+            fValues.at(depth + y).at(z).height = newheight;
+        }
+        fValues.at(depth).at(z).height = 300.f;
+    }
+
+    //West
+    for (size_t z = 0; z < maxZSize; ++z) {
+        auto newheight = 300.f;
+        for (size_t y = 0; y <= 50; ++y) {
+            newheight -= 1.0f;
+            fValues.at(maxZSize - depth - y).at(z).height = newheight;
+        }
+        fValues.at(depth).at(z).height = 300.f;
+    }
 }
 
 void Controller::TerrainFactory::LoadLua() {

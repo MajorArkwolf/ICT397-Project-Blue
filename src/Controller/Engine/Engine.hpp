@@ -64,6 +64,7 @@ namespace BlueEngine {
         float lastX     = SCR_WIDTH / 2.0f;
         float lastY     = SCR_HEIGHT / 2.0f;
         bool firstMouse = true;
+        std::string glsl_version = "";
 
       public:
         /**
