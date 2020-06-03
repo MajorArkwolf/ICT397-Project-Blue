@@ -7,10 +7,10 @@ dynamicsWorld = physManager:GetDynamicsWorld();
 sphereShape = shapeFactory:createSphere(1)
 
 -- Load the GameObject Lua Reporting Library functions from script
-dofile("D:/docto/Documents/Git/ICT397-Project-Blue/res/scripts/gameObjsReporting.lua");
+dofile("res/scripts/gameObjsReporting.lua");
 
 -- Load the GameObject Lua debugging script
-dofile("D:/docto/Documents/Git/ICT397-Project-Blue/res/scripts/gameObjsTesting.lua");
+dofile("res/scripts/gameObjsTesting.lua");
 
 for i = 0, 200, 1 do
 -- Create a GameObject and store the returned identifier
