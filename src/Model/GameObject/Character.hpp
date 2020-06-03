@@ -14,6 +14,13 @@
 	 */
 class GameObj_Character : virtual public GameObj_Base {
 public:
+
+		/*!
+		 * @brief Default constructor, does nothing.
+		 * @note This only exists due to a bug with MSVC failing to either generate or prevent calling this from a derived class's constructor.
+		 */
+	GameObj_Character() {};
+
 		/*!
 		 * @brief Identifies the GameObject's type.
 		 * @return Always returns GameObj_Type::Invalid for GameObj_Character.
@@ -71,6 +78,12 @@ public:
 		 * @note If the character has no statuses, no changes will occur.
 		 */
 	void status_clear();
+
+		/*!
+		 * @brief Registers this GameObject class to the Lua subscripting system.
+		 * @note Called in the constructor, constructor is responsible for only calling once.
+		 */
+	static void lua_init_register();
 
 private:
 		/*!

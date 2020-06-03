@@ -12,52 +12,34 @@ void GameObj_Manager::init() {
 	if (is_registered)
 		return;
 
-	// Register the Base GameObject class
-	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
-		.beginClass<GameObj_Base>("GameObj_Base")
-			.addFunction("id", &GameObj_Base::id)
-			.addFunction("type", &GameObj_Base::type)
-			.addProperty("physBody", &GameObj_Base::physBody)
-			.addProperty("model", &GameObj_Base::model)
-		.endClass();
+	// Register the raw GameObject classes
+	GameObj_Base::lua_init_register();
+	GameObj_Character::lua_init_register();
+	GameObj_NPC::lua_init_register();
 
 	// Register this GameObject Manager class
 	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
 		.beginNamespace("GameObject")
-			.addFunction("create", &GameObj_Manager::lua_create)
-			.addFunction("get", &GameObj_Manager::lua_get)
-			.addFunction("remove", &GameObj_Manager::remove)
-			.addFunction("clear", &GameObj_Manager::clear)
-			.addFunction("syncPhys", &GameObj_Manager::syncPhys)
-			.addFunction("charData", &GameObj_Manager::lua_charData)
+			.addFunction("create", GameObj_Manager::lua_create)
+			.addFunction("get", GameObj_Manager::lua_get)
+			.addFunction("remove", GameObj_Manager::remove)
+			.addFunction("clear", GameObj_Manager::clear)
+			.addFunction("syncPhys", GameObj_Manager::syncPhys)
+			.addFunction("to_character", GameObj_Manager::lua_to_character)
+			.addFunction("to_npc", GameObj_Manager::lua_to_npc)
 		.endNamespace();
 
 	// Register the GameObj_Type enum spawning functions
 	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
 		.beginNamespace("GameObject")
 			.beginNamespace("Types")
-				.addFunction("Invalid", &GameObj_LuaHelper::Invalid)
-				.addFunction("Static", &GameObj_LuaHelper::Static)
-				.addFunction("Item", &GameObj_LuaHelper::Item)
-				.addFunction("Player", &GameObj_LuaHelper::Player)
-				.addFunction("NPC", &GameObj_LuaHelper::NPC)
+				.addFunction("Invalid", GameObj_LuaHelper::Invalid)
+				.addFunction("Static", GameObj_LuaHelper::Static)
+				.addFunction("Item", GameObj_LuaHelper::Item)
+				.addFunction("Player", GameObj_LuaHelper::Player)
+				.addFunction("NPC", GameObj_LuaHelper::NPC)
 			.endNamespace()
 		.endNamespace();
-
-	// Register the LuaHelper class for the Character GameObjects
-	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
-		.beginClass<GameObj_LuaHelper::CharacterWrapper>("GameObject_CharacterData")
-			.addFunction("type", &GameObj_LuaHelper::CharacterWrapper::type)
-			.addFunction("status_assign", &GameObj_LuaHelper::CharacterWrapper::status_assign)
-			.addFunction("status_count", &GameObj_LuaHelper::CharacterWrapper::status_count)
-			.addFunction("status_has", &GameObj_LuaHelper::CharacterWrapper::status_has)
-			.addFunction("status_list", &GameObj_LuaHelper::CharacterWrapper::status_list)
-			.addFunction("status_get", &GameObj_LuaHelper::CharacterWrapper::status_get)
-			.addFunction("status_delete", &GameObj_LuaHelper::CharacterWrapper::status_delete)
-			.addFunction("status_clear", &GameObj_LuaHelper::CharacterWrapper::status_clear)
-			.addFunction("npc_context", &GameObj_LuaHelper::CharacterWrapper::npc_context)
-			.addFunction("is_valid", &GameObj_LuaHelper::CharacterWrapper::is_valid)
-		.endClass();
 }
 
 void GameObj_Manager::insert(std::shared_ptr<GameObj_Base> object) {
@@ -164,28 +146,14 @@ GameObj_Base* GameObj_Manager::lua_get(BlueEngine::ID identifier) {
 	return GameObj_Manager::get(identifier).get();
 }
 
-GameObj_LuaHelper::CharacterWrapper GameObj_Manager::lua_charData(BlueEngine::ID identifier) {
-	// Attempt to gather the requested GameObject
-	std::shared_ptr<GameObj_Base> temp_reference;
-	try {
-		// Attempt to gather the GameObject
-		temp_reference = managed_objs.at(identifier);
+GameObj_Character* GameObj_Manager::lua_to_character(GameObj_Base* raw_in) {
+	// Perform the case, it'll return nullptr if an invalid cast
+	return dynamic_cast<GameObj_Character*>(raw_in);
+}
 
-		// Check the type
-		if ((temp_reference->type() != GameObj_Type::Player) && (temp_reference->type() != GameObj_Type::NPC))
-		{
-			// Catch the invalid type, just pass nullptr out
-			temp_reference = nullptr;
-		}
-	}
-	catch (...) {
-		// Just pass nullptr out
-		temp_reference = nullptr;
-	}
-
-	// Encapculate the GameObject and return it
-	GameObj_Character* temp_out = dynamic_cast<GameObj_Character*>(temp_reference.get());
-	return GameObj_LuaHelper::CharacterWrapper(temp_out);
+GameObj_NPC* GameObj_Manager::lua_to_npc(GameObj_Character* raw_in) {
+	// Perform the case, it'll return nullptr if an invalid cast
+	return dynamic_cast<GameObj_NPC*>(raw_in);
 }
 
 	/// Static Initialisation

@@ -95,12 +95,20 @@ protected:
 	static GameObj_Base* lua_get(BlueEngine::ID identifier);
 
 		/*!
-		 * @brief Gathers an encapsulated GameObject with extended Character attributes and operations.
-		 * @param [in] identifier A GameObject identifier.
-		 * @brief A CharacterWrapper storing the pointer to the requested GameObject, or storing nullptr.
-		 * @note Passes to Lua by value, but encapsulates the actual GameObject in C++ scope via a smart pointer.
+		 * @brief Downcasts a GameObj_Base reference to a GameObj_Character reference.
+		 * @param [in] raw_in A base pointer to a polymorphic GameObject.
+		 * @return The reference typecasted, or nullptr if the cast could not be safely performed.
+		 * @note To be used in Lua to access character specific operations.
 		 */
-	static GameObj_LuaHelper::CharacterWrapper lua_charData(BlueEngine::ID identifier);
+	static GameObj_Character* lua_to_character(GameObj_Base* raw_in);
+
+		/*!
+		 * @brief Downcasts a GameObj_Character reference to a GameObj_NPC reference.
+		 * @param [in] raw_in A base pointer to a polymorphic GameObject.
+		 * @return The reference typecasted, or nullptr if the cast could not be safely performed.
+		 * @note To be used in Lua to access npc specific operations.
+		 */
+	static GameObj_NPC* lua_to_npc(GameObj_Character* raw_in);
 
 private:
 		//! Stores a collection of unique GameObjects, mapped to their identifier.
