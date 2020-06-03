@@ -84,7 +84,7 @@ void View::Camera::updateCameraVectors() {
     Up = glm::normalize(glm::cross(Right, Front));
 }
 
-void View::Camera::luaInit() {
+void View::Camera::LuaInit() {
     using namespace View;
 
     luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
@@ -93,6 +93,9 @@ void View::Camera::luaInit() {
         .addFunction("ProcessMouseMovement", &Camera::ProcessMouseMovement)
         .addProperty("FrontVector", &Camera::Front)
         .addFunction("ProcessKeyboard", &Camera::ProcessKeyboardInput)
+        .addProperty("Position", &Camera::Position)
+        .addProperty("Pitch", &Camera::Pitch)
+        .addProperty("Yaw", &Camera::Yaw)
         .endClass();
 }
 
@@ -106,7 +109,7 @@ glm::vec3 View::Camera::GetRightVector() {
 }
 
 void View::Camera::ProcessKeyboardInput(bool forward, bool backward, bool left, bool right,
-                                   double deltaTime) {
+                                        double deltaTime) {
     const float velocity = MovementSpeed * (static_cast<float>(deltaTime) * 1000.f);
     if (forward)
         Position += Front * velocity;
@@ -116,5 +119,4 @@ void View::Camera::ProcessKeyboardInput(bool forward, bool backward, bool left, 
         Position -= Right * velocity;
     if (right)
         Position += Right * velocity;
-
 }

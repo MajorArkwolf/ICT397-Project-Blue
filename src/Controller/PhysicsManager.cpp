@@ -60,6 +60,11 @@ Physics::CollisionWorld *Physics::PhysicsManager::lua_getCollisionWorld() {
     return GetInstance().collisionWorld.get();
 }
 
+glm::vec3 vectorMultiplyScalar(glm::vec3 vector, float scalar) {
+
+    return vector * scalar;
+}
+
 glm::vec3 normaliseVector(glm::vec3 vector) {
     return glm::normalize(vector);
 }
@@ -87,6 +92,7 @@ void Physics::PhysicsManager::LuaInit() {
         .addFunction("normaliseVector", &normaliseVector)
         .addFunction("vectorCross", &crossProduct)
         .addFunction("vectorDot", &dotProduct)
+        .addFunction("vectorMultiplyScalar", &vectorMultiplyScalar)
         .endNamespace();
 
     // Add glm vectors to lua
@@ -140,6 +146,9 @@ void Physics::PhysicsManager::LuaInit() {
         .addFunction("ApplyForce", &ReactRigidBody::ApplyForce)
         .addFunction("ApplyForceToCentre", &ReactRigidBody::ApplyForceToCentre)
         .addFunction("SetAngularDamping", &ReactRigidBody::SetAngularDamping)
+        .addFunction("SetBounciness", &ReactRigidBody::SetBounciness)
+        .addFunction("SetRollingResistance", &ReactRigidBody::SetRollingResistance)
+        .addFunction("SetFriction", &ReactRigidBody::SetFrictionCoefficient)
         .addFunction("SetSleeping", &ReactRigidBody::SetSleeping)
         .addFunction("SetMass", &ReactRigidBody::SetMass)
         .addFunction("Destroy", &ReactRigidBody::Destroy)

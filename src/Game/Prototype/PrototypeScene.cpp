@@ -17,8 +17,8 @@
 using Controller::Input::BLUE_InputAction;
 using Controller::Input::BLUE_InputType;
 
-View::Camera &getCamera() {
-    return BlueEngine::Engine::get().gameStack.getTop()->camera;
+View::Camera *getCamera() {
+    return &(BlueEngine::Engine::get().gameStack.getTop()->camera);
 }
 
 void toggleWireframe() {
@@ -26,14 +26,14 @@ void toggleWireframe() {
     render.ToggleWireFrame();
 }
 
-
-
 PrototypeScene::PrototypeScene() {
     PrototypeScene::Init();
 
     luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
         .addFunction("getCamera", &getCamera)
         .addFunction("toggleWireframe", &toggleWireframe);
+
+    View::Camera::LuaInit();
 }
 
 PrototypeScene::~PrototypeScene() {}
@@ -63,6 +63,15 @@ auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
 
     // Update the Dynamic Physics world
     Physics::PhysicsManager::GetInstance().GetDynamicsWorld()->Update(dt);
+
+    if (luaL_dofile(LuaManager::getInstance().getLuaState(), "./res/scripts/luaFunctions.lua")) {
+        printf("%s\n", lua_tostring(LuaManager::getInstance().getLuaState(), -1));
+    }
+    luabridge::LuaRef Update =
+        luabridge::LuaRef::getGlobal(LuaManager::getInstance().getLuaState(), "Update");
+    if (!Update.isNil()) {
+        Update(dt);
+    }
     GameObj_Manager::syncPhys();
 }
 
@@ -135,7 +144,7 @@ void PrototypeScene::Init() {
     const auto terrainID = phys_sys->GetShapeFactory()->createHeightField(
         heightMap.width, heightMap.height, heightMap.heightRange.min, heightMap.heightRange.max,
         heightMap.terrain);
-    const auto terrainPhysID = id_assigner.getID();
+    const auto terrainPhysID = 9999999;
     phys_world_dynamics->CreateRigidBody(heightMap.position, heightMap.rotation, terrainPhysID);
     auto *reactBodyHeights =
         dynamic_cast<Physics::ReactRigidBody *>(phys_world_dynamics->GetRigidBody(terrainPhysID));
@@ -174,7 +183,7 @@ void PrototypeScene::handleWindowEvent() {
     View::OpenGL::ResizeWindow();
 }
 
-void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
+void PrototypeScene::handleInputData(Controller::Input::InputData inputData, double deltaTime) {
 
     if (luaL_dofile(LuaManager::getInstance().getLuaState(), "./res/scripts/luaFunctions.lua")) {
         printf("%s\n", lua_tostring(LuaManager::getInstance().getLuaState(), -1));
@@ -182,7 +191,7 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
     luabridge::LuaRef luaInput =
         luabridge::LuaRef::getGlobal(LuaManager::getInstance().getLuaState(), "handleInput");
     if (!luaInput.isNil()) {
-        luaInput(inputData);
+        luaInput(inputData, deltaTime);
     }
 
     auto &engine      = BlueEngine::Engine::get();
@@ -205,10 +214,8 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
                 case BLUE_InputAction::INPUT_MOVE_RIGHT: {
                     moveRight = true;
                 } break;
-
                 default: break;
             }
-
         } break;
         case BLUE_InputType::KEY_RELEASE: { // Key Release events
             switch (inputData.inputAction) {
@@ -239,13 +246,12 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
         } break;
         case BLUE_InputType::MOUSE_MOTION: { // Mouse motion event
             if (!engine.getMouseMode()) {
-                auto x = static_cast<double>(inputData.mouseMotionRelative.x);
-                auto y = static_cast<double>(inputData.mouseMotionRelative.y);
-                y      = y * -1.0;
-                camera.ProcessMouseMovement(x, y);
-                handledMouse = true;
+                /* auto x = static_cast<double>(inputData.mouseMotionRelative.x);
+                 auto y = static_cast<double>(inputData.mouseMotionRelative.y);
+                 y      = y * -1.0;
+                 camera.ProcessMouseMovement(x, y);
+                 handledMouse = true;*/
             }
-
         } break;
         case BLUE_InputType::MOUSE_WHEEL: { // Mouse Wheel event
             double amountScrolledY = static_cast<double>(inputData.mouseWheelMotion);

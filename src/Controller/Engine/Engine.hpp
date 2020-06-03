@@ -126,7 +126,7 @@ namespace BlueEngine {
         /**
          * Process the input from our 3rd party library.
          */
-        void processInput();
+        void processInput(double deltaTime);
 
         /**
          * Checks to see what type of mouse mode the engine has set.

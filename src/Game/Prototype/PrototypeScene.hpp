@@ -44,10 +44,8 @@ class PrototypeScene : public BaseState {
      * @brief Handles input data using a passed in InputData struct from the engine
      * @param inputData The input event to read from
      */
-    void handleInputData(Controller::Input::InputData inputData) override;
+    void handleInputData(Controller::Input::InputData inputData, double deltatime) override;
 
-    ///The camera of the scene
-    View::Camera camera;
 
   private:
       ///The terrain manager for the prototype scene

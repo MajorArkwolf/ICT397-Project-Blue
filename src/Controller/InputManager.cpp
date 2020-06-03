@@ -14,7 +14,6 @@ namespace Controller::Input {
         resetKeyStates();
         ReadBindings();
 
-
         luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
             .beginClass<glm::ivec2>("ivec2")
             .addConstructor<void (*)(int, int)>()
@@ -31,6 +30,7 @@ namespace Controller::Input {
             .addProperty("inputType", &InputData::typeString)
             .endClass();
     }
+
     InputManager &InputManager::getInstance() {
         static auto instance = InputManager{};
 
@@ -64,6 +64,8 @@ namespace Controller::Input {
                 inputEvent.mouseMotionRelative.y = currentMousePos.y - prevMousePos.y;
                 inputEvent.mouseMotionAbsolute.x = event.pos.x;
                 inputEvent.mouseMotionAbsolute.y = event.pos.y;
+
+                inputEvent.mouseMotionRelative.y *= -1;
             } break;
             case GLEQ_BUTTON_PRESSED: {
                 inputEvent.inputType = BLUE_InputType::MOUSE_BUTTONDOWN;
@@ -92,15 +94,24 @@ namespace Controller::Input {
                 }
             } break;
 
-            case BLUE_InputType::MOUSE_BUTTONDOWN:
-            case BLUE_InputType::MOUSE_BUTTONUP: {
-                GLFW_KEY_0;
+            case BLUE_InputType::MOUSE_BUTTONDOWN: {
+                inputEvent.inputType = BLUE_InputType::MOUSE_BUTTONDOWN;
                 if (event.mouse.button == GLFW_MOUSE_BUTTON_LEFT) {
-                    inputEvent.inputAction = BLUE_InputAction::INPUT_ACTION_1;
+                    inputEvent.inputAction = BLUE_InputAction::MOUSE_LEFT;
                 } else if (event.mouse.button == GLFW_MOUSE_BUTTON_RIGHT) {
-                    inputEvent.inputAction = BLUE_InputAction::INPUT_ACTION_2;
+                    inputEvent.inputAction = BLUE_InputAction::MOUSE_RIGHT;
                 } else if (event.mouse.button == GLFW_MOUSE_BUTTON_MIDDLE) {
-                    inputEvent.inputAction = BLUE_InputAction::INPUT_ACTION_3;
+                    inputEvent.inputAction = BLUE_InputAction::MOUSE_MIDDLE;
+                }
+            } break;
+            case BLUE_InputType::MOUSE_BUTTONUP: {
+                inputEvent.inputType = BLUE_InputType::MOUSE_BUTTONUP;
+                if (event.mouse.button == GLFW_MOUSE_BUTTON_LEFT) {
+                    inputEvent.inputAction = BLUE_InputAction::MOUSE_LEFT;
+                } else if (event.mouse.button == GLFW_MOUSE_BUTTON_RIGHT) {
+                    inputEvent.inputAction = BLUE_InputAction::MOUSE_RIGHT;
+                } else if (event.mouse.button == GLFW_MOUSE_BUTTON_MIDDLE) {
+                    inputEvent.inputAction = BLUE_InputAction::MOUSE_MIDDLE;
                 }
             } break;
             default: {
@@ -229,6 +240,9 @@ namespace Controller::Input {
         bindKey(BLUE_InputAction::INPUT_ESCAPE, inputTable, "ESCAPE");
         bindKey(BLUE_InputAction::INPUT_CROUCH, inputTable, "CROUCH");
         bindKey(BLUE_InputAction::INPUT_SPRINT, inputTable, "SPRINT");
+        bindKey(BLUE_InputAction::MOUSE_LEFT, inputTable, "MOUSE_LEFT");
+        bindKey(BLUE_InputAction::MOUSE_MIDDLE, inputTable, "MOUSE_MIDDLE");
+        bindKey(BLUE_InputAction::MOUSE_RIGHT, inputTable, "MOUSE_RIGHT");
     }
 
     void InputManager::DefaultInputMap() {
@@ -302,11 +316,14 @@ namespace Controller::Input {
         stringActionPairs.emplace_back("Jump", BLUE_InputAction::INPUT_JUMP);
         stringActionPairs.emplace_back("Sprint", BLUE_InputAction::INPUT_SPRINT);
         stringActionPairs.emplace_back("Crouch", BLUE_InputAction::INPUT_CROUCH);
-        stringActionPairs.emplace_back("Menu", BLUE_InputAction::INPUT_ESCAPE);
+        stringActionPairs.emplace_back("Escape", BLUE_InputAction::INPUT_ESCAPE);
         stringActionPairs.emplace_back("Action 1", BLUE_InputAction::INPUT_ACTION_1);
         stringActionPairs.emplace_back("Action 2", BLUE_InputAction::INPUT_ACTION_2);
         stringActionPairs.emplace_back("Action 3", BLUE_InputAction::INPUT_ACTION_3);
         stringActionPairs.emplace_back("Action 4", BLUE_InputAction::INPUT_ACTION_4);
+        stringActionPairs.emplace_back("Mouse Left", BLUE_InputAction::MOUSE_LEFT);
+        stringActionPairs.emplace_back("Mouse Middle", BLUE_InputAction::MOUSE_MIDDLE);
+        stringActionPairs.emplace_back("Mouse Right", BLUE_InputAction::MOUSE_RIGHT);
 
         stringInputTypePairs.emplace_back("DEFAULT", BLUE_InputType::DEFAULT_TYPE);
         stringInputTypePairs.emplace_back("KeyPress", BLUE_InputType::KEY_PRESS);

@@ -97,6 +97,7 @@ namespace View {
         glm::vec3 GetRightVector();
 
         void ProcessKeyboardInput(bool forward, bool backward, bool left, bool right, double deltaTime);
+        static void LuaInit();
 
     private:
         /**
@@ -104,6 +105,5 @@ namespace View {
          */
         void updateCameraVectors();
 
-        void luaInit();
     };
 }

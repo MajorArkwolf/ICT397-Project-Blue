@@ -4,7 +4,8 @@ shapeFactory = physManager:GetReactShapeFactory();
 collisionWorld = physManager:GetCollisionWorld();
 dynamicsWorld = physManager:GetDynamicsWorld();
 
-sphereShape = shapeFactory:createSphere(1)
+sphereShape = shapeFactory:createSphere(1);
+capsuleShape = shapeFactory:createCapsule(1,3);
 
 -- Takes a GameObject_Type and turns it into a Lua string
 function GameObject_StringifyType(gameObjType_in)
@@ -83,7 +84,7 @@ function GameObject_Report(gameObj_in)
 	GameObject_ReportCharacter(GameObject.charData(gameObj_in:id()));
 end;
 
--- Testing an Invalid GameObject
+--[[ Testing an Invalid GameObject
 print("----------------------------");
 print(" Invalid GameObject Example ");
 print("----------------------------");
@@ -126,7 +127,7 @@ gameObj_raw.model = resources.getModel("res/model/ball.fbx");
 
 -- Output a report on the actual GameObject
 GameObject_Report(gameObj_raw);
-
+--]]
 -- Testing a Player GameObject
 print("\n---------------------------");
 print(" Player GameObject Example ");
@@ -134,10 +135,18 @@ print("---------------------------");
 
 -- Create a GameObject and store the returned identifier
 gameObj_id = GameObject.create(GameObject.Types.Player());
-
+print(gameObj_id)
 -- Gather the actual GameObject and configure it
 gameObj_raw = GameObject.get(gameObj_id);
 gameObj_raw.model = resources.getModel("res/model/ball.fbx");
+
+position = vector(0,200,0);
+dynamicsWorld:GetRigidBody(gameObj_raw.physBody):SetPosition(position);
+rigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(gameObj_raw.physBody));
+rigidBody:AddCollisionShape(shapeFactory:GetShape(capsuleShape), vector(0,0,0), quaternion(1,0,0,0), 1);
+rigidBody:SetBounciness(0);
+rigidBody:SetAngularDamping(1);
+rigidBody:SetRollingResistance(1);
 
 -- Gather the GameObject's Character data and configure it
 local gameObj_charData = GameObject.charData(gameObj_raw:id());
@@ -176,7 +185,7 @@ gameObj_charData:status_assign("Difficulty", 10);
 -- Output a report on the actual GameObject
 GameObject_Report(gameObj_raw);
 
-
+--[[
 for i = 0, 200, 1 do
 -- Create a GameObject and store the returned identifier
 gameObj_id = GameObject.create(GameObject.Types.NPC());
@@ -185,11 +194,10 @@ gameObj_id = GameObject.create(GameObject.Types.NPC());
 gameObj_raw = GameObject.get(gameObj_id);
 gameObj_raw.model = resources.getModel("res/model/ball.fbx");
 position = vector(5,200,20);
-debug.printVector(math.normaliseVector(position));
 dynamicsWorld:GetRigidBody(gameObj_raw.physBody):SetPosition(position);
 rigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(gameObj_raw.physBody));
 rigidBody:AddCollisionShape(shapeFactory:GetShape(sphereShape), vector(0,0,0), quaternion(1,0,0,0), 1);
 end
-
+]]--
 -- Syncronise the physics of the GameObjects after configuring them
 GameObject.syncPhys();

@@ -23,7 +23,10 @@ namespace Controller::Input {
         INPUT_ACTION_1,
         INPUT_ACTION_2,
         INPUT_ACTION_3,
-        INPUT_ACTION_4
+        INPUT_ACTION_4,
+        MOUSE_LEFT,
+        MOUSE_RIGHT,
+        MOUSE_MIDDLE
     };
 
     ///Enum classed used to represent the type of input sent by the user
