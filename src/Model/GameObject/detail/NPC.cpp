@@ -54,9 +54,15 @@ void GameObj_NPC::draw(const glm::mat4& projection, const glm::mat4& view, const
 	res_manager.drawModel(model, program.get());
 }
 
-BlueEngine::ID GameObj_NPC::context()
-{
+BlueEngine::ID GameObj_NPC::context() {
 	// Return a copy of the locally stored identifier
 	return contextID;
 }
 
+void GameObj_NPC::lua_init_register() {
+	// Register the NPC GameObject class
+	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
+		.deriveClass<GameObj_NPC, GameObj_Character>("GameObj_NPC")
+			.addProperty("context", &GameObj_NPC::contextID, false)
+		.endClass();
+}

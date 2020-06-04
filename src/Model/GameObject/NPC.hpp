@@ -40,6 +40,12 @@ public:
 		 */
 	BlueEngine::ID context();
 
+		/*!
+		 * @brief Registers this GameObject class to the Lua subscripting system.
+		 * @note Called in the constructor, constructor is responsible for only calling once.
+		 */
+	static void lua_init_register();
+
 private:
 		/*!
 		 * @brief Stores the NPC's finite state machine identifier.
