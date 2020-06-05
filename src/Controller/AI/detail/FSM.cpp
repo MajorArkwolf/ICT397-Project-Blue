@@ -9,7 +9,7 @@ FSM::FSM(std::shared_ptr<GameObj_Base> object) {
 void FSM::local_set(std::shared_ptr<State_Base> target) {
 	// Call the status's end behaviour
 	if (local_current)
-		local_current->end(this);
+		local_current->end(attached_object.lock());
 
 	// Update the internally stored states
 	local_prior = local_current;
@@ -17,13 +17,13 @@ void FSM::local_set(std::shared_ptr<State_Base> target) {
 
 	// Call the status's start behaviour
 	if (local_current)
-		local_current->start(this);
+		local_current->start(attached_object.lock());
 }
 
 void FSM::local_revert() {
 	// Call the status's end behaviour
 	if (local_current)
-		local_current->end(this);
+		local_current->end(attached_object.lock());
 
 	// Update the internally stored states
 	auto local_temp = local_prior;
@@ -32,13 +32,13 @@ void FSM::local_revert() {
 
 	// Call the status's start behaviour
 	if (local_current)
-		local_current->start(this);
+		local_current->start(attached_object.lock());
 }
 
 void FSM::global_set(std::shared_ptr<State_Base> target) {
 	// Call the status's end behaviour
 	if (global_current)
-		global_current->end(this);
+		global_current->end(attached_object.lock());
 
 	// Update the internally stored states
 	global_prior = global_current;
@@ -46,13 +46,13 @@ void FSM::global_set(std::shared_ptr<State_Base> target) {
 
 	// Call the status's start behaviour
 	if (global_current)
-		global_current->start(this);
+		global_current->start(attached_object.lock());
 }
 
 void FSM::global_revert() {
 	// Call the status's end behaviour
 	if (global_current)
-		global_current->end(this);
+		global_current->end(attached_object.lock());
 
 	// Update the internally stored states
 	auto global_temp = global_prior;
@@ -61,27 +61,27 @@ void FSM::global_revert() {
 
 	// Call the status's start behaviour
 	if (global_current)
-		global_current->start(this);
+		global_current->start(attached_object.lock());
 }
 
 void FSM::run(double t, double dt) {
 	// Call the local status's run behaviour
 	if (local_current)
-		local_current->run(this, t, dt);
+		local_current->run(attached_object.lock(), t, dt);
 
 	// Call the global status's run behaviour
 	if (global_current)
-		global_current->run(this, t, dt);
+		global_current->run(attached_object.lock(), t, dt);
 }
 
 void FSM::read(BlueEngine::ID msg_sender, Message_Type msg_type, float msg_attachment) {
 	// Call the local status's read behaviour
 	if (local_current)
-		local_current->read(this, msg_sender, msg_type, msg_attachment);
+		local_current->read(attached_object.lock(), msg_sender, msg_type, msg_attachment);
 
 	// Call the global status's read behaviour
 	if (global_current)
-		global_current->read(this, msg_sender, msg_type, msg_attachment);
+		global_current->read(attached_object.lock(), msg_sender, msg_type, msg_attachment);
 }
 
 BlueEngine::ID FSM::id_this() {
