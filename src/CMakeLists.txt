@@ -26,6 +26,7 @@ target_sources(${PROJECT_NAME} PRIVATE
 
         # Finite State Machine
     Controller/AI/detail/FSM.cpp
+    Controller/AI/detail/Message.cpp
     
     # Model
     Model/Models/Mesh.cpp
