@@ -27,6 +27,12 @@ target_sources(${PROJECT_NAME} PRIVATE
         # Finite State Machine
     Controller/AI/detail/FSM.cpp
     Controller/AI/detail/Message.cpp
+    Controller/AI/States/detail/Chase.cpp
+    Controller/AI/States/detail/Evade.cpp
+    Controller/AI/States/detail/Flee.cpp
+    Controller/AI/States/detail/Patrol.cpp
+    Controller/AI/States/detail/Pursuit.cpp
+    Controller/AI/States/detail/Wander.cpp
     
     # Model
     Model/Models/Mesh.cpp
