@@ -65,9 +65,9 @@ std::shared_ptr<GameObj_Base> Controller::Factory::GameObject(GameObj_Type type)
                 Physics::PhysicsManager::GetInstance().GetDynamicsWorld()->GetRigidBody(phys_id))
                 ->SetBodyType(Physics::ReactRigidBody::RigidBodyType::DYNAMIC);
 
-
-			// Create a configured the GameObject
-			object = std::make_shared<GameObj_Player>(0u, phys_id);
+			// Only create a single instance of the configured the GameObject
+			static std::shared_ptr<GameObj_Player> singlePlayer = std::make_shared<GameObj_Player>(0u, phys_id);
+			object = singlePlayer;
 		}
 		break;
 

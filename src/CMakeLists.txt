@@ -23,6 +23,9 @@ target_sources(${PROJECT_NAME} PRIVATE
     Controller/PhysicsFacade/React/ReactCollisionBody.cpp
     Controller/PhysicsFacade/React/ReactCollisionWorld.cpp
     Controller/PhysicsManager.cpp
+
+        # Finite State Machine
+    Controller/AI/detail/FSM.cpp
     
     # Model
     Model/Models/Mesh.cpp
