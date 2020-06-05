@@ -1,9 +1,9 @@
 	/// Declaration Include
 #include "Controller/AI/FSM.hpp"
 
-FSM::FSM(BlueEngine::ID object) {
-	// Just store the identifier
-	attached_id = object;
+FSM::FSM(std::shared_ptr<GameObj_Base> object) {
+	// Just cache the provided reference
+	attached_object = object;
 }
 
 void FSM::local_set(std::shared_ptr<State_Base> target) {
@@ -89,7 +89,7 @@ BlueEngine::ID FSM::id_this() {
 	return unique_id;
 }
 
-BlueEngine::ID FSM::id_attached() {
+std::shared_ptr<GameObj_Base> FSM::attached() {
 	// Return a copy of the attached GameObject's identifier
-	return attached_id;
+	return attached_object.lock();
 }

@@ -7,9 +7,10 @@
 #include "Controller/Engine/IDTracker.hpp"
 #include "Controller/AI/States/Base.hpp"
 #include "Controller/AI/Message.hpp"
+#include "Model/GameObject/Base.hpp"
 
 	/// Forward Declaration
-class FSM {};
+class State_Base;
 
 	/*!
 	 * @brief A finite state machine.
@@ -19,9 +20,9 @@ class FSM {
 public:
 		/*!
 		 * @brief Finite State Machine constructor, 'attaches' a Game Object for additional context.
-		 * @param [in] object The identifier of the target Game Object to 'attach'.
+		 * @param [in] object A managed reference to the target attachment Game Object.
 		 */
-	FSM(BlueEngine::ID object);
+	FSM(std::shared_ptr<GameObj_Base> object);
 
 		/*!
 		 * @brief Sets the current local State, calling the appropiate start and end behaviour.
@@ -76,10 +77,10 @@ public:
 	BlueEngine::ID id_this();
 
 		/*!
-		 * @brief Provides read-only access to the identifier of the 'attached' Game Object.
-		 * @warning Will throw an error if the attached Game Object is invalid!
+		 * @brief Provides read-only access to the cached managed reference of the 'attached' GameObject.
+		 * @return The reference to the GameObject, or nullptr on error.
 		 */
-	BlueEngine::ID id_attached();
+	std::shared_ptr<GameObj_Base> attached();
 
 protected:
 		/*!
@@ -118,8 +119,8 @@ private:
 	BlueEngine::ID unique_id;
 
 		/*!
-		 * @brief Stores the unique identifier of the 'attached' GameObject.
+		 * @brief Stores a cached managed reference to the 'attached' GameObject.
 		 * @note Initialised by constructor, should be treated as read-only after.
 		 */
-	BlueEngine::ID attached_id;
+	std::weak_ptr<GameObj_Base> attached_object;
 };

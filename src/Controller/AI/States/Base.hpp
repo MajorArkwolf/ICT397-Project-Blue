@@ -6,7 +6,7 @@
 #include "Controller/AI/FSM.hpp"
 
 	/// Forward Declaration
-class FSM {};
+class FSM;
 
 	/*!
 	 * @brief A virtual polymorphic interface class to be used by all FSM State systems.
@@ -14,6 +14,9 @@ class FSM {};
 	 */
 class State_Base {
 public:
+		//! Virtual destructor
+	virtual ~State_Base() {};
+
 		/*!
 		 * @brief The behaviour to perform when this State is made active/current.
 		 * @param [in] context The contextual information to apply to the State's behaviour.
