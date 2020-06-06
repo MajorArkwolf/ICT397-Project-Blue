@@ -22,6 +22,7 @@ void GameObj_Manager::init() {
 		.beginNamespace("GameObject")
 			.addFunction("create", GameObj_Manager::lua_create)
 			.addFunction("get", GameObj_Manager::lua_get)
+			.addFunction("getPlayer", GameObj_Manager::lua_getPlayer)
 			.addFunction("remove", GameObj_Manager::remove)
 			.addFunction("clear", GameObj_Manager::clear)
 			.addFunction("syncPhys", GameObj_Manager::syncPhys)
@@ -144,6 +145,23 @@ BlueEngine::ID GameObj_Manager::lua_create(GameObj_Type type) {
 GameObj_Base* GameObj_Manager::lua_get(BlueEngine::ID identifier) {
 	// Just return the same outcome, but without the smart pointer wrapper
 	return GameObj_Manager::get(identifier).get();
+}
+
+GameObj_Base* GameObj_Manager::lua_getPlayer() {
+	// Gather and insert the GameObject Player into the Manager
+	auto temp = Controller::Factory::get().GameObject(GameObj_Type::Player);
+
+	// Catch if the Factory output is valid
+	if (temp == nullptr) {
+		// Return 0u in cases where the GameObject would not be valid
+		return BlueEngine::ID(0u);
+	}
+
+	// Store the GameObject into the Manager
+	GameObj_Manager::insert(temp);
+
+	// Return the Player GameObject by reference
+	return temp.get();
 }
 
 GameObj_Character* GameObj_Manager::lua_to_character(GameObj_Base* raw_in) {
