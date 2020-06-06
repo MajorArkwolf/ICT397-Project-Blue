@@ -37,7 +37,7 @@ public:
 	static void insert(std::shared_ptr<GameObj_Base> object);
 
 		/*!
-		 * @brief Gather a reference to a managed GameObject.
+		 * @brief Gathers a reference to a managed GameObject.
 		 * @param [in] identifier A GameObject identifier.
 		 * @return A pointer to the specified GameObject, or nullptr on error.
 		 * @note Can be used to check if a GameObject is being managed.
@@ -93,6 +93,13 @@ protected:
 		 * @warning The pointer provided is not managed, and the data may go out of scope!
 		 */
 	static GameObj_Base* lua_get(BlueEngine::ID identifier);
+	
+		/*!
+		 * @brief Gathers a reference to a managed Player GameObject.
+		 * @return A pointer to the specified GameObject, or nullptr on error.
+		 * @note Will automatically store the Player GameObject into the manager if not used.
+		 */
+	static GameObj_Base* lua_getPlayer();
 
 		/*!
 		 * @brief Downcasts a GameObj_Base reference to a GameObj_Character reference.
