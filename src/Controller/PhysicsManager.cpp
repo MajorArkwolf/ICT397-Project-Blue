@@ -211,11 +211,16 @@ void Physics::PhysicsManager::LuaInit() {
         .endClass();
 
     luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
-        .addFunction("getReactRigidBody", &getReactRigid);
+        .addFunction("getReactRigidBody", &getReactRigid)
+        .addFunction("getReactCollisionBody", &getReactCollision);
+    
 }
 
 Physics::ReactRigidBody *Physics::PhysicsManager::getReactRigid(RigidBody *ptr) {
     return dynamic_cast<ReactRigidBody *>(ptr);
+}
+Physics::ReactCollisionBody *Physics::PhysicsManager::getReactCollision(CollisionBody *ptr) {
+    return dynamic_cast<ReactCollisionBody *>(ptr);
 }
 
 Physics::PhysicsManager::PhysicsManager() {

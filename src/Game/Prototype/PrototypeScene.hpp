@@ -46,6 +46,7 @@ class PrototypeScene : public BaseState {
      */
     void handleInputData(Controller::Input::InputData inputData, double deltatime) override;
 
+    float GetHeightAt(glm::ivec2); 
 
   private:
       ///The terrain manager for the prototype scene

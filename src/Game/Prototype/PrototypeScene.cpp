@@ -26,12 +26,17 @@ void toggleWireframe() {
     render.ToggleWireFrame();
 }
 
+static float getHeight(glm::ivec2 coord) {
+     return dynamic_cast<PrototypeScene*>(BlueEngine::Engine::get().gameStack.getTop().get())->GetHeightAt(coord);
+}
+
 PrototypeScene::PrototypeScene() {
     PrototypeScene::Init();
 
     luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
         .addFunction("getCamera", &getCamera)
-        .addFunction("toggleWireframe", &toggleWireframe);
+        .addFunction("toggleWireframe", &toggleWireframe)
+        .addFunction("getHeightAt", &getHeight);
 
     View::Camera::LuaInit();
 }
@@ -100,7 +105,8 @@ void PrototypeScene::Init() {
     //    auto resmanager           = ResourceManager::getInstance();
     //    auto model_id             = resmanager.getModelID("res/model/ball.fbx");
     //    auto phys_world_collision = phys_sys->GetCollisionWorld();
-    auto phys_world_dynamics = phys_sys->GetDynamicsWorld();
+    auto *phys_world_dynamics = phys_sys->GetDynamicsWorld();
+    auto *phys_world_collision = phys_sys->GetCollisionWorld();
 
     //    auto temp = Controller::Factory::get().GameObject(GameObj_Type::NPC);
     //    gameObj_ids.push_back(temp->id());
@@ -145,6 +151,8 @@ void PrototypeScene::Init() {
         heightMap.width, heightMap.height, heightMap.heightRange.min, heightMap.heightRange.max,
         heightMap.terrain);
     const auto terrainPhysID = 9999999;
+
+
     phys_world_dynamics->CreateRigidBody(heightMap.position, heightMap.rotation, terrainPhysID);
     auto *reactBodyHeights =
         dynamic_cast<Physics::ReactRigidBody *>(phys_world_dynamics->GetRigidBody(terrainPhysID));
@@ -152,6 +160,13 @@ void PrototypeScene::Init() {
         dynamic_cast<Physics::ReactShapes *>(phys_sys->GetShapeFactory())->GetShape(terrainID),
         glm::vec3{0, 0, 0}, glm::quat(1, 0, 0, 0), 1.f);
     reactBodyHeights->SetBodyType(Physics::ReactRigidBody::RigidBodyType::STATIC);
+
+    phys_world_collision->CreateCollisionBody(heightMap.position, heightMap.rotation, terrainPhysID);
+    auto *reactCollisionBodyHeights =
+        dynamic_cast<Physics::ReactCollisionBody *>(phys_world_collision->GetCollisionBody(terrainPhysID));
+    reactCollisionBodyHeights->AddCollisionShape(
+        dynamic_cast<Physics::ReactShapes *>(phys_sys->GetShapeFactory())->GetShape(terrainID),
+        glm::vec3{0, 0, 0}, glm::quat(1, 0, 0, 0));
     //}
 
     /*std::function<void(std::shared_ptr<GameObj_Base>)> PhysicsOp =
@@ -265,6 +280,10 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData, dou
     if (!handledMouse) {
         engine.mouse = {0.0f, 0.0f};
     }
+}
+
+float PrototypeScene::GetHeightAt(glm::ivec2 coord) {
+    return terrain.GetBLHeight(coord);
 }
 
 auto PrototypeScene::display() -> void {

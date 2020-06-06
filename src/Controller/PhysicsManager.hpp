@@ -63,6 +63,7 @@ namespace Physics {
         static ReactDynamicsWorld *lua_getReactDynamicsWorld();
         void LuaInit();
         static ReactRigidBody *getReactRigid(RigidBody* ptr);
+        static ReactCollisionBody *getReactCollision(CollisionBody* ptr);
 
         PhysicsManager();
 

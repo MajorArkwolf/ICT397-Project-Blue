@@ -1,9 +1,10 @@
 Update = function(deltaTime) 
-	player = GameObject.get(2);
-	playerRigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(player.physBody));
-	camera = getCamera();
-	position = playerRigidBody:GetPosition();
-	camera.Position = position;
+	 local player = GameObject.getPlayer();
+	 local playerRigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(player.physBody));
+	  camera = getCamera();
+	 local position = playerRigidBody:GetPosition();
+	 camera.Position = position;
+	movePlayer(deltaTime);
 end
 
 
@@ -20,39 +21,83 @@ createProjectile = function (position, force)
 	rigidBody:ApplyForceToCentre(math.vectorMultiplyScalar(force, 80000));
 end
 
+movePlayer = function(deltaTime)
+
+	local gameObj_charData = GameObject.to_character(player);
+	local cameraFrontVector = camera.FrontVector;
+	local cameraRightVector = camera:GetRightVector();
+	local playerRigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(player.physBody));
+	local playerCollisionBody = getReactCollisionBody(collisionWorld:GetCollisionBody(player.physBody));
+	local movementMult = 1000;
+
+	if(gameObj_charData:status_get("UseDynamics") == 1) then
+		if(	gameObj_charData:status_get("MoveForward") == 1) then 
+			local force = math.vectorMultiplyScalar(cameraFrontVector, movementMult );
+			debug.printVector(force);
+			--local force = math.vectorMultiplyScalar(force, deltaTime );
+			playerRigidBody:ApplyForceToCentre(force);
+		end
+		if(	gameObj_charData:status_get("MoveBackward") == 1) then 
+			local force = math.vectorMultiplyScalar(cameraFrontVector, -movementMult );
+			--local force = math.vectorMultiplyScalar(force, deltaTime );
+			playerRigidBody:ApplyForceToCentre(force);	
+						
+		end
+		if(	gameObj_charData:status_get("MoveLeft") == 1) then 
+			local force = math.vectorMultiplyScalar(cameraRightVector, -movementMult );
+			--local force = math.vectorMultiplyScalar(force, deltaTime );
+			playerRigidBody:ApplyForceToCentre(force);
+		end
+		if(	gameObj_charData:status_get("MoveRight") == 1) then 
+			local force = math.vectorMultiplyScalar(cameraRightVector, movementMult );
+			--local force = math.vectorMultiplyScalar(force, deltaTime );
+			playerRigidBody:ApplyForceToCentre(force);
+		end
+	elseif(gameObj_charData:status_get("UseDynamics") == 0) then
+		if(	gameObj_charData:status_get("MoveForward")) then 
+	
+		end
+		if(	gameObj_charData:status_get("MoveBackward")) then 
+	
+		end
+		if(	gameObj_charData:status_get("MoveLeft")) then 
+	
+		end
+		if(	gameObj_charData:status_get("MoveRight")) then 
+	
+		end
+	end
+
+end
+
 
 handleInput = function(inputData, deltaTime)
+	local 	 player = GameObject.getPlayer();
+	local camera = getCamera();
 
-	camera = getCamera();
-	physicsManager = PhysicsManager:GetInstance();
-	dynamicsWorld = physManager:GetDynamicsWorld();
-	collisionWorld = physManager:GetCollisionWorld();
-	player = GameObject.get(2);
-	playerRigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(player.physBody));
+	local playerRigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(player.physBody));
+		gameObj_charData = GameObject.to_character(player);
 	
-	cameraFrontVector = camera.FrontVector;
-	cameraRightVector = camera:GetRightVector();
+	local cameraFrontVector = camera.FrontVector;
+	local cameraRightVector = camera:GetRightVector();
 	
-	movementMult = 1000;
+	local movementMult = 1000;
 	
 	if(inputData.inputType == "KeyRelease") then
 			if(inputData.action == "Jump") then
 
 			elseif(inputData.action == "Move Forward") then
-
+				gameObj_charData:status_assign("MoveForward", 0);
 			elseif(inputData.action == "Move Backward") then
-
+				gameObj_charData:status_assign("MoveBackward", 0);
 			elseif(inputData.action == "Move Left") then
-
+				gameObj_charData:status_assign("MoveLeft", 0);
 			elseif(inputData.action == "Move Right") then
-
+				gameObj_charData:status_assign("MoveRight", 0);
 			elseif(inputData.action == "Escape") then
 				toggleGUIWindow("menu");
 			elseif(inputData.action == "Sprint") then
-				gameObj_raw = GameObject.get(20);
-				rigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(gameObj_raw.physBody));
-				force = vector(0,5000,0);
-				rigidBody:ApplyForceToCentre(force);
+
 			elseif(inputData.action == "Crouch") then
 
 			elseif(inputData.action == "Action 1") then
@@ -66,24 +111,18 @@ handleInput = function(inputData, deltaTime)
 	        end 
 	elseif(inputData.inputType == "KeyPress") then
 			if(inputData.action == "Jump") then
-
-				force = vector(0,1000,0);
-				rigidBody:ApplyForceToCentre(force);
 				
 			elseif(inputData.action == "Escape") then
 
 			elseif(inputData.action == "Move Forward") then
-				force = math.vectorMultiplyScalar(cameraFrontVector, movementMult );
-				rigidBody:ApplyForceToCentre(force);
+			
+				gameObj_charData:status_assign("MoveForward", 1);
 			elseif(inputData.action == "Move Backward") then
-				force = math.vectorMultiplyScalar(cameraFrontVector, -movementMult );
-				rigidBody:ApplyForceToCentre(force);
+				gameObj_charData:status_assign("MoveBackward", 1);
 			elseif(inputData.action == "Move Left") then
-				force = math.vectorMultiplyScalar(cameraRightVector, -movementMult );
-				rigidBody:ApplyForceToCentre(force);
+				gameObj_charData:status_assign("MoveLeft", 1);
 			elseif(inputData.action == "Move Right") then
-				force = math.vectorMultiplyScalar(cameraRightVector, movementMult );
-				rigidBody:ApplyForceToCentre(force);
+				gameObj_charData:status_assign("MoveRight", 1);
 			elseif(inputData.action == "Sprint") then
 
 			elseif(inputData.action == "Crouch") then
@@ -102,10 +141,7 @@ handleInput = function(inputData, deltaTime)
 	        end 
 	elseif(inputData.inputType == "MouseButtonPress") then
 		if(inputData.action == "Mouse Left") then
-			--[[for i=0,1,1 do
-			createProjectile(getCamera().Position, getCamera().FrontVector);
-			end
-			]]--
+
 		elseif(inputData.action == "Mouse Middle") then
 
 		elseif(inputData.action == "Mouse Right") then

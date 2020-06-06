@@ -4,8 +4,9 @@ shapeFactory = physManager:GetReactShapeFactory();
 collisionWorld = physManager:GetCollisionWorld();
 dynamicsWorld = physManager:GetDynamicsWorld();
 
-sphereShape = shapeFactory:createSphere(1);
-capsuleShape = shapeFactory:createCapsule(1,3);
+
+local sphereShape = shapeFactory:createSphere(1);
+local capsuleShape = shapeFactory:createCapsule(1,3);
 
 -- Load the GameObject Lua Reporting Library functions from script
 dofile("res/scripts/gameObjsReporting.lua");
@@ -13,19 +14,24 @@ dofile("res/scripts/gameObjsReporting.lua");
 -- Load the GameObject Lua debugging script
 --dofile("res/scripts/gameObjsTesting.lua");
 
--- Create a GameObject and store the returned identifier
-gameObj_id = GameObject.create(GameObject.Types.Player());
+
 -- Gather the actual GameObject and configure it
-gameObj_raw = GameObject.get(gameObj_id);
+gameObj_raw = GameObject.getPlayer();
 gameObj_raw.model = resources.getModel("res/model/ball.fbx");
 
 position = vector(0,200,0);
+print(gameObj_raw.model)
 dynamicsWorld:GetRigidBody(gameObj_raw.physBody):SetPosition(position);
 rigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(gameObj_raw.physBody));
 rigidBody:AddCollisionShape(shapeFactory:GetShape(capsuleShape), vector(0,0,0), quaternion(1,0,0,0), 1);
-rigidBody:SetBounciness(0);
-rigidBody:SetAngularDamping(1);
-rigidBody:SetRollingResistance(1);
+
+gameObj_charData = GameObject.to_character(gameObj_raw);
+gameObj_charData:status_assign("UseDynamics", 1);
+gameObj_charData:status_assign("MoveForward", 0);
+gameObj_charData:status_assign("MoveBackward", 0);
+gameObj_charData:status_assign("MoveLeft", 0);
+gameObj_charData:status_assign("MoveRight", 0);
+
 
 --[[
 for i = 0, 200, 1 do
@@ -43,3 +49,5 @@ end
 ]]--
 -- Syncronise the physics of the GameObjects after configuring them
 GameObject.syncPhys();
+player = GameObject.getPlayer();
+
