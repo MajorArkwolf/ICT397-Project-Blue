@@ -11,13 +11,14 @@
 
 ## Building
 ### Tools
-* macOS: [brew][brew-dl]
+* macOS: [xcode][xcode command line tool][brew][brew-dl]
 * Windows: [vcpkg][vcpkg-dl], [Visual Studio 2019][VS2019-dl]
 
 ### Dependencies
 * NOTE: `Linux and Mac dependences out of date`
 * Linux: `sudo apt-get install cmake libsdl2-dev libsdl2-image-dev
     libsdl2-ttf-dev libsdl2-mixer-dev libglm-dev assimp-utils`
+* macOS: `brew install cmake`
 * Windows: `None` 
 
 ### GIT LFS
