@@ -31,12 +31,13 @@ static float getHeight(glm::ivec2 coord) {
 }
 
 PrototypeScene::PrototypeScene() {
-    PrototypeScene::Init();
-
     luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
         .addFunction("getCamera", &getCamera)
         .addFunction("toggleWireframe", &toggleWireframe)
         .addFunction("getHeightAt", &getHeight);
+
+    PrototypeScene::Init();
+
 
     View::Camera::LuaInit();
 }

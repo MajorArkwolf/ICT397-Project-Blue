@@ -339,7 +339,8 @@ namespace Controller::Input {
         return stringScancodePairs;
     }
 
-    InputManager::~InputManager() = default;
+    InputManager::~InputManager() {
+    }
 
     void InputManager::populateInputMap() { // Populates Input map with all actions to allow mapping inputs to them
 

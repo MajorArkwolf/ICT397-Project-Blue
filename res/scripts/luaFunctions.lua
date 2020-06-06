@@ -1,10 +1,11 @@
+
 Update = function(deltaTime) 
-	 local player = GameObject.getPlayer();
-	 local playerRigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(player.physBody));
-	  camera = getCamera();
-	 local position = playerRigidBody:GetPosition();
-	 camera.Position = position;
-	movePlayer(deltaTime);
+	-- local player = GameObject.getPlayer();
+	 --local playerRigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(player.physBody));
+	 local camera = getCamera();
+	-- local position = playerRigidBody:GetPosition();
+	 --camera.Position = position;
+	--movePlayer(deltaTime);
 end
 
 
@@ -22,7 +23,7 @@ createProjectile = function (position, force)
 end
 
 movePlayer = function(deltaTime)
-
+	local camera = getCamera();
 	local gameObj_charData = GameObject.to_character(player);
 	local cameraFrontVector = camera.FrontVector;
 	local cameraRightVector = camera:GetRightVector();
@@ -33,7 +34,6 @@ movePlayer = function(deltaTime)
 	if(gameObj_charData:status_get("UseDynamics") == 1) then
 		if(	gameObj_charData:status_get("MoveForward") == 1) then 
 			local force = math.vectorMultiplyScalar(cameraFrontVector, movementMult );
-			debug.printVector(force);
 			--local force = math.vectorMultiplyScalar(force, deltaTime );
 			playerRigidBody:ApplyForceToCentre(force);
 		end
@@ -72,11 +72,12 @@ end
 
 
 handleInput = function(inputData, deltaTime)
-	local 	 player = GameObject.getPlayer();
-	local camera = getCamera();
 
+	local camera = getCamera();
+	local player = GameObject.getPlayer();
+--[[
 	local playerRigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(player.physBody));
-		gameObj_charData = GameObject.to_character(player);
+	local gameObj_charData = GameObject.to_character(player);
 	
 	local cameraFrontVector = camera.FrontVector;
 	local cameraRightVector = camera:GetRightVector();
@@ -161,6 +162,7 @@ handleInput = function(inputData, deltaTime)
 	elseif(inputData.inputType == "MouseWheel") then
 
 	end
+	--]]
 end
 
 

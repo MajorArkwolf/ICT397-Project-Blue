@@ -49,5 +49,5 @@ end
 ]]--
 -- Syncronise the physics of the GameObjects after configuring them
 GameObject.syncPhys();
-player = GameObject.getPlayer();
+
 
