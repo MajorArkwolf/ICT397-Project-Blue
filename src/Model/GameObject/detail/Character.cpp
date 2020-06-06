@@ -2,7 +2,8 @@
 #include "../Character.hpp"
 
 	/// Internal Dependencies
-#include "../Types.hpp"
+#include "Model/GameObject/Types.hpp"
+#include "LuaAssist.hpp"
 
 GameObj_Type GameObj_Character::type() const {
 	// The Character GameObject will always return an indicator that its type is not valid.
@@ -56,4 +57,18 @@ void GameObj_Character::status_delete(std::string key) {
 void GameObj_Character::status_clear() {
 	// Perform the operation on the map
 	statuses.clear();
+}
+
+void GameObj_Character::lua_init_register() {
+	// Register the Character GameObject class
+	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
+		.deriveClass<GameObj_Character, GameObj_Base>("GameObject_Character")
+			.addFunction("status_assign", &GameObj_Character::status_assign)
+			.addFunction("status_count", &GameObj_Character::status_count)
+			.addFunction("status_has", &GameObj_Character::status_has)
+			.addFunction("status_list", &GameObj_Character::status_list)
+			.addFunction("status_get", &GameObj_Character::status_get)
+			.addFunction("status_delete", &GameObj_Character::status_delete)
+			.addFunction("status_clear", &GameObj_Character::status_clear)
+		.endClass();
 }
