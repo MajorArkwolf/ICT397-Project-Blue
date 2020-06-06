@@ -56,18 +56,26 @@ std::shared_ptr<GameObj_Base> Controller::Factory::GameObject(GameObj_Type type)
 
 	case (GameObj_Type::Player):
 		{
-			// Create a new physics body for the GameObject, assigining default properties
-			auto phys_id = id_assigner.getID();
-			Physics::PhysicsManager::GetInstance().GetDynamicsWorld()->CreateRigidBody(glm::vec3(0.0f), glm::quat(1, 0, 0, 0), phys_id);
-			Physics::PhysicsManager::GetInstance().GetCollisionWorld()->CreateCollisionBody(glm::vec3(0.0f), glm::quat(1, 0, 0, 0), phys_id);
+			// Only configure the player setup once
+			static std::shared_ptr<GameObj_Base> staticPlayer;
+			static bool isGenerated = false;
+			if (!isGenerated) {
+				// Create a new physics body for the GameObject, assigining default properties
+				auto phys_id = id_assigner.getID();
+				Physics::PhysicsManager::GetInstance().GetDynamicsWorld()->CreateRigidBody(glm::vec3(0.0f), glm::quat(1, 0, 0, 0), phys_id);
+				Physics::PhysicsManager::GetInstance().GetCollisionWorld()->CreateCollisionBody(glm::vec3(0.0f), glm::quat(1, 0, 0, 0), phys_id);
+				dynamic_cast<Physics::ReactRigidBody*>(
+					Physics::PhysicsManager::GetInstance().GetDynamicsWorld()->GetRigidBody(phys_id))
+					->SetBodyType(Physics::ReactRigidBody::RigidBodyType::DYNAMIC);
 
-            dynamic_cast<Physics::ReactRigidBody *>(
-                Physics::PhysicsManager::GetInstance().GetDynamicsWorld()->GetRigidBody(phys_id))
-                ->SetBodyType(Physics::ReactRigidBody::RigidBodyType::DYNAMIC);
+				// Configure the static Player GameObject
+				staticPlayer = std::make_shared<GameObj_Player>(0u, phys_id);
 
+				// Prevent the re-configuration of the GameObject in the factory
+				isGenerated = true;
+			}
 
-			// Create a atatic configured the GameObject, onlmy return this one
-			auto static staticPlayer = std::make_shared<GameObj_Player>(0u, phys_id);
+			// Return a reference to the static Player GameObject
 			object = staticPlayer;
 		}
 		break;
