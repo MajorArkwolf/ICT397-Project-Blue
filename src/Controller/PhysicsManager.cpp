@@ -81,6 +81,10 @@ void printVector(glm::vec3 vec) {
     std::cout << "X: " << vec.x << " Y: " << vec.y << " Z: " << vec.z << std::endl;
 }
 
+glm::vec3 addVector(glm::vec3 vec1, glm::vec3 vec2) {
+    return vec1 + vec2;
+}
+
 void Physics::PhysicsManager::LuaInit() {
 
     luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
@@ -93,6 +97,7 @@ void Physics::PhysicsManager::LuaInit() {
         .addFunction("vectorCross", &crossProduct)
         .addFunction("vectorDot", &dotProduct)
         .addFunction("vectorMultiplyScalar", &vectorMultiplyScalar)
+        .addFunction("vectorAdd", &addVector)
         .endNamespace();
 
     // Add glm vectors to lua
@@ -199,6 +204,8 @@ void Physics::PhysicsManager::LuaInit() {
         .beginClass<CollisionWorld>("CollisionWorld")
         .addFunction("GetCollisionBody", &CollisionWorld::GetCollisionBody)
         .addFunction("CreateCollisionBody", &CollisionWorld::CreateCollisionBody)
+        .addFunction("TestOverlap", &CollisionWorld::TestOverlap)
+
         .endClass();
 
     luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
@@ -213,7 +220,6 @@ void Physics::PhysicsManager::LuaInit() {
     luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
         .addFunction("getReactRigidBody", &getReactRigid)
         .addFunction("getReactCollisionBody", &getReactCollision);
-    
 }
 
 Physics::ReactRigidBody *Physics::PhysicsManager::getReactRigid(RigidBody *ptr) {

@@ -26,8 +26,8 @@ void toggleWireframe() {
     render.ToggleWireFrame();
 }
 
-static float getHeight(glm::ivec2 coord) {
-     return dynamic_cast<PrototypeScene*>(BlueEngine::Engine::get().gameStack.getTop().get())->GetHeightAt(coord);
+static float getHeight(float x, float y) {
+     return dynamic_cast<PrototypeScene*>(BlueEngine::Engine::get().gameStack.getTop().get())->GetHeightAt(glm::vec2(x,y));
 }
 
 PrototypeScene::PrototypeScene() {
@@ -50,23 +50,7 @@ auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
 
     terrain.Update(camera.getLocation());
 
-    if (moveForward) {
-
-        camera.ProcessKeyboard(Camera_Movement::FORWARD, dt);
-    }
-    if (moveBackward) {
-
-        camera.ProcessKeyboard(Camera_Movement::BACKWARD, dt);
-    }
-    if (moveLeft) {
-
-        camera.ProcessKeyboard(Camera_Movement::LEFT, dt);
-    }
-    if (moveRight) {
-
-        camera.ProcessKeyboard(Camera_Movement::RIGHT, dt);
-    }
-
+    
     // Update the Dynamic Physics world
     Physics::PhysicsManager::GetInstance().GetDynamicsWorld()->Update(dt);
 
@@ -219,16 +203,12 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData, dou
 
             switch (inputData.inputAction) {
                 case BLUE_InputAction::INPUT_MOVE_FORWARD: {
-                    moveForward = true;
                 } break;
                 case BLUE_InputAction::INPUT_MOVE_BACKWARD: {
-                    moveBackward = true;
                 } break;
                 case BLUE_InputAction::INPUT_MOVE_LEFT: {
-                    moveLeft = true;
                 } break;
                 case BLUE_InputAction::INPUT_MOVE_RIGHT: {
-                    moveRight = true;
                 } break;
                 default: break;
             }
@@ -236,16 +216,12 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData, dou
         case BLUE_InputType::KEY_RELEASE: { // Key Release events
             switch (inputData.inputAction) {
                 case BLUE_InputAction::INPUT_MOVE_FORWARD: {
-                    moveForward = false;
                 } break;
                 case BLUE_InputAction::INPUT_MOVE_BACKWARD: {
-                    moveBackward = false;
                 } break;
                 case BLUE_InputAction::INPUT_MOVE_LEFT: {
-                    moveLeft = false;
                 } break;
                 case BLUE_InputAction::INPUT_MOVE_RIGHT: {
-                    moveRight = false;
                 } break;
                 case BLUE_InputAction::INPUT_JUMP: {
                 } break;
@@ -283,7 +259,7 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData, dou
     }
 }
 
-float PrototypeScene::GetHeightAt(glm::ivec2 coord) {
+float PrototypeScene::GetHeightAt(glm::vec2 coord) {
     return terrain.GetBLHeight(coord);
 }
 

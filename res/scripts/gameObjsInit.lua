@@ -26,7 +26,7 @@ rigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(gameObj_raw.physBody));
 rigidBody:AddCollisionShape(shapeFactory:GetShape(capsuleShape), vector(0,0,0), quaternion(1,0,0,0), 1);
 
 gameObj_charData = GameObject.to_character(gameObj_raw);
-gameObj_charData:status_assign("UseDynamics", 1);
+gameObj_charData:status_assign("UseDynamics", 0);
 gameObj_charData:status_assign("MoveForward", 0);
 gameObj_charData:status_assign("MoveBackward", 0);
 gameObj_charData:status_assign("MoveLeft", 0);
@@ -49,5 +49,5 @@ end
 ]]--
 -- Syncronise the physics of the GameObjects after configuring them
 GameObject.syncPhys();
-
+player = GameObject.getPlayer();
 

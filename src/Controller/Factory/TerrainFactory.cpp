@@ -616,11 +616,9 @@ float Controller::TerrainFactory::GetBLHeight(Blue::Key currentKey, glm::vec2 cu
     float x             = currentCord.x - floor(currentCord.x);
     float y             = currentCord.y - floor(currentCord.y);
 
-    float R1 = ((1.0f - x) / (1.0f - 0.0f)) * hBL + ((x - 0.0f) / (1.0f - 0.0f)) * hBR;
-    // ((x2 – x)/(x2 – x1))*Q12 + ((x – x1)/(x2 – x1))*Q22
-    float R2 = ((1.0f - x) / (1.0f - 0.0f)) * hTL + ((x - 0.0f) / (1.0f - 0.0f)) * hTR;
-    // ((y2 – y)/(y2 – y1))*R1 + ((y – y1)/(y2 – y1))*R2
-    result_height = (((1.0f - y) / (1 - 0.0f)) * R1) + (((y - 0.0f) / (1.0f - 0.0f)) * R2);
+    auto y1 = glm::mix(hBL, hTL, x);
+    auto y2 = glm::mix(hBR, hTR, x);
+    result_height = glm::mix(y1, y2, y);
     return result_height;
 }
 
