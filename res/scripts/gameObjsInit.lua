@@ -11,7 +11,22 @@ capsuleShape = shapeFactory:createCapsule(1,3);
 dofile("res/scripts/gameObjsReporting.lua");
 
 -- Load the GameObject Lua debugging script
-dofile("res/scripts/gameObjsTesting.lua");
+--dofile("res/scripts/gameObjsTesting.lua");
+
+-- Create a GameObject and store the returned identifier
+gameObj_id = GameObject.create(GameObject.Types.Player());
+-- Gather the actual GameObject and configure it
+gameObj_raw = GameObject.get(gameObj_id);
+gameObj_raw.model = resources.getModel("res/model/ball.fbx");
+
+position = vector(0,200,0);
+dynamicsWorld:GetRigidBody(gameObj_raw.physBody):SetPosition(position);
+rigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(gameObj_raw.physBody));
+rigidBody:AddCollisionShape(shapeFactory:GetShape(capsuleShape), vector(0,0,0), quaternion(1,0,0,0), 1);
+rigidBody:SetBounciness(0);
+rigidBody:SetAngularDamping(1);
+rigidBody:SetRollingResistance(1);
+
 --[[
 for i = 0, 200, 1 do
 -- Create a GameObject and store the returned identifier
