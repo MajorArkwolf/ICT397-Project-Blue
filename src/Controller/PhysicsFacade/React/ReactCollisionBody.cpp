@@ -5,8 +5,6 @@ Physics::ReactCollisionBody::ReactCollisionBody(rp3d::CollisionBody * body) {
     collisionBody = body;
 }
 
-Physics::ReactCollisionBody::~ReactCollisionBody() {}
-
 void Physics::ReactCollisionBody::SetPosition(glm::vec3 position) {
     rp3d::Transform currentTransform = collisionBody->getTransform();
     rp3d::Transform newTransform;

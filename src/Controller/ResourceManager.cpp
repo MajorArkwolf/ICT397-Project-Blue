@@ -28,14 +28,16 @@ void ResourceManager::loadResources() {
     auto *L        = LuaManager::getInstance().getLuaState();
     auto &basePath = BlueEngine::Engine::get().basepath;
 
-    auto scriptPath = basePath + "res/scripts/LoadResources.lua";
-    getGlobalNamespace(L).beginNamespace("resources").addFunction("loadString", &loadString).endNamespace();
-    getGlobalNamespace(L).beginNamespace("resources").addFunction("loadModel", &loadModel).endNamespace();
-    getGlobalNamespace(L).beginNamespace("resources").addFunction("loadTexture", &loadTexture).endNamespace();
-    getGlobalNamespace(L).beginNamespace("resources").addFunction("getModel", &getModelId).endNamespace();
+    const auto scriptPath = basePath + "res/scripts/LoadResources.lua";
+    getGlobalNamespace(L)
+        .beginNamespace("resources")
+        .addFunction("loadString", &loadString)
+        .addFunction("loadModel", &loadModel)
+        .addFunction("loadTexture", &loadTexture)
+        .addFunction("getModel", &getModelId)
+        .endNamespace();
     luaL_dofile(L, scriptPath.c_str());
     lua_pcall(L, 0, 0, 0);
-
 }
 
 auto ResourceManager::insertString(std::string key, std::string value) -> void {
@@ -61,7 +63,7 @@ void ResourceManager::loadModel(const std::string &filePath) {
 void ResourceManager::loadString(const std::string key) {
     using namespace luabridge;
 
-    auto *L     = LuaManager::getInstance().getLuaState();
+    auto *L = LuaManager::getInstance().getLuaState();
     static luabridge::LuaRef stringTable(L);
 
     if (stringTable.isNil()) {
@@ -70,7 +72,6 @@ void ResourceManager::loadString(const std::string key) {
             std::cout << "Failed to load 'Strings' table from LoadResources.lua\n";
             assert(!stringTable.isNil());
         }
-
     }
 
     LuaRef text = stringTable[key.c_str()];

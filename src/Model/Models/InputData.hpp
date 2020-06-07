@@ -1,4 +1,7 @@
 #pragma once
+#include <string>
+
+#include "glm/vec2.hpp"
 
 namespace Controller::Input {
 
@@ -20,7 +23,10 @@ namespace Controller::Input {
         INPUT_ACTION_1,
         INPUT_ACTION_2,
         INPUT_ACTION_3,
-        INPUT_ACTION_4
+        INPUT_ACTION_4,
+        MOUSE_LEFT,
+        MOUSE_RIGHT,
+        MOUSE_MIDDLE
     };
 
     ///Enum classed used to represent the type of input sent by the user
@@ -42,11 +48,15 @@ namespace Controller::Input {
         ///The absolute mouse motion in the event
         glm::ivec2 mouseMotionAbsolute = {0, 0};
         ///The amount of mouse wheel motion
-        float mouseWheelMotion         = 0.f;
+        double mouseWheelMotion         = 0.0;
         ///The type of action
         BLUE_InputAction inputAction = BLUE_InputAction::INPUT_DEFAULT;
         ///The action type
         BLUE_InputType inputType = BLUE_InputType::DEFAULT_TYPE;
+
+        std::string actionString = "DEFAULT";
+        std::string typeString = "DEFAULT";
+
     };
 
 }

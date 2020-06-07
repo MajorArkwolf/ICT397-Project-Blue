@@ -15,9 +15,9 @@ namespace Physics {
     class CollisionWorld {
       public:
         /// Constructor
-        CollisionWorld(){};
+        CollisionWorld(){}
         /// Desttructor
-        virtual ~CollisionWorld(){};
+        virtual ~CollisionWorld(){}
         /**
          * @brief Used to intialise a dynamics world with a certain gravity level
          */

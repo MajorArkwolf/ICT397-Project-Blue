@@ -60,6 +60,11 @@ Physics::CollisionWorld *Physics::PhysicsManager::lua_getCollisionWorld() {
     return GetInstance().collisionWorld.get();
 }
 
+glm::vec3 vectorMultiplyScalar(glm::vec3 vector, float scalar) {
+
+    return vector * scalar;
+}
+
 glm::vec3 normaliseVector(glm::vec3 vector) {
     return glm::normalize(vector);
 }
@@ -76,6 +81,10 @@ void printVector(glm::vec3 vec) {
     std::cout << "X: " << vec.x << " Y: " << vec.y << " Z: " << vec.z << std::endl;
 }
 
+glm::vec3 addVector(glm::vec3 vec1, glm::vec3 vec2) {
+    return vec1 + vec2;
+}
+
 void Physics::PhysicsManager::LuaInit() {
 
     luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
@@ -87,6 +96,8 @@ void Physics::PhysicsManager::LuaInit() {
         .addFunction("normaliseVector", &normaliseVector)
         .addFunction("vectorCross", &crossProduct)
         .addFunction("vectorDot", &dotProduct)
+        .addFunction("vectorMultiplyScalar", &vectorMultiplyScalar)
+        .addFunction("vectorAdd", &addVector)
         .endNamespace();
 
     // Add glm vectors to lua
@@ -140,6 +151,9 @@ void Physics::PhysicsManager::LuaInit() {
         .addFunction("ApplyForce", &ReactRigidBody::ApplyForce)
         .addFunction("ApplyForceToCentre", &ReactRigidBody::ApplyForceToCentre)
         .addFunction("SetAngularDamping", &ReactRigidBody::SetAngularDamping)
+        .addFunction("SetBounciness", &ReactRigidBody::SetBounciness)
+        .addFunction("SetRollingResistance", &ReactRigidBody::SetRollingResistance)
+        .addFunction("SetFriction", &ReactRigidBody::SetFrictionCoefficient)
         .addFunction("SetSleeping", &ReactRigidBody::SetSleeping)
         .addFunction("SetMass", &ReactRigidBody::SetMass)
         .addFunction("Destroy", &ReactRigidBody::Destroy)
@@ -190,6 +204,8 @@ void Physics::PhysicsManager::LuaInit() {
         .beginClass<CollisionWorld>("CollisionWorld")
         .addFunction("GetCollisionBody", &CollisionWorld::GetCollisionBody)
         .addFunction("CreateCollisionBody", &CollisionWorld::CreateCollisionBody)
+        .addFunction("TestOverlap", &CollisionWorld::TestOverlap)
+
         .endClass();
 
     luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
@@ -202,11 +218,15 @@ void Physics::PhysicsManager::LuaInit() {
         .endClass();
 
     luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
-        .addFunction("getReactRigidBody", &getReactRigid);
+        .addFunction("getReactRigidBody", &getReactRigid)
+        .addFunction("getReactCollisionBody", &getReactCollision);
 }
 
 Physics::ReactRigidBody *Physics::PhysicsManager::getReactRigid(RigidBody *ptr) {
     return dynamic_cast<ReactRigidBody *>(ptr);
+}
+Physics::ReactCollisionBody *Physics::PhysicsManager::getReactCollision(CollisionBody *ptr) {
+    return dynamic_cast<ReactCollisionBody *>(ptr);
 }
 
 Physics::PhysicsManager::PhysicsManager() {

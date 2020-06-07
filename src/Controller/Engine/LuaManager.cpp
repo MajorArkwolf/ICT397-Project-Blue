@@ -9,8 +9,14 @@ lua_State *LuaManager::getLuaState() {
     return luaState;
 }
 
-LuaManager::~LuaManager() {}
+void LuaManager::LuaRunScript(const std::string &path) {
+    luaL_dofile(LuaManager::getInstance().getLuaState(), path.c_str());
+}
+
+
 LuaManager::LuaManager() {
     luaState = luaL_newstate();
     luaL_openlibs(luaState);
+
+    luabridge::getGlobalNamespace(luaState).addFunction("runScript", &LuaManager::LuaRunScript);
 }

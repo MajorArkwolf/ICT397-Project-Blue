@@ -86,6 +86,9 @@ namespace Controller::Input {
              */
             std::string hashInputActionToString(const BLUE_InputAction &value) const;
 
+
+            std::string hashInputTypeToString(const BLUE_InputType &value) const;
+
             /** 
              * @brief Binds an action to a particular key given the action, the
              * lua table to read from, and the text to search for.
@@ -106,7 +109,7 @@ namespace Controller::Input {
              * @brief Returns the keys that have been pressed for a particular frame
              * @return A pointer to the key states
              */
-            const int *getKeyStates();
+            const int *getKeyStates() const;
 
           private:
             /// A map containing key value pairs between a game action and a particular key
@@ -157,7 +160,9 @@ namespace Controller::Input {
             /// A vector of pairs linking a string and an input action
             std::vector<std::pair<std::string, BLUE_InputAction>> stringActionPairs;
 
+            std::vector<std::pair<std::string, BLUE_InputType>> stringInputTypePairs;
+
             /// The key states array
-            int KeyStates[GLFW_KEY_LAST];
+            int KeyStates[GLFW_KEY_LAST]{};
         };
     }

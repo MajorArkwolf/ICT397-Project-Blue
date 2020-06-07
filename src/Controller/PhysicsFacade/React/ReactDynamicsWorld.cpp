@@ -5,7 +5,6 @@
 Physics::ReactDynamicsWorld::ReactDynamicsWorld(glm::vec3 gravity)
     : dynamicsWorld(ReactHelper::ConvertVec3(gravity)) {}
 
-Physics::ReactDynamicsWorld::~ReactDynamicsWorld() {}
 
 void Physics::ReactDynamicsWorld::InitialiseWorld(glm::vec3 gravity) {
     auto dgravity = ReactHelper::ConvertVec3(gravity);

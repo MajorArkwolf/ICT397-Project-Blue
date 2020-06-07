@@ -28,6 +28,9 @@ namespace Physics {
         void SetBodyType(RigidBodyType type);
         void SetMass(float mass);
         void SetAngularDamping(double damping) override;
+        void SetBounciness(float bounciness);
+        void SetFrictionCoefficient(float friction);
+        void SetRollingResistance(float resistance);
 
       private:
         rp3d::RigidBody *rigidBody = nullptr;
