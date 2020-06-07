@@ -38,7 +38,7 @@ catchPlayer = function()
 	local gameObj_charData = GameObject.to_character(player);
 
 	if(gameObj_charData:status_get("Sliding") == 0) then
-		if(height + 2 > currentPos.y) then
+		if(height + 1.2 > currentPos.y) then
 			gameObj_charData:status_assign("UseDynamics", 0)
 		end
 	end
