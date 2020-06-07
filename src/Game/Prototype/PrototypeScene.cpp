@@ -54,6 +54,7 @@ auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
     // Update the Dynamic Physics world
     Physics::PhysicsManager::GetInstance().GetDynamicsWorld()->Update(dt);
 
+    //Read and call the lua update function, this allows runtime change of the script
     if (luaL_dofile(LuaManager::getInstance().getLuaState(), "./res/scripts/luaFunctions.lua")) {
         printf("%s\n", lua_tostring(LuaManager::getInstance().getLuaState(), -1));
     }
@@ -83,51 +84,8 @@ void PrototypeScene::Init() {
         printf("%s\n", lua_tostring(LuaManager::getInstance().getLuaState(), -1));
     }
 
-    // Testing C++ implementation of Game Objects system revision
-    // vector<BlueEngine::ID> gameObj_ids;
-    //{
-    //    const auto ballShape      = phys_sys->GetShapeFactory()->createCapsule(1, 3);
-    //    auto resmanager           = ResourceManager::getInstance();
-    //    auto model_id             = resmanager.getModelID("res/model/ball.fbx");
-    //    auto phys_world_collision = phys_sys->GetCollisionWorld();
     auto *phys_world_dynamics = phys_sys->GetDynamicsWorld();
     auto *phys_world_collision = phys_sys->GetCollisionWorld();
-
-    //    auto temp = Controller::Factory::get().GameObject(GameObj_Type::NPC);
-    //    gameObj_ids.push_back(temp->id());
-    //    temp->model          = BlueEngine::ID(model_id);
-    //    auto *phys_obj_rigid = phys_world_dynamics->GetRigidBody(temp->physBody);
-    //    auto *reactBodyheights = dynamic_cast<Physics::ReactRigidBody *>(phys_obj_rigid);
-    //    reactBodyheights->AddCollisionShape(dynamic_cast<Physics::ReactShapes*>(phys_sys->GetShapeFactory())->GetShape(ballShape),
-    //    glm::vec3(0, 0, 0),
-    //                                        glm::quat(glm::vec3(0, 0, 0)), 1);
-    //    phys_obj_rigid->SetPosition(glm::vec3(0.0f, 150.0f, -20.0f));
-    //    phys_obj_rigid->SetAngularDamping(1.0);
-    //    GameObj_Manager::insert(temp);
-
-    //    temp = Controller::Factory::get().GameObject(GameObj_Type::Item);
-    //    gameObj_ids.push_back(temp->id());
-    //    temp->model             = BlueEngine::ID(model_id);
-    //    auto phys_obj_collision = phys_world_collision->GetCollisionBody(temp->physBody);
-    //    phys_obj_collision->SetPosition(glm::vec3(5.0f, 150.0f, -20.0f));
-    //    GameObj_Manager::insert(temp);
-
-    //    temp = Controller::Factory::get().GameObject(GameObj_Type::Player);
-    //    gameObj_ids.push_back(temp->id());
-    //    temp->model    = BlueEngine::ID(model_id);
-    //    phys_obj_rigid = phys_world_dynamics->GetRigidBody(temp->physBody);
-    //    phys_obj_rigid->SetPosition(glm::vec3(10.0f, 150.0f, -20.0f));
-    //    GameObj_Manager::insert(temp);
-
-    //    temp = Controller::Factory::get().GameObject(GameObj_Type::NPC);
-    //    gameObj_ids.push_back(temp->id());
-    //    temp->model    = BlueEngine::ID(model_id);
-    //    phys_obj_rigid = phys_world_dynamics->GetRigidBody(temp->physBody);
-    //    phys_obj_rigid->SetPosition(glm::vec3(15.0f, 150.0f, -20.0f));
-    //    GameObj_Manager::insert(temp);
-
-    //    // Make sure that the physics bodies stay in sync
-    //    GameObj_Manager::syncPhys();
 
     Blue::HeightMap heightMap;
     auto id_assigner = BlueEngine::IDTracker::getInstance();
@@ -152,30 +110,7 @@ void PrototypeScene::Init() {
     reactCollisionBodyHeights->AddCollisionShape(
         dynamic_cast<Physics::ReactShapes *>(phys_sys->GetShapeFactory())->GetShape(terrainID),
         glm::vec3{0, 0, 0}, glm::quat(1, 0, 0, 0));
-    //}
 
-    /*std::function<void(std::shared_ptr<GameObj_Base>)> PhysicsOp =
-        [&](std::shared_ptr<GameObj_Base> object) -> void {
-        static size_t  gameObjBodyID = 1;
-
-            dynWorld.CreateRigidBody(object->gameObj_pos, glm::quat(object->gameObj_rotation),
-    ++gameObjBodyID); auto *reactBody = dynamic_cast<Physics::ReactRigidBody
-    *>(dynWorld.GetRigidBody(gameObjBodyID)); if (object->gameObj_getTypeID() == 1u) { if
-    (object->gameObj_getModelPath().find("Tree") != std::string::npos) {
-    reactBody->AddCollisionShape(shapes.GetShape(TreeShapeID), glm::vec3{0, 0, 0}, glm::quat(1, 0,
-    0, 0), 1.f); } else { reactBody->AddCollisionShape(shapes.GetShape(RockShapeID), glm::vec3{0, 0,
-    0}, glm::quat(1, 0, 0, 0), 1.f);
-            }
-            reactBody->SetBodyType(2);
-        } else {
-            reactBody->AddCollisionShape(shapes.GetShape(sphereID), glm::vec3{0, 0, 0},
-                                         glm::quat(1, 0, 0, 0), 1.f);
-            reactBody->SetBodyType(3);
-        }
-
-        object->gameObj_physBody = static_cast<unsigned long>(gameObjBodyID);
-    };
-    GameObj_Manager::process_all(PhysicsOp);*/
     engine.getGuiManager().setTerrainManager(&terrain);
 }
 
