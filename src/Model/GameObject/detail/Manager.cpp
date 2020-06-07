@@ -148,20 +148,8 @@ GameObj_Base* GameObj_Manager::lua_get(BlueEngine::ID identifier) {
 }
 
 GameObj_Base* GameObj_Manager::lua_getPlayer() {
-	// Gather and insert the GameObject Player into the Manager
-	auto temp = Controller::Factory::get().GameObject(GameObj_Type::Player);
-
-	// Catch if the Factory output is valid
-	if (temp == nullptr) {
-		// Return 0u in cases where the GameObject would not be valid
-		return BlueEngine::ID(0u);
-	}
-
-	// Store the GameObject into the Manager
-	GameObj_Manager::insert(temp);
-
-	// Return the Player GameObject by reference
-	return temp.get();
+	// Gather and return the GameObject Player
+	return dynamic_cast<GameObj_Character*>(Controller::Factory::get().GameObject(GameObj_Type::Player).get());
 }
 
 GameObj_Character* GameObj_Manager::lua_to_character(GameObj_Base* raw_in) {
