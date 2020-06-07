@@ -34,6 +34,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     Controller/AI/States/detail/Patrol.cpp
     Controller/AI/States/detail/Pursuit.cpp
     Controller/AI/States/detail/Wander.cpp
+    Controller/AI/States/detail/Custom.cpp
     
     # Model
     Model/Models/Mesh.cpp
