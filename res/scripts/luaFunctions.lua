@@ -7,10 +7,15 @@ Update = function(deltaTime)
 	 local playerCollisionBody = getReactCollisionBody(collisionWorld:GetCollisionBody(player.physBody));
 	 local camera = getCamera();
 	 local position = playerRigidBody:GetPosition();
+
+
 	 if(gameObj_charData:status_get("FreeCam") == 0) then
 		  camera.Position = position;
-	 end
-		movePlayer(deltaTime);
+	 else 
+		playerRigidBody:SetSleeping(true);
+	end
+	
+	movePlayer(deltaTime);
 
 	 if(gameObj_charData:status_get("FreeCam") == 0) then
 
