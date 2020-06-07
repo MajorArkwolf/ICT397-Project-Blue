@@ -96,5 +96,7 @@ class GUIManager {
     void initialiseWindowOpenMap();
 
     /// Pointer to the current terrain manager
-    Controller::TerrainManager *terrainManager;
+    Controller::TerrainManager *terrainManager{};
+
+    static void luaToggleWindow(std::string window);
 };

@@ -10,8 +10,8 @@ namespace Physics {
     */
     class CollisionBody {
       public:
-        CollisionBody(){};
-        virtual ~CollisionBody(){};
+        CollisionBody(){}
+        virtual ~CollisionBody(){}
         /**
          * @brief Sets the position of the rigid body
          * @param position THe position to set the rigid body to

@@ -12,8 +12,8 @@ namespace Physics {
     */
     class RigidBody {
       public:
-        RigidBody(){};
-        virtual ~RigidBody(){};
+        RigidBody(){}
+        virtual ~RigidBody(){}
         /**
          * @brief Sets the position of the rigid body
          * @param position THe position to set the rigid body to

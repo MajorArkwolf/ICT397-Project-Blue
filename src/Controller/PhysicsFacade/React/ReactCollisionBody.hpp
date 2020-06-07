@@ -9,7 +9,6 @@ namespace Physics {
     class ReactCollisionBody : public CollisionBody {
       public:
         ReactCollisionBody(rp3d::CollisionBody *body);
-        ~ReactCollisionBody();
         void SetPosition(glm::vec3 position) override;
         void SetOrientation(glm::quat orientation) override;
         void SetPositionAndOrientation(glm::vec3 position, glm::quat orientation) override;

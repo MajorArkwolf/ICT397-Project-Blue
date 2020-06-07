@@ -28,14 +28,16 @@ class LuaManager {
      * @return The Lua state
      */
     lua_State *getLuaState();
+    LuaManager(const LuaManager &other) = delete;
+    LuaManager operator=(LuaManager &rhs) = delete;
 
   private:
+    static void LuaRunScript(const std::string &path);
     /// The lua state
     lua_State *luaState = nullptr;
     LuaManager();
-    ~LuaManager();
-    LuaManager(const LuaManager &other) = delete;
-    LuaManager operator=(LuaManager &rhs) = delete;
+    ~LuaManager() = default;
+
 };
 
     /*!

@@ -44,7 +44,7 @@ auto Engine::run() -> void {
         while (accumulator >= dt) {
             // previousState = currentState;
             glfwPollEvents();
-            engine.processInput();
+            engine.processInput(dt);
             engine.gameStack.getTop()->update(t, dt);
             t += dt;
             accumulator -= dt;
@@ -117,7 +117,7 @@ auto Engine::get() -> Engine & {
     return instance;
 }
 
-auto Engine::processInput() -> void {
+auto Engine::processInput(double dt) -> void {
     GLEQevent event;
     auto handledMouse  = true;
     auto &inputManager = Controller::Input::InputManager::getInstance();
@@ -143,7 +143,7 @@ auto Engine::processInput() -> void {
             default: break;
         }
 
-        gameStack.getTop()->handleInputData(inputManager.ProcessInput(event));
+        gameStack.getTop()->handleInputData(inputManager.ProcessInput(event), dt);
         gleqFreeEvent(&event);
     }
     if (!handledMouse) {

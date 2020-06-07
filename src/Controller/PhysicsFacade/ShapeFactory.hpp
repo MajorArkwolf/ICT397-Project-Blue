@@ -11,9 +11,9 @@ namespace Physics {
     class ShapeFactory {
       public:
         /// DEfault constructor
-        ShapeFactory(){};
+        ShapeFactory(){}
         /// Default destructor
-        virtual ~ShapeFactory(){};
+        virtual ~ShapeFactory(){}
         /**
          * @brief Creates a spherical collision shape with the given radius
          * @param radius The radius of the sphere to create
