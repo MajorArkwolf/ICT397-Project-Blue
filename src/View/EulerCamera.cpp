@@ -1,6 +1,6 @@
 #include "EulerCamera.hpp"
 
-#include <Controller\Engine\LuaManager.hpp>
+#include <Controller/Engine/LuaManager.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 // Constructor with vectors
