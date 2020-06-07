@@ -78,7 +78,7 @@ updatePlayerHeight = function()
 	local playerRigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(player.physBody));
 	local currentPos = playerRigidBody:GetPosition();
 	local height = getHeightAt(currentPos.x, currentPos.z);
-	currentPos.y = height + 2;
+	currentPos.y = height + 1;
 	playerRigidBody:SetPosition(currentPos);
 
 end

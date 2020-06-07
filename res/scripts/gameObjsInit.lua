@@ -40,7 +40,7 @@ gameObj_charData:status_assign("FreeCam", 0);
 
 
 
-for i = 0, 200, 1 do
+for i = 0, 20, 1 do
 -- Create a GameObject and store the returned identifier
 gameObj_id = GameObject.create(GameObject.Types.NPC());
 
