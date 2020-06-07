@@ -31,12 +31,16 @@ end
 
 -- Attaches the player back to the terrain if they have hit the terrain again after jumping
 catchPlayer = function() 
+
 	local playerRigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(player.physBody));
 	local currentPos = playerRigidBody:GetPosition();
 	local height = getHeightAt(currentPos.x, currentPos.z);
 	local gameObj_charData = GameObject.to_character(player);
-	if(height + 2 > currentPos.y) then
-		gameObj_charData:status_assign("UseDynamics", 0)
+
+	if(gameObj_charData:status_get("Sliding") == 0) then
+		if(height + 2 > currentPos.y) then
+			gameObj_charData:status_assign("UseDynamics", 0)
+		end
 	end
 
 end
@@ -216,9 +220,29 @@ handleInput = function(inputData, deltaTime)
 				if(gameObj_charData:status_get("UseDynamics") == 0) then
 					gameObj_charData:status_assign("UseDynamics",1);
 					playerRigidBody:SetSleeping(false);
-					force = vector(0,1000,0);
+					local scalar = 6000;
+					force = vector(0,scalar,0);
 					playerRigidBody:ApplyForceToCentre(force);
 
+					local frontVec = vector(cameraFrontVector.x, 0, cameraFrontVector.z);
+					local rightVec = vector(cameraRightVector.x, 0, cameraRightVector.z);
+		
+					if(	gameObj_charData:status_get("MoveForward") == 1) then 
+						local direction = math.vectorMultiplyScalar(frontVec, scalar);
+						playerRigidBody:ApplyForceToCentre(direction);
+					end
+					if(	gameObj_charData:status_get("MoveBackward") == 1) then 
+						local direction = math.vectorMultiplyScalar(frontVec, -scalar);
+						playerRigidBody:ApplyForceToCentre(direction);
+					end
+					if(	gameObj_charData:status_get("MoveLeft") == 1) then 
+						local direction = math.vectorMultiplyScalar(rightVec, -scalar);
+						playerRigidBody:ApplyForceToCentre(direction);
+					end
+					if(	gameObj_charData:status_get("MoveRight") == 1) then 
+						local direction = math.vectorMultiplyScalar(rightVec, scalar);
+						playerRigidBody:ApplyForceToCentre(direction);
+					end
 				end				
 				if(gameObj_charData:status_get("UseDynamics") == 1) then
 					gameObj_charData:status_assign("Sliding",1);

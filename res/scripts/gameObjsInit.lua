@@ -23,7 +23,9 @@ position = vector(0,200,0);
 print(gameObj_raw.model)
 dynamicsWorld:GetRigidBody(gameObj_raw.physBody):SetPosition(position);
 rigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(gameObj_raw.physBody));
-rigidBody:AddCollisionShape(shapeFactory:GetShape(capsuleShape), vector(0,0,0), quaternion(1,0,0,0), 1);
+rigidBody:AddCollisionShape(shapeFactory:GetShape(sphereShape), vector(0,0,0), quaternion(1,0,0,0), 10);
+
+rigidBody:SetBounciness(0);
 
 gameObj_charData = GameObject.to_character(gameObj_raw);
 
