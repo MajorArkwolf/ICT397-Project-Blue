@@ -26,6 +26,7 @@ target_sources(${PROJECT_NAME} PRIVATE
 
         # Finite State Machine
     Controller/AI/detail/FSM.cpp
+    Controller/AI/detail/Manager.cpp
     Controller/AI/detail/Message.cpp
     Controller/AI/States/detail/Chase.cpp
     Controller/AI/States/detail/Evade.cpp

@@ -56,7 +56,7 @@ public:
 		 * @brief Calls the run behaviour for the current States.
 		 * @param [in] t The amount of time from the engine program starting.
 		 * @param [in] dt The amount of delta time from the prior operation of this behaviour.
-		 * @note Operation calls are done in the order of local, global.
+		 * @note Operation calls are done in the order of local, then global.
 		 * @warning Will throw an error if the attached Game Object is invalid!
 		 */
 	void run(double t, double dt);
