@@ -156,7 +156,7 @@ protected:
 		 * @return True when successful, False otherwise.
 		 * @note If False is returned, no change is made to (or run by) the FSM.
 		 */
-	void lua_global_set_custom(std::string start_func, std::string run_func, std::string end_func, std::string read_func);
+	bool lua_global_set_custom(std::string start_func, std::string run_func, std::string end_func, std::string read_func);
 
 		/*!
 		 * @brief Provides read-only access to the cached managed reference of the 'attached' GameObject.
