@@ -2,7 +2,20 @@
 #include "Controller/AI/FSM.hpp"
 
 	/// Internal Dependencies
+#include "Controller/Engine/LuaManager.hpp"
 #include "Controller/AI/Manager.hpp"
+
+// Registratiion of Enum State_Type
+namespace luabridge {
+	template <>
+	struct luabridge::Stack <State_Type> : EnumWrapper <State_Type> {};
+}
+
+// Registratiion of Enum Message_Type
+namespace luabridge {
+	template <>
+	struct luabridge::Stack <Message_Type> : EnumWrapper <Message_Type> {};
+}
 
 FSM::FSM(std::shared_ptr<GameObj_Base> object) {
 	// Just cache the provided reference
@@ -95,6 +108,39 @@ BlueEngine::ID FSM::id_this() {
 std::shared_ptr<GameObj_Base> FSM::attached() {
 	// Return a copy of the attached GameObject's identifier
 	return attached_object.lock();
+}
+
+void FSM::lua_init() {
+	// Prevent this being run more than once
+	static bool isRegistered = false;
+	if (isRegistered)
+		return;
+
+	// Register the Message Class
+	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
+		.beginClass<Message>("FSM_Message")
+			.addConstructor<void (*) (void)>()
+			.addProperty("sender", &Message::sender)
+			.addProperty("type", &Message::type)
+			.addProperty("attachment", &Message::attachment)
+			.addProperty("delay", &Message::delay)
+			.addFunction("recipient_add", &Message::recipient_add)
+			.addFunction("recipient_list", &Message::recipient_list)
+		.endClass();
+
+	// Register the FSM Class
+	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
+		.beginClass<FSM>("FSM_Class")
+			.addFunction("stateLocal_setRegular", &FSM::lua_local_set_regular)
+			.addFunction("stateLocal_setCustom", &FSM::lua_local_set_custom)
+			.addFunction("stateGlobal_setRegular", &FSM::lua_global_set_regular)
+			.addFunction("stateGlobal_setCustom", &FSM::lua_global_set_custom)
+			.addFunction("id", &FSM::id_this)
+			.addFunction("attached", &FSM::lua_attached)
+		.endClass();
+
+	// Prevent re-registration
+	isRegistered = true;
 }
 
 void FSM::lua_local_set_regular(State_Type type) {

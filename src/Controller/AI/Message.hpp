@@ -10,7 +10,14 @@
 	//! Defines the types of inter-FSM messages that can be sent.
 enum class Message_Type {
 	Invalid,
-	MissingStatus
+	TargetSet,
+	TargetFound,
+	TargetLost,
+	TargetDanger,
+	TargetVunerable,
+	PositionX,
+	PositionY,
+	PositionZ
 };
 
 	/*!
@@ -56,7 +63,6 @@ public:
 		 */
 	std::set<BlueEngine::ID> recipients;
 
-private:
 		/*!
 		 * @brief Scripting interface to add a target recipient for this message.
 		 * @param [in] identifier The identifier of the FSM to send this message to.

@@ -104,7 +104,55 @@ std::shared_ptr<State_Base> FSM_Manager::custom_state(std::string start_func, st
 }
 
 void FSM_Manager::lua_init() {
+	// Prevent this being run more than once
+	static bool isRegistered = false;
+	if (isRegistered)
+		return;
 
+	// Call the FSM Class's Lua registration function
+	FSM::lua_init();
+
+	// Register the FSM Manager Class
+	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
+		.beginNamespace("FSM")
+			.addFunction("create", &FSM_Manager::lua_create)
+			.addFunction("get", &FSM_Manager::lua_get)
+			.addFunction("erase", &FSM_Manager::erase)
+			.addFunction("clear", &FSM_Manager::clear)
+			.addFunction("send", &FSM_Manager::send)
+		.endNamespace();
+
+	// Register the FSM State Type Enum access functions
+	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
+		.beginNamespace("FSM")
+			.beginNamespace("State")
+				.addFunction("Chase", &FSM_Manager::lua_enum_chase)
+				.addFunction("Evade", &FSM_Manager::lua_enum_evade)
+				.addFunction("Flee", &FSM_Manager::lua_enum_flee)
+				.addFunction("Patrol", &FSM_Manager::lua_enum_patrol)
+				.addFunction("Pursuit", &FSM_Manager::lua_enum_pursuit)
+				.addFunction("Wander", &FSM_Manager::lua_enum_wander)
+			.endNamespace()
+		.endNamespace();
+
+	// Register the FSM Message Type Enum access functions
+	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
+		.beginNamespace("FSM")
+			.beginNamespace("Message")
+				.addFunction("Invalid", &FSM_Manager::lua_enum_msg_invalid)
+				.addFunction("TargetSet", &FSM_Manager::lua_enum_msg_targetSet)
+				.addFunction("TargetFound", &FSM_Manager::lua_enum_msg_targetFound)
+				.addFunction("TargetLost", &FSM_Manager::lua_enum_msg_targetLost)
+				.addFunction("TargetDanger", &FSM_Manager::lua_enum_msg_targetDanger)
+				.addFunction("TargetVunerable", &FSM_Manager::lua_enum_msg_targetVunerable)
+				.addFunction("PositionX", &FSM_Manager::lua_enum_msg_posX)
+				.addFunction("PositionY", &FSM_Manager::lua_enum_msg_posY)
+				.addFunction("PositionZ", &FSM_Manager::lua_enum_msg_posZ)
+			.endNamespace()
+		.endNamespace();
+
+	// Prevent re-registration
+	isRegistered = true;
 }
 
 BlueEngine::ID FSM_Manager::lua_create(GameObj_Base* object) {
@@ -143,4 +191,49 @@ State_Type FSM_Manager::lua_enum_pursuit() {
 State_Type FSM_Manager::lua_enum_wander() {
 	// Return a copy of that enum value
 	return State_Type::Wander;
+}
+
+Message_Type FSM_Manager::lua_enum_msg_invalid() {
+	// Return a copy of that enum value
+	return Message_Type::Invalid;
+}
+
+Message_Type FSM_Manager::lua_enum_msg_targetSet() {
+	// Return a copy of that enum value
+	return Message_Type::TargetSet;
+}
+
+Message_Type FSM_Manager::lua_enum_msg_targetFound() {
+	// Return a copy of that enum value
+	return Message_Type::TargetFound;
+}
+
+Message_Type FSM_Manager::lua_enum_msg_targetLost() {
+	// Return a copy of that enum value
+	return Message_Type::TargetLost;
+}
+
+Message_Type FSM_Manager::lua_enum_msg_targetDanger() {
+	// Return a copy of that enum value
+	return Message_Type::TargetDanger;
+}
+
+Message_Type FSM_Manager::lua_enum_msg_targetVunerable() {
+	// Return a copy of that enum value
+	return Message_Type::TargetVunerable;
+}
+
+Message_Type FSM_Manager::lua_enum_msg_posX() {
+	// Return a copy of that enum value
+	return Message_Type::PositionX;
+}
+
+Message_Type FSM_Manager::lua_enum_msg_posY() {
+	// Return a copy of that enum value
+	return Message_Type::PositionY;
+}
+
+Message_Type FSM_Manager::lua_enum_msg_posZ() {
+	// Return a copy of that enum value
+	return Message_Type::PositionZ;
 }

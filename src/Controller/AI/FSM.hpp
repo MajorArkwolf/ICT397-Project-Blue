@@ -89,6 +89,12 @@ public:
 		 */
 	std::shared_ptr<GameObj_Base> attached();
 
+		/*!
+		 * @brief Registers the AI Message and FSM classes to the Lua Scripting System.
+		 * @note Only operates on its first call, and should be called at engine startup.
+		 */
+	static void lua_init();
+
 protected:
 		/*!
 		 * @brief The FSM's local active/current State.
