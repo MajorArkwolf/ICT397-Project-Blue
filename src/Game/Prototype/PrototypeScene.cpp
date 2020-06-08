@@ -7,6 +7,7 @@
 #include "Controller/Factory/GameAssetFactory.hpp"
 #include "Controller/PhysicsManager.hpp"
 #include "Controller/TextureManager.hpp"
+#include "Controller/AI/Manager.hpp"
 #include "Model/GameObject/Manager.hpp"
 #include "Model/GameObject/Types.hpp"
 #include "Model/Models/Model.hpp"
@@ -63,6 +64,11 @@ auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
     if (!Update.isNil()) {
         Update(dt);
     }
+
+    // Call the AI System's update function
+    FSM_Manager::update(t, dt);
+
+    // Sync the GameObject physics bodies
     GameObj_Manager::syncPhys();
 }
 
@@ -78,6 +84,9 @@ void PrototypeScene::Init() {
 
     // Initialise the GameObject system
     GameObj_Manager::init();
+
+    // Initialise the FSM AI system
+    FSM_Manager::lua_init();
 
     // Run the GameObject initialisation script
     if (luaL_dofile(LuaManager::getInstance().getLuaState(), "./res/scripts/gameObjsInit.lua")) {
