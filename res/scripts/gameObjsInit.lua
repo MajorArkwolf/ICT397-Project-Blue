@@ -54,6 +54,27 @@ rigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(gameObj_raw.physBody));
 rigidBody:AddCollisionShape(shapeFactory:GetShape(sphereShape), vector(0,0,0), quaternion(1,0,0,0), 1);
 end
 
+
+-- Create a GameObject and store the returned identifier
+local wallXID = GameObject.create(GameObject.Types.Static());
+local wallZID = GameObject.create(GameObject.Types.Static());
+local wallX = GameObject.get(wallXID);
+local wallZ = GameObject.get(wallZID);
+local wallXShape = shapeFactory:createBox(vector(5000,500, 100));
+local wallZShape = shapeFactory:createBox(vector(100,500, 5000));
+local wallXRigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(wallX.physBody));
+ wallXRigidBody:AddCollisionShape(shapeFactory:GetShape(wallXShape), vector(0,1900,0), quaternion(1,0,0,0), 1);
+local wallZrigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(wallZ.physBody));
+ wallZrigidBody:AddCollisionShape(shapeFactory:GetShape(wallZShape), vector(1900,0,0), quaternion(1,0,0,0), 1);
+
+-- Gather the actual GameObject and configure it
+gameObj_raw = GameObject.get(gameObj_id);
+position = vector(5,200,20);
+dynamicsWorld:GetRigidBody(gameObj_raw.physBody):SetPosition(position);
+rigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(gameObj_raw.physBody));
+rigidBody:AddCollisionShape(shapeFactory:GetShape(sphereShape), vector(0,0,0), quaternion(1,0,0,0), 1);
+
+
 -- Syncronise the physics of the GameObjects after configuring them
 GameObject.syncPhys();
 player = GameObject.getPlayer();
