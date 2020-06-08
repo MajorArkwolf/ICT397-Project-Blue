@@ -3,9 +3,6 @@
 	/// System Dependencies
 #include <memory>
 
-	/// External Dependencies
-#include "glm/glm.hpp"
-
 	/// Internal Dependencies
 #include "Controller/Engine/IDTracker.hpp"
 #include "View/Renderer/Shader.hpp"
@@ -57,6 +54,15 @@ public:
 		 * @note A value of 0 indicates the GameObject has no model.
 		 */
 	BlueEngine::ID model;
+
+		//! The GameObject's scale along the X axis.
+	float scale_x;
+
+		//! The GameObject's scale along the Y axis.
+	float scale_y;
+
+		//! The GameObject's scale along the Z axis.
+	float scale_z;
 
 		/*!
 		 * @brief Registers this GameObject class to the Lua subscripting system.

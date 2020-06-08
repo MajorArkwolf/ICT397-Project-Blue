@@ -40,6 +40,7 @@ void GameObj_Player::draw(const glm::mat4& projection, const glm::mat4& view, co
 	// Generate and configure the GameObject's model matrix
 	glm::mat4 model_matrix = glm::mat4(1.0f);
 	model_matrix = glm::translate(model_matrix, phys_body->GetPosition());
+	model_matrix = glm::scale(model_matrix, glm::vec3(scale_x, scale_y, scale_z));
 	model_matrix = model_matrix * glm::mat4_cast(phys_body->GetOrientation());
 
 	// Enable the shader and pass it the values for its uniforms
