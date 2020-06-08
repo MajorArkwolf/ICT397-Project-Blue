@@ -27,6 +27,7 @@ namespace Controller {
         glm::vec3 CalcInterpolatedPosition(double AnimationTime, const AnimJointNode *pNodeAnim);
         glm::quat CalcInterpolatedRotation(double AnimationTime, const AnimJointNode *pNodeAnim);
         void LoadAnimation(const std::string& newAnim, bool endWhenCompletedFlag = false);
+        void LinkToModel(unsigned modelID);
         void ResetAnimationTime();
         bool IsAnimationedEnded() const;
       private:

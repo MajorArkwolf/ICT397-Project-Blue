@@ -1,5 +1,6 @@
 #include "Animator.hpp"
 #include "Model/Models/Model.hpp"
+#include "Controller/ResourceManager.hpp"
 
 
 static inline glm::vec3 vec3_cast(const aiVector3D &v) { return glm::vec3(v.x, v.y, v.z); }
@@ -132,4 +133,7 @@ void Controller::Animator::ResetAnimationTime() {
 }
 bool Controller::Animator::IsAnimationedEnded() const {
     return clipEnded;
+}
+void Controller::Animator::LinkToModel(unsigned int modelID) {
+    animatedModel = ResourceManager::getInstance().getModel(modelID);
 }
