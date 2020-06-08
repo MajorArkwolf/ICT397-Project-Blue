@@ -2,7 +2,11 @@
 #include "Controller/AI/Message.hpp"
 
 Message::Message() {
-	// Nothing needed here, all set assignment is automatically called.
+	// Initialise the Message properties
+	sender = 0u;
+	type = Message_Type::Invalid;
+	attachment = 0.0f;
+	delay = 0u;
 }
 
 void Message::recipient_add(BlueEngine::ID identifier) {

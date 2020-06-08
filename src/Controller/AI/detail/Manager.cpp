@@ -5,6 +5,9 @@
 #include <set>
 #include <stdexcept>
 
+	/// Internal Dependencies
+#include "Controller/Engine/LuaManager.hpp"
+
 BlueEngine::ID FSM_Manager::create(std::shared_ptr<GameObj_Base> object) {
 	// Catch an invalid GameObject being attached
 	if (!object)
@@ -90,4 +93,54 @@ void FSM_Manager::send(Message message) {
 	
 	// Add the message to the list, only process and send them when the manager's run operation is called.
 	pending_messages.insert_after(pending_messages.before_begin(), message);
+}
+
+std::shared_ptr<State_Base> FSM_Manager::regular_state(State_Type type) {
+
+}
+
+std::shared_ptr<State_Base> FSM_Manager::custom_state(std::string start_func, std::string run_func, std::string end_func, std::string read_func) {
+
+}
+
+void FSM_Manager::lua_init() {
+
+}
+
+BlueEngine::ID FSM_Manager::lua_create(GameObj_Base* object) {
+
+}
+
+FSM* FSM_Manager::lua_get(BlueEngine::ID identifier) {
+
+}
+
+State_Type FSM_Manager::lua_enum_chase() {
+	// Return a copy of that enum value
+	return State_Type::Chase;
+}
+
+State_Type FSM_Manager::lua_enum_evade() {
+	// Return a copy of that enum value
+	return State_Type::Evade;
+}
+
+State_Type FSM_Manager::lua_enum_flee() {
+	// Return a copy of that enum value
+	return State_Type::Flee;
+}
+
+State_Type FSM_Manager::lua_enum_patrol() {
+	// Return a copy of that enum value
+	return State_Type::Patrol;
+}
+
+State_Type FSM_Manager::lua_enum_pursuit() {
+	// Return a copy of that enum value
+	return State_Type::Pursuit;
+}
+
+State_Type FSM_Manager::lua_enum_wander() {
+	// Return a copy of that enum value
+	return State_Type::Wander;
 }

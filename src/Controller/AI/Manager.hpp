@@ -60,12 +60,86 @@ public:
 		 */
 	void send(Message message);
 
+		/*!
+		 * @brief Returns a reference to a static instance of a requested type of FSM State.
+		 * @param [in] type The specification of the state type to gather.
+		 * @return A reference to a static regular FSM State.
+		 */
+	static std::shared_ptr<State_Base> regular_state(State_Type type);
+
+		/*!
+		 * @brief Attempts to generate a new Lua scripted FSM State.
+		 * @param [in] start_func The name of the Lua function to call for the starting behaviour.
+		 * @param [in] run_func The name of the Lua function to call for the running behaviour.
+		 * @param [in] end_func The name of the Lua function to call for the ending behaviour.
+		 * @param [in] read_func The name of the Lua function to call for the reading behaviour.
+		 * @return A managed reference to a newly created custom FSM State, or nullptr on error.
+		 */
+	static std::shared_ptr<State_Base> custom_state(std::string start_func, std::string run_func, std::string end_func, std::string read_func);
+
+		/*!
+		 * @brief Integrates all of the AI systems, classes, and interfaces into the Lua scripting system.
+		 * @note Only operates on its first call, and should be called at engine startup.
+		 */
+	static void lua_init();
+
 protected:
 		/*!
 		 * @brief Stores a collection of managed FSMs, mapped to their unique identifiers.
 		 * @note The FSM is solely responsible for maintaining their ID, this mapping is for access performance.
 		 */
 	std::map<BlueEngine::ID, std::shared_ptr<FSM>> actors;
+
+		/*!
+		 * @brief Creates a new FSM to be managed, attached to a specified Game Object.
+		 * @param [in] A managed reference to the target attachment Game Object.
+		 * @return The newly created FSM's identifier, or 0u on error.
+		 * @note This will intentionally not create an FSM if the attached GameObject is nullptr or not an NPC.
+		 */
+	BlueEngine::ID lua_create(GameObj_Base* object);
+
+		/*!
+		 * @brief The getter function for accessing the managed FSMs.
+		 * @param [in] identifier A FSM identifier.
+		 * @return A managed reference to the requested FSM, or nullptr on error.
+		 */
+	FSM* lua_get(BlueEngine::ID identifier);
+
+		/*!
+		 * @brief Provides scripted access to enumerated values.
+		 * @return State_Type::Chase
+		 */
+	State_Type lua_enum_chase();
+
+		/*!
+		 * @brief Provides scripted access to enumerated values.
+		 * @return State_Type::Evade
+		 */
+	State_Type lua_enum_evade();
+
+		/*!
+		 * @brief Provides scripted access to enumerated values.
+		 * @return State_Type::Flee
+		 */
+	State_Type lua_enum_flee();
+
+		/*!
+		 * @brief Provides scripted access to enumerated values.
+		 * @return State_Type::Patrol
+		 */
+	State_Type lua_enum_patrol();
+
+		/*!
+		 * @brief Provides scripted access to enumerated values.
+		 * @return State_Type::Pursuit
+		 */
+	State_Type lua_enum_pursuit();
+
+		/*!
+		 * @brief Provides scripted access to enumerated values.
+		 * @return State_Type::Wander
+		 */
+	State_Type lua_enum_wander();
 
 private:
 		/*!

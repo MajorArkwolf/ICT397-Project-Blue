@@ -9,8 +9,15 @@
 #include "Controller/AI/Message.hpp"
 #include "Model/GameObject/Base.hpp"
 
-	/// Forward Declaration
-class State_Base;
+	//! Lists the types of non-customized states that the AI system uses.
+enum class State_Type {
+	Chase,
+	Evade,
+	Flee,
+	Patrol,
+	Pursuit,
+	Wander
+};
 
 	/*!
 	 * @brief A finite state machine.
@@ -110,6 +117,46 @@ protected:
 		 * @warning If nullptr, no calls to its behaviour will be made.
 		 */
 	std::shared_ptr<State_Base> global_prior;
+
+		/*!
+		 * @brief Sets the FSM's local state to a specified regular type.
+		 * @param [in] type The specification of the state type to set.
+		 */
+	void lua_local_set_regular(State_Type type);
+
+		/*!
+		 * @brief Attempts to create and set a new Lua scripted FSM State for the FSM's local State.
+		 * @param [in] start_func The name of the Lua function to call for the starting behaviour.
+		 * @param [in] run_func The name of the Lua function to call for the running behaviour.
+		 * @param [in] end_func The name of the Lua function to call for the ending behaviour.
+		 * @param [in] read_func The name of the Lua function to call for the reading behaviour.
+		 * @return True when successful, False otherwise.
+		 * @note If False is returned, no change is made to (or run by) the FSM.
+		 */
+	bool lua_local_set_custom(std::string start_func, std::string run_func, std::string end_func, std::string read_func);
+
+		/*!
+		 * @brief Sets the FSM's global state to a specified regular type.
+		 * @param [in] type The specification of the state type to set.
+		 */
+	void lua_global_set_regular(State_Type type);
+
+		/*!
+		 * @brief Attempts to create and set a new Lua scripted FSM State for the FSM's global State.
+		 * @param [in] start_func The name of the Lua function to call for the starting behaviour.
+		 * @param [in] run_func The name of the Lua function to call for the running behaviour.
+		 * @param [in] end_func The name of the Lua function to call for the ending behaviour.
+		 * @param [in] read_func The name of the Lua function to call for the reading behaviour.
+		 * @return True when successful, False otherwise.
+		 * @note If False is returned, no change is made to (or run by) the FSM.
+		 */
+	void lua_global_set_custom(std::string start_func, std::string run_func, std::string end_func, std::string read_func);
+
+		/*!
+		 * @brief Provides read-only access to the cached managed reference of the 'attached' GameObject.
+		 * @return The reference to the GameObject, or nullptr on error.
+		 */
+	GameObj_Base* lua_attached();
 
 private:
 		/*!

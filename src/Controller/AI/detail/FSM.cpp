@@ -1,6 +1,9 @@
 	/// Declaration Include
 #include "Controller/AI/FSM.hpp"
 
+	/// Internal Dependencies
+#include "Controller/AI/Manager.hpp"
+
 FSM::FSM(std::shared_ptr<GameObj_Base> object) {
 	// Just cache the provided reference
 	attached_object = object;
@@ -92,4 +95,24 @@ BlueEngine::ID FSM::id_this() {
 std::shared_ptr<GameObj_Base> FSM::attached() {
 	// Return a copy of the attached GameObject's identifier
 	return attached_object.lock();
+}
+
+void FSM::lua_local_set_regular(State_Type type) {
+
+}
+
+bool FSM::lua_local_set_custom(std::string start_func, std::string run_func, std::string end_func, std::string read_func) {
+
+}
+
+void FSM::lua_global_set_regular(State_Type type) {
+
+}
+
+void FSM::lua_global_set_custom(std::string start_func, std::string run_func, std::string end_func, std::string read_func) {
+
+}
+
+GameObj_Base* FSM::lua_attached() {
+
 }
