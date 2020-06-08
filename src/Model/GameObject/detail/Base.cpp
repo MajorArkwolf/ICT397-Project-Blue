@@ -17,6 +17,11 @@ GameObj_Base::GameObj_Base(BlueEngine::ID model_in, BlueEngine::ID physBody_in) 
 	physBody = physBody_in;
 	program = std::make_shared<Shader>(Shader("res/shader/vertshader.vs", "res/shader/fragshader.fs"));
 
+	// Configure the initial scale
+	scale.x = 1.0f;
+	scale.y = 1.0f;
+	scale.z = 1.0f;
+
 	// Generate the GameObject's unique identifier.
 	uniqueID = BlueEngine::IDTracker::getInstance().getID();
 }
@@ -40,5 +45,6 @@ void GameObj_Base::lua_init_register() {
 			.addProperty("type", &GameObj_Base::type)
 			.addProperty("physBody", &GameObj_Base::physBody)
 			.addProperty("model", &GameObj_Base::model)
+			.addProperty("scale", &GameObj_Base::scale)
 		.endClass();
 }

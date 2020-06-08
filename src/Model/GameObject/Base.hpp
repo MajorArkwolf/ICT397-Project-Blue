@@ -3,7 +3,7 @@
 	/// System Dependencies
 #include <memory>
 
-	/// External Dependencies
+	/// System Dependencies
 #include "glm/glm.hpp"
 
 	/// Internal Dependencies
@@ -57,6 +57,12 @@ public:
 		 * @note A value of 0 indicates the GameObject has no model.
 		 */
 	BlueEngine::ID model;
+
+		/*!
+		 * @brief The GameObject's scale along all 3D axises.
+		 * @note Defaults to { 0.0f, 0.0f, 0.0f }.
+		 */
+	glm::vec3 scale;
 
 		/*!
 		 * @brief Registers this GameObject class to the Lua subscripting system.
