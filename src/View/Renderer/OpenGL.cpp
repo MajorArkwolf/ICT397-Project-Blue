@@ -279,8 +279,5 @@ bool View::OpenGL::windowMinimized() {
     auto &engine = BlueEngine::Engine::get();
     int width = 0, height = 0;
     glfwGetWindowSize(engine.window, &width, &height);
-    if (width == 0 || height == 0) {
-        return true;
-    }
-    return false;
+    return width == 0 || height == 0;
 }
