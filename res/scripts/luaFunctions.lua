@@ -26,6 +26,7 @@ Update = function(deltaTime)
 			catchPlayer();
 		 end
 	 end
+	 UpdateOxygen();
 	
 end
 
@@ -217,7 +218,8 @@ handleInput = function(inputData, deltaTime)
 	--Keyboard button press
 	elseif(inputData.inputType == "KeyPress") then
 			if(inputData.action == "Jump") then
-				if(gameObj_charData:status_get("UseDynamics") == 0) then
+
+				if(gameObj_charData:status_get("UseDynamics") == 0 or playerRigidBody:GetPosition().y < 105) then
 					gameObj_charData:status_assign("UseDynamics",1);
 					playerRigidBody:SetSleeping(false);
 					local scalar = 6000;
@@ -303,5 +305,55 @@ handleInput = function(inputData, deltaTime)
 	
 end
 
+UpdateOxygen = function()
+	local gameObj_charData = GameObject.to_character(player);
+	local oxygenLevel = gameObj_charData:status_get("Oxygen");
+	local playerRigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(player.physBody));
+	if(playerRigidBody:GetPosition().y < 100) then
+		gameObj_charData:status_assign("Oxygen", oxygenLevel - 1);
+	else
+		gameObj_charData:status_assign("Oxygen", 1000);
+	end
+	if (oxygenLevel < 0) then
+		local health = gameObj_charData:status_get("Health");
+		gameObj_charData:status_assign("Health", health - 1);
+	
+	end
+end
 
+GUI = function() 
+	local windowSize = GUIFunctions.GetWindowSize();
+	local gameObj_charData = GameObject.to_character(player);
+	local oxygenLevel = gameObj_charData:status_get("Oxygen");
+	local Health = gameObj_charData:status_get("Health");
+
+	GUIFunctions.SetNextWindowPos(0,windowSize.y - 50, true);
+	GUIFunctions.BeginWindow("Oxygen");
+	GUIFunctions.SetFontSize(3);
+
+	GUIFunctions.Text("Oxygen: " .. oxygenLevel)
+	GUIFunctions.EndWindow();
+
+
+	
+	GUIFunctions.SetNextWindowPos(windowSize.x - 300 ,windowSize.y - 50, true);
+	GUIFunctions.BeginWindow("Health");
+	GUIFunctions.SetFontSize(3);
+
+	if(Health < 0 ) then
+		Health = 0;
+	end
+
+	GUIFunctions.Text("Health: " .. Health)
+	GUIFunctions.EndWindow();
+
+	if(Health == 0) then
+		GUIFunctions.SetNextWindowPos(windowSize.x/2 - 180,windowSize.y/2 - 50, true);
+		GUIFunctions.BeginWindow("DEAD");
+		GUIFunctions.SetFontSize(6);
+
+		GUIFunctions.Text("YOU DEAD");
+		GUIFunctions.EndWindow();
+	end
+end
 	

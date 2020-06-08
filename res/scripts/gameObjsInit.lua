@@ -20,7 +20,6 @@ gameObj_raw = GameObject.getPlayer();
 gameObj_raw.model = resources.getModel("res/model/ball.fbx");
 
 position = vector(0,200,0);
-print(gameObj_raw.model)
 dynamicsWorld:GetRigidBody(gameObj_raw.physBody):SetPosition(position);
 rigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(gameObj_raw.physBody));
 rigidBody:AddCollisionShape(shapeFactory:GetShape(sphereShape), vector(0,0,0), quaternion(1,0,0,0), 10);
@@ -37,6 +36,8 @@ gameObj_charData:status_assign("MoveLeft", 0);
 gameObj_charData:status_assign("MoveRight", 0);
 gameObj_charData:status_assign("Sliding", 0);
 gameObj_charData:status_assign("FreeCam", 0);
+gameObj_charData:status_assign("Oxygen", 1000);
+gameObj_charData:status_assign("Health", 100);
 
 
 

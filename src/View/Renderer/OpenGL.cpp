@@ -1,9 +1,13 @@
 #include "OpenGL.hpp"
+
 #include <iostream>
+
 #include "Controller/Engine/Engine.hpp"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+
 #include <algorithm>
+
 
 void View::OpenGL::Draw() {
     auto &engine = BlueEngine::Engine::get();
@@ -11,7 +15,7 @@ void View::OpenGL::Draw() {
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        auto& guiManager = engine.getGuiManager();
+        auto &guiManager = engine.getGuiManager();
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         GUIManager::startWindowFrame();
@@ -22,14 +26,24 @@ void View::OpenGL::Draw() {
         guiManager.displayDevScreen(*camera);
         guiManager.displayTextureManager();
         guiManager.displayTerrainSettings();
+
+        if (luaL_dofile(LuaManager::getInstance().getLuaState(),
+                        "./res/scripts/luaFunctions.lua")) {
+            printf("%s\n", lua_tostring(LuaManager::getInstance().getLuaState(), -1));
+        }
+        luabridge::LuaRef LuaGui =
+            luabridge::LuaRef::getGlobal(LuaManager::getInstance().getLuaState(), "GUI");
+        if (!LuaGui.isNil()) {
+            LuaGui();
+        }
+
         int width = 0, height = 0;
         glfwGetWindowSize(engine.window, &width, &height);
 
-
         glm::mat4 projection =
-                glm::perspective(glm::radians(camera->Zoom),
-                                 static_cast<double>(width) / static_cast<double>(height), 0.1, 100000.0);
-        glm::mat4 view = camera->GetViewMatrix();
+            glm::perspective(glm::radians(camera->Zoom),
+                             static_cast<double>(width) / static_cast<double>(height), 0.1, 100000.0);
+        glm::mat4 view       = camera->GetViewMatrix();
         glm::mat4 skyboxView = glm::mat4(glm::mat3(camera->GetViewMatrix()));
         sortDrawDistance();
         if (wireFrame) {
@@ -62,14 +76,11 @@ void View::OpenGL::Init() {
     glEnable(GL_DEPTH_TEST);
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
     skyBox.Init();
-
 }
-void View::OpenGL::DeInit() {
+void View::OpenGL::DeInit() {}
 
-}
-
-void View::OpenGL::DrawModel(Shader& shader, unsigned int &VAO, const std::vector<TextureB> &textures,
-               const std::vector<unsigned int> &indices) {
+void View::OpenGL::DrawModel(Shader &shader, unsigned int &VAO, const std::vector<TextureB> &textures,
+                             const std::vector<unsigned int> &indices) {
     // bind appropriate textures
     unsigned int diffuseNr  = 1;
     unsigned int specularNr = 1;
@@ -83,8 +94,7 @@ void View::OpenGL::DrawModel(Shader& shader, unsigned int &VAO, const std::vecto
         if (name == "texture_diffuse")
             number = std::to_string(diffuseNr++);
         else if (name == "texture_specular")
-            number =
-                    std::to_string(specularNr++); // transfer unsigned int to stream
+            number = std::to_string(specularNr++); // transfer unsigned int to stream
         else if (name == "texture_normal")
             number = std::to_string(normalNr++); // transfer unsigned int to stream
         else if (name == "texture_height")
@@ -106,7 +116,7 @@ void View::OpenGL::DrawModel(Shader& shader, unsigned int &VAO, const std::vecto
 }
 
 void View::OpenGL::SetupMesh(unsigned int &VAO, unsigned int &VBO, unsigned int &EBO,
-               std::vector<Vertex> &vertices, std::vector<unsigned int> &indices) {
+                             std::vector<Vertex> &vertices, std::vector<unsigned int> &indices) {
     // create buffers/arrays
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -120,8 +130,9 @@ void View::OpenGL::SetupMesh(unsigned int &VAO, unsigned int &VBO, unsigned int 
                  &vertices[0], GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<unsigned int>(indices.size()) * sizeof(unsigned int),
-                 &indices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                 static_cast<unsigned int>(indices.size()) * sizeof(unsigned int), &indices[0],
+                 GL_STATIC_DRAW);
 
     // set the vertex attribute pointers
     // vertex Positions
@@ -130,7 +141,7 @@ void View::OpenGL::SetupMesh(unsigned int &VAO, unsigned int &VBO, unsigned int 
     // vertex normals
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          reinterpret_cast<void*>(offsetof(Vertex, Normal)));
+                          reinterpret_cast<void *>(offsetof(Vertex, Normal)));
     // vertex texture coords
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
@@ -154,12 +165,12 @@ void View::OpenGL::ResizeWindow() {
     glViewport(0, 0, width, height);
 }
 
-void View::OpenGL::AddToQue(View::Data::DrawItem& drawItem) {
+void View::OpenGL::AddToQue(View::Data::DrawItem &drawItem) {
     drawQue.push_back(drawItem);
 }
 
 unsigned int View::OpenGL::TextureFromFile(const char *path, const std::string &directory,
-                                                     [[maybe_unused]] bool gamma) {
+                                           [[maybe_unused]] bool gamma) {
     std::string filename = std::string(path);
     if (filename.find("..") < filename.length()) {
         filename.erase(0, 2);
@@ -171,8 +182,7 @@ unsigned int View::OpenGL::TextureFromFile(const char *path, const std::string &
     glGenTextures(1, &textureID);
 
     int width, height, nrComponents;
-    unsigned char *data =
-            stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
+    unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
     if (data) {
         GLenum format = 1;
         if (nrComponents == 1)
@@ -183,8 +193,7 @@ unsigned int View::OpenGL::TextureFromFile(const char *path, const std::string &
             format = GL_RGBA;
 
         glBindTexture(GL_TEXTURE_2D, textureID);
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format,
-                     GL_UNSIGNED_BYTE, data);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
 
         // Enable should you need alpha, this will clamp textures to the edge to
@@ -194,8 +203,7 @@ unsigned int View::OpenGL::TextureFromFile(const char *path, const std::string &
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                        GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         stbi_image_free(data);
@@ -210,12 +218,13 @@ void View::OpenGL::SetCameraOnRender(Camera &mainCamera) {
 }
 
 void View::OpenGL::sortDrawDistance() {
-    glm::vec3 cpos = {camera->Position.x, static_cast<float>(camera->Position.y), static_cast<float>(camera->Position.z)};
+    glm::vec3 cpos = {camera->Position.x, static_cast<float>(camera->Position.y),
+                      static_cast<float>(camera->Position.z)};
     for (auto &e : drawQue) {
         e.distance = glm::distance(e.pos, cpos);
     }
     sort(drawQue.begin(), drawQue.end(),
-         [](const View::Data::DrawItem& lhs, const View::Data::DrawItem& rhs)->bool {
+         [](const View::Data::DrawItem &lhs, const View::Data::DrawItem &rhs) -> bool {
              return lhs.distance > rhs.distance;
          });
 }
@@ -224,7 +233,9 @@ void View::OpenGL::ToggleWireFrame() {
     wireFrame = !wireFrame;
 }
 
-void View::OpenGL::SetupTerrainModel(unsigned int &VAO, unsigned &VBO, unsigned int &EBO, const std::vector<Blue::Vertex>& vertices, const std::vector<unsigned int>& indices) {
+void View::OpenGL::SetupTerrainModel(unsigned int &VAO, unsigned &VBO, unsigned int &EBO,
+                                     const std::vector<Blue::Vertex> &vertices,
+                                     const std::vector<unsigned int> &indices) {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
@@ -232,11 +243,11 @@ void View::OpenGL::SetupTerrainModel(unsigned int &VAO, unsigned &VBO, unsigned 
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Blue::Vertex), &vertices[0],
-                 GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Blue::Vertex), &vertices[0], GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0],
+                 GL_STATIC_DRAW);
 
     // Vertex Positions
     glEnableVertexAttribArray(0);
@@ -254,7 +265,7 @@ void View::OpenGL::SetupTerrainModel(unsigned int &VAO, unsigned &VBO, unsigned 
 }
 
 void View::OpenGL::DrawTerrain(unsigned int &VAO, const std::vector<unsigned int> &textures,
-                               const unsigned int& ebo_size) {
+                               const unsigned int &ebo_size) {
     GLint count = 0;
     for (auto &e : textures) {
         glActiveTexture(GL_TEXTURE0 + count);
