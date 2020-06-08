@@ -19,6 +19,15 @@ GameObj_Base::GameObj_Base(BlueEngine::ID model_in, BlueEngine::ID physBody_in) 
 
 	// Generate the GameObject's unique identifier.
 	uniqueID = BlueEngine::IDTracker::getInstance().getID();
+
+    //Peters addition
+    auto *modelObj = ResourceManager::getModel(static_cast<unsigned>(model));
+    if (modelObj->isAnimated) {
+        animator = std::make_unique<Controller::Animator>();
+        animator->LinkToModel(model);
+        // All animation loading must be uppercase
+        animator->LoadAnimation("WALK");
+    }
 }
 
 BlueEngine::ID GameObj_Base::id()
@@ -41,4 +50,9 @@ void GameObj_Base::lua_init_register() {
 			.addProperty("physBody", &GameObj_Base::physBody)
 			.addProperty("model", &GameObj_Base::model)
 		.endClass();
+}
+void GameObj_Base::update(double t, double dt) {
+    if (animator != nullptr) {
+        animator->BoneTransform(dt);
+    }
 }

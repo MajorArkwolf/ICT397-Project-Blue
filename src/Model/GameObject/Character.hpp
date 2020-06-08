@@ -19,7 +19,7 @@ public:
 		 * @brief Default constructor, does nothing.
 		 * @note This only exists due to a bug with MSVC failing to either generate or prevent calling this from a derived class's constructor.
 		 */
-	GameObj_Character() {};
+	GameObj_Character() {}
 
 		/*!
 		 * @brief Identifies the GameObject's type.

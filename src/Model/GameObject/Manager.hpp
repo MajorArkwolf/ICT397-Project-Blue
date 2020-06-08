@@ -77,6 +77,8 @@ public:
 		 */
 	static void syncPhys();
 
+    static void update(double t, double dt);
+
 protected:
 		/*!
 		 * @brief Invokes the use of the GameObject Factory and automates the process of storing its output.

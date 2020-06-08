@@ -10,6 +10,7 @@
 #include "Controller/Engine/IDTracker.hpp"
 #include "View/Renderer/Shader.hpp"
 #include "Types.hpp"
+#include "Controller/Animator.hpp"
 
 	/*!
 	 * @brief The parent class for all child GameObjects.
@@ -57,6 +58,10 @@ public:
 		 * @note A value of 0 indicates the GameObject has no model.
 		 */
 	BlueEngine::ID model;
+
+    std::shared_ptr<Controller::Animator> animator = nullptr;
+
+    void update(double t, double dt);
 
 		/*!
 		 * @brief Registers this GameObject class to the Lua subscripting system.
