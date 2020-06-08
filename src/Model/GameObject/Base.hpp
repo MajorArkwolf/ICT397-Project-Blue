@@ -26,7 +26,7 @@ public:
 	GameObj_Base(BlueEngine::ID model_in, BlueEngine::ID physBody_in);
 
 		//! Virtual destructor
-	virtual ~GameObj_Base() {};
+	virtual ~GameObj_Base() {}
 
 		/*!
 		 * @brief Returns a copy of this GameObject's unique identifier.
@@ -57,11 +57,9 @@ public:
 		 * @brief Stores the identifier for the GameObject's model.
 		 * @note A value of 0 indicates the GameObject has no model.
 		 */
-	BlueEngine::ID model;
+	size_t model;
 
-    std::shared_ptr<Controller::Animator> animator = nullptr;
-
-    void update(double t, double dt);
+    virtual void update(double t, double dt);
 
 		/*!
 		 * @brief Registers this GameObject class to the Lua subscripting system.

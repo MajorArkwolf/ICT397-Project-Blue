@@ -85,10 +85,15 @@ public:
 		 */
 	static void lua_init_register();
 
+    void update(double t, double dt) override;
+
 private:
 		/*!
 		 * @brief Stores a dynamic amount of configurable character statuses.
 		 * @note All status values are mapped to a unique name.
 		 */
 	std::map<std::string, float> statuses;
+
+  protected:
+    std::shared_ptr<Controller::Animator> animator = nullptr;
 };

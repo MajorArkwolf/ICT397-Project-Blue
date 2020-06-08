@@ -12,10 +12,10 @@ public:
 		/*!
 		 * @brief Sets initial class contents and calls the inherited class constructor.
 		 * @param [in] model_in The identifier for a model loaded into the engine.
-		 * @param [in] physbody_in The identifier for a physics body loaded into the engine.
+		 * @param [in] physBody_in The identifier for a physics body loaded into the engine.
 		 * @param [in] context_in The identifier for a finite state machine loaded into the engine.
 		 */
-	GameObj_NPC(BlueEngine::ID model_in, BlueEngine::ID physBody_in, BlueEngine::ID context_in);
+	GameObj_NPC(size_t model_in, BlueEngine::ID physBody_in, BlueEngine::ID context_in);
 
 		/*!
 		 * @brief Identifies the GameObject's type.
@@ -33,6 +33,8 @@ public:
 		 * @param [in] cameraPos The position of the camera for rendering.
 		 */
 	void draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos);
+
+    void update(double t, double dt);
 
 		/*!
 		 * @brief Returns a read-only copy of the NPC's AI context.

@@ -72,3 +72,8 @@ void GameObj_Character::lua_init_register() {
 			.addFunction("status_clear", &GameObj_Character::status_clear)
 		.endClass();
 }
+void GameObj_Character::update(double t, double dt) {
+    if (animator != nullptr) {
+        animator->BoneTransform(dt);
+    }
+}

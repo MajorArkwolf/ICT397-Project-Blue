@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <set>
-#include "View/Renderer/OpenGL.hpp"
 #include "Controller/Engine/Engine.hpp"
 
 static inline glm::vec3 vec3_cast(const aiVector3D &v) { return glm::vec3(v.x, v.y, v.z); }
@@ -53,7 +52,8 @@ void Model::Model::loadModel(string const &path) {
     }
 
     // retrieve the directory path of the filepath
-    isAnimated = scene->HasAnimations() && CheckFileType(path);
+    name = path;
+    isAnimated = /**scene->HasAnimations() &&**/ CheckFileType(path);
     globalInverseTransform = glm::inverse(mat4_cast(scene->mRootNode->mTransformation));
     // process ASSIMP's root node recursively
     processNode(scene->mRootNode, scene);

@@ -85,6 +85,7 @@ namespace Model {
         void LoadJoints(aiMesh* mesh, aiNode* root);
         JointsName rootJoint;
         bool isAnimated = true;
+        std::string name = "";
     };
 }
 

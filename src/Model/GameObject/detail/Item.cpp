@@ -43,10 +43,10 @@ void GameObj_Item::draw(const glm::mat4& projection, const glm::mat4& view, cons
 	model_matrix = model_matrix * glm::mat4_cast(phys_body->GetOrientation());
 
 	// Enable the shader and pass it the values for its uniforms
-	program.get()->use();
-	program.get()->setMat4("projection", projection);
-	program.get()->setMat4("view", view);
-	program.get()->setMat4("model", model_matrix);
+	program->use();
+	program->setMat4("projection", projection);
+	program->setMat4("view", view);
+	program->setMat4("model", model_matrix);
 
 	// Get the resource manager and call for it to draw the model
 	auto& res_manager = ResourceManager::getInstance();

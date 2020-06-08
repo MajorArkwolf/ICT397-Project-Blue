@@ -6,10 +6,18 @@
 #include "Controller/PhysicsManager.hpp"
 #include "../Types.hpp"
 
-GameObj_NPC::GameObj_NPC(BlueEngine::ID model_in, BlueEngine::ID physBody_in, BlueEngine::ID context_in)
+GameObj_NPC::GameObj_NPC(size_t model_in, BlueEngine::ID physBody_in, BlueEngine::ID context_in)
 	: GameObj_Base(model_in, physBody_in), GameObj_Character() {
 	// Store the NPC's FSM identifier
 	contextID = context_in;
+    //Peters addition
+    auto *modelObj = ResourceManager::getModel(static_cast<unsigned>(model_in));
+    if (modelObj->isAnimated) {
+        animator = std::make_unique<Controller::Animator>();
+        animator->LinkToModel(model_in);
+        // All animation loading must be uppercase
+        animator->LoadAnimation("WALK");
+    }
 }
 
 GameObj_Type GameObj_NPC::type() const {
@@ -44,11 +52,16 @@ void GameObj_NPC::draw(const glm::mat4& projection, const glm::mat4& view, const
 	model_matrix = model_matrix * glm::mat4_cast(phys_body->GetOrientation());
 
 	// Enable the shader and pass it the values for its uniforms
-	program.get()->use();
-	program.get()->setMat4("projection", projection);
-	program.get()->setMat4("view", view);
-	program.get()->setMat4("model", model_matrix);
-	program.get()->setBool("isAnimated", false);
+	program->use();
+	program->setMat4("projection", projection);
+	program->setMat4("view", view);
+	program->setMat4("model", model_matrix);
+    if (animator != nullptr) {
+        program->setBool("isAnimated", true);
+        program->setMat4Array("jointTransforms", animator->Transforms);
+    } else {
+	    program->setBool("isAnimated", false);
+    }
 
 	// Get the resource manager and call for it to draw the model
 	auto& res_manager = ResourceManager::getInstance();
@@ -66,4 +79,7 @@ void GameObj_NPC::lua_init_register() {
 		.deriveClass<GameObj_NPC, GameObj_Character>("GameObj_NPC")
 			.addProperty("context", &GameObj_NPC::contextID, false)
 		.endClass();
+}
+void GameObj_NPC::update(double t, double dt) {
+    GameObj_Character::update(t, dt);
 }
