@@ -10,7 +10,7 @@
 #include "Controller/Engine/IDTracker.hpp"
 #include "View/Renderer/Shader.hpp"
 #include "Types.hpp"
-#include "Controller/Animator.hpp"
+
 
 	/*!
 	 * @brief The parent class for all child GameObjects.
@@ -23,7 +23,7 @@ public:
 		 * @param [in] model_in The identifier for a model loaded into the engine.
 		 * @param [in] physBody_in The identifier for a physics body loaded into the engine.
 		 */
-	GameObj_Base(BlueEngine::ID model_in, BlueEngine::ID physBody_in);
+	GameObj_Base(size_t model_in, BlueEngine::ID physBody_in);
 
 		//! Virtual destructor
 	virtual ~GameObj_Base() {}

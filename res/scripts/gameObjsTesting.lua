@@ -84,6 +84,7 @@ gameObj_charData:status_assign("AnyValueCanBeAssignedToStatuses", 50);
 gameObj_charData:status_clear();
 gameObj_charData:status_assign("Health", 40);
 gameObj_charData:status_assign("Difficulty", 10);
+gameObj_charData:add_animator();
 position = vector(0, 200, 0);
 dynamicsWorld:GetRigidBody(gameObj_raw.physBody):SetPosition(position);
 getReactRigidBody(dynamicsWorld:GetRigidBody(gameObj_raw.physBody)):AddCollisionShape(shapeFactory:GetShape(0), vector(0,0,0), quaternion(1,0,0,0), 10);

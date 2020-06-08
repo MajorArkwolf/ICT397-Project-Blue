@@ -1,4 +1,5 @@
 	/// Declaration Include
+#include <Controller/ResourceManager.hpp>
 #include "../Character.hpp"
 
 	/// Internal Dependencies
@@ -10,7 +11,7 @@ GameObj_Type GameObj_Character::type() const {
 	return GameObj_Type::Invalid;
 }
 
-void GameObj_Character::status_assign(std::string key, float value) {
+void GameObj_Character::status_assign(const std::string& key, float value) {
 	// Perform the operation on the map
 	statuses[key] = value;
 }
@@ -20,7 +21,7 @@ unsigned long long GameObj_Character::status_count() {
 	return statuses.size();
 }
 
-bool GameObj_Character::status_has(std::string key) {
+bool GameObj_Character::status_has(const std::string& key) {
 	// Perform the operation on the map
 	return (statuses.find(key) != statuses.end());
 }
@@ -30,17 +31,17 @@ std::vector<std::string> GameObj_Character::status_list() {
 	std::vector<std::string> keys;
 
 	// Iterate through the entire map
-	for (auto i = statuses.begin(); i != statuses.end(); ++i)
+	for (auto & statuse : statuses)
 	{
 		// Append the currently processed status' key
-		keys.push_back(i->first);
+		keys.push_back(statuse.first);
 	}
 
 	// Return the gathered keys
 	return keys;
 }
 
-float GameObj_Character::status_get(std::string key) {
+float GameObj_Character::status_get(const std::string& key) {
 	// Catch an invalid key
 	if (!status_has(key))
 		return 0.0f;
@@ -49,7 +50,7 @@ float GameObj_Character::status_get(std::string key) {
 	return statuses.at(key);
 }
 
-void GameObj_Character::status_delete(std::string key) {
+void GameObj_Character::status_delete(const std::string& key) {
 	// Perform the operation on the map
 	statuses.erase(key);
 }
@@ -57,6 +58,22 @@ void GameObj_Character::status_delete(std::string key) {
 void GameObj_Character::status_clear() {
 	// Perform the operation on the map
 	statuses.clear();
+}
+
+void GameObj_Character::add_animator() {
+    auto *modelObj = ResourceManager::getModel(model);
+    if (modelObj->isAnimated) {
+        animator = std::make_unique<Controller::Animator>();
+        animator->LinkToModel(model);
+        // All animation loading must be uppercase
+        animator->LoadAnimation("IDLE", false);
+    }
+}
+
+void GameObj_Character::change_animation(const std::string& animToLoad, bool stopOnEnd) {
+    if (animator != nullptr) {
+        animator->LoadAnimation(animToLoad, stopOnEnd);
+    }
 }
 
 void GameObj_Character::lua_init_register() {
@@ -70,6 +87,8 @@ void GameObj_Character::lua_init_register() {
 			.addFunction("status_get", &GameObj_Character::status_get)
 			.addFunction("status_delete", &GameObj_Character::status_delete)
 			.addFunction("status_clear", &GameObj_Character::status_clear)
+			.addFunction("add_animator", &GameObj_Character::add_animator)
+			.addFunction("change_animation", &GameObj_Character::change_animation)
 		.endClass();
 }
 void GameObj_Character::update(double t, double dt) {
@@ -77,3 +96,5 @@ void GameObj_Character::update(double t, double dt) {
         animator->BoneTransform(dt);
     }
 }
+
+

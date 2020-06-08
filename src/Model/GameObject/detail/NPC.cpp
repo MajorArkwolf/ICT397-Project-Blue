@@ -10,14 +10,6 @@ GameObj_NPC::GameObj_NPC(size_t model_in, BlueEngine::ID physBody_in, BlueEngine
 	: GameObj_Base(model_in, physBody_in), GameObj_Character() {
 	// Store the NPC's FSM identifier
 	contextID = context_in;
-    //Peters addition
-    auto *modelObj = ResourceManager::getModel(static_cast<unsigned>(model_in));
-    if (modelObj->isAnimated) {
-        animator = std::make_unique<Controller::Animator>();
-        animator->LinkToModel(model_in);
-        // All animation loading must be uppercase
-        animator->LoadAnimation("WALK");
-    }
 }
 
 GameObj_Type GameObj_NPC::type() const {
@@ -57,6 +49,8 @@ void GameObj_NPC::draw(const glm::mat4& projection, const glm::mat4& view, const
 	program->setMat4("view", view);
 	program->setMat4("model", model_matrix);
     if (animator != nullptr) {
+        //TODO: REMOVE THIS. THIS IS A HACK!!!!!!!!! MAKE THE UPDATE FUNCTION WORK
+        animator->BoneTransform(BlueEngine::Engine::get().getDt());
         program->setBool("isAnimated", true);
         program->setMat4Array("jointTransforms", animator->Transforms);
     } else {
