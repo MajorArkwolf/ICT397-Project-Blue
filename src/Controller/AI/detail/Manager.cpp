@@ -7,6 +7,13 @@
 
 	/// Internal Dependencies
 #include "Controller/Engine/LuaManager.hpp"
+#include "Controller/AI/States/Chase.hpp"
+#include "Controller/AI/States/Evade.hpp"
+#include "Controller/AI/States/Flee.hpp"
+#include "Controller/AI/States/Patrol.hpp"
+#include "Controller/AI/States/Pursuit.hpp"
+#include "Controller/AI/States/Wander.hpp"
+#include "Controller/AI/States/Custom.hpp"
 
 BlueEngine::ID FSM_Manager::create(std::shared_ptr<GameObj_Base> object) {
 	// Catch an invalid GameObject being attached
@@ -96,11 +103,71 @@ void FSM_Manager::send(Message message) {
 }
 
 std::shared_ptr<State_Base> FSM_Manager::regular_state(State_Type type) {
+	// Keep a single static instance of each derived C++ state
+	static std::shared_ptr<State_Chase> staticChase;
+	static std::shared_ptr<State_Evade> staticEvade;
+	static std::shared_ptr<State_Flee> staticFlee;
+	static std::shared_ptr<State_Patrol> staticPatrol;
+	static std::shared_ptr<State_Pursuit> staticPursuit;
+	static std::shared_ptr<State_Wander> staticWander;
+	
+	// Spit out the requested type
+	switch (type) {
+	case (State_Type::Chase):
+		return staticChase;
 
+	case (State_Type::Evade):
+		return staticEvade;
+
+	case (State_Type::Flee):
+		return staticFlee;
+
+	case (State_Type::Patrol):
+		return staticPatrol;
+
+	case (State_Type::Pursuit):
+		return staticPursuit;
+
+	case (State_Type::Wander):
+		return staticWander;
+	}
 }
 
 std::shared_ptr<State_Base> FSM_Manager::custom_state(std::string start_func, std::string run_func, std::string end_func, std::string read_func) {
+	// Attempt to gather the start function
+	luabridge::LuaRef start_temp = luabridge::getGlobal(LuaManager::getInstance().getLuaState(), start_func.c_str());
+	if (start_temp == luabridge::Nil()) {
+		// Report the error and return nullptr
+		std::cout << "Failed to generate a custom state: Lua global \"" << start_func << "\" could not be gathered for the start behaviour!\n";
+		return nullptr;
+	}
 
+	// Attempt to gather the run function
+	luabridge::LuaRef run_temp = luabridge::getGlobal(LuaManager::getInstance().getLuaState(), run_func.c_str());
+	if (run_temp == luabridge::Nil()) {
+		// Report the error and return nullptr
+		std::cout << "Failed to generate a custom state: Lua global \"" << run_func << "\" could not be gathered for the run behaviour!\n";
+		return nullptr;
+	}
+
+	// Attempt to gather the end function
+	luabridge::LuaRef end_temp = luabridge::getGlobal(LuaManager::getInstance().getLuaState(), end_func.c_str());
+	if (end_temp == luabridge::Nil()) {
+		// Report the error and return nullptr
+		std::cout << "Failed to generate a custom state: Lua global \"" << end_func << "\" could not be gathered for the end behaviour!\n";
+		return nullptr;
+	}
+
+	// Attempt to gather the read function
+	luabridge::LuaRef read_temp = luabridge::getGlobal(LuaManager::getInstance().getLuaState(), read_func.c_str());
+	if (read_temp == luabridge::Nil()) {
+		// Report the error and return nullptr
+		std::cout << "Failed to generate a custom state: Lua global \"" << read_func << "\" could not be gathered for the read behaviour!\n";
+		return nullptr;
+	}
+
+	// Generate and return the custom state
+	return std::make_shared<State_Custom>(State_Custom(start_temp, run_temp, end_temp, read_temp));
 }
 
 void FSM_Manager::lua_init() {
@@ -156,11 +223,13 @@ void FSM_Manager::lua_init() {
 }
 
 BlueEngine::ID FSM_Manager::lua_create(GameObj_Base* object) {
-
+	// Encapsulate the smart pointers from the C++ interface
+	return create(std::shared_ptr<GameObj_Base>(object));
 }
 
 FSM* FSM_Manager::lua_get(BlueEngine::ID identifier) {
-
+	// Encapsulate the smart pointers from the C++ interface
+	return get(identifier).get();
 }
 
 State_Type FSM_Manager::lua_enum_chase() {
@@ -237,3 +306,7 @@ Message_Type FSM_Manager::lua_enum_msg_posZ() {
 	// Return a copy of that enum value
 	return Message_Type::PositionZ;
 }
+
+std::map<BlueEngine::ID, std::shared_ptr<FSM>> FSM_Manager::actors = std::map<BlueEngine::ID, std::shared_ptr<FSM>>();
+
+std::forward_list<Message> FSM_Manager::pending_messages = std::forward_list<Message>();
