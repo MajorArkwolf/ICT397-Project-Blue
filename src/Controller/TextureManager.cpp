@@ -4,7 +4,7 @@
 
 #include "Controller/Engine/Engine.hpp"
 
-bool TextureManager::loadTextureFromFile(std::string filePath, std::string texName) {
+bool TextureManager::loadTextureFromFile(const std::string& filePath, const std::string& texName) {
     auto &basePath = BlueEngine::Engine::get().basepath;
     auto path      = basePath + filePath;
     unsigned int textureID;
@@ -41,7 +41,7 @@ bool TextureManager::loadTextureFromFile(std::string filePath, std::string texNa
     return true;
 }
 
-Texture &TextureManager::getTexture(std::string texName) {
+Texture &TextureManager::getTexture(const std::string& texName) {
     if (textureMap.find(texName) != textureMap.end()) {
         return textureMap.at(texName);
     }

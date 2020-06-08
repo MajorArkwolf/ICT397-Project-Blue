@@ -1,15 +1,21 @@
 #pragma once
+#include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
 #include <assimp/Importer.hpp>
+#include <assimp/matrix4x4.h>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Mesh.hpp"
+#include "Model/Models/Animation.hpp"
+#include "Model/Models/DataTypes.hpp"
 #include "View/Renderer/Shader.hpp"
+
 namespace Model {
     class Model {
       public:
@@ -41,7 +47,15 @@ namespace Model {
          */
         void Draw(Shader& shader);
 
-      private:
+        void Update(float t, float dt);
+
+        /*----------------*/
+        unsigned numBones = 0;
+        std::vector<BoneInfo> boneInfo;
+        std::vector<Animation> animation = {};
+        Animation* getAnimation(const std::string& animName);
+
+      public:
         /**
          * Loads a model from file.
          * @param path to the model.
@@ -63,5 +77,14 @@ namespace Model {
         Mesh processMesh(aiMesh *mesh, const aiScene *scene);
         std::vector<TextureB> loadMaterialTextures(aiMaterial *mat, aiTextureType type,
                                                   const std::string& typeName);
+
+        std::map<std::string, unsigned int> boneMapping = {};
+        glm::mat4 globalInverseTransform = {};
+        void LoadBones(unsigned int MeshIndex, const aiMesh *pMesh);
+        void LoadAnimations(const aiScene *scene);
+        void LoadJoints(aiMesh* mesh, aiNode* root);
+        JointsName rootJoint;
+        bool isAnimated = true;
     };
 }
+
