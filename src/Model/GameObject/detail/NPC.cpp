@@ -48,6 +48,7 @@ void GameObj_NPC::draw(const glm::mat4& projection, const glm::mat4& view, const
 	program.get()->setMat4("projection", projection);
 	program.get()->setMat4("view", view);
 	program.get()->setMat4("model", model_matrix);
+	program.get()->setBool("isAnimated", false);
 
 	// Get the resource manager and call for it to draw the model
 	auto& res_manager = ResourceManager::getInstance();
