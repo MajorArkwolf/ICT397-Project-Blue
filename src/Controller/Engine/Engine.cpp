@@ -7,6 +7,7 @@
 
 // Game States
 #include "Game/Prototype/PrototypeScene.hpp"
+#include "Game/MainMenu/MainMenu.hpp"
 
 using BlueEngine::Engine;
 using std::runtime_error;
@@ -16,7 +17,8 @@ auto Engine::run() -> void {
     auto &engine = Engine::get();
 
     ResourceManager::getInstance().loadResources();
-    engine.gameStack.AddToStack(std::make_shared<PrototypeScene>());
+    engine.gameStack.AddToStack(std::make_shared<MainMenu>());
+    engine.gameStack.getTop()->Init();
 
     double t  = 0.0;
     double dt = 0.01;
