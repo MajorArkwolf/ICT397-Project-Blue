@@ -56,16 +56,16 @@ end
 
 
 -- Create a GameObject and store the returned identifier
-local wallXID = GameObject.create(GameObject.Types.Static());
-local wallZID = GameObject.create(GameObject.Types.Static());
+ wallXID = GameObject.create(GameObject.Types.Static());
+ wallZID = GameObject.create(GameObject.Types.Static());
 local wallX = GameObject.get(wallXID);
 local wallZ = GameObject.get(wallZID);
 local wallXShape = shapeFactory:createBox(vector(5000,500, 100));
 local wallZShape = shapeFactory:createBox(vector(100,500, 5000));
-local wallXRigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(wallX.physBody));
- wallXRigidBody:AddCollisionShape(shapeFactory:GetShape(wallXShape), vector(0,1900,0), quaternion(1,0,0,0), 1);
-local wallZrigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(wallZ.physBody));
- wallZrigidBody:AddCollisionShape(shapeFactory:GetShape(wallZShape), vector(1900,0,0), quaternion(1,0,0,0), 1);
+local wallXCollisionBody = getReactCollisionBody(collisionWorld:GetCollisionBody(wallX.physBody));
+ wallXCollisionBody:AddCollisionShape(shapeFactory:GetShape(wallXShape), vector(0,0,1900), quaternion(1,0,0,0));
+local wallZCollisionBody = getReactCollisionBody(collisionWorld:GetCollisionBody(wallZ.physBody));
+ wallZCollisionBody:AddCollisionShape(shapeFactory:GetShape(wallZShape), vector(1900,0,0), quaternion(1,0,0,0));
 
 -- Gather the actual GameObject and configure it
 gameObj_raw = GameObject.get(gameObj_id);

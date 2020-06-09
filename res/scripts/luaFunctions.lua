@@ -7,7 +7,11 @@ Update = function(deltaTime)
 	 local playerCollisionBody = getReactCollisionBody(collisionWorld:GetCollisionBody(player.physBody));
 	 local camera = getCamera();
 	 local position = playerRigidBody:GetPosition();
+	 		debug.printVector(playerCollisionBody:GetPosition());
+	 if(collisionWorld:TestOverlap(player.physBody, wallXID) == true) then
 
+		print("TOUCHING");
+	 end
 
 	 if(gameObj_charData:status_get("FreeCam") == 0) then
 		  camera.Position = position;
@@ -112,7 +116,7 @@ movePlayer = function(deltaTime)
 	local playerRigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(player.physBody));
 	local currentPos = playerRigidBody:GetPosition();
 	local playerCollisionBody = getReactCollisionBody(collisionWorld:GetCollisionBody(player.physBody));
-	local movementMult = 1000;
+	local movementMult = 100000;
 
 	if(gameObj_charData:status_get("FreeCam") == 0) then
 		if(gameObj_charData:status_get("UseDynamics") == 1) then
