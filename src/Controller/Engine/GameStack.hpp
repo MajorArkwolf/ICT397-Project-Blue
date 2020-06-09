@@ -87,7 +87,11 @@ class GameStack {
         }
     }
 
-  private:
+    bool isRemoveTopFlag() const {
+        return removeTopFlag;
+    }
+
+private:
     bool removeTopFlag = false;
     /// The stack itself.
     vector<T> gameStack;
