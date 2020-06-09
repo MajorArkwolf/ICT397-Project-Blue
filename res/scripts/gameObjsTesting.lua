@@ -22,7 +22,11 @@ gameObj_id = GameObject.create(GameObject.Types.Static());
 
 -- Gather the actual GameObject and configure it
 gameObj_raw = GameObject.get(gameObj_id);
-gameObj_raw.model = resources.getModel("res/model/ball.fbx");
+gameObj_raw.model = resources.getModel("res/model/AnimatedHuman.gltf");
+if (gameObj_raw:anim_init()) then
+	print("Successfully added animation to the example static GameObject!");
+	gameObj_raw:anim_set("IDLE", false);
+end
 
 -- Output a report on the actual GameObject
 GameObject_Report(gameObj_raw);
@@ -75,7 +79,7 @@ gameObj_id = GameObject.create(GameObject.Types.NPC());
 
 -- Gather the actual GameObject and configure it
 gameObj_raw = GameObject.get(gameObj_id);
-gameObj_raw.model = resources.getModel("res/model/AnimatedHuman.gltf");
+gameObj_raw.model = resources.getModel("res/model/ball.fbx");
 
 -- Gather the GameObject's Character data and configure it
 gameObj_charData = GameObject.to_character(gameObj_raw);
@@ -84,7 +88,6 @@ gameObj_charData:status_assign("AnyValueCanBeAssignedToStatuses", 50);
 gameObj_charData:status_clear();
 gameObj_charData:status_assign("Health", 40);
 gameObj_charData:status_assign("Difficulty", 10);
-gameObj_charData:add_animator();
 position = vector(0, 200, 0);
 dynamicsWorld:GetRigidBody(gameObj_raw.physBody):SetPosition(position);
 getReactRigidBody(dynamicsWorld:GetRigidBody(gameObj_raw.physBody)):AddCollisionShape(shapeFactory:GetShape(0), vector(0,0,0), quaternion(1,0,0,0), 10);

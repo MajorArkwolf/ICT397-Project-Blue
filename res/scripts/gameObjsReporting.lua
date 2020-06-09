@@ -79,6 +79,13 @@ function GameObject_Report(gameObj_in)
 	-- Print the GameObject's Model ID
 	print("Model ID: " .. gameObj_in.model);
 
+	-- Print if the GameObject has its animation configured
+	if (gameObj_in:anim_has()) then
+		print("Animation Setup: TRUE");
+	else
+		print("Animation Setup: FALSE");
+	end;
+
 	-- Attempt to gather the GameObject's character data and report it
 	GameObject_ReportCharacter(GameObject.to_character(gameObj_in));
 end;

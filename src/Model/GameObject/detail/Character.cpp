@@ -60,22 +60,6 @@ void GameObj_Character::status_clear() {
 	statuses.clear();
 }
 
-void GameObj_Character::add_animator() {
-    auto *modelObj = ResourceManager::getModel(model);
-    if (modelObj->isAnimated) {
-        animator = std::make_unique<Controller::Animator>();
-        animator->LinkToModel(model);
-        // All animation loading must be uppercase
-        animator->LoadAnimation("IDLE", false);
-    }
-}
-
-void GameObj_Character::change_animation(const std::string& animToLoad, bool stopOnEnd) {
-    if (animator != nullptr) {
-        animator->LoadAnimation(animToLoad, stopOnEnd);
-    }
-}
-
 void GameObj_Character::lua_init_register() {
 	// Register the Character GameObject class
 	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
@@ -87,14 +71,5 @@ void GameObj_Character::lua_init_register() {
 			.addFunction("status_get", &GameObj_Character::status_get)
 			.addFunction("status_delete", &GameObj_Character::status_delete)
 			.addFunction("status_clear", &GameObj_Character::status_clear)
-			.addFunction("add_animator", &GameObj_Character::add_animator)
-			.addFunction("change_animation", &GameObj_Character::change_animation)
 		.endClass();
 }
-void GameObj_Character::update(double t, double dt) {
-    if (animator != nullptr) {
-        animator->BoneTransform(dt);
-    }
-}
-
-

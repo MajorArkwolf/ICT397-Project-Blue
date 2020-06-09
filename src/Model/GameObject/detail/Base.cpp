@@ -40,6 +40,9 @@ void GameObj_Base::lua_init_register() {
 			.addProperty("type", &GameObj_Base::type)
 			.addProperty("physBody", &GameObj_Base::physBody)
 			.addProperty("model", &GameObj_Base::model)
+			.addFunction("anim_init", &GameObj_Base::animator_add)
+			.addFunction("anim_set", &GameObj_Base::animator_changeAnimation)
+			.addFunction("anim_has", &GameObj_Base::animator_has)
 		.endClass();
 }
 
@@ -67,7 +70,7 @@ bool GameObj_Base::animator_add() {
 
 void GameObj_Base::animator_update(double t [[maybe_unused]], double dt) {
 	// Catch an invalid animator
-	if (!animator) {
+	if (animator) {
 		// Update the model's animation through a delta bone transform
 		animator->BoneTransform(dt);
 	}
@@ -75,7 +78,7 @@ void GameObj_Base::animator_update(double t [[maybe_unused]], double dt) {
 
 void GameObj_Base::animator_changeAnimation(std::string animToLoad, bool stopOnEnd) {
 	// Catch an invalid animator
-	if (!animator) {
+	if (animator) {
 		// Load the animation
 		animator->LoadAnimation(animToLoad, stopOnEnd);
 	}
