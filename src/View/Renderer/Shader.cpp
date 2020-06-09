@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <glm/gtc/type_ptr.hpp>
 
 Shader::Shader(const char *vertexPath, const char *fragmentPath,
                const char *geometryPath) {
@@ -164,4 +165,9 @@ void Shader::checkCompileErrors(GLuint shader, const std::string& type) {
 
 unsigned int Shader::getId() const {
     return ID;
+}
+void Shader::setMat4Array(const string &name, const std::vector<glm::mat4> &matArray) const {
+    if (!matArray.empty()) {
+        glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), matArray.size(), GL_FALSE, glm::value_ptr(matArray[0]));
+    }
 }
