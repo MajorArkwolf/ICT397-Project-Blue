@@ -55,7 +55,6 @@ public:
 
 		/*!
 		 * @brief Stores the identifier for the GameObject's model.
-		 * @note A value of 0 indicates the GameObject has no model.
 		 */
 	size_t model;
 
@@ -79,7 +78,7 @@ public:
 		 * @param [in] stopOnEnd True to stop animation after it ends, False to loop the animation.
 		 * @note Has no effect if the GameObject has not had its animation initialised.
 		 */
-	void animator_changeAnimation(std::string animToLoad, bool stopOnEnd);
+	void animator_changeAnimation(const std::string& animToLoad, bool stopOnEnd);
 
 		/*!
 		 * @brief Checks if the GameObject has an initialised and configured animation.
@@ -104,7 +103,7 @@ protected:
 		 * @brief Stores the GameObject's individual animation properties.
 		 * @note Internal to the GameObject itself, and must be updated relative to delta time passed.
 		 */
-	std::unique_ptr<Controller::Animator> animator = nullptr;
+	std::shared_ptr<Controller::Animator> animator;
 
 private:
 		/*!

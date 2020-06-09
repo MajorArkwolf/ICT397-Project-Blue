@@ -22,11 +22,7 @@ gameObj_id = GameObject.create(GameObject.Types.Static());
 
 -- Gather the actual GameObject and configure it
 gameObj_raw = GameObject.get(gameObj_id);
-gameObj_raw.model = resources.getModel("res/model/AnimatedHuman.gltf");
-if (gameObj_raw:anim_init()) then
-	print("Successfully added animation to the example static GameObject!");
-	gameObj_raw:anim_set("IDLE", false);
-end
+gameObj_raw.model = resources.getModel("res/model/ball.fbx");
 
 -- Output a report on the actual GameObject
 GameObject_Report(gameObj_raw);
@@ -79,7 +75,10 @@ gameObj_id = GameObject.create(GameObject.Types.NPC());
 
 -- Gather the actual GameObject and configure it
 gameObj_raw = GameObject.get(gameObj_id);
-gameObj_raw.model = resources.getModel("res/model/ball.fbx");
+gameObj_raw.model = resources.getModel("res/model/AnimatedHuman.gltf");
+if (gameObj_raw:anim_init()) then
+	gameObj_raw:anim_set("RUN", false);
+end
 
 -- Gather the GameObject's Character data and configure it
 gameObj_charData = GameObject.to_character(gameObj_raw);

@@ -41,6 +41,9 @@ void GameObj_Manager::init() {
 				.addFunction("NPC", GameObj_LuaHelper::NPC)
 			.endNamespace()
 		.endNamespace();
+
+	// Prevent re-registration
+	is_registered = true;
 }
 
 void GameObj_Manager::insert(std::shared_ptr<GameObj_Base> object) {

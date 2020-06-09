@@ -12,7 +12,7 @@ local capsuleShape = shapeFactory:createCapsule(1.5,3);
 dofile("res/scripts/gameObjsReporting.lua");
 
 -- Load the GameObject Lua debugging script
-dofile("res/scripts/gameObjsTesting.lua");
+--dofile("res/scripts/gameObjsTesting.lua");
 
 
 -- Gather the actual GameObject and configure it

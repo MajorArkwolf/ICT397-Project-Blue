@@ -61,6 +61,11 @@ void GameObj_Character::status_clear() {
 }
 
 void GameObj_Character::lua_init_register() {
+	// Prevent this being called more than once
+	static bool isRegistered = false;
+	if (isRegistered)
+		return;
+
 	// Register the Character GameObject class
 	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
 		.deriveClass<GameObj_Character, GameObj_Base>("GameObject_Character")
@@ -72,4 +77,7 @@ void GameObj_Character::lua_init_register() {
 			.addFunction("status_delete", &GameObj_Character::status_delete)
 			.addFunction("status_clear", &GameObj_Character::status_clear)
 		.endClass();
+
+	// Prevent re-registration
+	isRegistered = true;
 }

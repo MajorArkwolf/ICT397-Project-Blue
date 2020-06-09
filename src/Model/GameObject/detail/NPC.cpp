@@ -71,9 +71,17 @@ BlueEngine::ID GameObj_NPC::context() {
 }
 
 void GameObj_NPC::lua_init_register() {
+	// Prevent this being called more than once
+	static bool isRegistered = false;
+	if (isRegistered)
+		return;
+
 	// Register the NPC GameObject class
 	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
 		.deriveClass<GameObj_NPC, GameObj_Character>("GameObj_NPC")
 			.addProperty("context", &GameObj_NPC::contextID, false)
 		.endClass();
+
+	// Prevent re-registration
+	isRegistered = true;
 }
