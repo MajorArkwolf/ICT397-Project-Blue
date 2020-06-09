@@ -201,12 +201,11 @@ void Engine::SettingMenu() {
 
     ImGui::Text("Window Settings");
     if (ImGui::Button("Borderless Windowed", buttonSize)) {
-//        SDL_GetCurrentDisplayMode(0, &display);
-//        SDL_SetWindowSize(this->window.get(), display.w / 2, display.h / 2);
-//        SDL_SetWindowPosition(this->window.get(), display.w / 4, display.h / 4);
-//        SDL_SetWindowBordered(this->window.get(), SDL_FALSE);
-//        SDL_SetWindowFullscreen(this->window.get(), SDL_FALSE);
-//        SDL_SetWindowResizable(this->window.get(), SDL_TRUE);
+        lastWindowXSize = mode->width / 2;
+        lastWindowYSize = mode->height / 2;
+        glfwSetWindowMonitor(window, nullptr, 0, 0, lastWindowXSize, lastWindowYSize, mode->refreshRate);
+        this->renderer.UpdateViewPort(0, 0, lastWindowXSize, lastWindowYSize);
+        glfwSetWindowPos(window, lastWindowXSize - lastWindowXSize / 2, lastWindowYSize - lastWindowYSize / 2);
     }
     ImGui::SameLine();
     if (ImGui::Button("Windowed", buttonSize)) {
