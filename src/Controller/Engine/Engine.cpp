@@ -58,7 +58,7 @@ auto Engine::run() -> void {
         engine.gameStack.getTop()->display();
         engine.renderer.Draw();
         if (engine.gameStack.isRemoveTopFlag()) {
-            engine.gameStack.getTop().reset();
+            engine.gameStack.getTop()->unInit();
         }
         engine.gameStack.checkTop();
     }

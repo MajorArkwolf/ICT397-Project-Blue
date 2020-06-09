@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <stack>
 
 using std::vector;
 
@@ -48,7 +49,7 @@ class GameStack {
      * @param newState the state to be added onto the stack.
      */
     void AddToStack(T newState) {
-        gameStack.push_back(newState);
+        gameStack.push(newState);
     }
 
     /**
@@ -56,24 +57,8 @@ class GameStack {
      * @return
      */
     T& getTop() {
-        return gameStack.at(gameStack.size() - 1);
+        return gameStack.top();
     }
-
-    /**
-     * Peeks below the current stack.
-     * @param currentElement the element it wants to peek below.
-     * @return the element below.
-     */
-    T& peekBelow(T currentElement) {
-        size_t index = findElement(currentElement) - 1;
-        if (index > 0) {
-            return gameStack.at(index);
-        } else {
-            return nullptr;
-        }
-        
-    }
-
     /**
      * Deletes the top element
      */
@@ -93,25 +78,15 @@ class GameStack {
 
 private:
     bool removeTopFlag = false;
+    size_t size = 0;
     /// The stack itself.
-    vector<T> gameStack;
+    std::stack<T> gameStack;
 
     /*
      * Finds an element on the stack.
      */
-    size_t findElement(T currentElement) {
-        size_t index = 0;
-        for (auto &i : gameStack) {
-            ++index;
-            if (currentElement == i) {
-                break;
-            }
-        }
-        return index;
-    }
-
     void removeTop() {
-        gameStack.erase(gameStack.end() - 1);
+        gameStack.pop();
         removeTopFlag = false;
     }
 };

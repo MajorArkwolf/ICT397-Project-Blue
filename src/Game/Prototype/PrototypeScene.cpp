@@ -27,12 +27,11 @@ PrototypeScene::PrototypeScene() {
         .addFunction("getHeightAt", &getHeight);
 
     PrototypeScene::Init();
-
-
     View::Camera::LuaInit();
 }
 
 PrototypeScene::~PrototypeScene() {
+    terrain.DeInit();
     GameObj_Manager::clear();
     BlueEngine::IDTracker::getInstance().clear();
     Physics::PhysicsManager::GetInstance().clear();
@@ -201,7 +200,9 @@ auto PrototypeScene::display() -> void {
     GameObj_Manager::addAllToDraw();
 }
 
-void PrototypeScene::unInit() {}
+void PrototypeScene::unInit() {
+    terrain.DeInit();
+}
 
 void PrototypeScene::GUIStart() {
     auto &engine = BlueEngine::Engine::get();
