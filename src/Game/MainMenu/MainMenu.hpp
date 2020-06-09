@@ -17,7 +17,6 @@ public:
     void handleInputData(Controller::Input::InputData inputData, double deltaTime) override;
 
     void startGame();
-
 private:
     void handleWindowEvent();
     View::Camera camera;
