@@ -231,6 +231,7 @@ void Engine::SettingMenu() {
     if (ImGui::SliderFloat("Gamma Correction", &gammaCorrection, 0.1f, 2.f,
                            "Gamma = %.1f")) {
         //SDL_SetWindowBrightness(this->window.get(), gammaCorrection);
+        glfwSetGamma(monitor, gammaCorrection);
     }
     ImGui::End();
 }

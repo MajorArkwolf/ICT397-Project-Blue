@@ -247,6 +247,9 @@ void PrototypeScene::GUIStart() {
     guiManager.displayDevScreen(camera);
     guiManager.displayTextureManager();
     guiManager.displayTerrainSettings();
+    if (engine.showSettingsMenu) {
+        engine.SettingMenu();
+    }
 }
 
 void PrototypeScene::GUIEnd() {
