@@ -23,6 +23,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     Controller/PhysicsFacade/React/ReactCollisionBody.cpp
     Controller/PhysicsFacade/React/ReactCollisionWorld.cpp
     Controller/PhysicsManager.cpp
+    Controller/Animator.cpp
     
     # Model
     Model/Models/Mesh.cpp
@@ -31,6 +32,9 @@ target_sources(${PROJECT_NAME} PRIVATE
     Model/TerrainModel.cpp
     Model/WaterModel.cpp
     Model/TextManager.cpp
+    Model/TerrainModel.cpp
+    Model/Models/Animation.cpp
+
 
         # Game Objects
     Model/GameObject/detail/Base.cpp

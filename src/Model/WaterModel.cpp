@@ -15,17 +15,19 @@ void Model::Water::SetShader(std::shared_ptr<Shader> newWater) {
 }
 
 void Model::Water::Draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos) {
+    auto &engine = BlueEngine::Engine::get();
     auto temp = model;
     temp = glm::translate(temp, position);
     //temp = glm::scale(temp, scale);
     shader->use();
+    shader->setFloat("w_time", static_cast<float>(engine.getT()));
     shader->setMat4("w_projection", projection);
     shader->setMat4("w_view", view);
     shader->setMat4("w_model", temp);
     shader->setVec3("lightColor", 1.0f, 1.0f, 1.0f);
     shader->setVec3("lightPos", 1.0f, 400.0f, 1.0f);
     shader->setVec3("viewPos", cameraPos);
-    BlueEngine::Engine::get().renderer.DrawTerrain(VAO, textures, EBO_Size);
+    engine.renderer.DrawTerrain(VAO, textures, EBO_Size);
 }
 
 void Model::Water::SetTexture(unsigned int newTex) {

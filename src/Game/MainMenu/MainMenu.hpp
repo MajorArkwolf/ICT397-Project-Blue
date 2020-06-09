@@ -25,8 +25,6 @@ private:
     void handleWindowEvent();
     View::Camera camera;
     std::vector<MainMenuObject::StaticModel> sModels = {};
-
-    void SettingMenu();
 };
 
 

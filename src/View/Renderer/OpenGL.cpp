@@ -133,6 +133,14 @@ void View::OpenGL::SetupMesh(unsigned int &VAO, unsigned int &VBO, unsigned int 
     glEnableVertexAttribArray(4);
     glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                           reinterpret_cast<void *>(offsetof(Vertex, Bitangent)));
+    // BoneID's
+    glEnableVertexAttribArray(5);
+    glVertexAttribIPointer(5, 4, GL_INT, sizeof(Vertex),
+                           reinterpret_cast<void *>(offsetof(Vertex, BoneIDs)));
+    //Bone Weights
+    glEnableVertexAttribArray(6);
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                          reinterpret_cast<void *>(offsetof(Vertex, BoneWeight)));
 
     glBindVertexArray(0);
 }

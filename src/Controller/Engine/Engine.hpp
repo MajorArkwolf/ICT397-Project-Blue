@@ -64,6 +64,11 @@ namespace BlueEngine {
         int lastWindowYSize     = 600;
         bool firstMouse = true;
 
+        double t  = 0.0;
+        double dt = 0.01;
+        std::string glsl_version = "";
+
+
       public:
         /**
          * Deleted move constructor due to unique pointers being used.
@@ -135,10 +140,11 @@ namespace BlueEngine {
          */
         void setMouseMode(bool mode);
 
+
         void SettingMenu();
 
         ///Engine Variables
-        std::string glsl_version = "";
+
         float gammaCorrection = 1.f;
         bool showSettingsMenu = false;
 
@@ -149,5 +155,9 @@ namespace BlueEngine {
         int getLastWindowYSize() const;
 
         void setLastWindowYSize(int lastWindowYSize);
+
+        double getT() const;
+        double getDt() const;
+
     };
 }

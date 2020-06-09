@@ -3,12 +3,14 @@
 #include <string>
 #include <vector>
 
+#include <assimp/anim.h>
+#include <glm/fwd.hpp>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
 #include "Model/Models/DataTypes.hpp"
-#include "View/Renderer/Shader.hpp"
 #include "View/Renderer/DrawStruct.hpp"
+#include "View/Renderer/Shader.hpp"
 
 class Mesh {
   public:
@@ -20,6 +22,7 @@ class Mesh {
     std::vector<TextureB> textures = {};
     /// Index buffer location.
     unsigned int VAO = {};
+
     /**
      * Constructs a mesh object.
      * @param newVertices vertices used in the mesh.
@@ -34,6 +37,10 @@ class Mesh {
      * @param shader used to draw the model.
      */
     void Draw(Shader& shader);
+
+    void AddBoneData(unsigned VectorID, unsigned BoneID, float Weight);
+
+    void MoveToGPU();
 
   private:
     /// Buffer ID's.

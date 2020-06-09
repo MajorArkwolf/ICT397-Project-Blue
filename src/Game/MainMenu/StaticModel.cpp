@@ -16,7 +16,9 @@ MainMenuObject::StaticModel::~StaticModel() {
 }
 
 void MainMenuObject::StaticModel::update(double t, double dt) {
-
+    if (animator != nullptr) {
+        animator->BoneTransform(dt);
+    }
 }
 
 void MainMenuObject::StaticModel::addToDraw() {
@@ -43,8 +45,17 @@ void MainMenuObject::StaticModel::draw(const glm::mat4 &projection, const glm::m
     modelMatrix = glm::scale(modelMatrix, scale);
     modelMatrix = modelMatrix * glm::toMat4(rotation);
     shader->setMat4("model", modelMatrix);
-
+    if (animator) {
+        shader->setMat4Array("jointTransforms", animator->Transforms);
+        shader->setBool("isAnimated", true);
+    } else {
+        shader->setBool("isAnimated", false);
+    }
     // Get the resource manager and call for it to draw the model
     auto& res_manager = ResourceManager::getInstance();
     res_manager.drawModel(model, shader.get());
+}
+
+size_t MainMenuObject::StaticModel::getModel() const {
+    return model;
 }

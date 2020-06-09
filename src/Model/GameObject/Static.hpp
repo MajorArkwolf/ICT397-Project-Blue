@@ -15,7 +15,7 @@ public:
 		/*!
 		 * @brief Sets initial class contents and calls the inherited class constructor.
 		 * @param [in] model_in The identifier for a model loaded into the engine.
-		 * @param [in] physbody_in The identifier for a physics body loaded into the engine.
+		 * @param [in] physBody_in The identifier for a physics body loaded into the engine.
 		 */
 	GameObj_Static(BlueEngine::ID model_in, BlueEngine::ID physBody_in);
 

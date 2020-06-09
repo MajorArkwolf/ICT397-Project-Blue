@@ -16,11 +16,17 @@ void MainMenu::Init() {
     sModels.emplace_back("res/model/ClothedMan.gltf");
     sModels.emplace_back("res/model/ClothedMan.gltf");
     sModels.at(0).position.x = 20.0f;
-    sModels.at(0).position.z = 1.0f;
-    sModels.at(0).rotation = glm::quat(glm::vec3(0.0f, glm::radians(90.0f) ,0.0f));
-    sModels.at(1).position.x = 20.0f;
-    sModels.at(1).position.z = -1.0f;
-    sModels.at(1).rotation = glm::quat(glm::vec3(0.0f, glm::radians(-90.0f) ,0.0f));
+    sModels.at(0).position.z = 2.0f;
+    sModels.at(0).animator = std::make_shared<Controller::Animator>();
+    sModels.at(0).animator->LinkToModel(sModels.at(0).getModel());
+    sModels.at(0).animator->LoadAnimation("PUNCH");
+    sModels.at(0).rotation = glm::quat(glm::vec3(0.0f, glm::radians(180.0f) ,0.0f));
+    sModels.at(1).position.x = 20.5f;
+    sModels.at(1).position.z = -2.0f;
+    sModels.at(1).animator = std::make_shared<Controller::Animator>();
+    sModels.at(1).animator->LinkToModel(sModels.at(1).getModel());
+    sModels.at(1).animator->LoadAnimation("PUNCH");
+    sModels.at(1).rotation = glm::quat(glm::vec3(0.0f, 0.0f ,0.0f));
     camera.Pitch -= 20.0f;
     camera.updateCameraVectors();
 }
@@ -35,7 +41,9 @@ auto MainMenu::display() -> void {
 }
 
 auto MainMenu::update(double t, double dt) -> void {
-
+    for (auto & m : sModels) {
+        m.update(t, dt);
+    }
 }
 
 void MainMenu::unInit() {
@@ -70,8 +78,6 @@ void MainMenu::handleInputData(Controller::Input::InputData inputData, double de
         case BLUE_InputType::KEY_RELEASE: { // Key Release events
             switch (inputData.inputAction) {
                 case BLUE_InputAction::INPUT_MOVE_FORWARD: {
-                    //TODO: Move this somewhere useful
-                    //startGame();
                 } break;
                 case BLUE_InputAction::INPUT_MOVE_BACKWARD: {
                 } break;

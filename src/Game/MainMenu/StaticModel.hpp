@@ -4,7 +4,7 @@
 #include <glm/vec3.hpp>
 #include <glm/matrix.hpp>
 #include "View/Renderer/Shader.hpp"
-//#include "Controller/Animator"
+#include "Controller/Animator.hpp"
 
 namespace MainMenuObject {
 
@@ -18,9 +18,12 @@ namespace MainMenuObject {
         glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f);
         glm::quat rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
         glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f);
+        std::shared_ptr<Controller::Animator> animator = nullptr;
     private:
         size_t model = 0;
         std::shared_ptr<Shader> shader = nullptr;
+    public:
+        size_t getModel() const;
     };
 }
 
