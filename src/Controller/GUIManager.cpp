@@ -135,7 +135,7 @@ void GUIManager::displayQuitScreen() {
         ImGui::Text("Thank you for playing our game. Click the image to exit.");
         if (ImGui::ImageButton((void *)(intptr_t)texture.TextureID,
                                ImVec2(texture.width / 4, texture.height / 4))) {
-            engine.gameStack.popTop();
+            engine.endEngine();
         }
 
         ImGui::End();
