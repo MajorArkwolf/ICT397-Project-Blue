@@ -45,24 +45,42 @@ PrototypeScene::PrototypeScene() {
 
 PrototypeScene::~PrototypeScene() {}
 
-auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
-    double scalar = 100.0;
-    auto &engine  = BlueEngine::Engine::get();
-
+auto PrototypeScene::update(double t, double dt) -> void {
+    // Update the terrain
     terrain.Update(camera.getLocation());
 
+    // Update the GameObject animations
+    GameObj_Manager::animation_update(t, dt);
     
     // Update the Dynamic Physics world
     Physics::PhysicsManager::GetInstance().GetDynamicsWorld()->Update(dt);
 
-    //Read and call the lua update function, this allows runtime change of the script
-    if (luaL_dofile(LuaManager::getInstance().getLuaState(), "./res/scripts/luaFunctions.lua")) {
-        printf("%s\n", lua_tostring(LuaManager::getInstance().getLuaState(), -1));
+    // Read and call the lua update function, this allows runtime change of the script
+    try {
+        // Run the script, and catch and Lua errors that are thrown
+        luaL_dofile(LuaManager::getInstance().getLuaState(), "./res/scripts/luaFunctions.lua");
+    }
+    catch (luabridge::LuaException const& err) {
+        // Print out the error that had occured when running the script
+        std::cerr << "Scene Update Lua Functions Script Error: \"" << err.what() << "\"\n";
     }
     luabridge::LuaRef Update =
         luabridge::LuaRef::getGlobal(LuaManager::getInstance().getLuaState(), "Update");
+
+    // Catch if an Lua scripted update function has been provided
     if (!Update.isNil()) {
-        Update(dt);
+        // Catch any errors thrown when running the Lua scripted Update() function
+        try {
+            Update(dt);
+        }
+        catch (luabridge::LuaException const& err) {
+            // Print out the error that had occured when running the Lua function
+            std::cerr << "Scene Lua Update Function Error: \"" << err.what() << "\"\n";
+        }
+    }
+    else {
+        // Report no scripted update function has been provided
+        std::cerr << "No scripted Update() function was provided to call!\n";
     }
 
     // Call the AI System's update function
@@ -89,8 +107,16 @@ void PrototypeScene::Init() {
     FSM_Manager::lua_init();
 
     // Run the GameObject initialisation script
-    if (luaL_dofile(LuaManager::getInstance().getLuaState(), "./res/scripts/gameObjsInit.lua")) {
-        printf("%s\n", lua_tostring(LuaManager::getInstance().getLuaState(), -1));
+    try {
+        // Run the script, and catch and Lua errors that are thrown
+        if (luaL_dofile(LuaManager::getInstance().getLuaState(), "./res/scripts/gameObjsInit.lua")) {
+            printf("Scene Initialisation Script Error: ");
+            printf("\"%s\"\n", lua_tostring(LuaManager::getInstance().getLuaState(), -1));
+        }
+    }
+    catch (luabridge::LuaException const& err) {
+        // Print out the error that had occured when running the script
+        std::cerr << "Scene Initialisation Script Error: \"" << err.what() << "\"\n";
     }
 
     auto *phys_world_dynamics = phys_sys->GetDynamicsWorld();

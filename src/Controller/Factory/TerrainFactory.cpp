@@ -182,7 +182,6 @@ void Controller::TerrainFactory::GenerateWater(Model::Water &lake, const Blue::K
     for (auto &v : vertices) {
         v.normals = glm::vec3(0.0f, 1.0f, 0.0f);
     }
-    // GenerateNormals(vertices, lake.indicies);
     lake.SetTexture(waterTextureID);
     lake.SetupModel(vertices, indicies);
 }

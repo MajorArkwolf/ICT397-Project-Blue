@@ -3,6 +3,7 @@
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include <vector>
 
 using std::string;
 
@@ -111,6 +112,8 @@ class Shader {
      * @param mat to set the variable to.
      */
     void setMat4(const std::string &name, const glm::mat4 &mat) const;
+
+    void setMat4Array(const std::string &name, const std::vector<glm::mat4> &matArray) const;
 
     /**
      * Returns the ID of the given shader in use.

@@ -63,10 +63,8 @@ namespace BlueEngine {
          */
         Engine();
 
-        /// Testing values
-        float lastX     = SCR_WIDTH / 2.0f;
-        float lastY     = SCR_HEIGHT / 2.0f;
-        bool firstMouse = true;
+        double t  = 0.0;
+        double dt = 0.01;
         std::string glsl_version = "";
 
       public:
@@ -139,5 +137,8 @@ namespace BlueEngine {
          * @param mode sets the mouse mode.
          */
         void setMouseMode(bool mode);
+
+        double getT() const;
+        double getDt() const;
     };
 }

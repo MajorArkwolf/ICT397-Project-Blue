@@ -18,8 +18,8 @@ auto Engine::run() -> void {
     ResourceManager::getInstance().loadResources();
     engine.gameStack.AddToStack(std::make_shared<PrototypeScene>());
 
-    double t  = 0.0;
-    double dt = 0.01;
+    engine.t  = 0.0;
+    engine.dt = 0.01;
 
     double currentTime = glfwGetTime();
     double accumulator = 0.0;
@@ -41,13 +41,13 @@ auto Engine::run() -> void {
 
         accumulator += frameTime;
 
-        while (accumulator >= dt) {
+        while (accumulator >= engine.dt) {
             // previousState = currentState;
             glfwPollEvents();
-            engine.processInput(dt);
-            engine.gameStack.getTop()->update(t, dt);
-            t += dt;
-            accumulator -= dt;
+            engine.processInput(engine.dt);
+            engine.gameStack.getTop()->update(engine.t, engine.dt);
+            engine.t += engine.dt;
+            accumulator -= engine.dt;
         }
 
         // const double alpha = accumulator / dt;
@@ -177,4 +177,10 @@ auto Engine::getBasePath() -> void {
     // basepath        = std::string(base_path);
     // SDL_free(base_path);
     basepath = "./";
+}
+double BlueEngine::Engine::getT() const {
+    return t;
+}
+double BlueEngine::Engine::getDt() const {
+    return dt;
 }
