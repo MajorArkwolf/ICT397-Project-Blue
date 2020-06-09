@@ -48,14 +48,17 @@ void GameObj_NPC::draw(const glm::mat4& projection, const glm::mat4& view, const
 	program->setMat4("projection", projection);
 	program->setMat4("view", view);
 	program->setMat4("model", model_matrix);
-    if (animator != nullptr) {
-        //TODO: REMOVE THIS. THIS IS A HACK!!!!!!!!! MAKE THE UPDATE FUNCTION WORK
-        animator->BoneTransform(BlueEngine::Engine::get().getDt());
-        program->setBool("isAnimated", true);
-        program->setMat4Array("jointTransforms", animator->Transforms);
-    } else {
-	    program->setBool("isAnimated", false);
-    }
+
+	// Apply additional shader uniform variables for the GameObject's animation
+	if (animator != nullptr) {
+		// Pass the animation critical data to the shader program
+		program->setBool("isAnimated", true);
+		program->setMat4Array("jointTransforms", animator->Transforms);
+	}
+	else {
+		// Indicate to the shader program that the GameObject model doesn't need to be updated
+		program->setBool("isAnimated", false);
+	}
 
 	// Get the resource manager and call for it to draw the model
 	auto& res_manager = ResourceManager::getInstance();
@@ -73,7 +76,4 @@ void GameObj_NPC::lua_init_register() {
 		.deriveClass<GameObj_NPC, GameObj_Character>("GameObj_NPC")
 			.addProperty("context", &GameObj_NPC::contextID, false)
 		.endClass();
-}
-void GameObj_NPC::update(double t, double dt) {
-    GameObj_Character::update(t, dt);
 }

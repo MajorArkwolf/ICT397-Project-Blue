@@ -48,6 +48,17 @@ void GameObj_Player::draw(const glm::mat4& projection, const glm::mat4& view, co
 	program->setMat4("view", view);
 	program->setMat4("model", model_matrix);
 
+	// Apply additional shader uniform variables for the GameObject's animation
+	if (animator != nullptr) {
+		// Pass the animation critical data to the shader program
+		program->setBool("isAnimated", true);
+		program->setMat4Array("jointTransforms", animator->Transforms);
+	}
+	else {
+		// Indicate to the shader program that the GameObject model doesn't need to be updated
+		program->setBool("isAnimated", false);
+	}
+
 	// Get the resource manager and call for it to draw the model
 	auto& res_manager = ResourceManager::getInstance();
 	res_manager.drawModel(model, program.get());

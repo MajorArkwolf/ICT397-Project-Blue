@@ -34,8 +34,6 @@ public:
 		 */
 	void draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos);
 
-    void update(double t, double dt);
-
 		/*!
 		 * @brief Returns a read-only copy of the NPC's AI context.
 		 * @return The identifier for the NPC's FSM.

@@ -164,9 +164,3 @@ GameObj_NPC* GameObj_Manager::lua_to_npc(GameObj_Character* raw_in) {
 
 	/// Static Initialisation
 std::map<BlueEngine::ID, std::shared_ptr<GameObj_Base>> GameObj_Manager::managed_objs = std::map<BlueEngine::ID, std::shared_ptr<GameObj_Base>>();
-
-void GameObj_Manager::update(double t, double dt) {
-    for (auto &o : managed_objs) {
-        o.second->update(t, dt);
-    }
-}
