@@ -141,7 +141,9 @@ void View::OpenGL::ResizeWindow() {
     auto &engine = BlueEngine::Engine::get();
     int width = 0, height = 0;
     glfwGetWindowSize(engine.window, &width, &height);
-    glViewport(0, 0, width, height);
+    engine.setLastWindowXSize(width);
+    engine.setLastWindowYSize(height);
+    UpdateViewPort(0, 0, width, height);
 }
 
 void View::OpenGL::AddToQue(View::Data::DrawItem& drawItem) {
@@ -262,4 +264,8 @@ bool View::OpenGL::windowMinimized() {
     int width = 0, height = 0;
     glfwGetWindowSize(engine.window, &width, &height);
     return width == 0 || height == 0;
+}
+
+void View::OpenGL::UpdateViewPort(int bl, int br, int tl, int tr) {
+    glViewport(bl, br, tl, tr);
 }

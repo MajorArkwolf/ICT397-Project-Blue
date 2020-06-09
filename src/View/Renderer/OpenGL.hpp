@@ -55,7 +55,7 @@ namespace View {
         /**
          * The Resize window function for OpenGL
          */
-        static void ResizeWindow();
+        void ResizeWindow();
         /**
          * Load a texture from file and store it.
          * @param path The path to the image.
@@ -98,6 +98,7 @@ namespace View {
         void DrawTerrain(unsigned int &VAO, const std::vector<unsigned int> &textures,
                          const unsigned int& ebo_size);
 
+        void UpdateViewPort(int bl, int br, int tl, int tr) override;
 
     private:
         /// Decides if the renderer should be in wire frame mode or not.

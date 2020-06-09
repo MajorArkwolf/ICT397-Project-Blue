@@ -1,18 +1,8 @@
 #include "PrototypeScene.hpp"
-
-#include <glm/glm.hpp>
-
-#include "Controller/Engine/Engine.hpp"
-#include "Controller/Engine/LuaManager.hpp"
 #include "Controller/Factory/GameAssetFactory.hpp"
 #include "Controller/PhysicsManager.hpp"
-#include "Controller/TextureManager.hpp"
 #include "Model/GameObject/Manager.hpp"
-#include "Model/GameObject/Types.hpp"
-#include "Model/Models/Model.hpp"
-#include "Model/Models/ModelManager.hpp"
-#include "View/Renderer/OpenGL.hpp"
-#include "View/Renderer/Renderer.hpp"
+
 
 using Controller::Input::BLUE_InputAction;
 using Controller::Input::BLUE_InputType;
@@ -42,7 +32,11 @@ PrototypeScene::PrototypeScene() {
     View::Camera::LuaInit();
 }
 
-PrototypeScene::~PrototypeScene() {}
+PrototypeScene::~PrototypeScene() {
+    GameObj_Manager::clear();
+    BlueEngine::IDTracker::getInstance().clear();
+    Physics::PhysicsManager::GetInstance().clear();
+}
 
 auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
     double scalar = 100.0;
@@ -115,7 +109,8 @@ void PrototypeScene::Init() {
 }
 
 void PrototypeScene::handleWindowEvent() {
-    View::OpenGL::ResizeWindow();
+    auto &engine = BlueEngine::Engine::get();
+    engine.renderer.ResizeWindow();
 }
 
 void PrototypeScene::handleInputData(Controller::Input::InputData inputData, double deltaTime) {

@@ -16,10 +16,6 @@
 #include "Controller/PhysicsFacade/React/ReactDynamicsWorld.hpp"
 
 #include "View/Renderer/OpenGL.hpp"
-
-constexpr unsigned int SCR_WIDTH  = 800;
-constexpr unsigned int SCR_HEIGHT = 600;
-
 namespace BlueEngine {
 
     /**
@@ -64,10 +60,9 @@ namespace BlueEngine {
         Engine();
 
         /// Testing values
-        float lastX     = SCR_WIDTH / 2.0f;
-        float lastY     = SCR_HEIGHT / 2.0f;
+        int lastWindowXSize     = 800;
+        int lastWindowYSize     = 600;
         bool firstMouse = true;
-        std::string glsl_version = "";
 
       public:
         /**
@@ -139,5 +134,20 @@ namespace BlueEngine {
          * @param mode sets the mouse mode.
          */
         void setMouseMode(bool mode);
+
+        void SettingMenu();
+
+        ///Engine Variables
+        std::string glsl_version = "";
+        float gammaCorrection = 1.f;
+        bool showSettingsMenu = false;
+
+        int getLastWindowXSize() const;
+
+        void setLastWindowXSize(int lastWindowXSize);
+
+        int getLastWindowYSize() const;
+
+        void setLastWindowYSize(int lastWindowYSize);
     };
 }

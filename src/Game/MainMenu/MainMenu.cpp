@@ -43,7 +43,8 @@ void MainMenu::unInit() {
 }
 
 void MainMenu::handleWindowEvent() {
-    View::OpenGL::ResizeWindow();
+    auto &engine = BlueEngine::Engine::get();
+    engine.renderer.ResizeWindow();
 }
 
 void MainMenu::handleInputData(Controller::Input::InputData inputData, double deltaTime) {
@@ -138,11 +139,16 @@ void MainMenu::GUIStart() {
 
     ImGui::Text("Other options");
     if (ImGui::Button("Settings", ImVec2(285, 40))) {
-        //stonk.showSettingsMenu = stonk.showSettingsMenu ? false : true;
+        engine.showSettingsMenu = !engine.showSettingsMenu;
     }
     if (ImGui::Button("Quit", ImVec2(285, 40))) {
         engine.endEngine();
     }
+
+    if (engine.showSettingsMenu) {
+        engine.SettingMenu();
+    }
+
     ImGui::End();
 }
 

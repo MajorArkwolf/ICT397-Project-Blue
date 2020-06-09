@@ -88,7 +88,9 @@ Engine::Engine(){
     // glfw window creation
     // --------------------
     const GLFWvidmode * mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-    window = glfwCreateWindow(mode->width / 2, mode->height / 2, "Project Blue", nullptr, nullptr);
+    lastWindowXSize = mode->width / 2;
+    lastWindowYSize = mode->height / 2;
+    window = glfwCreateWindow(lastWindowXSize, lastWindowYSize, "Project Blue", nullptr, nullptr);
     if (window == nullptr) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
@@ -180,4 +182,68 @@ auto Engine::getBasePath() -> void {
     // basepath        = std::string(base_path);
     // SDL_free(base_path);
     basepath = "./";
+}
+
+void Engine::SettingMenu() {
+    ImVec2 buttonSize(150, 30);
+
+    GLFWmonitor *monitor = glfwGetPrimaryMonitor();
+    const GLFWvidmode *mode = glfwGetVideoMode(monitor);
+    //auto &window = BlueEngine::Engine::get().window;
+
+    ImGui::SetNextWindowFocus();
+    ImGui::SetNextWindowSize(ImVec2(500, 500), 1);
+    ImGui::Begin("Settings", &showSettingsMenu,
+                 ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
+
+    ImGui::Text("Window Settings");
+    if (ImGui::Button("Borderless Windowed", buttonSize)) {
+//        SDL_GetCurrentDisplayMode(0, &display);
+//        SDL_SetWindowSize(this->window.get(), display.w / 2, display.h / 2);
+//        SDL_SetWindowPosition(this->window.get(), display.w / 4, display.h / 4);
+//        SDL_SetWindowBordered(this->window.get(), SDL_FALSE);
+//        SDL_SetWindowFullscreen(this->window.get(), SDL_FALSE);
+//        SDL_SetWindowResizable(this->window.get(), SDL_TRUE);
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Windowed", buttonSize)) {
+        lastWindowXSize = mode->width / 2;
+        lastWindowYSize = mode->height / 2;
+        glfwSetWindowMonitor(window, nullptr, 0, 0, lastWindowXSize, lastWindowYSize, mode->refreshRate);
+        this->renderer.UpdateViewPort(0, 0, lastWindowXSize, lastWindowYSize);
+        glfwSetWindowPos(window, lastWindowXSize - lastWindowXSize / 2, lastWindowYSize - lastWindowYSize / 2);
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Borderless Fullscreen", buttonSize)) {
+        glfwSetWindowMonitor(window, nullptr, 0, 0, mode->width, mode->height, mode->refreshRate);
+        this->renderer.UpdateViewPort(0, 0, mode->width, mode->height);
+    }
+
+    if (ImGui::Button("Fullscreen", buttonSize)) {
+        glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+        this->renderer.UpdateViewPort(0, 0, mode->width, mode->height);
+    }
+    ImGui::Separator();
+    ImGui::Text("Brightness");
+    if (ImGui::SliderFloat("Gamma Correction", &gammaCorrection, 0.1f, 2.f,
+                           "Gamma = %.1f")) {
+        //SDL_SetWindowBrightness(this->window.get(), gammaCorrection);
+    }
+    ImGui::End();
+}
+
+int BlueEngine::Engine::getLastWindowXSize() const {
+    return lastWindowXSize;
+}
+
+void BlueEngine::Engine::setLastWindowXSize(int lastWindowXSize) {
+    Engine::lastWindowXSize = lastWindowXSize;
+}
+
+int BlueEngine::Engine::getLastWindowYSize() const {
+    return lastWindowYSize;
+}
+
+void BlueEngine::Engine::setLastWindowYSize(int lastWindowYSize) {
+    Engine::lastWindowYSize = lastWindowYSize;
 }

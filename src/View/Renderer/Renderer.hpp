@@ -20,5 +20,14 @@ namespace View {
          * The default toggle wire frame interface.
          */
         virtual void ToggleWireFrame() = 0;
+
+        /**
+         * Updates the view port
+         * @param bl Bottom left
+         * @param br Bottom right
+         * @param tl Top Left
+         * @param tr Top Right
+         */
+        virtual void UpdateViewPort(int bl, int br, int tl, int tr) = 0;
     };
 }
