@@ -21,6 +21,7 @@ public:
     void GUIStart() override;
 
     void GUIEnd() override;
+
 private:
     void handleWindowEvent();
     View::Camera camera;

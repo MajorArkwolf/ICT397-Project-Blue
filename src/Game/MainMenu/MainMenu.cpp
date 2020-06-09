@@ -6,7 +6,10 @@
 using Controller::Input::BLUE_InputAction;
 using Controller::Input::BLUE_InputType;
 
-MainMenu::MainMenu() {}
+MainMenu::MainMenu() {
+    auto &window = BlueEngine::Engine::get().window;
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+}
 
 MainMenu::~MainMenu() {}
 

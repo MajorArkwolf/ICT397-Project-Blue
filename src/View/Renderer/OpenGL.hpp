@@ -43,6 +43,11 @@ namespace View {
          */
         void AddToQue(View::Data::DrawItem& drawItem);
         /**
+ * Adds an item to the draw que.
+ * @param drawItem Passes DrawItem into the que to be used for rendering purposes.
+ */
+        void AddToQueTransparent(View::Data::DrawItem& drawItem);
+        /**
          * Setups a general mesh for the renderer in the OpenGL Context.
          * @param VAO buffer identity
          * @param VBO buffer identity
@@ -105,6 +110,7 @@ namespace View {
         bool wireFrame = false;
         /// DrawQue of objects that need to be rendered by the renderer.
         std::vector<View::Data::DrawItem> drawQue = {};
+        std::vector<View::Data::DrawItem> drawQueTransparent = {};
         /// The active camera on the draw pass.
         Camera *camera = nullptr;
         /// The sky box for the scene.

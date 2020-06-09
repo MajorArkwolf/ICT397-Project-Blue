@@ -28,6 +28,8 @@ PrototypeScene::PrototypeScene() {
 
     PrototypeScene::Init();
     View::Camera::LuaInit();
+    auto &window = BlueEngine::Engine::get().window;
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
 PrototypeScene::~PrototypeScene() {

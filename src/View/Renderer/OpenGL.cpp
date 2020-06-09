@@ -31,12 +31,16 @@ void View::OpenGL::Draw() {
         for (auto &m : drawQue) {
             m.drawPointer(projection, view, camera->Position);
         }
+        for (auto &m : drawQueTransparent) {
+            m.drawPointer(projection, view, camera->Position);
+        }
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         skyBox.draw(skyboxView, projection);
         engine.gameStack.getTop()->GUIEnd();
     }
     glfwSwapBuffers(engine.window);
     drawQue.clear();
+    drawQueTransparent.clear();
 }
 void View::OpenGL::Init() {
     int width  = 0;
@@ -214,7 +218,7 @@ void View::OpenGL::sortDrawDistance() {
     for (auto &e : drawQue) {
         e.distance = glm::distance(e.pos, cpos);
     }
-    sort(drawQue.begin(), drawQue.end(),
+    sort(drawQueTransparent.begin(), drawQueTransparent.end(),
          [](const View::Data::DrawItem& lhs, const View::Data::DrawItem& rhs)->bool {
              return lhs.distance > rhs.distance;
          });
@@ -276,4 +280,8 @@ bool View::OpenGL::windowMinimized() {
 
 void View::OpenGL::UpdateViewPort(int bl, int br, int tl, int tr) {
     glViewport(bl, br, tl, tr);
+}
+
+void View::OpenGL::AddToQueTransparent(View::Data::DrawItem &drawItem) {
+    drawQueTransparent.push_back(drawItem);
 }

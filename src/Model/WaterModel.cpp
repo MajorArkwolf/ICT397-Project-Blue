@@ -15,6 +15,7 @@ void Model::Water::SetShader(std::shared_ptr<Shader> newWater) {
 }
 
 void Model::Water::Draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos) {
+    glDisable(GL_CULL_FACE);
     auto &engine = BlueEngine::Engine::get();
     auto temp = model;
     temp = glm::translate(temp, position);
@@ -28,6 +29,7 @@ void Model::Water::Draw(const glm::mat4& projection, const glm::mat4& view, cons
     shader->setVec3("lightPos", 1.0f, 400.0f, 1.0f);
     shader->setVec3("viewPos", cameraPos);
     engine.renderer.DrawTerrain(VAO, textures, EBO_Size);
+    glEnable(GL_CULL_FACE);
 }
 
 void Model::Water::SetTexture(unsigned int newTex) {
@@ -50,5 +52,5 @@ void Model::Water::AddToDraw() {
     di.pos = position;
     di.pos.x += chunkSize / 2.0f;
     di.pos.z += chunkSize / 2.0f;
-    renderer.AddToQue(di);
+    renderer.AddToQueTransparent(di);
 }
