@@ -6,22 +6,23 @@
 using Controller::Input::BLUE_InputAction;
 using Controller::Input::BLUE_InputType;
 
-MainMenu::MainMenu() {
-    camera = View::Camera();
-    camera.Position = glm::vec3(0.0f, 0.0f, 0.0f);
-}
+MainMenu::MainMenu() {}
 
 MainMenu::~MainMenu() {}
 
 void MainMenu::Init() {
-    sModels.emplace_back("res/model/AnimatedHuman.gltf");
-    sModels.emplace_back("res/model/AnimatedHuman.gltf");
-    sModels.at(0).position.x = 15.0f;
+    camera = View::Camera();
+    camera.Position = glm::vec3(0.0f, 10.0f, 0.0f);
+    sModels.emplace_back("res/model/ClothedMan.gltf");
+    sModels.emplace_back("res/model/ClothedMan.gltf");
+    sModels.at(0).position.x = 20.0f;
     sModels.at(0).position.z = 1.0f;
     sModels.at(0).rotation = glm::quat(glm::vec3(0.0f, glm::radians(90.0f) ,0.0f));
-    sModels.at(1).position.x = 15.0f;
+    sModels.at(1).position.x = 20.0f;
     sModels.at(1).position.z = -1.0f;
     sModels.at(1).rotation = glm::quat(glm::vec3(0.0f, glm::radians(-90.0f) ,0.0f));
+    camera.Pitch -= 20.0f;
+    camera.updateCameraVectors();
 }
 
 auto MainMenu::display() -> void {
@@ -69,7 +70,7 @@ void MainMenu::handleInputData(Controller::Input::InputData inputData, double de
             switch (inputData.inputAction) {
                 case BLUE_InputAction::INPUT_MOVE_FORWARD: {
                     //TODO: Move this somewhere useful
-                    startGame();
+                    //startGame();
                 } break;
                 case BLUE_InputAction::INPUT_MOVE_BACKWARD: {
                 } break;
@@ -116,4 +117,35 @@ void MainMenu::handleInputData(Controller::Input::InputData inputData, double de
 void MainMenu::startGame() {
     auto &engine = BlueEngine::Engine::get();
     engine.gameStack.AddToStack(std::make_shared<PrototypeScene>());
+}
+
+void MainMenu::GUIStart() {
+    auto &engine  = BlueEngine::Engine::get();
+    GUIManager::startWindowFrame();
+
+    ImGui::SetNextWindowSize(ImVec2(300, 500), 1);
+    //ImGui::SetNextWindowPosCenter(1);
+
+    ImGui::Begin("Menu", nullptr,
+                 ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
+    ImGui::Separator();
+    ImGui::SetNextItemWidth(ImGui::GetWindowWidth());
+    ImGui::Text("Project Blue: Run and Gun");
+    if (ImGui::Button("Play Game", ImVec2(285, 40))) {
+        startGame();
+    }
+    ImGui::Separator();
+
+    ImGui::Text("Other options");
+    if (ImGui::Button("Settings", ImVec2(285, 40))) {
+        //stonk.showSettingsMenu = stonk.showSettingsMenu ? false : true;
+    }
+    if (ImGui::Button("Quit", ImVec2(285, 40))) {
+        engine.endEngine();
+    }
+    ImGui::End();
+}
+
+void MainMenu::GUIEnd() {
+    GUIManager::endWindowFrame();
 }

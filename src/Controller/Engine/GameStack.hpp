@@ -74,7 +74,21 @@ class GameStack {
         
     }
 
+    /**
+     * Deletes the top element
+     */
+    void popTop() {
+        removeTopFlag = true;
+    }
+
+    void checkTop() {
+        if (removeTopFlag) {
+            removeTop();
+        }
+    }
+
   private:
+    bool removeTopFlag = false;
     /// The stack itself.
     vector<T> gameStack;
 
@@ -90,5 +104,10 @@ class GameStack {
             }
         }
         return index;
+    }
+
+    void removeTop() {
+        gameStack.erase(gameStack.end() - 1);
+        removeTopFlag = false;
     }
 };

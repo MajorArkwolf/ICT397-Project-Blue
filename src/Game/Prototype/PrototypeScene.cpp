@@ -207,3 +207,22 @@ auto PrototypeScene::display() -> void {
 }
 
 void PrototypeScene::unInit() {}
+
+void PrototypeScene::GUIStart() {
+    auto &engine = BlueEngine::Engine::get();
+    auto& guiManager = engine.getGuiManager();
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    GUIManager::startWindowFrame();
+    guiManager.displayInputRebindWindow();
+    guiManager.displayEscapeMenu();
+    guiManager.displayInstructionMenu();
+    guiManager.displayQuitScreen();
+    guiManager.displayDevScreen(camera);
+    guiManager.displayTextureManager();
+    guiManager.displayTerrainSettings();
+}
+
+void PrototypeScene::GUIEnd() {
+    GUIManager::endWindowFrame();
+}

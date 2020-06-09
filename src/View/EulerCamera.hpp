@@ -98,12 +98,13 @@ namespace View {
 
         void ProcessKeyboardInput(bool forward, bool backward, bool left, bool right, double deltaTime);
         static void LuaInit();
-
-    private:
         /**
          * Calculates the front vector from the Camera's (updated) Euler Angles
          */
         void updateCameraVectors();
+
+    private:
+
 
     };
 }

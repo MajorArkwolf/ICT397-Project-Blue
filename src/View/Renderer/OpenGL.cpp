@@ -11,17 +11,7 @@ void View::OpenGL::Draw() {
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        auto& guiManager = engine.getGuiManager();
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        GUIManager::startWindowFrame();
-        guiManager.displayInputRebindWindow();
-        guiManager.displayEscapeMenu();
-        guiManager.displayInstructionMenu();
-        guiManager.displayQuitScreen();
-        guiManager.displayDevScreen(*camera);
-        guiManager.displayTextureManager();
-        guiManager.displayTerrainSettings();
+        engine.gameStack.getTop()->GUIStart();
         int width = 0, height = 0;
         glfwGetWindowSize(engine.window, &width, &height);
 
@@ -43,8 +33,8 @@ void View::OpenGL::Draw() {
         }
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         skyBox.draw(skyboxView, projection);
+        engine.gameStack.getTop()->GUIEnd();
     }
-    GUIManager::endWindowFrame();
     glfwSwapBuffers(engine.window);
     drawQue.clear();
 }

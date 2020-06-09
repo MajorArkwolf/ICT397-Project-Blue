@@ -57,6 +57,7 @@ auto Engine::run() -> void {
 
         engine.gameStack.getTop()->display();
         engine.renderer.Draw();
+        engine.gameStack.checkTop();
     }
     glfwDestroyWindow(engine.window);
 }
