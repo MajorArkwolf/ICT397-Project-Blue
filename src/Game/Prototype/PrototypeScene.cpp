@@ -47,9 +47,6 @@ auto PrototypeScene::update(double t, double dt) -> void {
     // Update the GameObject animations
     //GameObj_Manager::animation_update(t, dt);
 
-    // Update the Dynamic Physics world
-    Physics::PhysicsManager::GetInstance().GetDynamicsWorld()->Update(dt);
-
     // Read and call the lua update function, this allows runtime change of the script
     try {
         // Run the script, and catch and Lua errors that are thrown
@@ -80,6 +77,9 @@ auto PrototypeScene::update(double t, double dt) -> void {
 
     // Call the AI System's update function
     FSM_Manager::update(t, dt);
+
+    // Update the Dynamic Physics world
+    Physics::PhysicsManager::GetInstance().GetDynamicsWorld()->Update(dt);
 
     // Sync the GameObject physics bodies
     GameObj_Manager::syncPhys();
