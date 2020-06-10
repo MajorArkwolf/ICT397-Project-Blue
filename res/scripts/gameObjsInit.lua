@@ -27,8 +27,12 @@ gameObj_charData:status_assign("MoveRight", 0);
 gameObj_charData:status_assign("Sliding", 0);
 gameObj_charData:status_assign("FreeCam", 0);
 
--- Generate 20 NPCs
-for i = 0, 20, 1 do
+-- Ensure randomness by setting the seed relative to the current time and removing any starting bias
+math.randomseed(os.time());
+math.random();
+
+-- Generate 30 NPCs
+for i = 0, 30, 1 do
 	-- Create a GameObject and store the returned identifier
 	gameObj_id = GameObject.create(GameObject.Types.NPC());
 
@@ -42,17 +46,22 @@ for i = 0, 20, 1 do
 	gameObj_raw:anim_init();
 	gameObj_raw.scale = vector(0.5, 0.5, 0.5);
 
-	-- Configure the position
-	local position = vector(5,200,20);
+	-- Configure the NPC to be in a random position surrounding the player's spawning location
+	local position = vector(math.random(-150, 150), 0, math.random(-150, 150));
+	position.y = getHeightAt(position.x, position.z);
 	dynamicsWorld:GetRigidBody(gameObj_raw.physBody):SetPosition(position);
 
-	-- Set the rigid body's collision shape
+	-- Set the NPC's rigid body collision shape and stop the NPC from being affected by gravity
 	local rigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(gameObj_raw.physBody));
 	rigidBody:AddCollisionShape(shapeFactory:GetShape(sphereShape), vector(0,0,0), quaternion(1,0,0,0), 1);
+	rigidBody:SetSleeping(true);
 
-	-- Set up the initial AI FSM State
+	-- Set up the NPC's initial AI FSM State
 	local npc_ai = FSM.get(gameObj_npc.context);
 	npc_ai:stateLocal_setRegular(FSM.State.Wander());
+
+	-- Make the NPC have a randomly variant offset of time before they start to wander
+	gameObj_char:status_assign("Wander_ActionTime", math.random(-8.0, 2.0));
 end
 
 -- Syncronise the physics of the GameObjects after configuring them
