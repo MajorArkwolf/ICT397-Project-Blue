@@ -52,4 +52,7 @@ class BaseState {
 
     View::Camera camera;
 
+    virtual void GUIStart() = 0;
+    virtual void GUIEnd() = 0;
+
 };
