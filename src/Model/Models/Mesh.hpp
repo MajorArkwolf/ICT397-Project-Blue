@@ -38,8 +38,17 @@ class Mesh {
      */
     void Draw(Shader& shader);
 
+    /**
+     * Add bone data to the the given vertix.
+     * @param VectorID vertex to add bone data too
+     * @param BoneID the bone id
+     * @param Weight the weight of the given bone
+     */
     void AddBoneData(unsigned VectorID, unsigned BoneID, float Weight);
 
+    /**
+     * Move the data onto the GPU
+     */
     void MoveToGPU();
 
   private:

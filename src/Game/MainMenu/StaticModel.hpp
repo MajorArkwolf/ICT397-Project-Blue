@@ -7,7 +7,10 @@
 #include "Controller/Animator.hpp"
 
 namespace MainMenuObject {
-
+    /**
+     * This class is only used for demonstration purposes, documentation will not be provided as it should only
+     * be used for demonstration purposes only.
+     */
     class StaticModel {
     public:
         explicit StaticModel(const std::string& name);
