@@ -33,10 +33,10 @@ PrototypeScene::PrototypeScene() {
 }
 
 PrototypeScene::~PrototypeScene() {
-    terrain.DeInit();
+    /*terrain.DeInit();
     GameObj_Manager::clear();
     BlueEngine::IDTracker::getInstance().clear();
-    Physics::PhysicsManager::GetInstance().clear();
+    Physics::PhysicsManager::GetInstance().clear();*/
 }
 
 auto PrototypeScene::update(double t, double dt) -> void {
@@ -231,7 +231,7 @@ auto PrototypeScene::display() -> void {
 }
 
 void PrototypeScene::unInit() {
-    terrain.DeInit();
+    //terrain.DeInit();
 }
 
 void PrototypeScene::GUIStart() {
