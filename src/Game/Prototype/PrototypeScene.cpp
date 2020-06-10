@@ -1,19 +1,8 @@
 #include "PrototypeScene.hpp"
-
-#include <glm/glm.hpp>
-
-#include "Controller/Engine/Engine.hpp"
-#include "Controller/Engine/LuaManager.hpp"
 #include "Controller/Factory/GameAssetFactory.hpp"
 #include "Controller/PhysicsManager.hpp"
-#include "Controller/TextureManager.hpp"
 #include "Controller/AI/Manager.hpp"
 #include "Model/GameObject/Manager.hpp"
-#include "Model/GameObject/Types.hpp"
-#include "Model/Models/Model.hpp"
-#include "Model/Models/ModelManager.hpp"
-#include "View/Renderer/OpenGL.hpp"
-#include "View/Renderer/Renderer.hpp"
 
 using Controller::Input::BLUE_InputAction;
 using Controller::Input::BLUE_InputType;
@@ -38,12 +27,17 @@ PrototypeScene::PrototypeScene() {
         .addFunction("getHeightAt", &getHeight);
 
     PrototypeScene::Init();
-
-
     View::Camera::LuaInit();
+    auto &window = BlueEngine::Engine::get().window;
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
-PrototypeScene::~PrototypeScene() {}
+PrototypeScene::~PrototypeScene() {
+    /*terrain.DeInit();
+    GameObj_Manager::clear();
+    BlueEngine::IDTracker::getInstance().clear();
+    Physics::PhysicsManager::GetInstance().clear();*/
+}
 
 auto PrototypeScene::update(double t, double dt) -> void {
     // Update the terrain
@@ -150,7 +144,8 @@ void PrototypeScene::Init() {
 }
 
 void PrototypeScene::handleWindowEvent() {
-    View::OpenGL::ResizeWindow();
+    auto &engine = BlueEngine::Engine::get();
+    engine.renderer.ResizeWindow();
 }
 
 void PrototypeScene::handleInputData(Controller::Input::InputData inputData, double deltaTime) {
@@ -241,4 +236,28 @@ auto PrototypeScene::display() -> void {
     GameObj_Manager::addAllToDraw();
 }
 
-void PrototypeScene::unInit() {}
+void PrototypeScene::unInit() {
+    //terrain.DeInit();
+}
+
+void PrototypeScene::GUIStart() {
+    auto &engine = BlueEngine::Engine::get();
+    auto& guiManager = engine.getGuiManager();
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    GUIManager::startWindowFrame();
+    guiManager.displayInputRebindWindow();
+    guiManager.displayEscapeMenu();
+    guiManager.displayInstructionMenu();
+    guiManager.displayQuitScreen();
+    guiManager.displayDevScreen(camera);
+    guiManager.displayTextureManager();
+    guiManager.displayTerrainSettings();
+    if (engine.showSettingsMenu) {
+        engine.SettingMenu();
+    }
+}
+
+void PrototypeScene::GUIEnd() {
+    GUIManager::endWindowFrame();
+}

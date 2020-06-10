@@ -68,6 +68,8 @@ target_sources(${PROJECT_NAME} PRIVATE
 
     # Game
     Game/Prototype/PrototypeScene.cpp
+    Game/MainMenu/MainMenu.cpp
+    Game/MainMenu/StaticModel.cpp
 
 
 

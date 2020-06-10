@@ -231,4 +231,14 @@ Physics::ReactCollisionBody *Physics::PhysicsManager::getReactCollision(Collisio
 
 Physics::PhysicsManager::PhysicsManager() {
     LuaInit();
+
+}
+
+void Physics::PhysicsManager::clear() {
+//    InitialiseCollisionWorld();
+//    InitialiseDynamicsWorld();
+//    InitialiseShapeFactory();
+    dynamicsWorld.reset();
+    shapeFactory.reset();
+    collisionWorld.reset();
 }

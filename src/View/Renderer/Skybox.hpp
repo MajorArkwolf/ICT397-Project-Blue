@@ -89,5 +89,7 @@ namespace View {
          * @return the buffer object id.
          */
         unsigned int loadCubemap(vector<string> faces);
+
+
     };
 }
