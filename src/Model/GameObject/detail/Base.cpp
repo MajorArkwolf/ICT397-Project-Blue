@@ -70,11 +70,7 @@ bool GameObj_Base::animator_add() {
 		return false;
 
 	// Check if the model is animated
-<<<<<<< HEAD
 	if (modelObj->isAnimated && animator == nullptr) {
-=======
-	if ((modelObj->isAnimated) && (animator == nullptr)) {
->>>>>>> e993114870607641424455fef70778b4492af7ea
 		// Store a new animator into the GameObject, and link it to the model
 		animator = std::make_shared<Controller::Animator>();
 		animator->LinkToModel(model);
