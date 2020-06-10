@@ -8,7 +8,6 @@ Update = function(deltaTime)
 	 local camera = getCamera();
 	 local position = playerRigidBody:GetPosition();
 
-
 	 if(gameObj_charData:status_get("FreeCam") == 0) then
 		  camera.Position = position;
 	 else 
@@ -26,6 +25,7 @@ Update = function(deltaTime)
 			catchPlayer();
 		 end
 	 end
+	 UpdateOxygen();
 	
 end
 
@@ -38,7 +38,7 @@ catchPlayer = function()
 	local gameObj_charData = GameObject.to_character(player);
 
 	if(gameObj_charData:status_get("Sliding") == 0) then
-		if(height + 1.2 > currentPos.y) then
+		if(height + 1.3 > currentPos.y) then
 			gameObj_charData:status_assign("UseDynamics", 0)
 		end
 	end
@@ -66,7 +66,7 @@ createStatic = function (position)
 	collisionWorld = physManager:GetCollisionWorld();
 	gameObj_id = GameObject.create(GameObject.Types.Static());
 	gameObj_raw = GameObject.get(gameObj_id);
-	gameObj_raw.model = resources.getModel("res/model/vikings/SM_Env_Tree_Pine_Large_01.fbx");
+	gameObj_raw.model = resources.getModel("res/model/ball.fbx");
 	dynamicsWorld:GetRigidBody(gameObj_raw.physBody):SetPosition(position);
 	rigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(gameObj_raw.physBody));
 	rigidBody:AddCollisionShape(shapeFactory:GetShape(0), vector(0,0,0), quaternion(1,0,0,0), 5);
@@ -99,7 +99,13 @@ movePlayerTo = function(direction, deltaTime)
 	move = math.normaliseVector(move);
 	move = math.vectorMultiplyScalar(move, movementMult );
 	local pos = math.vectorAdd(move, currentPos);
-	playerRigidBody:SetPosition(pos);
+	playerCollisionBody:SetPosition(pos);
+
+	if(collisionWorld:TestOverlap(BoundingWallID, player.physBody) == true) then
+		playerRigidBody:SetPosition(currentPos);
+	 else
+		playerRigidBody:SetPosition(pos);
+	 end
 end
 
 --Moves the player based on current type of set movement
@@ -217,7 +223,8 @@ handleInput = function(inputData, deltaTime)
 	--Keyboard button press
 	elseif(inputData.inputType == "KeyPress") then
 			if(inputData.action == "Jump") then
-				if(gameObj_charData:status_get("UseDynamics") == 0) then
+
+				if(gameObj_charData:status_get("UseDynamics") == 0 or playerRigidBody:GetPosition().y < 105) then
 					gameObj_charData:status_assign("UseDynamics",1);
 					playerRigidBody:SetSleeping(false);
 					local scalar = 6000;
@@ -303,5 +310,55 @@ handleInput = function(inputData, deltaTime)
 	
 end
 
+UpdateOxygen = function()
+	local gameObj_charData = GameObject.to_character(player);
+	local oxygenLevel = gameObj_charData:status_get("Oxygen");
+	local playerRigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(player.physBody));
+	if(playerRigidBody:GetPosition().y < 100) then
+		gameObj_charData:status_assign("Oxygen", oxygenLevel - 1);
+	else
+		gameObj_charData:status_assign("Oxygen", 1000);
+	end
+	if (oxygenLevel < 0) then
+		local health = gameObj_charData:status_get("Health");
+		gameObj_charData:status_assign("Health", health - 1);
+	
+	end
+end
 
+GUI = function() 
+	local windowSize = GUIFunctions.GetWindowSize();
+	local gameObj_charData = GameObject.to_character(player);
+	local oxygenLevel = gameObj_charData:status_get("Oxygen");
+	local Health = gameObj_charData:status_get("Health");
+
+	GUIFunctions.SetNextWindowPos(0,windowSize.y - 50, true);
+	GUIFunctions.BeginWindow("Oxygen");
+	GUIFunctions.SetFontSize(3);
+
+	GUIFunctions.Text("Oxygen: " .. oxygenLevel)
+	GUIFunctions.EndWindow();
+
+
+	
+	GUIFunctions.SetNextWindowPos(windowSize.x - 300 ,windowSize.y - 50, true);
+	GUIFunctions.BeginWindow("Health");
+	GUIFunctions.SetFontSize(3);
+
+	if(Health < 0 ) then
+		Health = 0;
+	end
+
+	GUIFunctions.Text("Health: " .. Health)
+	GUIFunctions.EndWindow();
+
+	if(Health == 0) then
+		GUIFunctions.SetNextWindowPos(windowSize.x/2 - 180,windowSize.y/2 - 50, true);
+		GUIFunctions.BeginWindow("DEAD");
+		GUIFunctions.SetFontSize(6);
+
+		GUIFunctions.Text("YOU DEAD");
+		GUIFunctions.EndWindow();
+	end
+end
 	

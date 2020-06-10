@@ -34,7 +34,7 @@ public:
 		 * @param [in] object A smart pointer to the target GameObject.
 		 * @warning Assigning a new GameObject with an existing identifier will overwrite the old GameObject!
 		 */
-	static void insert(std::shared_ptr<GameObj_Base> object);
+	static void insert(const std::shared_ptr<GameObj_Base> &object);
 
 		/*!
 		 * @brief Gathers a reference to a managed GameObject.
@@ -63,7 +63,7 @@ public:
 		 * @param [in] function A function to process all of the stored GameObjects in the Manager.
 		 * @see GameObj_ProcessFunc
 		 */
-	static void process_all(GameObj_ProcessFunc function);
+	static void process_all(const GameObj_ProcessFunc &function);
 
 		/*!
 		 * @brief Calls the addToDraw function on all managed GameObjects.

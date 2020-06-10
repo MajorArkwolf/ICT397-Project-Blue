@@ -205,6 +205,7 @@ void Physics::PhysicsManager::LuaInit() {
         .addFunction("GetCollisionBody", &CollisionWorld::GetCollisionBody)
         .addFunction("CreateCollisionBody", &CollisionWorld::CreateCollisionBody)
         .addFunction("TestOverlap", &CollisionWorld::TestOverlap)
+        .addFunction("TestAABBOverlap", &CollisionWorld::TestAABBOverlap)
 
         .endClass();
 
