@@ -40,8 +40,8 @@ public:
 
     /**
      * Input to be handled inside of the scene.
-     * @param inputData
-     * @param deltaTime
+     * @param inputData events
+     * @param deltaTime delta time
      */
     void handleInputData(Controller::Input::InputData inputData, double deltaTime) override;
 
