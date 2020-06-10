@@ -103,31 +103,39 @@ void FSM_Manager::send(Message message) {
 }
 
 State_Base* FSM_Manager::regular_state(State_Type type) {
+	// Static instantiations of the C++ FSM States
+	static State_Wander staticState_Wander;
+	static State_Chase staticState_Chase;
+	static State_Attack staticState_Attack;
+	static State_Flee staticState_Flee;
+	static State_Die staticState_Die;
+	static State_Revive staticState_Revive;
+
 	// Spit out the requested type
 	switch (type) {
 	case (State_Type::Wander):
-		static State_Wander staticState_Wander;
 		return &staticState_Wander;
+		break;
 
 	case (State_Type::Chase):
-		static State_Chase staticState_Chase;
 		return &staticState_Chase;
+		break;
 
 	case (State_Type::Attack):
-		static State_Attack staticState_Attack;
 		return &staticState_Attack;
+		break;
 
 	case (State_Type::Flee):
-		static State_Flee staticState_Flee;
 		return &staticState_Flee;
+		break;
 
 	case (State_Type::Die):
-		static State_Die staticState_Die;
 		return &staticState_Die;
+		break;
 
 	case (State_Type::Revive):
-		static State_Revive staticState_Revive;
 		return &staticState_Revive;
+		break;
 
 	default:
 		return nullptr;

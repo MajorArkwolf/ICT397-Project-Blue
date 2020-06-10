@@ -24,7 +24,8 @@ PrototypeScene::PrototypeScene() {
     luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
         .addFunction("getCamera", &getCamera)
         .addFunction("toggleWireframe", &toggleWireframe)
-        .addFunction("getHeightAt", &getHeight);
+        .addFunction("getHeightAt", &getHeight)
+        .addFunction("getMapSize", &Controller::TerrainFactory::LuaMapSize);
 
     PrototypeScene::Init();
     View::Camera::LuaInit();
