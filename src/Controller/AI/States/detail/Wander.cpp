@@ -14,28 +14,29 @@ void State_Wander::start(std::shared_ptr<GameObj_Base> context) {
 	std::shared_ptr<GameObj_NPC> npc = std::dynamic_pointer_cast<GameObj_NPC>(context);
 	if (!npc->status_has("Wander_IdleTimeMax")) {
 		// Assign the critical status
-		npc->status_assign("Wander_IdleTimeMax", 4.0f);
+		npc->status_assign("Wander_IdleTimeMax", 5.0f);
 	}
 	if (!npc->status_has("Wander_WalkTimeMax")) {
 		// Assign the critical status
-		npc->status_assign("Wander_WalkTimeMax", 9.0f);
+		npc->status_assign("Wander_WalkTimeMax", 15.0f);
 	}
 
 	// Configure the runtime status for the NPC
 	npc->status_assign("Wander_ActionTime", 0.0f);
 	npc->status_assign("Wander_ActionIsIdle", 1.0f);
+	npc->status_assign("Wander_Rotation", static_cast<float>(rand()) / static_cast<float>(RAND_MAX / 359.99f));
 }
 
 void State_Wander::run(std::shared_ptr<GameObj_Base> context, double t, double dt) {
 	// Get the NPC's collision body
 	auto npc_phys = Physics::PhysicsManager::GetInstance().GetDynamicsWorld()->GetRigidBody(context->physBody);
 
-	// Make sure the NPC's physical body is at a stand-still, and correctly orientated
-	npc_phys->SetSleeping(true);
-	npc_phys->SetOrientation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f));
-
 	// Get the entirety of the contextual NPC's properties
 	std::shared_ptr<GameObj_NPC> npc = std::dynamic_pointer_cast<GameObj_NPC>(context);
+
+	// Make sure the NPC's physical body is at a stand-still, and correctly orientated
+	npc_phys->SetSleeping(true);
+	npc_phys->SetOrientation(glm::angleAxis(glm::radians(npc->status_get("Wander_Rotation")), glm::vec3(0.0f, 1.0f, 0.0f)));
 
 	// Increment the behaviour timer
 	npc->status_assign("Wander_ActionTime", npc->status_get("Wander_ActionTime") + float(dt));
@@ -50,7 +51,7 @@ void State_Wander::run(std::shared_ptr<GameObj_Base> context, double t, double d
 		// Catch if the wandering behaviour should swap
 		if (npc->status_get("Wander_ActionTime") > npc->status_get("Wander_WalkTimeMax")) {
 			// Change the direction that the AI will face
-			//TODO: Implement this!
+			npc->status_assign("Wander_Rotation", static_cast<float>(rand()) / static_cast<float>(RAND_MAX / 359.99f));
 
 			// Change the NPC's animation to walking
 			npc->animator_changeAnimation("IDLE", false);
