@@ -54,6 +54,8 @@ namespace Physics {
         void InitialiseShapeFactory(PhysicsLibrary type = PhysicsLibrary::REACT);
 
         void UpdateDynamicsWorld(double deltaTime);
+
+        void clear();
       private:
 
         static void lua_initialiseReact();

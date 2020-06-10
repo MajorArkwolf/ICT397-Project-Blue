@@ -8,3 +8,7 @@ BlueEngine::IDTracker &BlueEngine::IDTracker::getInstance() {
     static auto instance = IDTracker{};
     return instance;
 }
+
+void BlueEngine::IDTracker::clear() {
+    id = 0;
+}

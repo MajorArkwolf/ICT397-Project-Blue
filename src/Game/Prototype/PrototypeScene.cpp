@@ -1,18 +1,8 @@
 #include "PrototypeScene.hpp"
-
-#include <glm/glm.hpp>
-
-#include "Controller/Engine/Engine.hpp"
-#include "Controller/Engine/LuaManager.hpp"
 #include "Controller/Factory/GameAssetFactory.hpp"
 #include "Controller/PhysicsManager.hpp"
-#include "Controller/TextureManager.hpp"
 #include "Model/GameObject/Manager.hpp"
-#include "Model/GameObject/Types.hpp"
-#include "Model/Models/Model.hpp"
-#include "Model/Models/ModelManager.hpp"
-#include "View/Renderer/OpenGL.hpp"
-#include "View/Renderer/Renderer.hpp"
+
 
 using Controller::Input::BLUE_InputAction;
 using Controller::Input::BLUE_InputType;
@@ -37,32 +27,57 @@ PrototypeScene::PrototypeScene() {
         .addFunction("getHeightAt", &getHeight);
 
     PrototypeScene::Init();
-
-
     View::Camera::LuaInit();
+    auto &window = BlueEngine::Engine::get().window;
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
-PrototypeScene::~PrototypeScene() {}
+PrototypeScene::~PrototypeScene() {
+    /*terrain.DeInit();
+    GameObj_Manager::clear();
+    BlueEngine::IDTracker::getInstance().clear();
+    Physics::PhysicsManager::GetInstance().clear();*/
+}
 
-auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
-    double scalar = 100.0;
-    auto &engine  = BlueEngine::Engine::get();
-
+auto PrototypeScene::update(double t, double dt) -> void {
+    // Update the terrain
     terrain.Update(camera.getLocation());
 
+    // Update the GameObject animations
+    GameObj_Manager::animation_update(t, dt);
     
     // Update the Dynamic Physics world
     Physics::PhysicsManager::GetInstance().GetDynamicsWorld()->Update(dt);
 
-    //Read and call the lua update function, this allows runtime change of the script
-    if (luaL_dofile(LuaManager::getInstance().getLuaState(), "./res/scripts/luaFunctions.lua")) {
-        printf("%s\n", lua_tostring(LuaManager::getInstance().getLuaState(), -1));
+    // Read and call the lua update function, this allows runtime change of the script
+    try {
+        // Run the script, and catch and Lua errors that are thrown
+        luaL_dofile(LuaManager::getInstance().getLuaState(), "./res/scripts/luaFunctions.lua");
+    }
+    catch (luabridge::LuaException const& err) {
+        // Print out the error that had occured when running the script
+        std::cerr << "Scene Update Lua Functions Script Error: \"" << err.what() << "\"\n";
     }
     luabridge::LuaRef Update =
         luabridge::LuaRef::getGlobal(LuaManager::getInstance().getLuaState(), "Update");
+
+    // Catch if an Lua scripted update function has been provided
     if (!Update.isNil()) {
-        Update(dt);
+        // Catch any errors thrown when running the Lua scripted Update() function
+        try {
+            Update(dt);
+        }
+        catch (luabridge::LuaException const& err) {
+            // Print out the error that had occured when running the Lua function
+            std::cerr << "Scene Lua Update Function Error: \"" << err.what() << "\"\n";
+        }
     }
+    else {
+        // Report no scripted update function has been provided
+        std::cerr << "No scripted Update() function was provided to call!\n";
+    }
+
+    // Syncronise the GameObjects' physics bodies
     GameObj_Manager::syncPhys();
 }
 
@@ -80,8 +95,16 @@ void PrototypeScene::Init() {
     GameObj_Manager::init();
 
     // Run the GameObject initialisation script
-    if (luaL_dofile(LuaManager::getInstance().getLuaState(), "./res/scripts/gameObjsInit.lua")) {
-        printf("%s\n", lua_tostring(LuaManager::getInstance().getLuaState(), -1));
+    try {
+        // Run the script, and catch and Lua errors that are thrown
+        if (luaL_dofile(LuaManager::getInstance().getLuaState(), "./res/scripts/gameObjsInit.lua")) {
+            printf("Scene Initialisation Script Error: ");
+            printf("\"%s\"\n", lua_tostring(LuaManager::getInstance().getLuaState(), -1));
+        }
+    }
+    catch (luabridge::LuaException const& err) {
+        // Print out the error that had occured when running the script
+        std::cerr << "Scene Initialisation Script Error: \"" << err.what() << "\"\n";
     }
 
     auto *phys_world_dynamics = phys_sys->GetDynamicsWorld();
@@ -115,7 +138,8 @@ void PrototypeScene::Init() {
 }
 
 void PrototypeScene::handleWindowEvent() {
-    View::OpenGL::ResizeWindow();
+    auto &engine = BlueEngine::Engine::get();
+    engine.renderer.ResizeWindow();
 }
 
 void PrototypeScene::handleInputData(Controller::Input::InputData inputData, double deltaTime) {
@@ -206,4 +230,28 @@ auto PrototypeScene::display() -> void {
     GameObj_Manager::addAllToDraw();
 }
 
-void PrototypeScene::unInit() {}
+void PrototypeScene::unInit() {
+    //terrain.DeInit();
+}
+
+void PrototypeScene::GUIStart() {
+    auto &engine = BlueEngine::Engine::get();
+    auto& guiManager = engine.getGuiManager();
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    GUIManager::startWindowFrame();
+    guiManager.displayInputRebindWindow();
+    guiManager.displayEscapeMenu();
+    guiManager.displayInstructionMenu();
+    guiManager.displayQuitScreen();
+    guiManager.displayDevScreen(camera);
+    guiManager.displayTextureManager();
+    guiManager.displayTerrainSettings();
+    if (engine.showSettingsMenu) {
+        engine.SettingMenu();
+    }
+}
+
+void PrototypeScene::GUIEnd() {
+    GUIManager::endWindowFrame();
+}

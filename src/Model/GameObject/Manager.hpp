@@ -77,6 +77,13 @@ public:
 		 */
 	static void syncPhys();
 
+		/*!
+		 * @brief Updates the current animation of the managed GameObjects, relative to the delta time passed.
+		 * @param [in] t The amount of time that the engine has been running.
+		 * @param [in] dt The delta amount of time since the engine loop called the subsystems' update functions.
+		 */
+	static void animation_update(double t, double dt);
+
 protected:
 		/*!
 		 * @brief Invokes the use of the GameObject Factory and automates the process of storing its output.

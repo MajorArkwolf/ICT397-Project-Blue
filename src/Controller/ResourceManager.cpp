@@ -40,15 +40,15 @@ void ResourceManager::loadResources() {
     lua_pcall(L, 0, 0, 0);
 }
 
-auto ResourceManager::insertString(std::string key, std::string value) -> void {
+auto ResourceManager::insertString(const std::string& key, const std::string& value) -> void {
     TextManager::InsertString(key, value);
 }
 
-auto ResourceManager::getString(std::string key) -> std::string {
+auto ResourceManager::getString(const std::string& key) -> std::string {
     return TextManager::GetString(key);
 }
 
-auto ResourceManager::getModelID(std::string filename) -> size_t {
+auto ResourceManager::getModelID(const std::string& filename) -> size_t {
     return ModelManager::GetModelID(filename);
 }
 
@@ -60,7 +60,7 @@ void ResourceManager::loadModel(const std::string &filePath) {
     ModelManager::GetModelID(filePath);
 }
 
-void ResourceManager::loadString(const std::string key) {
+void ResourceManager::loadString(const std::string& key) {
     using namespace luabridge;
 
     auto *L = LuaManager::getInstance().getLuaState();
@@ -83,11 +83,14 @@ void ResourceManager::loadString(const std::string key) {
     }
 }
 
-auto ResourceManager::loadTexture(const std::string filePath, const std::string textureName) -> void {
+auto ResourceManager::loadTexture(const std::string& filePath, const std::string& textureName) -> void {
     getInstance().textureManager.loadTextureFromFile(filePath, textureName);
 }
 
-auto ResourceManager::getModelId(const std::string key) -> size_t {
+auto ResourceManager::getModelId(const std::string& key) -> size_t {
 
     return getInstance().getModelID(key);
+}
+auto ResourceManager::getModel(const unsigned int modelID) -> Model::Model* {
+    return &ModelManager::ModelRepo().at(modelID);
 }

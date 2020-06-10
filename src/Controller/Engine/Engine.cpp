@@ -7,6 +7,7 @@
 
 // Game States
 #include "Game/Prototype/PrototypeScene.hpp"
+#include "Game/MainMenu/MainMenu.hpp"
 
 using BlueEngine::Engine;
 using std::runtime_error;
@@ -16,10 +17,11 @@ auto Engine::run() -> void {
     auto &engine = Engine::get();
 
     ResourceManager::getInstance().loadResources();
-    engine.gameStack.AddToStack(std::make_shared<PrototypeScene>());
+    engine.gameStack.AddToStack(std::make_shared<MainMenu>());
+    engine.gameStack.getTop()->Init();
 
-    double t  = 0.0;
-    double dt = 0.01;
+    engine.t  = 0.0;
+    engine.dt = 0.01;
 
     double currentTime = glfwGetTime();
     double accumulator = 0.0;
@@ -41,13 +43,13 @@ auto Engine::run() -> void {
 
         accumulator += frameTime;
 
-        while (accumulator >= dt) {
+        while (accumulator >= engine.dt) {
             // previousState = currentState;
             glfwPollEvents();
-            engine.processInput(dt);
-            engine.gameStack.getTop()->update(t, dt);
-            t += dt;
-            accumulator -= dt;
+            engine.processInput(engine.dt);
+            engine.gameStack.getTop()->update(engine.t, engine.dt);
+            engine.t += engine.dt;
+            accumulator -= engine.dt;
         }
 
         // const double alpha = accumulator / dt;
@@ -55,6 +57,10 @@ auto Engine::run() -> void {
 
         engine.gameStack.getTop()->display();
         engine.renderer.Draw();
+        if (engine.gameStack.isRemoveTopFlag()) {
+            engine.gameStack.getTop()->unInit();
+        }
+        engine.gameStack.checkTop();
     }
     glfwDestroyWindow(engine.window);
 }
@@ -85,7 +91,9 @@ Engine::Engine(){
     // glfw window creation
     // --------------------
     const GLFWvidmode * mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-    window = glfwCreateWindow(mode->width / 2, mode->height / 2, "Project Blue", nullptr, nullptr);
+    lastWindowXSize = mode->width / 2;
+    lastWindowYSize = mode->height / 2;
+    window = glfwCreateWindow(lastWindowXSize, lastWindowYSize, "Project Blue", nullptr, nullptr);
     if (window == nullptr) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
@@ -177,4 +185,74 @@ auto Engine::getBasePath() -> void {
     // basepath        = std::string(base_path);
     // SDL_free(base_path);
     basepath = "./";
+}
+
+void Engine::SettingMenu() {
+    ImVec2 buttonSize(150, 30);
+
+    GLFWmonitor *monitor = glfwGetPrimaryMonitor();
+    const GLFWvidmode *mode = glfwGetVideoMode(monitor);
+    //auto &window = BlueEngine::Engine::get().window;
+
+    ImGui::SetNextWindowFocus();
+    ImGui::SetNextWindowSize(ImVec2(500, 500), 1);
+    ImGui::Begin("Settings", &showSettingsMenu,
+                 ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
+
+    ImGui::Text("Window Settings");
+    if (ImGui::Button("Borderless Windowed", buttonSize)) {
+        lastWindowXSize = mode->width / 2;
+        lastWindowYSize = mode->height / 2;
+        glfwSetWindowMonitor(window, nullptr, 0, 0, lastWindowXSize, lastWindowYSize, mode->refreshRate);
+        this->renderer.UpdateViewPort(0, 0, lastWindowXSize, lastWindowYSize);
+        glfwSetWindowPos(window, lastWindowXSize - lastWindowXSize / 2, lastWindowYSize - lastWindowYSize / 2);
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Windowed", buttonSize)) {
+        lastWindowXSize = mode->width / 2;
+        lastWindowYSize = mode->height / 2;
+        glfwSetWindowMonitor(window, nullptr, 0, 0, lastWindowXSize, lastWindowYSize, mode->refreshRate);
+        this->renderer.UpdateViewPort(0, 0, lastWindowXSize, lastWindowYSize);
+        glfwSetWindowPos(window, lastWindowXSize - lastWindowXSize / 2, lastWindowYSize - lastWindowYSize / 2);
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Borderless Fullscreen", buttonSize)) {
+        glfwSetWindowMonitor(window, nullptr, 0, 0, mode->width, mode->height, mode->refreshRate);
+        this->renderer.UpdateViewPort(0, 0, mode->width, mode->height);
+    }
+
+    if (ImGui::Button("Fullscreen", buttonSize)) {
+        glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+        this->renderer.UpdateViewPort(0, 0, mode->width, mode->height);
+    }
+    ImGui::Separator();
+    ImGui::Text("Brightness");
+    if (ImGui::SliderFloat("Gamma Correction", &gammaCorrection, 0.1f, 2.f,
+                           "Gamma = %.1f")) {
+        //SDL_SetWindowBrightness(this->window.get(), gammaCorrection);
+        glfwSetGamma(monitor, gammaCorrection);
+    }
+    ImGui::End();
+}
+
+int BlueEngine::Engine::getLastWindowXSize() const {
+    return lastWindowXSize;
+}
+
+void BlueEngine::Engine::setLastWindowXSize(int lastWindowXSize) {
+    Engine::lastWindowXSize = lastWindowXSize;
+}
+
+int BlueEngine::Engine::getLastWindowYSize() const {
+    return lastWindowYSize;
+}
+
+void BlueEngine::Engine::setLastWindowYSize(int lastWindowYSize) {
+    Engine::lastWindowYSize = lastWindowYSize;
+}
+double BlueEngine::Engine::getT() const {
+    return t;
+}
+double BlueEngine::Engine::getDt() const {
+    return dt;
 }

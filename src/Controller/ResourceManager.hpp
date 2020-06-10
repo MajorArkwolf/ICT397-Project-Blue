@@ -22,19 +22,19 @@ class ResourceManager {
      * @param key The identifier to give the key
      * @param value the string value to insert into the text manager
      */
-    auto insertString(std::string key, std::string value) -> void;
+    auto insertString(const std::string& key, const std::string& value) -> void;
     /**
      * @brief Gets a string from the text manager
      * @param key The key value for the string to return
      * @return A string at the given key location
      */
-    auto getString(std::string key) -> std::string;
+    auto getString(const std::string& key) -> std::string;
     /**
      * @brief Gets the id of the model with the given filename / key
      * @param filename The key / filename of the model to return the id of
      * @return The ID of the model with the given key /filename
      */
-    auto getModelID(std::string filename) -> size_t;
+    auto getModelID(const std::string& filename) -> size_t;
     /**
      * @brief Draws a model with the given id using the given shader
      * @param id The id of the model to draw
@@ -63,6 +63,12 @@ class ResourceManager {
      * @return The texture manager
      */
     TextureManager &GetTextureManager();
+    /**
+     * get the Model object from the Model Manager by pointer
+     * @param modelID the id of where the model exists.
+     * @return a pointer to the model type.
+     */
+    static auto getModel(unsigned modelID) -> Model::Model*;
 
   private:
     /// A manager for all text elements in the program
@@ -84,13 +90,17 @@ class ResourceManager {
      * @brief Used to provide lua with a means to load a string
      * @param key The key to look for in the lua file
      */
-    static auto loadString(const std::string key) -> void;
+    static auto loadString(const std::string& key) -> void;
     /**
      * @brief used to provide lua with  a means to load a texture
-     * @param filepath The filepath of the image to load  as texture
+     * @param filePath The filepath of the image to load  as texture
      * @param textureName The key to use to store the texture
      */
-    static auto loadTexture(const std::string filePath, const std::string textureName) -> void;
-
-    static auto getModelId(const std::string key) -> size_t;
+    static auto loadTexture(const std::string& filePath, const std::string& textureName) -> void;
+    /**
+     * @brief Get the ID of a given model, will also attempt to load the model.
+     * @param key Key to the model.
+     * @return the model id where it exists in the vector.
+     */
+    static auto getModelId(const std::string& key) -> size_t;
 };

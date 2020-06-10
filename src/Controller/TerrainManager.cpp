@@ -7,17 +7,23 @@ Controller::TerrainManager::TerrainManager() {
     Init();
 }
 
+void Controller::TerrainManager::DeInit() {
+    for (auto &e : chunks) {
+        e.reset();
+    }
+}
+
 void Controller::TerrainManager::Init() {
     auto &factory = Controller::Factory::get().terrain;
     maxKey = factory.getMaxKeySize();
     int mKey = static_cast<int>(maxKey);
     for (int key_x = mKey * -1; key_x < mKey; ++key_x) {
         for (int key_z = mKey * -1; key_z < mKey; ++key_z) {
-            auto e = std::make_shared<ChunkClod>();
+            auto e = std::make_unique<ChunkClod>();
             e->key = Blue::Key(key_x, key_z);
             factory.GenerateTerrain(e->level1, e->key);
             factory.GenerateTerrainL2(e->level2, e->key);
-            chunks.push_back(e);
+            chunks.push_back(std::move(e));
         }
     }
     auto textures = factory.GetTextureID();
@@ -34,7 +40,6 @@ void Controller::TerrainManager::Init() {
     sandHeight = heights.at(3);
     waterHeight = heights.at(4);
 }
-
 void Controller::TerrainManager::Draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos) {
 	for (const auto& e : drawCircle) {
 		e->Draw(projection, view, cameraPos);

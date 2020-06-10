@@ -19,6 +19,8 @@ namespace BlueEngine {
          * @return Unique ID value.
          */
         ID getID();
+
+        void clear();
     private:
         /**
          * Privatised constructor since class is a singleton.

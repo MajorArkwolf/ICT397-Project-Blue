@@ -19,7 +19,7 @@ public:
 		 * @brief Default constructor, does nothing.
 		 * @note This only exists due to a bug with MSVC failing to either generate or prevent calling this from a derived class's constructor.
 		 */
-	GameObj_Character() {};
+	GameObj_Character() {}
 
 		/*!
 		 * @brief Identifies the GameObject's type.
@@ -35,7 +35,7 @@ public:
 		 * @note If the status key does not exist, it will be created.
 		 * @note If the status key does exist, its assigned value will be overwritten.
 		 */
-	void status_assign(std::string key, float value);
+	void status_assign(const std::string& key, float value);
 
 		/*!
 		 * @brief Counts the amount of unique statuses are assigned to the GameObject.
@@ -48,7 +48,7 @@ public:
 		 * @param [in] key The string to identify the status by.
 		 * @return True if the character has the specified status key, False otherwise.
 		 */
-	bool status_has(std::string key);
+	bool status_has(const std::string& key);
 
 		/*!
 		 * @brief Generates a list of unique status keys stored in this GameObject.
@@ -64,14 +64,14 @@ public:
 		 * @note Function status_has() should be called prior to confirm the status exists.
 		 * @warning The return value alone cannot be used to determine if an error had occured!
 		 */
-	float status_get(std::string key);
+	float status_get(const std::string& key);
 
 		/*!
 		 * @brief Deletes a specific status (and it's assigned value) from the character.
 		 * @param [in] key The string to identify the status by.
 		 * @note If the targeted status does not exist, no changes will occur.
 		 */
-	void status_delete(std::string key);
+	void status_delete(const std::string& key);
 
 		/*!
 		 * @brief Removes all statuses (and their values) from the character.

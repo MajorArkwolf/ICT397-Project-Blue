@@ -82,6 +82,7 @@ void GUIManager::displayEscapeMenu() {
     // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
     bool &windowOpen = windowOpenMap.at("menu");
     auto &resManager = ResourceManager::getInstance();
+    auto &engine = BlueEngine::Engine::get();
 
     if (windowOpen) {
         ImGui::SetNextWindowPos(ImVec2(0.5, 0.5), ImGuiCond_Always, ImVec2(-0.5, -0.5));
@@ -101,6 +102,9 @@ void GUIManager::displayEscapeMenu() {
         }
         if (ImGui::Button("Terrain Settings")) {
             toggleWindow("terrainSettings");
+        }
+        if (ImGui::Button("Settings")) {
+            engine.showSettingsMenu = true;
         }
         if (ImGui::Button("Exit")) {
             toggleWindow("exit");

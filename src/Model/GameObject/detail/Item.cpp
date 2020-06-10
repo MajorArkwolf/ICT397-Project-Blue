@@ -40,13 +40,25 @@ void GameObj_Item::draw(const glm::mat4& projection, const glm::mat4& view, cons
 	// Generate and configure the GameObject's model matrix
 	glm::mat4 model_matrix = glm::mat4(1.0f);
 	model_matrix = glm::translate(model_matrix, phys_body->GetPosition());
+	model_matrix = glm::scale(model_matrix, scale);
 	model_matrix = model_matrix * glm::mat4_cast(phys_body->GetOrientation());
 
 	// Enable the shader and pass it the values for its uniforms
-	program.get()->use();
-	program.get()->setMat4("projection", projection);
-	program.get()->setMat4("view", view);
-	program.get()->setMat4("model", model_matrix);
+	program->use();
+	program->setMat4("projection", projection);
+	program->setMat4("view", view);
+	program->setMat4("model", model_matrix);
+
+	// Apply additional shader uniform variables for the GameObject's animation
+	if (animator != nullptr) {
+		// Pass the animation critical data to the shader program
+		program->setBool("isAnimated", true);
+		program->setMat4Array("jointTransforms", animator->Transforms);
+	}
+	else {
+		// Indicate to the shader program that the GameObject model doesn't need to be updated
+		program->setBool("isAnimated", false);
+	}
 
 	// Get the resource manager and call for it to draw the model
 	auto& res_manager = ResourceManager::getInstance();

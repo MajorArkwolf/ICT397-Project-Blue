@@ -44,6 +44,9 @@ namespace Controller {
          * @param view matrix for the model
          * @param cameraPos The position of the camera
          */
+
+        void DeInit();
+
         void Draw(const glm::mat4 &projection, const glm::mat4 &view, const glm::dvec3 &cameraPos);
         /**
          * @brief Update call for the terrain model objects.
@@ -98,9 +101,9 @@ namespace Controller {
         /// The last position the camera was at.
         Blue::Key lastPos = Blue::Key(999, 999);
         /// Draw list of chunks to be sent to the renderer.
-        std::vector<Model::TerrainModel *> drawCircle = {};
+        std::vector<Model::TerrainModel*> drawCircle = {};
         /// All the chunks in a scene.
-        std::vector<std::shared_ptr<ChunkClod>> chunks = {};
+        std::vector<std::unique_ptr<ChunkClod>> chunks = {};
         /// Textures used for the chunks.
         unsigned int snowTextureID = {}, grassTextureID = {}, dirtTextureID = {},
                      sandTextureID = {}, waterTextureID = {};

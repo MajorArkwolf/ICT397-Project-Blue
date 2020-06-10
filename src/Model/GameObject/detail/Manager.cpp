@@ -30,17 +30,20 @@ void GameObj_Manager::init() {
         .addFunction("to_npc", GameObj_Manager::lua_to_npc)
         .endNamespace();
 
-    // Register the GameObj_Type enum spawning functions
-    luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
-        .beginNamespace("GameObject")
-        .beginNamespace("Types")
-        .addFunction("Invalid", GameObj_LuaHelper::Invalid)
-        .addFunction("Static", GameObj_LuaHelper::Static)
-        .addFunction("Item", GameObj_LuaHelper::Item)
-        .addFunction("Player", GameObj_LuaHelper::Player)
-        .addFunction("NPC", GameObj_LuaHelper::NPC)
-        .endNamespace()
-        .endNamespace();
+	// Register the GameObj_Type enum spawning functions
+	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
+		.beginNamespace("GameObject")
+			.beginNamespace("Types")
+				.addFunction("Invalid", GameObj_LuaHelper::Invalid)
+				.addFunction("Static", GameObj_LuaHelper::Static)
+				.addFunction("Item", GameObj_LuaHelper::Item)
+				.addFunction("Player", GameObj_LuaHelper::Player)
+				.addFunction("NPC", GameObj_LuaHelper::NPC)
+			.endNamespace()
+		.endNamespace();
+
+	// Prevent re-registration
+	is_registered = true;
 }
 
 void GameObj_Manager::insert(const std::shared_ptr<GameObj_Base> &object) {
@@ -164,6 +167,13 @@ GameObj_NPC *GameObj_Manager::lua_to_npc(GameObj_Character *raw_in) {
     return dynamic_cast<GameObj_NPC *>(raw_in);
 }
 
-/// Static Initialisation
-std::map<BlueEngine::ID, std::shared_ptr<GameObj_Base>> GameObj_Manager::managed_objs =
-    std::map<BlueEngine::ID, std::shared_ptr<GameObj_Base>>();
+void GameObj_Manager::animation_update(double t, double dt) {
+	// Process all of the GameObjects
+	for (auto i = managed_objs.begin(); i != managed_objs.end(); ++i) {
+		// Update the GameObject's animation, relative to the delta time
+		i->second.get()->animator_update(t, dt);
+	}
+}
+
+	/// Static Initialisation
+std::map<BlueEngine::ID, std::shared_ptr<GameObj_Base>> GameObj_Manager::managed_objs = std::map<BlueEngine::ID, std::shared_ptr<GameObj_Base>>();

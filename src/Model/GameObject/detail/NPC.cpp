@@ -6,7 +6,7 @@
 #include "Controller/PhysicsManager.hpp"
 #include "../Types.hpp"
 
-GameObj_NPC::GameObj_NPC(BlueEngine::ID model_in, BlueEngine::ID physBody_in, BlueEngine::ID context_in)
+GameObj_NPC::GameObj_NPC(size_t model_in, BlueEngine::ID physBody_in, BlueEngine::ID context_in)
 	: GameObj_Base(model_in, physBody_in), GameObj_Character() {
 	// Store the NPC's FSM identifier
 	contextID = context_in;
@@ -41,13 +41,25 @@ void GameObj_NPC::draw(const glm::mat4& projection, const glm::mat4& view, const
 	// Generate and configure the GameObject's model matrix
 	glm::mat4 model_matrix = glm::mat4(1.0f);
 	model_matrix = glm::translate(model_matrix, phys_body->GetPosition());
+	model_matrix = glm::scale(model_matrix, scale);
 	model_matrix = model_matrix * glm::mat4_cast(phys_body->GetOrientation());
 
 	// Enable the shader and pass it the values for its uniforms
-	program.get()->use();
-	program.get()->setMat4("projection", projection);
-	program.get()->setMat4("view", view);
-	program.get()->setMat4("model", model_matrix);
+	program->use();
+	program->setMat4("projection", projection);
+	program->setMat4("view", view);
+	program->setMat4("model", model_matrix);
+
+	// Apply additional shader uniform variables for the GameObject's animation
+	if (animator != nullptr) {
+		// Pass the animation critical data to the shader program
+		program->setBool("isAnimated", true);
+		program->setMat4Array("jointTransforms", animator->Transforms);
+	}
+	else {
+		// Indicate to the shader program that the GameObject model doesn't need to be updated
+		program->setBool("isAnimated", false);
+	}
 
 	// Get the resource manager and call for it to draw the model
 	auto& res_manager = ResourceManager::getInstance();
@@ -60,9 +72,17 @@ BlueEngine::ID GameObj_NPC::context() {
 }
 
 void GameObj_NPC::lua_init_register() {
+	// Prevent this being called more than once
+	static bool isRegistered = false;
+	if (isRegistered)
+		return;
+
 	// Register the NPC GameObject class
 	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
 		.deriveClass<GameObj_NPC, GameObj_Character>("GameObj_NPC")
 			.addProperty("context", &GameObj_NPC::contextID, false)
 		.endClass();
+
+	// Prevent re-registration
+	isRegistered = true;
 }
