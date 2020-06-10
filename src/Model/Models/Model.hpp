@@ -75,16 +75,46 @@ namespace Model {
          * @return returns the next mesh.
          */
         Mesh processMesh(aiMesh *mesh, const aiScene *scene);
+        /**
+         * Load a material into the GPU
+         * @param mat the material type.
+         * @param type texture type
+         * @param typeName name
+         * @return the ID of it in memory.
+         */
         std::vector<TextureB> loadMaterialTextures(aiMaterial *mat, aiTextureType type,
                                                   const std::string& typeName);
 
+        /// Bone map, takes a string and gives its ID.
         std::map<std::string, unsigned int> boneMapping = {};
+        /// global inverse transform matrix
         glm::mat4 globalInverseTransform = {};
+
+        /**
+         * Load bones
+         * @param MeshIndex mesh index
+         * @param pMesh object that contains the mesh.
+         */
         void LoadBones(unsigned int MeshIndex, const aiMesh *pMesh);
+
+        /**
+         * Load animations
+         * @param scene scene that contains the animation
+         */
         void LoadAnimations(const aiScene *scene);
+
+        /**
+         * Load joints
+         * @param mesh mesh ID
+         * @param root node of the joint
+         */
         void LoadJoints(aiMesh* mesh, aiNode* root);
+
+        /// root joint.
         JointsName rootJoint;
+        /// Is the model animation
         bool isAnimated = true;
+        /// Name of the model
         std::string name = "";
     };
 }

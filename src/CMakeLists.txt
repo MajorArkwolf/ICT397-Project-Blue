@@ -34,6 +34,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     Model/TextManager.cpp
     Model/TerrainModel.cpp
     Model/Models/Animation.cpp
+    Model/PlayerCanvas.cpp
 
 
         # Game Objects

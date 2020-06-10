@@ -50,9 +50,17 @@ class BaseState {
      */
     virtual void update(double t, double dt) = 0;
 
+    /// Camera required for renderer.
     View::Camera camera;
 
+    /**
+     * Starts the GUI menu.
+     */
     virtual void GUIStart() = 0;
+
+    /**
+     * Ends the GUI menu.
+     */
     virtual void GUIEnd() = 0;
 
 };
