@@ -43,10 +43,10 @@ PrototypeScene::~PrototypeScene() {
 auto PrototypeScene::update(double t, double dt) -> void {
     // Update the terrain
     terrain.Update(camera.getLocation());
-
-    // Update the GameObject animations
-    GameObj_Manager::animation_update(t, dt);
     
+    // Update the GameObject animations
+    //GameObj_Manager::animation_update(t, dt);
+
     // Update the Dynamic Physics world
     Physics::PhysicsManager::GetInstance().GetDynamicsWorld()->Update(dt);
 
@@ -234,6 +234,8 @@ auto PrototypeScene::display() -> void {
     auto &renderer = BlueEngine::Engine::get().renderer;
     renderer.SetCameraOnRender(camera);
     terrain.AddToDraw();
+    // Update the GameObject animations
+    GameObj_Manager::animation_update(0.0, engine.getFrameTime());
     GameObj_Manager::addAllToDraw();
 }
 

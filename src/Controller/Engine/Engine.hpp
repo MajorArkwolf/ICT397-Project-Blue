@@ -66,6 +66,7 @@ namespace BlueEngine {
 
         double t  = 0.0;
         double dt = 0.01;
+        double EngineFrameTime   = 0.0;
         std::string glsl_version = "";
 
 
@@ -158,6 +159,6 @@ namespace BlueEngine {
 
         double getT() const;
         double getDt() const;
-
+        double getFrameTime() const;
     };
 }

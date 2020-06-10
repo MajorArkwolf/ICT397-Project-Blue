@@ -9,6 +9,7 @@ static inline glm::quat quat_cast(const aiQuaternion &q) { return glm::quat(q.w,
 static inline glm::mat4 mat4_cast(const aiMatrix4x4 &m) { return glm::transpose(glm::make_mat4(&m.a1)); }
 
 void Controller::Animator::BoneTransform(double TimeInSeconds) {
+    Transforms.resize(100);
     animationTime += TimeInSeconds;
     if (animatedModel != nullptr) {
         if (animatedModel->isAnimated && loadedAnimation != nullptr) {
@@ -25,13 +26,12 @@ void Controller::Animator::BoneTransform(double TimeInSeconds) {
             double AnimationTime  = fmod(TimeInTicks, loadedAnimation->getDuration());
 
             ReadNodeHeirarchy(AnimationTime, animatedModel->rootJoint, Identity);
-            Transforms.resize(animatedModel->numBones);
+//            Transforms.resize(animatedModel->numBones);
 
-            for (unsigned i = 0; i < animatedModel->numBones; i++) {
-                Transforms[i] = animatedModel->boneInfo[i].FinalTransformation;
-            }
+//            for (unsigned i = 0; i < animatedModel->numBones; i++) {
+//                Transforms[i] = animatedModel->boneInfo[i].FinalTransformation;
+//            }
         } else {
-            Transforms.resize(100);
             for (unsigned i = 0; i < 100; i++) {
                 Transforms[i] = glm::mat4(1.0f);
             }
@@ -66,7 +66,7 @@ void Controller::Animator::ReadNodeHeirarchy(const double &AnimationTime, const 
 
     if (animatedModel->boneMapping.find(jN.name) != animatedModel->boneMapping.end()) {
         unsigned BoneIndex = animatedModel->boneMapping[jN.name];
-        animatedModel->boneInfo[BoneIndex].FinalTransformation = animatedModel->globalInverseTransform * GlobalTransformation *
+       Transforms[BoneIndex] = animatedModel->globalInverseTransform * GlobalTransformation *
                                                                  animatedModel->boneInfo[BoneIndex].BoneOffset;
     }
 

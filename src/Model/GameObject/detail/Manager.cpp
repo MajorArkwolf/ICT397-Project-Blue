@@ -167,9 +167,10 @@ GameObj_NPC* GameObj_Manager::lua_to_npc(GameObj_Character* raw_in) {
 
 void GameObj_Manager::animation_update(double t, double dt) {
 	// Process all of the GameObjects
-	for (auto i = managed_objs.begin(); i != managed_objs.end(); ++i) {
+	//for (auto i = managed_objs.begin(); i != managed_objs.end(); ++i) {
+	for (auto &i :managed_objs) {
 		// Update the GameObject's animation, relative to the delta time
-		i->second.get()->animator_update(t, dt);
+		i.second->animator_update(t, dt);
 	}
 }
 
