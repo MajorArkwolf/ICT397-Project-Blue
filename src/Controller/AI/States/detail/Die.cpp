@@ -1,14 +1,21 @@
 	/// Declaration Include
 #include "Controller/AI/States/Die.hpp"
 
+	/// Internal Dependencies
+#include "Controller/PhysicsManager.hpp"
+
 void State_Die::start(std::shared_ptr<GameObj_Base> context) {
-	// Set the GameObject's animation
-	if (context->animator_has())
-		context->animator_changeAnimation("DEATH", true);
+	// Get the NPC's collision body
+	auto npc_phys = Physics::PhysicsManager::GetInstance().GetDynamicsWorld()->GetRigidBody(context->physBody);
+
+	// Make sure the NPC's physical body is at a stand-still, and correctly orientated
+	npc_phys->SetSleeping(true);
+	npc_phys->SetOrientation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f));
 }
 
 void State_Die::run(std::shared_ptr<GameObj_Base> context, double t, double dt) {
-
+	// Make sure the NPC's physical body is at a stand-still
+	Physics::PhysicsManager::GetInstance().GetDynamicsWorld()->GetRigidBody(context->physBody)->SetSleeping(true);
 }
 
 void State_Die::end(std::shared_ptr<GameObj_Base> context) {

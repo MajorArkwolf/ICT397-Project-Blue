@@ -1,6 +1,10 @@
 	/// Declaration Include
 #include "Controller/AI/States/Wander.hpp"
 
+	/// Internal Dependencies
+#include "Controller/PhysicsManager.hpp"
+#include "Controller/Factory/TerrainFactory.hpp"
+
 void State_Wander::start(std::shared_ptr<GameObj_Base> context) {
 	// Set the GameObject's animation
 	if (context->animator_has())
@@ -23,6 +27,13 @@ void State_Wander::start(std::shared_ptr<GameObj_Base> context) {
 }
 
 void State_Wander::run(std::shared_ptr<GameObj_Base> context, double t, double dt) {
+	// Get the NPC's collision body
+	auto npc_phys = Physics::PhysicsManager::GetInstance().GetDynamicsWorld()->GetRigidBody(context->physBody);
+
+	// Make sure the NPC's physical body is at a stand-still, and correctly orientated
+	npc_phys->SetSleeping(true);
+	npc_phys->SetOrientation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f));
+
 	// Get the entirety of the contextual NPC's properties
 	std::shared_ptr<GameObj_NPC> npc = std::dynamic_pointer_cast<GameObj_NPC>(context);
 
@@ -32,7 +43,9 @@ void State_Wander::run(std::shared_ptr<GameObj_Base> context, double t, double d
 	// Determine the behaviour to apply for the wandering
 	if (npc->status_get("Wander_ActionIsIdle") < 0.5f) {
 		// The NPC is walking, move it forward
-		//TODO: Implement this!
+		glm::vec3 new_position = npc_phys->GetPosition() + (npc_phys->GetOrientation() * (glm::vec3(0.0f, 0.0f, 1.0f * float(dt))));
+		new_position.y = Controller::TerrainFactory::LuaBLHeight(new_position.x, new_position.y);
+		npc_phys->SetPosition(new_position);
 
 		// Catch if the wandering behaviour should swap
 		if (npc->status_get("Wander_ActionTime") > npc->status_get("Wander_WalkTimeMax")) {
