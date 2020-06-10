@@ -39,7 +39,7 @@ npcSpawningRegion = npcSpawningRegion - 100;
 -- Generate 50 NPCs
 for i = 0, 50, 1 do
 	-- Create a GameObject and store the returned identifier
-	npc_id = GameObject.create(GameObject.Types.NPC());
+	local npc_id = GameObject.create(GameObject.Types.NPC());
 
 	-- Gather the actual GameObject
 	local npc_gameObj_raw = GameObject.get(npc_id);
@@ -53,12 +53,14 @@ for i = 0, 50, 1 do
 
 	-- Configure the NPC to be in a random position surrounding the player's spawning location
 	local position = vector(math.random(0 - npcSpawningRegion, npcSpawningRegion), 0, math.random(0 - npcSpawningRegion, npcSpawningRegion));
-	position.y = getHeightAt(position.x, position.z);
+	position.y = getHeightAt(position.x, position.z) + 0.1;
 	dynamicsWorld:GetRigidBody(npc_gameObj_raw.physBody):SetPosition(position);
 
 	-- Set the NPC's rigid body collision shape and stop the NPC from being affected by gravity
-	local rigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(npc_gameObj_raw.physBody));
-	rigidBody:AddCollisionShape(shapeFactory:GetShape(sphereShape), vector(0,0,0), quaternion(1,0,0,0), 1);
+	local npc_rigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(npc_gameObj_raw.physBody));
+	npc_rigidBody:AddCollisionShape(shapeFactory:GetShape(sphereShape), vector(0,0,0), quaternion(1,0,0,0), 1);
+	npc_rigidBody:SetAngularDamping(1);
+	npc_rigidBody:SetSleeping(true);
 
 	-- Set up the NPC's initial AI FSM State
 	local npc_ai = FSM.get(npc_gameObj_npc.context);
