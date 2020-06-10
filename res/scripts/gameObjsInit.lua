@@ -31,37 +31,41 @@ gameObj_charData:status_assign("FreeCam", 0);
 math.randomseed(os.time());
 math.random();
 
--- Generate 30 NPCs
-for i = 0, 30, 1 do
+-- Get the environment's playable size
+local npcSpawningRegion = getMapSize();
+npcSpawningRegion = npcSpawningRegion / 4;
+npcSpawningRegion = npcSpawningRegion - 100;
+
+-- Generate 50 NPCs
+for i = 0, 50, 1 do
 	-- Create a GameObject and store the returned identifier
-	gameObj_id = GameObject.create(GameObject.Types.NPC());
+	npc_id = GameObject.create(GameObject.Types.NPC());
 
 	-- Gather the actual GameObject
-	local gameObj_raw = GameObject.get(gameObj_id);
-	local gameObj_char = GameObject.to_character(gameObj_raw);
-	local gameObj_npc = GameObject.to_npc(gameObj_char);
+	local npc_gameObj_raw = GameObject.get(npc_id);
+	local npc_gameObj_char = GameObject.to_character(npc_gameObj_raw);
+	local npc_gameObj_npc = GameObject.to_npc(npc_gameObj_char);
 
 	-- Configure the model, animator and scale
-	gameObj_raw.model = resources.getModel("res/model/ClothedMan.gltf");
-	gameObj_raw:anim_init();
-	gameObj_raw.scale = vector(0.5, 0.5, 0.5);
+	npc_gameObj_raw.model = resources.getModel("res/model/ClothedMan.gltf");
+	npc_gameObj_raw:anim_init();
+	npc_gameObj_raw.scale = vector(0.15, 0.15, 0.15);
 
 	-- Configure the NPC to be in a random position surrounding the player's spawning location
-	local position = vector(math.random(-150, 150), 0, math.random(-150, 150));
+	local position = vector(math.random(0 - npcSpawningRegion, npcSpawningRegion), 0, math.random(0 - npcSpawningRegion, npcSpawningRegion));
 	position.y = getHeightAt(position.x, position.z);
-	dynamicsWorld:GetRigidBody(gameObj_raw.physBody):SetPosition(position);
+	dynamicsWorld:GetRigidBody(npc_gameObj_raw.physBody):SetPosition(position);
 
 	-- Set the NPC's rigid body collision shape and stop the NPC from being affected by gravity
-	local rigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(gameObj_raw.physBody));
+	local rigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(npc_gameObj_raw.physBody));
 	rigidBody:AddCollisionShape(shapeFactory:GetShape(sphereShape), vector(0,0,0), quaternion(1,0,0,0), 1);
-	rigidBody:SetSleeping(true);
 
 	-- Set up the NPC's initial AI FSM State
-	local npc_ai = FSM.get(gameObj_npc.context);
+	local npc_ai = FSM.get(npc_gameObj_npc.context);
 	npc_ai:stateLocal_setRegular(FSM.State.Wander());
 
 	-- Make the NPC have a randomly variant offset of time before they start to wander
-	gameObj_char:status_assign("Wander_ActionTime", math.random(-8.0, 2.0));
+	npc_gameObj_char:status_assign("Wander_ActionTime", math.random(-8.0, 2.0));
 end
 
 -- Syncronise the physics of the GameObjects after configuring them
