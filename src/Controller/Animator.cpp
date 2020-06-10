@@ -119,8 +119,10 @@ void Controller::Animator::LoadAnimation(const std::string& newAnim, bool endWhe
     size_t index = 0;
     if (loadedAnimation != nullptr) {
         index = loadedAnimation->getName().find(newAnim);
+    } else {
+        index = std::string::npos;
     }
-    if (index != std::string::npos) {
+    if (index == std::string::npos) {
         animationTime = 0.0;
         loadedAnimation = animatedModel->getAnimation(newAnim);
         endWhenCompleted = endWhenCompletedFlag;
