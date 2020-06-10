@@ -8,11 +8,8 @@
 #include "Controller/Engine/LuaManager.hpp"
 #include "Base.hpp"
 
-	/*!
-	 * @brief A customizable FSm state that has its behaviour defined in Lua scripting.
-	 * @note Operates on the contextual GameObject's "_TargetGameObject" status.
-	 */
-class State_Custom : public State_Base {
+	//! A customizable FSM state that has its behaviour defined in Lua scripting.
+class State_Custom : virtual public State_Base {
 public:
 		//! Use of the default constructor is disallowed.
 	State_Custom() = delete;
@@ -58,6 +55,12 @@ public:
 		 * @note This will catch (and print to cerr) any LuaException errors thrown.
 		 */
 	void read(std::shared_ptr<GameObj_Base> context, BlueEngine::ID msg_sender, Message_Type msg_type, float msg_attachment);
+
+		/*!
+		 * @brief For use with hacky memory manegement.
+		 * @note Only exists to deal with the issues pertaining to memory management.
+		 */
+	bool isCustom() { return true; }
 
 private:
 		/*!

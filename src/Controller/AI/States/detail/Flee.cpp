@@ -2,7 +2,9 @@
 #include "Controller/AI/States/Flee.hpp"
 
 void State_Flee::start(std::shared_ptr<GameObj_Base> context) {
-
+	// Set the GameObject's animation
+	if (context->animator_has())
+		context->animator_changeAnimation("RUN", false);
 }
 
 void State_Flee::run(std::shared_ptr<GameObj_Base> context, double t, double dt) {

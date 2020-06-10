@@ -7,6 +7,7 @@
 #include "Controller/Engine/IDTracker.hpp"
 #include "Controller/AI/Message.hpp"
 #include "Model/GameObject/Base.hpp"
+#include "Model/GameObject/NPC.hpp"
 
 	/*!
 	 * @brief A virtual polymorphic interface class to be used by all FSM State systems.
@@ -49,4 +50,10 @@ public:
 		 * @warning Fully virtual, must be implemented by inheritors!
 		 */
 	virtual void read(std::shared_ptr<GameObj_Base> context, BlueEngine::ID msg_sender, Message_Type msg_type, float msg_attachment) = 0;
+
+		/*!
+		 * @brief For use with hacky memory manegement.
+		 * @note Only exists to deal with the issues pertaining to memory management.
+		 */
+	virtual bool isCustom() { return false; }
 };

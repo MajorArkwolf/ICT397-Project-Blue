@@ -1,10 +1,10 @@
 #pragma once
 
-	/// Internal Dependencies
+/// Internal Dependencies
 #include "Base.hpp"
 
-	//! A state where the FSM actor will move directly towards the player GameObject.
-class State_Chase : virtual public State_Base {
+	//! A state where the FSM actor will attempt to damage the player GameObject.
+class State_Attack : virtual public State_Base {
 public:
 	/*!
 	 * @brief The behaviour to perform when this State is made active/current.

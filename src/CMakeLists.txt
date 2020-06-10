@@ -30,11 +30,11 @@ target_sources(${PROJECT_NAME} PRIVATE
     Controller/AI/detail/Manager.cpp
     Controller/AI/detail/Message.cpp
     Controller/AI/States/detail/Chase.cpp
-    Controller/AI/States/detail/Evade.cpp
     Controller/AI/States/detail/Flee.cpp
-    Controller/AI/States/detail/Patrol.cpp
-    Controller/AI/States/detail/Pursuit.cpp
     Controller/AI/States/detail/Wander.cpp
+    Controller/AI/States/detail/Attack.cpp
+    Controller/AI/States/detail/Die.cpp
+    Controller/AI/States/detail/Revive.cpp
     Controller/AI/States/detail/Custom.cpp
     
     # Model

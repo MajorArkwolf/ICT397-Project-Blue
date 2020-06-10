@@ -7,13 +7,13 @@
 
 	/// Internal Dependencies
 #include "Controller/Engine/LuaManager.hpp"
-#include "Controller/AI/States/Chase.hpp"
-#include "Controller/AI/States/Evade.hpp"
-#include "Controller/AI/States/Flee.hpp"
-#include "Controller/AI/States/Patrol.hpp"
-#include "Controller/AI/States/Pursuit.hpp"
-#include "Controller/AI/States/Wander.hpp"
 #include "Controller/AI/States/Custom.hpp"
+#include "Controller/AI/States/Chase.hpp"
+#include "Controller/AI/States/Flee.hpp"
+#include "Controller/AI/States/Wander.hpp"
+#include "Controller/AI/States/Attack.hpp"
+#include "Controller/AI/States/Die.hpp"
+#include "Controller/AI/States/Revive.hpp"
 
 BlueEngine::ID FSM_Manager::create(std::shared_ptr<GameObj_Base> object) {
 	// Catch an invalid GameObject being attached
@@ -102,38 +102,39 @@ void FSM_Manager::send(Message message) {
 	pending_messages.insert_after(pending_messages.before_begin(), message);
 }
 
-std::shared_ptr<State_Base> FSM_Manager::regular_state(State_Type type) {
-	// Keep a single static instance of each derived C++ state
-	static std::shared_ptr<State_Chase> staticChase;
-	static std::shared_ptr<State_Evade> staticEvade;
-	static std::shared_ptr<State_Flee> staticFlee;
-	static std::shared_ptr<State_Patrol> staticPatrol;
-	static std::shared_ptr<State_Pursuit> staticPursuit;
-	static std::shared_ptr<State_Wander> staticWander;
-	
+State_Base* FSM_Manager::regular_state(State_Type type) {
 	// Spit out the requested type
 	switch (type) {
-	case (State_Type::Chase):
-		return staticChase;
+	case (State_Type::Wander):
+		static State_Wander staticState_Wander;
+		return &staticState_Wander;
 
-	case (State_Type::Evade):
-		return staticEvade;
+	case (State_Type::Chase):
+		static State_Chase staticState_Chase;
+		return &staticState_Chase;
+
+	case (State_Type::Attack):
+		static State_Attack staticState_Attack;
+		return &staticState_Attack;
 
 	case (State_Type::Flee):
-		return staticFlee;
+		static State_Flee staticState_Flee;
+		return &staticState_Flee;
 
-	case (State_Type::Patrol):
-		return staticPatrol;
+	case (State_Type::Die):
+		static State_Die staticState_Die;
+		return &staticState_Die;
 
-	case (State_Type::Pursuit):
-		return staticPursuit;
+	case (State_Type::Revive):
+		static State_Revive staticState_Revive;
+		return &staticState_Revive;
 
-	case (State_Type::Wander):
-		return staticWander;
+	default:
+		return nullptr;
 	}
 }
 
-std::shared_ptr<State_Base> FSM_Manager::custom_state(std::string start_func, std::string run_func, std::string end_func, std::string read_func) {
+State_Base* FSM_Manager::custom_state(std::string start_func, std::string run_func, std::string end_func, std::string read_func) {
 	// Attempt to gather the start function
 	luabridge::LuaRef start_temp = luabridge::getGlobal(LuaManager::getInstance().getLuaState(), start_func.c_str());
 	if (start_temp == luabridge::Nil()) {
@@ -167,7 +168,7 @@ std::shared_ptr<State_Base> FSM_Manager::custom_state(std::string start_func, st
 	}
 
 	// Generate and return the custom state
-	return std::make_shared<State_Custom>(State_Custom(start_temp, run_temp, end_temp, read_temp));
+	return new State_Custom(start_temp, run_temp, end_temp, read_temp);
 }
 
 void FSM_Manager::lua_init() {
@@ -193,12 +194,13 @@ void FSM_Manager::lua_init() {
 	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
 		.beginNamespace("FSM")
 			.beginNamespace("State")
-				.addFunction("Chase", &FSM_Manager::lua_enum_chase)
-				.addFunction("Evade", &FSM_Manager::lua_enum_evade)
-				.addFunction("Flee", &FSM_Manager::lua_enum_flee)
-				.addFunction("Patrol", &FSM_Manager::lua_enum_patrol)
-				.addFunction("Pursuit", &FSM_Manager::lua_enum_pursuit)
-				.addFunction("Wander", &FSM_Manager::lua_enum_wander)
+				.addFunction("Invalid", &FSM_Manager::lua_enum_state_invalid)
+				.addFunction("Wander", &FSM_Manager::lua_enum_state_wander)
+				.addFunction("Chase", &FSM_Manager::lua_enum_state_chase)
+				.addFunction("Attack", &FSM_Manager::lua_enum_state_attack)
+				.addFunction("Flee", &FSM_Manager::lua_enum_state_flee)
+				.addFunction("Die", &FSM_Manager::lua_enum_state_die)
+				.addFunction("Revive", &FSM_Manager::lua_enum_state_revive)
 			.endNamespace()
 		.endNamespace();
 
@@ -207,14 +209,12 @@ void FSM_Manager::lua_init() {
 		.beginNamespace("FSM")
 			.beginNamespace("Message")
 				.addFunction("Invalid", &FSM_Manager::lua_enum_msg_invalid)
-				.addFunction("TargetSet", &FSM_Manager::lua_enum_msg_targetSet)
-				.addFunction("TargetFound", &FSM_Manager::lua_enum_msg_targetFound)
-				.addFunction("TargetLost", &FSM_Manager::lua_enum_msg_targetLost)
-				.addFunction("TargetDanger", &FSM_Manager::lua_enum_msg_targetDanger)
-				.addFunction("TargetVunerable", &FSM_Manager::lua_enum_msg_targetVunerable)
-				.addFunction("PositionX", &FSM_Manager::lua_enum_msg_posX)
-				.addFunction("PositionY", &FSM_Manager::lua_enum_msg_posY)
-				.addFunction("PositionZ", &FSM_Manager::lua_enum_msg_posZ)
+				.addFunction("PosX", &FSM_Manager::lua_enum_msg_posX)
+				.addFunction("PosY", &FSM_Manager::lua_enum_msg_posY)
+				.addFunction("PosZ", &FSM_Manager::lua_enum_msg_posZ)
+				.addFunction("TargetFound", &FSM_Manager::lua_enum_msg_targetfound)
+				.addFunction("IAmHurt", &FSM_Manager::lua_enum_msg_iamhurt)
+				.addFunction("IAmHelping", &FSM_Manager::lua_enum_msg_iamhelping)
 			.endNamespace()
 		.endNamespace();
 
@@ -232,34 +232,39 @@ FSM* FSM_Manager::lua_get(BlueEngine::ID identifier) {
 	return get(identifier).get();
 }
 
-State_Type FSM_Manager::lua_enum_chase() {
+State_Type FSM_Manager::lua_enum_state_invalid() {
 	// Return a copy of that enum value
-	return State_Type::Chase;
+	return State_Type::Invalid;
 }
 
-State_Type FSM_Manager::lua_enum_evade() {
-	// Return a copy of that enum value
-	return State_Type::Evade;
+State_Type FSM_Manager::lua_enum_state_wander() {
+    // Return a copy of that enum value
+    return State_Type::Wander;
 }
 
-State_Type FSM_Manager::lua_enum_flee() {
-	// Return a copy of that enum value
-	return State_Type::Flee;
+State_Type FSM_Manager::lua_enum_state_chase() {
+    // Return a copy of that enum value
+    return State_Type::Chase;
 }
 
-State_Type FSM_Manager::lua_enum_patrol() {
-	// Return a copy of that enum value
-	return State_Type::Patrol;
+State_Type FSM_Manager::lua_enum_state_attack() {
+    // Return a copy of that enum value
+    return State_Type::Attack;
 }
 
-State_Type FSM_Manager::lua_enum_pursuit() {
-	// Return a copy of that enum value
-	return State_Type::Pursuit;
+State_Type FSM_Manager::lua_enum_state_flee() {
+    // Return a copy of that enum value
+    return State_Type::Flee;
 }
 
-State_Type FSM_Manager::lua_enum_wander() {
-	// Return a copy of that enum value
-	return State_Type::Wander;
+State_Type FSM_Manager::lua_enum_state_die() {
+    // Return a copy of that enum value
+    return State_Type::Die;
+}
+
+State_Type FSM_Manager::lua_enum_state_revive() {
+    // Return a copy of that enum value
+    return State_Type::Revive;
 }
 
 Message_Type FSM_Manager::lua_enum_msg_invalid() {
@@ -267,44 +272,34 @@ Message_Type FSM_Manager::lua_enum_msg_invalid() {
 	return Message_Type::Invalid;
 }
 
-Message_Type FSM_Manager::lua_enum_msg_targetSet() {
-	// Return a copy of that enum value
-	return Message_Type::TargetSet;
-}
-
-Message_Type FSM_Manager::lua_enum_msg_targetFound() {
-	// Return a copy of that enum value
-	return Message_Type::TargetFound;
-}
-
-Message_Type FSM_Manager::lua_enum_msg_targetLost() {
-	// Return a copy of that enum value
-	return Message_Type::TargetLost;
-}
-
-Message_Type FSM_Manager::lua_enum_msg_targetDanger() {
-	// Return a copy of that enum value
-	return Message_Type::TargetDanger;
-}
-
-Message_Type FSM_Manager::lua_enum_msg_targetVunerable() {
-	// Return a copy of that enum value
-	return Message_Type::TargetVunerable;
-}
-
 Message_Type FSM_Manager::lua_enum_msg_posX() {
-	// Return a copy of that enum value
-	return Message_Type::PositionX;
+    // Return a copy of that enum value
+    return Message_Type::PositionX;
 }
 
 Message_Type FSM_Manager::lua_enum_msg_posY() {
-	// Return a copy of that enum value
-	return Message_Type::PositionY;
+    // Return a copy of that enum value
+    return Message_Type::PositionY;
 }
 
 Message_Type FSM_Manager::lua_enum_msg_posZ() {
-	// Return a copy of that enum value
-	return Message_Type::PositionZ;
+    // Return a copy of that enum value
+    return Message_Type::PositionZ;
+}
+
+Message_Type FSM_Manager::lua_enum_msg_targetfound() {
+    // Return a copy of that enum value
+    return Message_Type::TargetFound;
+}
+
+Message_Type FSM_Manager::lua_enum_msg_iamhurt() {
+    // Return a copy of that enum value
+    return Message_Type::IAmHurt;
+}
+
+Message_Type FSM_Manager::lua_enum_msg_iamhelping() {
+    // Return a copy of that enum value
+    return Message_Type::IAmHelping;
 }
 
 std::map<BlueEngine::ID, std::shared_ptr<FSM>> FSM_Manager::actors = std::map<BlueEngine::ID, std::shared_ptr<FSM>>();

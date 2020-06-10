@@ -6,19 +6,24 @@
 
 	/// Internal Dependencies
 #include "Controller/Engine/IDTracker.hpp"
+#include "Controller/Engine/LuaManager.hpp"
 
 	//! Defines the types of inter-FSM messages that can be sent.
 enum class Message_Type {
 	Invalid,
-	TargetSet,
-	TargetFound,
-	TargetLost,
-	TargetDanger,
-	TargetVunerable,
 	PositionX,
 	PositionY,
-	PositionZ
+	PositionZ,
+	TargetFound,
+	IAmHurt,
+	IAmHelping
 };
+
+// Registratiion of Enum Message_Type
+namespace luabridge {
+	template <>
+	struct luabridge::Stack <Message_Type> : EnumWrapper <Message_Type> {};
+}
 
 	/*!
 	 * @brief The data structure used for inter-FSM communication.

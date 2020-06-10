@@ -2,7 +2,9 @@
 #include "Controller/AI/States/Chase.hpp"
 
 void State_Chase::start(std::shared_ptr<GameObj_Base> context) {
-
+	// Set the GameObject's animation
+	if (context->animator_has())
+		context->animator_changeAnimation("RUN", false);
 }
 
 void State_Chase::run(std::shared_ptr<GameObj_Base> context, double t, double dt) {

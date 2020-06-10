@@ -1,13 +1,10 @@
 #pragma once
 
-	/// Internal Dependencies
+/// Internal Dependencies
 #include "Base.hpp"
 
-	/*!
-	 * @brief A state where the FSM actor will flee a specific GameObject, in a direction relative to its movement.
-	 * @note Operates on the contextual GameObject's "_TargetGameObject" status.
-	 */
-class State_Evade : public State_Base {
+	//! A state where the FSM actor will collapse from taking too much damage.
+class State_Die : virtual public State_Base {
 public:
 	/*!
 	 * @brief The behaviour to perform when this State is made active/current.

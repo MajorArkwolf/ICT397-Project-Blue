@@ -3,11 +3,8 @@
 	/// Internal Dependencies
 #include "Base.hpp"
 
-	/*!
-	 * @brief A state where the FSM actor will flee in a random direction from a specific GameObject.
-	 * @note Operates on the contextual GameObject's "_TargetGameObject" status.
-	 */
-class State_Flee : public State_Base {
+	//! A state where the FSM actor will flee away from the player GameObject.
+class State_Flee : virtual public State_Base {
 public:
 	/*!
 	 * @brief The behaviour to perform when this State is made active/current.

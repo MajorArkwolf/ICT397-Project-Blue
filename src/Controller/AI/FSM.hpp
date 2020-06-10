@@ -11,13 +11,20 @@
 
 	//! Lists the types of non-customized states that the AI system uses.
 enum class State_Type {
+	Invalid,
+	Wander,
 	Chase,
-	Evade,
+	Attack,
 	Flee,
-	Patrol,
-	Pursuit,
-	Wander
+	Die,
+	Revive
 };
+
+// Registratiion of Enum State_Type
+namespace luabridge {
+	template <>
+	struct luabridge::Stack <State_Type> : EnumWrapper <State_Type> {};
+}
 
 	/*!
 	 * @brief A finite state machine.
@@ -32,12 +39,18 @@ public:
 	FSM(std::shared_ptr<GameObj_Base> object);
 
 		/*!
+		 * @brief Class destructor.
+		 * @note Only frees stored CUSTOM states, as regular states are staticly assigned to memory.
+		 */
+	~FSM();
+
+		/*!
 		 * @brief Sets the current local State, calling the appropiate start and end behaviour.
 		 * @param [in] target A managed reference to an existing State loaded into the engine.
 		 * @note Sets the prior local State to the value of the current local State at call before operating.
 		 * @warning Will throw an error if the attached Game Object is invalid!
 		 */
-	void local_set(std::shared_ptr<State_Base> target);
+	void local_set(State_Base* target);
 
 		/*!
 		 * @brief Swaps the current local and prior State, calling the appropiate start and end behaviour.
@@ -51,7 +64,7 @@ public:
 		 * @note Sets the prior global State to the value of the current global State at call before operating.
 		 * @warning Will throw an error if the attached Game Object is invalid!
 		 */
-	void global_set(std::shared_ptr<State_Base> target);
+	void global_set(State_Base* target);
 
 		/*!
 		 * @brief Swaps the current global and prior State, calling the appropiate start and end behaviour.
@@ -101,28 +114,28 @@ protected:
 		 * @note Stores a managed reference to the State, not an instance of the State itself.
 		 * @warning If nullptr, no calls to its behaviour will be made.
 		 */
-	std::shared_ptr<State_Base> local_current;
+	State_Base* local_current;
 
 		/*!
 		 * @brief The FSM's local prior (inactive) State.
 		 * @note Stores a managed reference to the State, not an instance of the State itself.
 		 * @warning If nullptr, no calls to its behaviour will be made.
 		 */
-	std::shared_ptr<State_Base> local_prior;
+	State_Base* local_prior;
 
 		/*!
 		 * @brief The FSM's global active/current State.
 		 * @note Stores a managed reference to the State, not an instance of the State itself.
 		 * @warning If nullptr, no calls to its behaviour will be made.
 		 */
-	std::shared_ptr<State_Base> global_current;
+	State_Base* global_current;
 
 		/*!
 		 * @brief The FSM's global prior (inactive) State.
 		 * @note Stores a managed reference to the State, not an instance of the State itself.
 		 * @warning If nullptr, no calls to its behaviour will be made.
 		 */
-	std::shared_ptr<State_Base> global_prior;
+	State_Base* global_prior;
 
 		/*!
 		 * @brief Sets the FSM's local state to a specified regular type.
@@ -175,5 +188,5 @@ private:
 		 * @brief Stores a cached managed reference to the 'attached' GameObject.
 		 * @note Initialised by constructor, should be treated as read-only after.
 		 */
-	std::weak_ptr<GameObj_Base> attached_object;
+	std::shared_ptr<GameObj_Base> attached_object;
 };

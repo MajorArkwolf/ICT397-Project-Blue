@@ -3,11 +3,8 @@
 	/// Internal Dependencies
 #include "Base.hpp"
 
-	/*!
-	 * @brief A state where the FSM actor will randomly move around the environment.
-	 * @note Does not operate on any of the contextual GameObject's statuses.
-	 */
-class State_Wander : public State_Base {
+	//! A state where the FSM actor will randomly move around the environment.
+class State_Wander : virtual public State_Base {
 public:
 		/*!
 		 * @brief The behaviour to perform when this State is made active/current.

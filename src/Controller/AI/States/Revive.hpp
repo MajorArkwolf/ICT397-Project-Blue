@@ -1,13 +1,10 @@
 #pragma once
 
-	/// Internal Dependencies
+/// Internal Dependencies
 #include "Base.hpp"
 
-	/*!
-	 * @brief A state where the FSM actor will follow a set 'path' arnound its environment.
-	 * @note Operates on the contextual GameObject's "_PatrolPoint{0x,0z,1x,1z,2x,2z,3x,3z}" statuses.
-	 */
-class State_Patrol : public State_Base {
+	//! A state where the FSM actor will assist other NPCs that have collapsed from taking too much damage.
+class State_Revive : virtual public State_Base {
 public:
 	/*!
 	 * @brief The behaviour to perform when this State is made active/current.

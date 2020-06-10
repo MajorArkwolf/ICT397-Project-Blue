@@ -65,7 +65,7 @@ public:
 		 * @param [in] type The specification of the state type to gather.
 		 * @return A reference to a static regular FSM State.
 		 */
-	static std::shared_ptr<State_Base> regular_state(State_Type type);
+	static State_Base* regular_state(State_Type type);
 
 		/*!
 		 * @brief Attempts to generate a new Lua scripted FSM State.
@@ -75,7 +75,7 @@ public:
 		 * @param [in] read_func The name of the Lua function to call for the reading behaviour.
 		 * @return A managed reference to a newly created custom FSM State, or nullptr on error.
 		 */
-	static std::shared_ptr<State_Base> custom_state(std::string start_func, std::string run_func, std::string end_func, std::string read_func);
+	static State_Base* custom_state(std::string start_func, std::string run_func, std::string end_func, std::string read_func);
 
 		/*!
 		 * @brief Registers the FSM management systems and misc. properties to the Lua scripting system.
@@ -108,75 +108,51 @@ private:
 
 		/*!
 		 * @brief Provides scripted access to enumerated values.
-		 * @return State_Type::Chase
+		 * @return State_Type::Invalid
 		 */
-	static State_Type lua_enum_chase();
-
-		/*!
-		 * @brief Provides scripted access to enumerated values.
-		 * @return State_Type::Evade
-		 */
-	static State_Type lua_enum_evade();
-
-		/*!
-		 * @brief Provides scripted access to enumerated values.
-		 * @return State_Type::Flee
-		 */
-	static State_Type lua_enum_flee();
-
-		/*!
-		 * @brief Provides scripted access to enumerated values.
-		 * @return State_Type::Patrol
-		 */
-	static State_Type lua_enum_patrol();
-
-		/*!
-		 * @brief Provides scripted access to enumerated values.
-		 * @return State_Type::Pursuit
-		 */
-	static State_Type lua_enum_pursuit();
+	static State_Type lua_enum_state_invalid();
 
 		/*!
 		 * @brief Provides scripted access to enumerated values.
 		 * @return State_Type::Wander
 		 */
-	static State_Type lua_enum_wander();
+	static State_Type lua_enum_state_wander();
+
+		/*!
+		 * @brief Provides scripted access to enumerated values.
+		 * @return State_Type::Chase
+		 */
+	static State_Type lua_enum_state_chase();
+
+		/*!
+		 * @brief Provides scripted access to enumerated values.
+		 * @return State_Type::Attack
+		 */
+	static State_Type lua_enum_state_attack();
+
+		/*!
+		 * @brief Provides scripted access to enumerated values.
+		 * @return State_Type::Flee
+		 */
+	static State_Type lua_enum_state_flee();
+
+		/*!
+		 * @brief Provides scripted access to enumerated values.
+		 * @return State_Type::Die
+		 */
+	static State_Type lua_enum_state_die();
+
+		/*!
+		 * @brief Provides scripted access to enumerated values.
+		 * @return State_Type::Revive
+		 */
+	static State_Type lua_enum_state_revive();
 
 		/*!
 		 * @brief Provides scripted access to enumerated values.
 		 * @return Message_Type::Invalid
 		 */
 	static Message_Type lua_enum_msg_invalid();
-
-		/*!
-		 * @brief Provides scripted access to enumerated values.
-		 * @return Message_Type::TargetSet
-		 */
-	static Message_Type lua_enum_msg_targetSet();
-
-		/*!
-		 * @brief Provides scripted access to enumerated values.
-		 * @return Message_Type::TargetFound
-		 */
-	static Message_Type lua_enum_msg_targetFound();
-
-		/*!
-		 * @brief Provides scripted access to enumerated values.
-		 * @return Message_Type::TargetLost
-		 */
-	static Message_Type lua_enum_msg_targetLost();
-
-		/*!
-		 * @brief Provides scripted access to enumerated values.
-		 * @return Message_Type::TargetDanger
-		 */
-	static Message_Type lua_enum_msg_targetDanger();
-
-		/*!
-		 * @brief Provides scripted access to enumerated values.
-		 * @return Message_Type::TargetVunerable
-		 */
-	static Message_Type lua_enum_msg_targetVunerable();
 
 		/*!
 		 * @brief Provides scripted access to enumerated values.
@@ -195,6 +171,24 @@ private:
 		 * @return Message_Type::PositionZ
 		 */
 	static Message_Type lua_enum_msg_posZ();
+
+		/*!
+		 * @brief Provides scripted access to enumerated values.
+		 * @return Message_Type::TargetFound
+		 */
+	static Message_Type lua_enum_msg_targetfound();
+
+		/*!
+		 * @brief Provides scripted access to enumerated values.
+		 * @return Message_Type::IAmHurt
+		 */
+	static Message_Type lua_enum_msg_iamhurt();
+
+		/*!
+		 * @brief Provides scripted access to enumerated values.
+		 * @return Message_Type::IAmHelping
+		 */
+	static Message_Type lua_enum_msg_iamhelping();
 
 		/*!
 		 * @brief Stores the currently pending messages to be delivered.
