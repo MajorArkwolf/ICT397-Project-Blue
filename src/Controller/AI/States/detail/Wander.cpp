@@ -30,7 +30,7 @@ void State_Wander::run(std::shared_ptr<GameObj_Base> context, double t, double d
 	npc->status_assign("Wander_ActionTime", npc->status_get("Wander_ActionTime") + float(dt));
 
 	// Determine the behaviour to apply for the wandering
-	if (npc->status_get("Wander_ActionIsIdle") < 1.0f) {
+	if (npc->status_get("Wander_ActionIsIdle") < 0.5f) {
 		// The NPC is walking, move it forward
 		//TODO: Implement this!
 
@@ -50,9 +50,6 @@ void State_Wander::run(std::shared_ptr<GameObj_Base> context, double t, double d
 	else {
 		// Catch if the wandering behaviour should swap
 		if (npc->status_get("Wander_ActionTime") > npc->status_get("Wander_IdleTimeMax")) {
-			// Change the direction that the AI will face
-			//TODO: Implement this!
-
 			// Change the NPC's animation to walking
 			npc->animator_changeAnimation("WALK", false);
 
