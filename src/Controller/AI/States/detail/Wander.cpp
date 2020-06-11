@@ -27,7 +27,7 @@ void State_Wander::start(std::shared_ptr<GameObj_Base> context) {
 	npc->status_assign("Wander_Rotation", static_cast<float>(rand()) / static_cast<float>(RAND_MAX / 359.99f));
 }
 
-void State_Wander::run(std::shared_ptr<GameObj_Base> context, double t, double dt) {
+void State_Wander::run(std::shared_ptr<GameObj_Base> context, double t [[maybe_unused]], double dt) {
 	// Get the NPC's collision body
 	auto npc_phys = Physics::PhysicsManager::GetInstance().GetDynamicsWorld()->GetRigidBody(context->physBody);
 
@@ -44,7 +44,7 @@ void State_Wander::run(std::shared_ptr<GameObj_Base> context, double t, double d
 	// Determine the behaviour to apply for the wandering
 	if (npc->status_get("Wander_ActionIsIdle") < 0.5f) {
 		// The NPC is walking, move it forward
-		glm::vec3 new_position = npc_phys->GetPosition() + (npc_phys->GetOrientation() * (glm::vec3(0.0f, 0.0f, 1.0f * float(dt))));
+		glm::vec3 new_position = npc_phys->GetPosition() + (npc_phys->GetOrientation() * (glm::vec3(0.0f, 0.0f, 1.5f * float(dt))));
 		new_position.y = Controller::TerrainFactory::LuaBLHeight(new_position.x, new_position.z) + 0.1f;
 		npc_phys->SetPosition(new_position);
 
