@@ -47,7 +47,7 @@ function catchIfDead(npc_raw) {
 		local npc_char = GameObject.to_character(npc_raw);
 
 	-- Catch if the NPC has died
-	if (npc_npc:status_get("Health") < 0) {
+	if ((npc_npc:status_get("Health") < 0) or (npc_npc:status_get("Health") == 0)) {
 		-- Make sure you have access to the NPC specific properties
 		local npc_npc = GameObject.to_npc(npc_char);
 
