@@ -109,6 +109,12 @@ protected:
 	static GameObj_Base* lua_getPlayer();
 
 		/*!
+		 * @brief Generates a list of GameObject IDs, only containing those from managed NPCs.
+		 * @return A vector of the managed NPC GameObject identifiers.
+		 */
+	static std::vector<BlueEngine::ID> lua_listNPCs();
+
+		/*!
 		 * @brief Downcasts a GameObj_Base reference to a GameObj_Character reference.
 		 * @param [in] raw_in A base pointer to a polymorphic GameObject.
 		 * @return The reference typecasted, or nullptr if the cast could not be safely performed.

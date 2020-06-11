@@ -23,6 +23,7 @@ void GameObj_Manager::init() {
         .addFunction("create", GameObj_Manager::lua_create)
         .addFunction("get", GameObj_Manager::lua_get)
         .addFunction("getPlayer", GameObj_Manager::lua_getPlayer)
+        .addFunction("listNPCs", GameObj_Manager::lua_listNPCs)
         .addFunction("remove", GameObj_Manager::remove)
         .addFunction("clear", GameObj_Manager::clear)
         .addFunction("syncPhys", GameObj_Manager::syncPhys)
@@ -155,6 +156,21 @@ GameObj_Base *GameObj_Manager::lua_getPlayer() {
     // Gather and return the GameObject Player
     return dynamic_cast<GameObj_Character *>(
         Controller::Factory::get().GameObject(GameObj_Type::Player).get());
+}
+
+std::vector<BlueEngine::ID> GameObj_Manager::lua_listNPCs() {
+    // Keep track of the identifiers
+    std::vector<BlueEngine::ID> identifierList;
+    
+    // Process all of the GameObjects
+    for (auto i = managed_objs.begin(); i != managed_objs.end(); ++i) {
+        // Catch if the GameObject is an NPC
+        if (i->second->type() == GameObj_Type::NPC)
+            identifierList.push_back(i->second->id());
+    }
+
+    // Return the generated list
+    return identifierList;
 }
 
 GameObj_Character *GameObj_Manager::lua_to_character(GameObj_Base *raw_in) {
