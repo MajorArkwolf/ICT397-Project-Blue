@@ -18,7 +18,7 @@
 * NOTE: `Linux and Mac dependences out of date`
 * Linux: `sudo apt-get install cmake libsdl2-dev libsdl2-image-dev
     libsdl2-ttf-dev libsdl2-mixer-dev libglm-dev assimp-utils`
-* macOS: `brew install cmake`
+* macOS: `brew install cmake ninja llvm --with-toolchain`
 * Windows: `None` 
 
 ### GIT LFS
@@ -36,11 +36,22 @@ git submodule update --init --recursive --depth 1
 ```
 
 ### Building
-* Unix:
-    ```
-    cmake -S . -B build && cmake --build build && ./build/project-blue
-    ```
-* Windows:
+#### Linux:
+```
+cmake -S . -B build && cmake --build build && ./build/project-blue
+```
+
+#### macOS:
+Replace X with compiler built types for example 'debug', 'release' or 'RelWithDebInfo'
+```
+CXX=/usr/local/opt/llvm/bin/clang++ cmake -S . -B build/X -G Ninja -D CMAKE_BUILD_TYPE=X
+```
+Change directory to whatever you specified X as.
+```
+ninja && ./Project-Blue
+```
+
+#### Windows:
     * Open Visual Studio as Administrator (required to make symbolic links)
     * In Visual Studio, select Open → CMake, select `CMakeLists.txt`
     * From the "Select Startup Item" menu, select `Project-Blue.exe`
@@ -58,5 +69,5 @@ git submodule update --init --recursive --depth 1
         * [Visual Studio Code][clang-format-vsc]
 
 ## License
-This project is licensed under the MIT license. Please see the [`LICENSE](LICENSE) file
+This project is licensed under the MIT license. Please see the [LICENSE](LICENSE) file
 for details.
