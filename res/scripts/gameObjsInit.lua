@@ -6,6 +6,7 @@ collisionWorld = physManager:GetCollisionWorld();
 dynamicsWorld = physManager:GetDynamicsWorld();
 local sphereShape = shapeFactory:createSphere(1);
 local capsuleShape = shapeFactory:createCapsule(1.5,3);
+local capsuleShape_npc = shapeFactory:createCapsule(0.5,1);
 
 -- Gather the actual GameObject and configure it
 gameObj_raw = GameObject.create(GameObject.Types.Player());
@@ -62,13 +63,13 @@ for i = 0, 50, 1 do
 
 	-- Set the NPC's rigid body collision shape and stop the NPC from being affected by gravity
 	local npc_rigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(npc_gameObj_raw.physBody));
-	npc_rigidBody:AddCollisionShape(shapeFactory:GetShape(sphereShape), vector(0,0,0), quaternion(1,0,0,0), 1);
+	npc_rigidBody:AddCollisionShape(shapeFactory:GetShape(capsuleShape_npc), vector(0,0,0), quaternion(1,0,0,0), 1);
 	npc_rigidBody:SetAngularDamping(1);
 	npc_rigidBody:SetSleeping(true);
 
 	-- Set up the NPC's initial AI FSM State
 	local npc_ai = FSM.get(npc_gameObj_npc.context);
-	npc_ai:stateLocal_setRegular(FSM.State.Wander());
+	npc_ai:stateLocal_setRegular(FSM.State.Chase());
 
 	-- Make the NPC have a randomly variant offset of time before they start to wander
 	npc_gameObj_char:status_assign("Wander_ActionTime", math.random(-8.0, 2.0));

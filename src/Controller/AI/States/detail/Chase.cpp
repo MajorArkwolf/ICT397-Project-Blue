@@ -26,10 +26,14 @@ void State_Chase::run(std::shared_ptr<GameObj_Base> context, double t [[maybe_un
 	std::shared_ptr<GameObj_Base> player_obj = Controller::Factory::get().GameObject(GameObj_Type::Player);
 	auto player_phys = Physics::PhysicsManager::GetInstance().GetDynamicsWorld()->GetRigidBody(player_obj->physBody);
 
-	// Make sure the NPC's physical body is at a stand-still, and correctly orientated towards the player
+	// Make sure the NPC's physical body is at a stand-still
 	npc_phys->SetSleeping(true);
-	glm::quat oriantationToApply = glm::rotation(glm::vec3(npc_phys->GetPosition().x, 0.0f, npc_phys->GetPosition().z), glm::vec3(player_phys->GetPosition().x, 0.0f, player_phys->GetPosition().z));
-	npc_phys->SetOrientation(oriantationToApply);
+
+	// Make sure the NPC is oriented towards the player
+	glm::vec3 npc_pos = glm::vec3(npc_phys->GetPosition().x, 0.0f, npc_phys->GetPosition().z);
+	glm::vec3 player_pos = glm::vec3(player_phys->GetPosition().x, 0.0f, player_phys->GetPosition().z);
+	glm::quat rotationToPlayer = glm::quatLookAt(glm::normalize(npc_pos - player_pos), glm::vec3(0.0f, 1.0f, 0.0f));
+	npc_phys->SetOrientation(rotationToPlayer);
 
 	// The NPC is running, move it forward
 	glm::vec3 new_position = npc_phys->GetPosition() + (npc_phys->GetOrientation() * (glm::vec3(0.0f, 0.0f, 4.0f * float(dt))));
