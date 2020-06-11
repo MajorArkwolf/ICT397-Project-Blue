@@ -7,6 +7,8 @@ dynamicsWorld = physManager:GetDynamicsWorld();
 
 local sphereShape = shapeFactory:createSphere(1);
 local capsuleShape = shapeFactory:createCapsule(1.5,3);
+local bulletShape = shapeFactory:createSphere(0.4);
+local bulletShapeCollision = shapeFactory:createSphere(1);
 
 -- Load the GameObject Lua Reporting Library functions from script
 dofile("res/scripts/gameObjsReporting.lua");
@@ -41,22 +43,40 @@ gameObj_charData:status_assign("Sliding", 0);
 gameObj_charData:status_assign("FreeCam", 0);
 gameObj_charData:status_assign("Oxygen", 1000);
 gameObj_charData:status_assign("Health", 100);
+gameObj_charData:status_assign("Jetpack", 500);
+gameObj_charData:status_assign("UsingJetpack", 0);
 
---[[
+
+
+BulletID = GameObject.create(GameObject.Types.NPC());
+BulletObject = GameObject.get(BulletID);
+BulletObject.scale = vector(0.5, 0.5, 0.5)
+BulletCharData = GameObject.to_character(BulletObject);
+BulletCharData:status_assign("Projectile", 1)
+BulletObject.model = resources.getModel("res/model/throwingstar.obj");
+rigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(BulletObject.physBody));
+BulletCollisionBody = getReactCollisionBody(collisionWorld:GetCollisionBody(BulletObject.physBody));
+rigidBody:AddCollisionShape(shapeFactory:GetShape(bulletShape), vector(0,0,0), quaternion(1,0,0,0), 5);
+BulletCollisionBody:AddCollisionShape(shapeFactory:GetShape(bulletShapeCollision), vector(0,0,0), quaternion(1,0,0,0));
+
+
 
 for i = 0, 20, 1 do
 -- Create a GameObject and store the returned identifier
-gameObj_id = GameObject.create(GameObject.Types.NPC());
+ gameObj_id = GameObject.create(GameObject.Types.NPC());
 
 -- Gather the actual GameObject and configure it
-gameObj_raw = GameObject.get(gameObj_id);
-gameObj_raw.model = resources.getModel("res/model/ball.fbx");
-position = vector(5,200,20);
+ gameObj_raw = GameObject.get(gameObj_id);
+ gameObj_raw.model = resources.getModel("res/model/ball.fbx");
+ position = vector(5,200,20);
 dynamicsWorld:GetRigidBody(gameObj_raw.physBody):SetPosition(position);
-rigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(gameObj_raw.physBody));
+ rigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(gameObj_raw.physBody));
+ collisionBody = getReactCollisionBody(collisionWorld:GetCollisionBody(gameObj_raw.physBody));
 rigidBody:AddCollisionShape(shapeFactory:GetShape(sphereShape), vector(0,0,0), quaternion(1,0,0,0), 1);
+rigidBody:SetSleeping(true);
+collisionBody:AddCollisionShape(shapeFactory:GetShape(sphereShape), vector(0,0,0), quaternion(1,0,0,0));
 end
-]]--
+
 
 -- Create a GameObject and store the returned identifier
  BoundingWallID = GameObject.create(GameObject.Types.Static());
