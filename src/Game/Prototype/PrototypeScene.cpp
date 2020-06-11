@@ -259,6 +259,14 @@ void PrototypeScene::GUIStart() {
     if (engine.showSettingsMenu) {
         engine.SettingMenu();
     }
+    if (luaL_dofile(LuaManager::getInstance().getLuaState(), "./res/scripts/luaFunctions.lua")) {
+        printf("%s\n", lua_tostring(LuaManager::getInstance().getLuaState(), -1));
+    }
+    luabridge::LuaRef LuaGui =
+        luabridge::LuaRef::getGlobal(LuaManager::getInstance().getLuaState(), "GUI");
+    if (!LuaGui.isNil()) {
+        LuaGui();
+    }
 }
 
 void PrototypeScene::GUIEnd() {

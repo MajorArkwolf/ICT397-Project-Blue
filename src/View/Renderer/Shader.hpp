@@ -113,6 +113,11 @@ class Shader {
      */
     void setMat4(const std::string &name, const glm::mat4 &mat) const;
 
+    /**
+     * Pass a vector of Mat4's into the shader.
+     * @param name of the variable
+     * @param matArray vector contain matrices, capped at 100.
+     */
     void setMat4Array(const std::string &name, const std::vector<glm::mat4> &matArray) const;
 
     /**

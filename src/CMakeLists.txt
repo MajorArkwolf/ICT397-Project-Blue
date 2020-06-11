@@ -46,7 +46,9 @@ target_sources(${PROJECT_NAME} PRIVATE
     Model/TextManager.cpp
     Model/TerrainModel.cpp
     Model/Models/Animation.cpp
+    Model/PlayerCanvas.cpp
 
+    Model/LuaGuiWrapper.cpp
 
         # Game Objects
     Model/GameObject/detail/Base.cpp
@@ -57,6 +59,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     Model/GameObject/detail/NPC.cpp
     Model/GameObject/detail/Manager.cpp
     Model/GameObject/detail/LuaAssist.cpp
+
 
     Model/GameState.cpp
 

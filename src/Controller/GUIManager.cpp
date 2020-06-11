@@ -4,6 +4,7 @@
 #include "Controller/InputManager.hpp"
 #include "Controller/TerrainManager.hpp"
 #include "Controller/TextureManager.hpp"
+#include "Model/LuaGuiWrapper.h"
 #include "Model/TextManager.hpp"
 
 GUIManager::GUIManager() {
@@ -11,6 +12,8 @@ GUIManager::GUIManager() {
 
     luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
         .addFunction("toggleGUIWindow", &GUIManager::luaToggleWindow);
+
+    LuaGUIWrapper::RegisterWithLua();
 }
 
 GUIManager::~GUIManager() {
@@ -32,9 +35,9 @@ void GUIManager::initialiseImGUI(GLFWwindow *window) {
 void GUIManager::displayInputRebindWindow() {
     auto &inputManager = Controller::Input::InputManager::getInstance();
     auto &inputMap     = inputManager.getInputMap();
-    bool &windowOpen   = windowOpenMap.at("controls");
+    auto &windowOpen   = windowOpenMap.at("controls");
     auto &resManager   = ResourceManager::getInstance();
-    auto *state        = inputManager.getKeyStates();
+    const auto *state        = inputManager.getKeyStates();
 
     if (windowOpen) {
 
@@ -58,8 +61,8 @@ void GUIManager::displayInputRebindWindow() {
                     ImGui::SameLine(ImGui::GetWindowWidth() - 80);
 
                     if (ImGui::Button(scancodeString.c_str())) {
-                        auto &scancodePairs = inputManager.getStringScancodePairs();
-                        for (auto &i : scancodePairs) {
+                        const auto &scancodePairs = inputManager.getStringScancodePairs();
+                        for (const auto &i : scancodePairs) {
                             if (state[i.second]) {
                                 inputManager.bindKey(n.first, i.second);
                                 break;
@@ -113,7 +116,7 @@ void GUIManager::displayEscapeMenu() {
 void GUIManager::displayInstructionMenu() {
     auto &resManager = ResourceManager::getInstance();
     // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-    bool &windowOpen = windowOpenMap.at("instructions");
+    auto &windowOpen = windowOpenMap.at("instructions");
     if (windowOpen) {
         ImGui::Begin(resManager.getString("InstructionMenu_title").c_str(), &windowOpen,
                      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize);
@@ -125,7 +128,7 @@ void GUIManager::displayInstructionMenu() {
 void GUIManager::displayQuitScreen() {
     auto &textures   = ResourceManager::getInstance().GetTextureManager();
     auto &texture    = textures.getTexture("exitScreen");
-    bool &windowOpen = windowOpenMap.at("exit");
+    auto &windowOpen = windowOpenMap.at("exit");
     auto &engine     = BlueEngine::Engine::get();
 
     if (windowOpen) {
@@ -137,7 +140,7 @@ void GUIManager::displayQuitScreen() {
                          ImGuiWindowFlags_NoTitleBar);
 
         ImGui::Text("Thank you for playing our game. Click the image to exit.");
-        if (ImGui::ImageButton((void *)(intptr_t)texture.TextureID,
+        if (ImGui::ImageButton(reinterpret_cast<void *>(intptr_t(texture.TextureID)),
                                ImVec2(texture.width / 4, texture.height / 4))) {
             engine.endEngine();
         }
@@ -162,13 +165,13 @@ void GUIManager::displayDevScreen(View::Camera &camera) {
 
 void GUIManager::displayTextureManager() {
     auto &textureManager = ResourceManager::getInstance().GetTextureManager();
-    bool &windowOpen     = windowOpenMap.at("texture");
+    auto &windowOpen     = windowOpenMap.at("texture");
     auto &texMap         = textureManager.textureMap;
     if (windowOpen) {
         ImGui::Begin("Textures", &windowOpen, ImGuiWindowFlags_NoCollapse);
 
         for (auto &n : texMap) {
-            ImGui::Image((void *)(intptr_t)n.second.TextureID, ImVec2(100, 100));
+            ImGui::Image(reinterpret_cast<void *>(static_cast<intptr_t>(n.second.TextureID)), ImVec2(100, 100));
             ImGui::SameLine();
             ImGui::Text("Texture Name: %s\nTexture ID: %d\nWidth: %d\nHeight: %d", n.first.c_str(),
                         n.second.TextureID, n.second.width, n.second.height);
@@ -183,26 +186,26 @@ void GUIManager::displayTerrainSettings() {
 
     if (terrainManager != nullptr) {
 
-        bool &windowOpen        = windowOpenMap.at("terrainSettings");
-        constexpr int textLimit = 1000;
+        auto &windowOpen        = windowOpenMap.at("terrainSettings");
+        constexpr auto textLimit = 1000;
 
-        auto snowID  = terrainManager->getSnowTextureId();
-        auto grassID = terrainManager->getGrassTextureId();
-        auto sandID  = terrainManager->getSandTextureId();
-        auto dirtID  = terrainManager->getDirtTextureId();
-        auto waterID = terrainManager->getWaterTextureId();
+        const auto snowID  = terrainManager->getSnowTextureId();
+        const auto grassID = terrainManager->getGrassTextureId();
+        const auto sandID  = terrainManager->getSandTextureId();
+        const auto dirtID  = terrainManager->getDirtTextureId();
+        const auto waterID = terrainManager->getWaterTextureId();
 
-        auto snowHeight  = terrainManager->getSnowHeight();
-        auto grassHeight = terrainManager->getGrassHeight();
-        auto sandHeight  = terrainManager->getSandHeight();
-        auto dirtHeight  = terrainManager->getDirtHeight();
-        auto waterHeight = terrainManager->getWaterHeight();
+        const auto snowHeight  = terrainManager->getSnowHeight();
+        const auto grassHeight = terrainManager->getGrassHeight();
+        const auto sandHeight  = terrainManager->getSandHeight();
+        const auto dirtHeight  = terrainManager->getDirtHeight();
+        const auto waterHeight = terrainManager->getWaterHeight();
 
-        static float snowSlider  = snowHeight;
-        static float grassSlider = grassHeight;
-        static float sandSlider  = sandHeight;
-        static float dirtSlider  = dirtHeight;
-        static float waterSlider = waterHeight;
+        static auto snowSlider  = snowHeight;
+        static auto grassSlider = grassHeight;
+        static auto sandSlider  = sandHeight;
+        static auto dirtSlider  = dirtHeight;
+        static auto waterSlider = waterHeight;
 
         static char snowMap[textLimit];
         static char grassMap[textLimit];
@@ -210,33 +213,34 @@ void GUIManager::displayTerrainSettings() {
         static char waterMap[textLimit];
         static char sandMap[textLimit];
 
-        auto showTextureInfo = [&](unsigned int textureID, std::string textureName,
-                                   char text[textLimit], std::function<void(unsigned int)> setTex) {
-            ImGui::Image((void *)(intptr_t)textureID, ImVec2(100, 100));
+        auto showTextureInfo = [&](const unsigned int textureID, const std::string &textureName,
+                                   char text[textLimit], const std::function<void(unsigned int)> &
+                                   setTex) {
+            ImGui::Image(reinterpret_cast<void *>(intptr_t(textureID)), ImVec2(100, 100));
             ImGui::SameLine();
             ImGui::Text("%s Texture \nTexture ID: %d", textureName.c_str(), textureID);
             std::string inputTextName = "ID ###" + textureName;
             ImGui::InputText(textureName.c_str(), text, textLimit);
-            std::string buttonName = "Set Texture ###" + textureName;
+            const std::string buttonName = "Set Texture ###" + textureName;
             if (ImGui::Button(buttonName.c_str())) {
-                auto id = texManager.getTexture(text);
+                const auto id = texManager.getTexture(text);
                 setTex(id.TextureID);
             }
             ImGui::Separator();
         };
 
-        std::function<void(int)> setSnow = [&](unsigned id) { terrainManager->setSnowTextureId(id); };
-        std::function<void(int)> setGrass = [&](unsigned id) {
+        const std::function<void(int)> setSnow = [&](unsigned id) { terrainManager->setSnowTextureId(id); };
+        const std::function<void(int)> setGrass = [&](unsigned id) {
             terrainManager->setGrassTextureId(id);
         };
-        std::function<void(int)> setWater = [&](unsigned id) {
+        const std::function<void(int)> setWater = [&](unsigned id) {
             terrainManager->setWaterTextureId(id);
         };
-        std::function<void(int)> setDirt = [&](unsigned id) { terrainManager->setDirtTextureId(id); };
-        std::function<void(int)> setSand = [&](unsigned id) { terrainManager->setSandTextureId(id); };
+        const std::function<void(int)> setDirt = [&](unsigned id) { terrainManager->setDirtTextureId(id); };
+        const std::function<void(int)> setSand = [&](unsigned id) { terrainManager->setSandTextureId(id); };
 
-        constexpr int minHeight = 0;
-        constexpr int maxHeight = 255;
+        constexpr const auto minHeight = 0;
+        constexpr const auto maxHeight = 255;
 
         if (windowOpen) {
             ImGui::Begin("Terrain Settings", &windowOpen, ImGuiWindowFlags_AlwaysAutoResize);
@@ -265,22 +269,6 @@ void GUIManager::displayTerrainSettings() {
         }
     }
 }
-//
-// void GUIManager::textureRebind() {
-//    bool &windowOpen = windowOpenMap.at("textureRebind");
-//    auto &texManager = TextureManager::getInstance();
-//    if (windowOpen) {
-//        static char text[255];
-//        std::string windowTitle = "New Texture Path for '" + texName + "'";
-//        ImGui::Begin(windowTitle.c_str(), &windowOpen, ImGuiWindowFlags_AlwaysAutoResize);
-//        ImGui::InputText(" ", text, IM_ARRAYSIZE(text));
-//        if (ImGui::Button("Set")) {
-//            texManager.textureMap.erase(texName);
-//            texManager.loadTextureFromFile(text, texName);
-//        }
-//        ImGui::End();
-//    }
-//}
 
 void GUIManager::startWindowFrame() {
 
@@ -295,7 +283,7 @@ void GUIManager::endWindowFrame() {
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void GUIManager::toggleWindow(std::string windowName) {
+void GUIManager::toggleWindow(const std::string &windowName) {
     if (windowOpenMap.find(windowName) != windowOpenMap.end()) {
         bool &open = windowOpenMap.at(windowName);
         open       = open ? false : true;

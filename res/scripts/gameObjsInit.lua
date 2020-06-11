@@ -8,13 +8,15 @@ local sphereShape = shapeFactory:createSphere(1);
 local capsuleShape = shapeFactory:createCapsule(1.5,3);
 
 -- Gather the actual GameObject and configure it
+gameObj_raw = GameObject.create(GameObject.Types.Player());
 gameObj_raw = GameObject.getPlayer();
 gameObj_raw.model = resources.getModel("res/model/ball.fbx");
 position = vector(0,200,0);
-print(gameObj_raw.model)
 dynamicsWorld:GetRigidBody(gameObj_raw.physBody):SetPosition(position);
 rigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(gameObj_raw.physBody));
+collisionBody = getReactCollisionBody(collisionWorld:GetCollisionBody(gameObj_raw.physBody));
 rigidBody:AddCollisionShape(shapeFactory:GetShape(sphereShape), vector(0,0,0), quaternion(1,0,0,0), 10);
+collisionBody:AddCollisionShape(shapeFactory:GetShape(sphereShape), vector(0,0,0), quaternion(1,0,0,0));
 rigidBody:SetBounciness(0);
 
 -- Create character attributes used for moving
@@ -26,6 +28,8 @@ gameObj_charData:status_assign("MoveLeft", 0);
 gameObj_charData:status_assign("MoveRight", 0);
 gameObj_charData:status_assign("Sliding", 0);
 gameObj_charData:status_assign("FreeCam", 0);
+gameObj_charData:status_assign("Oxygen", 1000);
+gameObj_charData:status_assign("Health", 100);
 
 -- Ensure randomness by setting the seed relative to the current time and removing any starting bias
 math.randomseed(os.time());
@@ -69,6 +73,28 @@ for i = 0, 50, 1 do
 	-- Make the NPC have a randomly variant offset of time before they start to wander
 	npc_gameObj_char:status_assign("Wander_ActionTime", math.random(-8.0, 2.0));
 end
+
+-- Create a GameObject and store the returned identifier
+BoundingWallID = GameObject.create(GameObject.Types.Static());
+local BoundingWall = GameObject.get(BoundingWallID);
+
+-- Generate the shapes for the GameObject's physics
+local wallXShape = shapeFactory:createBox(vector(2500,500, 100));
+local wallZShape = shapeFactory:createBox(vector(100,500, 2500));
+
+-- Gather the GameObject's physics objects
+local BoundingWallCollisionBody = getReactCollisionBody(collisionWorld:GetCollisionBody(BoundingWall.physBody));
+local BoundingWallRigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(BoundingWall.physBody));
+
+-- Configure the GameObject's physics objects
+BoundingWallCollisionBody:AddCollisionShape(shapeFactory:GetShape(wallXShape), vector(0,0,1900), quaternion(1,0,0,0));
+BoundingWallCollisionBody:AddCollisionShape(shapeFactory:GetShape(wallXShape), vector(0,0,-1900), quaternion(1,0,0,0));
+BoundingWallCollisionBody:AddCollisionShape(shapeFactory:GetShape(wallZShape), vector(1900,0,0), quaternion(1,0,0,0));
+BoundingWallCollisionBody:AddCollisionShape(shapeFactory:GetShape(wallZShape), vector(-1900,0,0), quaternion(1,0,0,0)); 
+BoundingWallRigidBody:AddCollisionShape(shapeFactory:GetShape(wallXShape), vector(0,0,1900), quaternion(1,0,0,0), 1);
+BoundingWallRigidBody:AddCollisionShape(shapeFactory:GetShape(wallXShape), vector(0,0,-1900), quaternion(1,0,0,0), 1);
+BoundingWallRigidBody:AddCollisionShape(shapeFactory:GetShape(wallZShape), vector(1900,0,0), quaternion(1,0,0,0), 1);
+BoundingWallRigidBody:AddCollisionShape(shapeFactory:GetShape(wallZShape), vector(-1900,0,0), quaternion(1,0,0,0), 1);
 
 -- Syncronise the physics of the GameObjects after configuring them
 GameObject.syncPhys();
