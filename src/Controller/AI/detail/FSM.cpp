@@ -168,9 +168,9 @@ void FSM::lua_init() {
 	luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
 		.beginClass<FSM>("FSM_Class")
 			.addFunction("stateLocal_setRegular", &FSM::lua_local_set_regular)
-			.addFunction("stateLocal_setCustom", &FSM::lua_local_set_custom)
+			.addFunction("stateLocal_setCustom", &FSM::lua_local_set_custom_could_lua_bind_stop_breaking_this_please)
 			.addFunction("stateGlobal_setRegular", &FSM::lua_global_set_regular)
-			.addFunction("stateGlobal_setCustom", &FSM::lua_global_set_custom)
+			.addFunction("stateGlobal_setCustom", &FSM::lua_global_set_custom_could_lua_bind_stop_breaking_this_please)
 			.addFunction("id", &FSM::id_this)
 			.addFunction("attached", &FSM::lua_attached)
 		.endClass();
@@ -185,19 +185,18 @@ void FSM::lua_local_set_regular(State_Type type) {
 	local_set(temp);
 }
 
-bool FSM::lua_local_set_custom(std::string start_func, std::string run_func, std::string end_func, std::string read_func) {
+void FSM::lua_local_set_custom_could_lua_bind_stop_breaking_this_please(std::string start_func, std::string run_func, std::string end_func, std::string read_func) {
 	// Attempt to generate the local state
 	State_Base* custom_temp = FSM_Manager::custom_state(start_func, run_func, end_func, read_func);
 
 	// Catch failure to generate the custom state
 	if (custom_temp == nullptr) {
 		// Report has already been made to the console, just indicate failure
-		return false;
+		return;
 	}
 
-	// Call the local set function and indicate failure
-	local_set(custom_temp);
-	return true;
+	// Call the local set function
+	this->local_set(custom_temp);
 }
 
 void FSM::lua_global_set_regular(State_Type type) {
@@ -205,19 +204,18 @@ void FSM::lua_global_set_regular(State_Type type) {
 	global_set(FSM_Manager::regular_state(type));
 }
 
-bool FSM::lua_global_set_custom(std::string start_func, std::string run_func, std::string end_func, std::string read_func) {
+void FSM::lua_global_set_custom_could_lua_bind_stop_breaking_this_please(std::string start_func, std::string run_func, std::string end_func, std::string read_func) {
 	// Attempt to generate the local state
 	State_Base* custom_temp = FSM_Manager::custom_state(start_func, run_func, end_func, read_func);
 
 	// Catch failure to generate the custom state
-	if (!custom_temp) {
+	if (custom_temp == nullptr) {
 		// Report has already been made to the console, just indicate failure
-		return false;
+		return;
 	}
 
-	// Call the local set function and indicate failure
-	global_set(custom_temp);
-	return true;
+	// Call the local set function
+	this->global_set(custom_temp);
 }
 
 GameObj_Base* FSM::lua_attached() {

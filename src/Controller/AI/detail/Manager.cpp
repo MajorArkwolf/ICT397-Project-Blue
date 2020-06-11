@@ -144,32 +144,32 @@ State_Base* FSM_Manager::regular_state(State_Type type) {
 
 State_Base* FSM_Manager::custom_state(std::string start_func, std::string run_func, std::string end_func, std::string read_func) {
 	// Attempt to gather the start function
-	luabridge::LuaRef start_temp = luabridge::getGlobal(LuaManager::getInstance().getLuaState(), start_func.c_str());
-	if (start_temp == luabridge::Nil()) {
+	std::shared_ptr<luabridge::LuaRef> start_temp = std::make_shared<luabridge::LuaRef>(luabridge::getGlobal(LuaManager::getInstance().getLuaState(), start_func.c_str()));
+	if (start_temp->isNil()) {
 		// Report the error and return nullptr
 		std::cout << "Failed to generate a custom state: Lua global \"" << start_func << "\" could not be gathered for the start behaviour!\n";
 		return nullptr;
 	}
 
 	// Attempt to gather the run function
-	luabridge::LuaRef run_temp = luabridge::getGlobal(LuaManager::getInstance().getLuaState(), run_func.c_str());
-	if (run_temp == luabridge::Nil()) {
+	std::shared_ptr<luabridge::LuaRef> run_temp = std::make_shared<luabridge::LuaRef>(luabridge::getGlobal(LuaManager::getInstance().getLuaState(), run_func.c_str()));
+	if (run_temp->isNil()) {
 		// Report the error and return nullptr
 		std::cout << "Failed to generate a custom state: Lua global \"" << run_func << "\" could not be gathered for the run behaviour!\n";
 		return nullptr;
 	}
 
 	// Attempt to gather the end function
-	luabridge::LuaRef end_temp = luabridge::getGlobal(LuaManager::getInstance().getLuaState(), end_func.c_str());
-	if (end_temp == luabridge::Nil()) {
+	std::shared_ptr<luabridge::LuaRef> end_temp = std::make_shared<luabridge::LuaRef>(luabridge::getGlobal(LuaManager::getInstance().getLuaState(), end_func.c_str()));
+	if (end_temp->isNil()) {
 		// Report the error and return nullptr
 		std::cout << "Failed to generate a custom state: Lua global \"" << end_func << "\" could not be gathered for the end behaviour!\n";
 		return nullptr;
 	}
 
 	// Attempt to gather the read function
-	luabridge::LuaRef read_temp = luabridge::getGlobal(LuaManager::getInstance().getLuaState(), read_func.c_str());
-	if (read_temp == luabridge::Nil()) {
+	std::shared_ptr<luabridge::LuaRef> read_temp = std::make_shared<luabridge::LuaRef>(luabridge::getGlobal(LuaManager::getInstance().getLuaState(), read_func.c_str()));
+	if (read_temp->isNil()) {
 		// Report the error and return nullptr
 		std::cout << "Failed to generate a custom state: Lua global \"" << read_func << "\" could not be gathered for the read behaviour!\n";
 		return nullptr;

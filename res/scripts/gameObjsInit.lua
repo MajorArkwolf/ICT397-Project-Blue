@@ -62,12 +62,12 @@ npcSpawningRegion = npcSpawningRegion / 4;
 npcSpawningRegion = npcSpawningRegion - 100;
 
 -- The function to use for the NPC's Global State behaviours
-function catchIfDead(npc_raw) 
+NPC_catchIfDead = function(npc_raw)
 	-- Make sure you have access to the character specific properties
-		local npc_char = GameObject.to_character(npc_raw);
+	local npc_char = GameObject.to_character(npc_raw);
 
 	-- Catch if the NPC has died
-	if (npc_npc:status_get("Health") < 0) then
+	if ((npc_char:status_get("Health") < 0) or (npc_char:status_get("Health") == 0)) then
 		-- Make sure you have access to the NPC specific properties
 		local npc_npc = GameObject.to_npc(npc_char);
 
@@ -114,9 +114,9 @@ for i = 0, 50, 1 do
 	-- Set up the NPC's initial AI FSM States
 	local npc_ai = FSM.get(npc_gameObj_npc.context);
 	npc_ai:stateLocal_setRegular(FSM.State.Wander());
-	
+	npc_ai:stateGlobal_setCustom("NPC_catchIfDead", "NPC_catchIfDead", "NPC_catchIfDead", "NPC_catchIfDead");
 end
-
+print("Finished generating the AIs");
 
 -----------------------------------Boundary Wall Setup--------------------------------------------------
  BoundingWallID = GameObject.create(GameObject.Types.Static());
