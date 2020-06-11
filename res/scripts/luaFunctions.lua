@@ -424,5 +424,29 @@ GUI = function()
 		GUIFunctions.Text("YOU DEAD");
 		GUIFunctions.EndWindow();
 	end
+
+	--Enemy Count
+
+		GUIFunctions.SetNextWindowPos(0,0, true);
+		GUIFunctions.BeginWindow("Enemies");
+		GUIFunctions.SetFontSize(3);
+		local EnemyCount = 0;
+		local id_list = GameObject.listNPCs();
+	
+		for iterator, npcID in pairs(id_list) do
+			local npcObject = GameObject.get(npcID);
+
+			local charData = GameObject.to_character(npcObject);
+
+			if(charData:status_has("Enemy") == true and charData:status_has("Health")) then
+				if(charData:status_get("Health") > 0) then
+					EnemyCount = EnemyCount + 1;
+				end
+			end
+
+		end
+		GUIFunctions.Text("Enemies Left: " .. EnemyCount );
+		GUIFunctions.EndWindow();
+
 end
 	

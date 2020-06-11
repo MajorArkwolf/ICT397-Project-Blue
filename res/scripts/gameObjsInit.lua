@@ -1,4 +1,11 @@
--- -------------------Physics Set up------------------------------
+
+---------Difficulty 
+local DifficultyMultiplier = 1;
+
+
+
+
+---------------------Physics Set up------------------------------
 InitialisePhysics();
 physManager = PhysicsManager:GetInstance();
 shapeFactory = physManager:GetReactShapeFactory();
@@ -50,7 +57,7 @@ BulletObject.model = resources.getModel("res/model/throwingstar.obj");
 BulletRigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(BulletObject.physBody));
 BulletCollisionBody = getReactCollisionBody(collisionWorld:GetCollisionBody(BulletObject.physBody));
 BulletRigidBody:AddCollisionShape(shapeFactory:GetShape(bulletShape), vector(0,0,0), quaternion(1,0,0,0), 5);
-BulletCollisionBody:AddCollisionShape(shapeFactory:GetShape(bulletShape), vector(0,0,0), quaternion(1,0,0,0));
+BulletCollisionBody:AddCollisionShape(shapeFactory:GetShape(bulletShapeCollision), vector(0,0,0), quaternion(1,0,0,0));
 -----------------------------------------------------------------------------------
 -- Ensure randomness by setting the seed relative to the current time and removing any starting bias
 math.randomseed(os.time());
@@ -78,7 +85,7 @@ NPC_catchIfDead = function(npc_raw)
 end
 
 -- Generate 50 NPCs
-for i = 0, 50, 1 do
+for i = 0, 15 * DifficultyMultiplier, 1 do
 	-- Create a GameObject and store the returned identifier
 	local npc_id = GameObject.create(GameObject.Types.NPC());
 
@@ -110,6 +117,7 @@ for i = 0, 50, 1 do
 
 	-- Assign a starting health value to the NPC
 	npc_gameObj_char:status_assign("Health", 100);
+	npc_gameObj_char:status_assign("Enemy", 1);
 
 	-- Set up the NPC's initial AI FSM States
 	local npc_ai = FSM.get(npc_gameObj_npc.context);
@@ -139,8 +147,7 @@ BoundingWallRigidBody:AddCollisionShape(shapeFactory:GetShape(wallXShape), vecto
 BoundingWallRigidBody:AddCollisionShape(shapeFactory:GetShape(wallXShape), vector(0,0,-1900), quaternion(1,0,0,0), 1);
 BoundingWallRigidBody:AddCollisionShape(shapeFactory:GetShape(wallZShape), vector(1900,0,0), quaternion(1,0,0,0), 1);
 BoundingWallRigidBody:AddCollisionShape(shapeFactory:GetShape(wallZShape), vector(-1900,0,0), quaternion(1,0,0,0), 1);
-
+--------------------------------------------------------------------------------------------------------------
 -- Syncronise the physics of the GameObjects after configuring them
 GameObject.syncPhys();
 player = GameObject.getPlayer();
-KilledEnemies = 0;
