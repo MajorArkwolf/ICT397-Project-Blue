@@ -1,8 +1,8 @@
 #include "PrototypeScene.hpp"
 #include "Controller/Factory/GameAssetFactory.hpp"
 #include "Controller/PhysicsManager.hpp"
+#include "Controller/AI/Manager.hpp"
 #include "Model/GameObject/Manager.hpp"
-
 
 using Controller::Input::BLUE_InputAction;
 using Controller::Input::BLUE_InputType;
@@ -24,7 +24,8 @@ PrototypeScene::PrototypeScene() {
     luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
         .addFunction("getCamera", &getCamera)
         .addFunction("toggleWireframe", &toggleWireframe)
-        .addFunction("getHeightAt", &getHeight);
+        .addFunction("getHeightAt", &getHeight)
+        .addFunction("getMapSize", &Controller::TerrainFactory::LuaMapSize);
 
     PrototypeScene::Init();
     View::Camera::LuaInit();
@@ -42,12 +43,9 @@ PrototypeScene::~PrototypeScene() {
 auto PrototypeScene::update(double t, double dt) -> void {
     // Update the terrain
     terrain.Update(camera.getLocation());
-
-    // Update the GameObject animations
-    GameObj_Manager::animation_update(t, dt);
     
-    // Update the Dynamic Physics world
-    Physics::PhysicsManager::GetInstance().GetDynamicsWorld()->Update(dt);
+    // Update the GameObject animations
+    //GameObj_Manager::animation_update(t, dt);
 
     // Read and call the lua update function, this allows runtime change of the script
     try {
@@ -77,7 +75,13 @@ auto PrototypeScene::update(double t, double dt) -> void {
         std::cerr << "No scripted Update() function was provided to call!\n";
     }
 
-    // Syncronise the GameObjects' physics bodies
+    // Call the AI System's update function
+    FSM_Manager::update(t, dt);
+
+    // Update the Dynamic Physics world
+    Physics::PhysicsManager::GetInstance().GetDynamicsWorld()->Update(dt);
+
+    // Sync the GameObject physics bodies
     GameObj_Manager::syncPhys();
 }
 
@@ -94,11 +98,14 @@ void PrototypeScene::Init() {
     // Initialise the GameObject system
     GameObj_Manager::init();
 
+    // Initialise the FSM AI system
+    FSM_Manager::lua_init();
+
     // Run the GameObject initialisation script
     try {
         // Run the script, and catch and Lua errors that are thrown
         if (luaL_dofile(LuaManager::getInstance().getLuaState(), "./res/scripts/gameObjsInit.lua")) {
-            printf("Scene Initialisation Script Error: ");
+            printf("Scene Initialisation Script (Non-Thrown) Error: ");
             printf("\"%s\"\n", lua_tostring(LuaManager::getInstance().getLuaState(), -1));
         }
     }
@@ -227,6 +234,8 @@ auto PrototypeScene::display() -> void {
     auto &renderer = BlueEngine::Engine::get().renderer;
     renderer.SetCameraOnRender(camera);
     terrain.AddToDraw();
+    // Update the GameObject animations
+    GameObj_Manager::animation_update(0.0, engine.getFrameTime());
     GameObj_Manager::addAllToDraw();
 }
 

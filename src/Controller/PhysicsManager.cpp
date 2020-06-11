@@ -155,6 +155,7 @@ void Physics::PhysicsManager::LuaInit() {
         .addFunction("SetRollingResistance", &ReactRigidBody::SetRollingResistance)
         .addFunction("SetFriction", &ReactRigidBody::SetFrictionCoefficient)
         .addFunction("SetSleeping", &ReactRigidBody::SetSleeping)
+        .addFunction("GetSleeping", &ReactRigidBody::GetSleeping)
         .addFunction("SetMass", &ReactRigidBody::SetMass)
         .addFunction("Destroy", &ReactRigidBody::Destroy)
         .endClass();

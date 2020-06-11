@@ -55,6 +55,7 @@ void GameObj_Base::lua_init_register() {
 			.addFunction("anim_init", &GameObj_Base::animator_add)
 			.addFunction("anim_set", &GameObj_Base::animator_changeAnimation)
 			.addFunction("anim_has", &GameObj_Base::animator_has)
+			.addFunction("anim_ended", &GameObj_Base::animator_animationHasEnded)
 		.endClass();
 
 	// Prevent re-registration
@@ -70,7 +71,7 @@ bool GameObj_Base::animator_add() {
 		return false;
 
 	// Check if the model is animated
-	if (modelObj->isAnimated) {
+	if (modelObj->isAnimated && animator == nullptr) {
 		// Store a new animator into the GameObject, and link it to the model
 		animator = std::make_shared<Controller::Animator>();
 		animator->LinkToModel(model);
@@ -102,4 +103,15 @@ void GameObj_Base::animator_changeAnimation(const std::string& animToLoad, bool 
 bool GameObj_Base::animator_has() {
 	// Return if the GameObject's animator is not nullptr
 	return (animator != nullptr);
+}
+
+bool GameObj_Base::animator_animationHasEnded() {
+	// Catch working on an invalid animator
+	if (animator != nullptr) {
+		// Return the animator's status
+		return animator->IsAnimationedEnded();
+	}
+
+	// Return true otherwise, as it has no animation
+	return true;
 }

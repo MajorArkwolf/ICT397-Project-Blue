@@ -1,6 +1,7 @@
 #include "GameAssetFactory.hpp"
 
 	/// Internal Dependencies
+#include "Controller/AI/Manager.hpp"
 #include "Controller/PhysicsManager.hpp"
 #include "Model/GameObject/Types.hpp"
 #include "Model/GameObject/Static.hpp"
@@ -91,10 +92,12 @@ std::shared_ptr<GameObj_Base> Controller::Factory::GameObject(GameObj_Type type)
                 Physics::PhysicsManager::GetInstance().GetDynamicsWorld()->GetRigidBody(phys_id))
                 ->SetBodyType(Physics::ReactRigidBody::RigidBodyType::DYNAMIC);
 
-			//TODO: Finish AI system and generate a FSM for the GameObject
-
 			// Create a configured the GameObject
-			object = std::make_shared<GameObj_NPC>(0u, phys_id, 0u);
+			auto npc_temp = std::make_shared<GameObj_NPC>(0u, phys_id, 0u);
+			object = npc_temp;
+
+			// Create a new FSM for the NPC
+			npc_temp->contextID = FSM_Manager::create(object);
 		}
 		break;
     default:

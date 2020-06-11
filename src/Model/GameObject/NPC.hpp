@@ -46,7 +46,6 @@ public:
 		 */
 	static void lua_init_register();
 
-private:
 		/*!
 		 * @brief Stores the NPC's finite state machine identifier.
 		 * @note Value assigned at NPC construction.
