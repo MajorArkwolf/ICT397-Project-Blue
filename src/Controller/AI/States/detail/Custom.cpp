@@ -16,7 +16,7 @@ void State_Custom::start(std::shared_ptr<GameObj_Base> context) {
 	// Catch any errors thrown by the Lua function
 	try {
 		// Call the function and pass the parameter(s) into Lua
-		(*custom_behaviours[0].get())(context);
+		(*custom_behaviours[0].get())(context.get());
 	} catch (luabridge::LuaException const& err) {
 		// Report the error, and stop the function
 		std::cerr << "State_Custom::start() Lua Error! - \"" << err.what() << "\"\n";
@@ -27,7 +27,7 @@ void State_Custom::run(std::shared_ptr<GameObj_Base> context, double t, double d
 	// Catch any errors thrown by the Lua function
 	try {
 		// Call the function and pass the parameter(s) into Lua
-		(*custom_behaviours[1].get())(context, t,  dt);
+		(*custom_behaviours[1].get())(context.get(), t,  dt);
 	}
 	catch (luabridge::LuaException const& err) {
 		// Report the error, and stop the function
@@ -39,7 +39,7 @@ void State_Custom::end(std::shared_ptr<GameObj_Base> context) {
 	// Catch any errors thrown by the Lua function
 	try {
 		// Call the function and pass the parameter(s) into Lua
-		(*custom_behaviours[2].get())(context);
+		(*custom_behaviours[2].get())(context.get());
 	}
 	catch (luabridge::LuaException const& err) {
 		// Report the error, and stop the function
@@ -51,7 +51,7 @@ void State_Custom::read(std::shared_ptr<GameObj_Base> context, BlueEngine::ID ms
 	// Catch any errors thrown by the Lua function
 	try {
 		// Call the function and pass the parameter(s) into Lua
-		(*custom_behaviours[3].get())(context, msg_sender, msg_type, msg_attachment);
+		(*custom_behaviours[3].get())(context.get(), msg_sender, msg_type, msg_attachment);
 	}
 	catch (luabridge::LuaException const& err) {
 		// Report the error, and stop the function
