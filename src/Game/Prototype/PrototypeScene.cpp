@@ -105,7 +105,7 @@ void PrototypeScene::Init() {
     try {
         // Run the script, and catch and Lua errors that are thrown
         if (luaL_dofile(LuaManager::getInstance().getLuaState(), "./res/scripts/gameObjsInit.lua")) {
-            printf("Scene Initialisation Script Error: ");
+            printf("Scene Initialisation Script (Non-Thrown) Error: ");
             printf("\"%s\"\n", lua_tostring(LuaManager::getInstance().getLuaState(), -1));
         }
     }

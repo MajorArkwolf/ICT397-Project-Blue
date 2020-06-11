@@ -149,10 +149,8 @@ protected:
 		 * @param [in] run_func The name of the Lua function to call for the running behaviour.
 		 * @param [in] end_func The name of the Lua function to call for the ending behaviour.
 		 * @param [in] read_func The name of the Lua function to call for the reading behaviour.
-		 * @return True when successful, False otherwise.
-		 * @note If False is returned, no change is made to (or run by) the FSM.
 		 */
-	bool lua_local_set_custom(std::string start_func, std::string run_func, std::string end_func, std::string read_func);
+	void lua_local_set_custom_could_lua_bind_stop_breaking_this_please(std::string start_func, std::string run_func, std::string end_func, std::string read_func);
 
 		/*!
 		 * @brief Sets the FSM's global state to a specified regular type.
@@ -166,10 +164,8 @@ protected:
 		 * @param [in] run_func The name of the Lua function to call for the running behaviour.
 		 * @param [in] end_func The name of the Lua function to call for the ending behaviour.
 		 * @param [in] read_func The name of the Lua function to call for the reading behaviour.
-		 * @return True when successful, False otherwise.
-		 * @note If False is returned, no change is made to (or run by) the FSM.
 		 */
-	bool lua_global_set_custom(std::string start_func, std::string run_func, std::string end_func, std::string read_func);
+	void lua_global_set_custom_could_lua_bind_stop_breaking_this_please(std::string start_func, std::string run_func, std::string end_func, std::string read_func);
 
 		/*!
 		 * @brief Provides read-only access to the cached managed reference of the 'attached' GameObject.
