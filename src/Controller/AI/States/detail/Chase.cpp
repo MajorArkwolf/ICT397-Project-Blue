@@ -14,9 +14,6 @@ void State_Chase::start(std::shared_ptr<GameObj_Base> context) {
 	// Set the GameObject's animation
 	if (context->animator_has())
 		context->animator_changeAnimation("RUN", false);
-	
-	// Get the entirety of the contextual NPC's properties
-	std::shared_ptr<GameObj_NPC> npc = std::dynamic_pointer_cast<GameObj_NPC>(context);
 }
 
 void State_Chase::run(std::shared_ptr<GameObj_Base> context, double t [[maybe_unused]], double dt) {
@@ -49,6 +46,11 @@ void State_Chase::run(std::shared_ptr<GameObj_Base> context, double t [[maybe_un
 	if (glm::length(new_position - player_pos) > 40.0f) {
 		// Switch this NPC's state to chase the player
 		FSM_Manager::get(npc->contextID)->local_set(FSM_Manager::regular_state(State_Type::Wander));
+	}
+	// Catch if the NPC has got close enough to the player
+	else if (glm::length(new_position - player_pos) < 2.0f) {
+		// Switch this NPC's state to attack the player
+		FSM_Manager::get(npc->contextID)->local_set(FSM_Manager::regular_state(State_Type::Attack));
 	}
 }
 
