@@ -36,6 +36,7 @@ auto Engine::run() -> void {
     while (engine.getIsRunning()) {
         double newTime   = glfwGetTime();
         double frameTime = newTime - currentTime;
+        engine.EngineFrameTime = frameTime;
 
         if (frameTime > 0.25)
             frameTime = 0.25;
@@ -255,4 +256,8 @@ double BlueEngine::Engine::getT() const {
 }
 double BlueEngine::Engine::getDt() const {
     return dt;
+}
+
+double BlueEngine::Engine::getFrameTime() const {
+    return EngineFrameTime;
 }

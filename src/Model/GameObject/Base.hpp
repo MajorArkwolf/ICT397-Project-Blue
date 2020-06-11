@@ -81,10 +81,18 @@ public:
 	void animator_changeAnimation(const std::string& animToLoad, bool stopOnEnd);
 
 		/*!
-		 * @brief Checks if the GameObject has an initialised and configured animation.
+		 * @brief Checks if the GameObject has an initialised and configured animator.
 		 * @return True if it does, False otherwise.
 		 */
 	bool animator_has();
+
+		/*!
+		 * @brief Checks if the GameObject's animation has ended.
+		 * @return True if the animation hase ended, False otherwise.
+		 * @note If an error occurred, True will be returned.
+		 * @warning A check should be made for the GameObject having an initialised and configured animator first!
+		 */
+	bool animator_animationHasEnded();
 
 		/*!
 		 * @brief The GameObject's scale along all 3D axises.
