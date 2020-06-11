@@ -62,20 +62,20 @@ npcSpawningRegion = npcSpawningRegion / 4;
 npcSpawningRegion = npcSpawningRegion - 100;
 
 -- The function to use for the NPC's Global State behaviours
-function catchIfDead(npc_raw) {
+function catchIfDead(npc_raw) 
 	-- Make sure you have access to the character specific properties
 		local npc_char = GameObject.to_character(npc_raw);
 
 	-- Catch if the NPC has died
-	if (npc_npc:status_get("Health") < 0) {
+	if (npc_npc:status_get("Health") < 0) then
 		-- Make sure you have access to the NPC specific properties
 		local npc_npc = GameObject.to_npc(npc_char);
 
 		-- Set the NPC's State to die
 		local npc_ai = FSM.get(npc_npc.context);
 		npc_ai:stateLocal_setRegular(FSM.State.Die());
-	}
-}
+	end
+end
 
 -- Generate 50 NPCs
 for i = 0, 50, 1 do
@@ -90,7 +90,7 @@ for i = 0, 50, 1 do
 	-- Configure the model, animator and scale
 	npc_gameObj_raw.model = resources.getModel("res/model/ClothedMan.gltf");
 	npc_gameObj_raw:anim_init();
-	npc_gameObj_raw.scale = vector(0.15, 0.15, 0.15);
+	npc_gameObj_raw.scale = vector(0.3, 0.3, 0.3);
 
 	-- Configure the NPC to be in a random position surrounding the player's spawning location
 	local position = vector(math.random(0 - npcSpawningRegion, npcSpawningRegion), 0, math.random(0 - npcSpawningRegion, npcSpawningRegion));
@@ -99,7 +99,9 @@ for i = 0, 50, 1 do
 
 	-- Set the NPC's rigid body collision shape and stop the NPC from being affected by gravity
 	local npc_rigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(npc_gameObj_raw.physBody));
+	local npc_collisionBody = getReactCollisionBody(collisionWorld:GetCollisionBody(npc_gameObj_raw.physBody));
 	npc_rigidBody:AddCollisionShape(shapeFactory:GetShape(capsuleShape_npc), vector(0,0,0), quaternion(1,0,0,0), 1);
+	npc_collisionBody:AddCollisionShape(shapeFactory:GetShape(capsuleShape_npc), vector(0,0,0), quaternion(1,0,0,0));
 	npc_rigidBody:SetAngularDamping(1);
 	npc_rigidBody:SetSleeping(true);
 
@@ -112,8 +114,7 @@ for i = 0, 50, 1 do
 	-- Set up the NPC's initial AI FSM States
 	local npc_ai = FSM.get(npc_gameObj_npc.context);
 	npc_ai:stateLocal_setRegular(FSM.State.Wander());
-	if (!npc_ai:stateGlobal_setCustom("catchIfDead", "catchIfDead", "catchIfDead", "catchIfDead"))
-		print("An error occurred while setting up the NPC's custom global state!");
+	
 end
 
 
