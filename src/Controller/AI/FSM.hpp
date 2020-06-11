@@ -23,7 +23,7 @@ enum class State_Type {
 // Registratiion of Enum State_Type
 namespace luabridge {
 	template <>
-	struct luabridge::Stack <State_Type> : EnumWrapper <State_Type> {};
+	struct Stack <State_Type> : EnumWrapper <State_Type> {};
 }
 
 	/*!
