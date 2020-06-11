@@ -41,6 +41,22 @@ local npcSpawningRegion = getMapSize();
 npcSpawningRegion = npcSpawningRegion / 4;
 npcSpawningRegion = npcSpawningRegion - 100;
 
+-- The function to use for the NPC's Global State behaviours
+function catchIfDead(npc_raw) {
+	-- Make sure you have access to the character specific properties
+		local npc_char = GameObject.to_character(npc_raw);
+
+	-- Catch if the NPC has died
+	if (npc_npc:status_get("Health") < 0) {
+		-- Make sure you have access to the NPC specific properties
+		local npc_npc = GameObject.to_npc(npc_char);
+
+		-- Set the NPC's State to die
+		local npc_ai = FSM.get(npc_npc.context);
+		npc_ai:stateLocal_setRegular(FSM.State.Die());
+	}
+}
+
 -- Generate 50 NPCs
 for i = 0, 50, 1 do
 	-- Create a GameObject and store the returned identifier
@@ -67,12 +83,17 @@ for i = 0, 50, 1 do
 	npc_rigidBody:SetAngularDamping(1);
 	npc_rigidBody:SetSleeping(true);
 
-	-- Set up the NPC's initial AI FSM State
-	local npc_ai = FSM.get(npc_gameObj_npc.context);
-	npc_ai:stateLocal_setRegular(FSM.State.Wander());
-
 	-- Make the NPC have a randomly variant offset of time before they start to wander
 	npc_gameObj_char:status_assign("Wander_ActionTime", math.random(-8.0, 2.0));
+
+	-- Assign a starting health value to the NPC
+	npc_gameObj_char:status_assign("Health", 100);
+
+	-- Set up the NPC's initial AI FSM States
+	local npc_ai = FSM.get(npc_gameObj_npc.context);
+	npc_ai:stateLocal_setRegular(FSM.State.Wander());
+	if (!npc_ai:stateGlobal_setCustom("catchIfDead", "catchIfDead", "catchIfDead", "catchIfDead"))
+		print("An error occurred while setting up the NPC's custom global state!");
 end
 
 -- Create a GameObject and store the returned identifier
