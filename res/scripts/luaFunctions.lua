@@ -49,14 +49,17 @@ end
 
 checkCollisions = function()
 		local id_list = GameObject.listNPCs();
+		damage = BulletCharData:status_get("Damage");
 		for iterator, npcID in pairs(id_list) do
-			local npcObject = GameObject.get(BulletID);
+			local npcObject = GameObject.get(npcID);
+
 			local charData = GameObject.to_character(npcObject);
 
-			if(charData:status_has("Projectile") == 0) then
-			print("GOT HERE")
+			if(charData:status_has("Projectile") == false) then
 				if(collisionWorld:TestOverlap(BulletObject.physBody, npcObject.physBody)== true) then
-				print("yes");
+					local npcObjectHealth = charData:status_get("Health");
+					charData:status_assign("Health", npcObjectHealth - damage);
+					BulletRigidBody:SetPosition(vector(0,0,0));
 				end
 			end
 
@@ -362,7 +365,7 @@ UpdateOxygen = function()
 	local gameObj_charData = GameObject.to_character(player);
 	local oxygenLevel = gameObj_charData:status_get("Oxygen");
 	local playerRigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(player.physBody));
-	if(playerRigidBody:GetPosition().y < 100) then
+	if(playerRigidBody:GetPosition().y < 105) then
 		gameObj_charData:status_assign("Oxygen", oxygenLevel - 1);
 	else
 		gameObj_charData:status_assign("Oxygen", 1000);
@@ -383,14 +386,16 @@ GUI = function()
 
 
 	--Oxygen
-	GUIFunctions.SetNextWindowPos(0,windowSize.y - 50, true);
-	GUIFunctions.BeginWindow("Oxygen");
-	GUIFunctions.SetFontSize(3);
-	GUIFunctions.Text("Oxygen: " .. oxygenLevel)
-	GUIFunctions.EndWindow();
-	
+	if(oxygenLevel < 1000) then
+		GUIFunctions.SetNextWindowPos(windowSize.x/2 - 150,windowSize.y - 50, true);
+
+		GUIFunctions.BeginWindow("Oxygen");
+		GUIFunctions.SetFontSize(3);
+		GUIFunctions.Text("Oxygen: " .. oxygenLevel)
+		GUIFunctions.EndWindow();
+	end
 	--Jetpack
-	GUIFunctions.SetNextWindowPos(windowSize.x/2 - 150,windowSize.y - 50, true);
+			GUIFunctions.SetNextWindowPos(0,windowSize.y - 50, true);
 	GUIFunctions.BeginWindow("Jetpack");
 	GUIFunctions.SetFontSize(3);
 	GUIFunctions.Text("Jetpack: " .. jetpackLevel)

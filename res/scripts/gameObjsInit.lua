@@ -53,11 +53,12 @@ BulletObject = GameObject.get(BulletID);
 BulletObject.scale = vector(0.5, 0.5, 0.5)
 BulletCharData = GameObject.to_character(BulletObject);
 BulletCharData:status_assign("Projectile", 1)
+BulletCharData:status_assign("Damage", 25)
 BulletObject.model = resources.getModel("res/model/throwingstar.obj");
-rigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(BulletObject.physBody));
+BulletRigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(BulletObject.physBody));
 BulletCollisionBody = getReactCollisionBody(collisionWorld:GetCollisionBody(BulletObject.physBody));
-rigidBody:AddCollisionShape(shapeFactory:GetShape(bulletShape), vector(0,0,0), quaternion(1,0,0,0), 5);
-BulletCollisionBody:AddCollisionShape(shapeFactory:GetShape(bulletShapeCollision), vector(0,0,0), quaternion(1,0,0,0));
+BulletRigidBody:AddCollisionShape(shapeFactory:GetShape(bulletShape), vector(0,0,0), quaternion(1,0,0,0), 5);
+BulletCollisionBody:AddCollisionShape(shapeFactory:GetShape(bulletShape), vector(0,0,0), quaternion(1,0,0,0));
 
 
 
@@ -68,6 +69,12 @@ for i = 0, 20, 1 do
 -- Gather the actual GameObject and configure it
  gameObj_raw = GameObject.get(gameObj_id);
  gameObj_raw.model = resources.getModel("res/model/ball.fbx");
+ 
+gameObj_charData = GameObject.to_character(gameObj_raw);
+
+--Create character attributes used for moving
+gameObj_charData:status_assign("Health", 100);
+
  position = vector(5,200,20);
 dynamicsWorld:GetRigidBody(gameObj_raw.physBody):SetPosition(position);
  rigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(gameObj_raw.physBody));
@@ -105,4 +112,4 @@ local BoundingWallRigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(Bound
 -- Syncronise the physics of the GameObjects after configuring them
 GameObject.syncPhys();
 player = GameObject.getPlayer();
-
+KilledEnemies = 0;

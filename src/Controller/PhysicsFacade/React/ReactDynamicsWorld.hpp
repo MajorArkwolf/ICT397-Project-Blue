@@ -12,6 +12,7 @@ namespace Physics {
         void Update(double deltaTime) override;
         void CreateRigidBody(glm::vec3 position, glm::quat orientation, size_t gameObjectID) override;
         RigidBody* GetRigidBody(RigidBodyID bodyID) override;
+        void DestroyBody(RigidBodyID id);
 
       private:
         std::map<size_t, ReactRigidBody> rigidBodies;
