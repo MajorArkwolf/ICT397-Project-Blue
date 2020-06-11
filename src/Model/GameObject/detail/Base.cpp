@@ -55,6 +55,7 @@ void GameObj_Base::lua_init_register() {
 			.addFunction("anim_init", &GameObj_Base::animator_add)
 			.addFunction("anim_set", &GameObj_Base::animator_changeAnimation)
 			.addFunction("anim_has", &GameObj_Base::animator_has)
+			.addFunction("anim_ended", &GameObj_Base::animator_animationHasEnded)
 		.endClass();
 
 	// Prevent re-registration
