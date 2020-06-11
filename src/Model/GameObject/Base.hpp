@@ -89,7 +89,7 @@ public:
 		/*!
 		 * @brief Checks if the GameObject's animation has ended.
 		 * @return True if the animation hase ended, False otherwise.
-		 * @note If an error occurred, False will be returned.
+		 * @note If an error occurred, True will be returned.
 		 * @warning A check should be made for the GameObject having an initialised and configured animator first!
 		 */
 	bool animator_animationHasEnded();

@@ -112,6 +112,6 @@ bool GameObj_Base::animator_animationHasEnded() {
 		return animator->IsAnimationedEnded();
 	}
 
-	// Return false otherwise
-	return false;
+	// Return true otherwise, as it has no animation
+	return true;
 }
