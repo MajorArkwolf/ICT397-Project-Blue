@@ -69,7 +69,7 @@ for i = 0, 50, 1 do
 
 	-- Set up the NPC's initial AI FSM State
 	local npc_ai = FSM.get(npc_gameObj_npc.context);
-	npc_ai:stateLocal_setRegular(FSM.State.Chase());
+	npc_ai:stateLocal_setRegular(FSM.State.Wander());
 
 	-- Make the NPC have a randomly variant offset of time before they start to wander
 	npc_gameObj_char:status_assign("Wander_ActionTime", math.random(-8.0, 2.0));

@@ -4,6 +4,8 @@
 	/// Internal Dependencies
 #include "Controller/PhysicsManager.hpp"
 #include "Controller/Factory/TerrainFactory.hpp"
+#include "Controller/Factory/GameAssetFactory.hpp"
+#include "Controller/AI/Manager.hpp"
 
 void State_Wander::start(std::shared_ptr<GameObj_Base> context) {
 	// Set the GameObject's animation
@@ -38,6 +40,10 @@ void State_Wander::run(std::shared_ptr<GameObj_Base> context, double t [[maybe_u
 	npc_phys->SetSleeping(true);
 	npc_phys->SetOrientation(glm::angleAxis(glm::radians(npc->status_get("Wander_Rotation")), glm::vec3(0.0f, 1.0f, 0.0f)));
 
+	// Get the Player's GameObject and collision body
+	std::shared_ptr<GameObj_Base> player_obj = Controller::Factory::get().GameObject(GameObj_Type::Player);
+	auto player_phys = Physics::PhysicsManager::GetInstance().GetDynamicsWorld()->GetRigidBody(player_obj->physBody);
+
 	// Increment the behaviour timer
 	npc->status_assign("Wander_ActionTime", npc->status_get("Wander_ActionTime") + float(dt));
 
@@ -71,6 +77,14 @@ void State_Wander::run(std::shared_ptr<GameObj_Base> context, double t [[maybe_u
 			npc->status_assign("Wander_ActionTime", 0.0f);
 			npc->status_assign("Wander_ActionIsIdle", 0.0f);
 		}
+	}
+
+	// Catch if the NPC has got close enough to the player
+	glm::vec3 npc_pos = glm::vec3(npc_phys->GetPosition().x, 0.0f, npc_phys->GetPosition().z);
+	glm::vec3 player_pos = glm::vec3(player_phys->GetPosition().x, 0.0f, player_phys->GetPosition().z);
+	if (glm::length(npc_pos - player_pos) < 30.0f) {
+		// Switch this NPC's state to chase the player
+		FSM_Manager::get(npc->contextID)->local_set(FSM_Manager::regular_state(State_Type::Chase));
 	}
 }
 

@@ -8,6 +8,7 @@
 #include "Controller/PhysicsManager.hpp"
 #include "Controller/Factory/TerrainFactory.hpp"
 #include "Controller/Factory/GameAssetFactory.hpp"
+#include "Controller/AI/Manager.hpp"
 
 void State_Chase::start(std::shared_ptr<GameObj_Base> context) {
 	// Set the GameObject's animation
@@ -39,6 +40,16 @@ void State_Chase::run(std::shared_ptr<GameObj_Base> context, double t [[maybe_un
 	glm::vec3 new_position = npc_phys->GetPosition() + (npc_phys->GetOrientation() * (glm::vec3(0.0f, 0.0f, 4.0f * float(dt))));
 	new_position.y = Controller::TerrainFactory::LuaBLHeight(new_position.x, new_position.z) + 0.1f;
 	npc_phys->SetPosition(new_position);
+
+	// Get the entirety of the contextual NPC's properties
+	std::shared_ptr<GameObj_NPC> npc = std::dynamic_pointer_cast<GameObj_NPC>(context);
+
+	// Catch if the NPC has got far away enough from the player
+	new_position.y = 0.0f;
+	if (glm::length(new_position - player_pos) > 40.0f) {
+		// Switch this NPC's state to chase the player
+		FSM_Manager::get(npc->contextID)->local_set(FSM_Manager::regular_state(State_Type::Wander));
+	}
 }
 
 void State_Chase::end(std::shared_ptr<GameObj_Base> context [[maybe_unused]] ) {
