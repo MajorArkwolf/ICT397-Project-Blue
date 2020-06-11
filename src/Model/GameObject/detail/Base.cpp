@@ -103,3 +103,14 @@ bool GameObj_Base::animator_has() {
 	// Return if the GameObject's animator is not nullptr
 	return (animator != nullptr);
 }
+
+bool GameObj_Base::animator_animationHasEnded() {
+	// Catch working on an invalid animator
+	if (animator != nullptr) {
+		// Return the animator's status
+		return animator->IsAnimationedEnded();
+	}
+
+	// Return false otherwise
+	return false;
+}
