@@ -1,15 +1,14 @@
 #pragma once
 
-
+#include "Controller/Engine/LuaManager.hpp"
 #include "Controller/PhysicsFacade/React/ReactCollisionWorld.hpp"
 #include "Controller/PhysicsFacade/React/ReactDynamicsWorld.hpp"
 #include "Controller/PhysicsFacade/React/ReactShapes.hpp"
-#include "Controller/Engine/LuaManager.hpp"
 
 namespace Physics {
     /**
      *@class PhysicsManager
-     *@brief A class the manages a 
+     *@brief A class the manages a
      */
     class PhysicsManager {
         enum class PhysicsLibrary { REACT };
@@ -33,6 +32,10 @@ namespace Physics {
          */
         CollisionWorld *GetCollisionWorld();
 
+        /**
+         *@brief Gets the shape factory
+         * @return A pointer to the shape factory currently initialised
+         */
         ShapeFactory *GetShapeFactory();
 
         ReactShapes *GetReactShapeFactory();
@@ -51,31 +54,39 @@ namespace Physics {
         void InitialiseDynamicsWorld(PhysicsLibrary type = PhysicsLibrary::REACT,
                                      glm::vec3 gravity   = glm::vec3(0, -9.8f, 0));
 
+        /**
+         *@brief Initialises the shape factor with the given type
+         *@param type The type of physics library to implement
+         */
         void InitialiseShapeFactory(PhysicsLibrary type = PhysicsLibrary::REACT);
 
+        /**
+         *@brief Updates the dynamics world with the given DeltaTime
+         * @param deltaTime The time since the last physics update in seconds
+         */
         void UpdateDynamicsWorld(double deltaTime);
 
         void clear();
-      private:
 
+      private:
         static void lua_initialiseReact();
-        static CollisionWorld* lua_getCollisionWorld();
-        static DynamicsWorld* lua_getDynamicsWorld();
+        static CollisionWorld *lua_getCollisionWorld();
+        static DynamicsWorld *lua_getDynamicsWorld();
         static ReactCollisionWorld *lua_getReactCollisionWorld();
         static ReactDynamicsWorld *lua_getReactDynamicsWorld();
         void LuaInit();
-        static ReactRigidBody *getReactRigid(RigidBody* ptr);
-        static ReactCollisionBody *getReactCollision(CollisionBody* ptr);
+        static ReactRigidBody *getReactRigid(RigidBody *ptr);
+        static ReactCollisionBody *getReactCollision(CollisionBody *ptr);
 
         PhysicsManager();
 
         /// Dynamics world pointer
         std::unique_ptr<DynamicsWorld> dynamicsWorld;
 
-        ///Collision world pointer
+        /// Collision world pointer
         std::unique_ptr<CollisionWorld> collisionWorld;
 
-        ///Shape factory pointer
+        /// Shape factory pointer
         std::unique_ptr<ShapeFactory> shapeFactory;
     };
 }

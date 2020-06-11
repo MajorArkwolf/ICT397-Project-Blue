@@ -370,9 +370,10 @@ UpdateOxygen = function()
 	else
 		gameObj_charData:status_assign("Oxygen", 1000);
 	end
-	if (oxygenLevel < 0) then
+	if (gameObj_charData:status_get("Oxygen") < 1) then
 		local health = gameObj_charData:status_get("Health");
-		gameObj_charData:status_assign("Health", health - 1);
+		gameObj_charData:status_assign("Health", health - 0.1);
+		gameObj_charData:status_assign("Oxygen", 0);
 	
 	end
 end
