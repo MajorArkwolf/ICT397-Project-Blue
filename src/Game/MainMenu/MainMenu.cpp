@@ -124,10 +124,10 @@ void MainMenu::handleInputData(Controller::Input::InputData inputData, double de
     }
 }
 
-void MainMenu::startGame(Difficulty newDifficulty) {
+void MainMenu::startGame(Model::Difficulty newDifficulty) {
     auto &engine = BlueEngine::Engine::get();
+    Model::GameState::getInstance().setDifficulty(newDifficulty);
     engine.gameStack.AddToStack(std::make_shared<PrototypeScene>());
-    dynamic_cast<PrototypeScene*>(engine.gameStack.getTop().get())->SetDifficulty(newDifficulty);
 }
 
 void MainMenu::GUIStart() {
@@ -181,17 +181,17 @@ void MainMenu::DifficultyMenu() {
     ImGui::SetNextItemWidth(ImGui::GetWindowWidth());
     ImGui::Text("Select Difficulty");
     if (ImGui::Button("Easy", buttonSize)) {
-        startGame(Difficulty::easy);
+        startGame(Model::Difficulty::easy);
         displayDifficultyMenu = false;
     }
     ImGui::SameLine();
     if (ImGui::Button("Medium", buttonSize)) {
-        startGame(Difficulty::medium);
+        startGame(Model::Difficulty::medium);
         displayDifficultyMenu = false;
     }
     ImGui::SameLine();
     if (ImGui::Button("Hard", buttonSize)) {
-        startGame(Difficulty::hard);
+        startGame(Model::Difficulty::hard);
         displayDifficultyMenu = false;
     }
     ImGui::End();

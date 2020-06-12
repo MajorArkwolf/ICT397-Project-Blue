@@ -4,6 +4,7 @@
 #include "View/EulerCamera.hpp"
 #include "Game/MainMenu/StaticModel.hpp"
 #include "Game/Prototype/PrototypeScene.hpp"
+#include "Model/GameState.hpp"
 
 class MainMenu : public BaseState {
 public:
@@ -49,7 +50,7 @@ public:
     /**
      * Function to start our game.
      */
-    void startGame(Difficulty newDifficulty);
+    void startGame(Model::Difficulty newDifficulty);
 
     /**
      * Starts the GUI

@@ -1,3 +1,6 @@
+-- Debugging
+print("difficulty " .. getDifficulty());
+
 -- Initialise the physics system, and prepare it for use
 InitialisePhysics();
 physManager = PhysicsManager:GetInstance();
