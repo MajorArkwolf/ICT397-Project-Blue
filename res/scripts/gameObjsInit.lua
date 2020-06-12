@@ -16,7 +16,7 @@ local sphereShape = shapeFactory:createSphere(1);
 local capsuleShape = shapeFactory:createCapsule(1.5,3);
 local bulletShape = shapeFactory:createSphere(0.4);
 local bulletShapeCollision = shapeFactory:createSphere(1);
-local capsuleShape_npc = shapeFactory:createCapsule(0.5,1);
+local capsuleShape_npc = shapeFactory:createCapsule(3,7);
 local treeShape = shapeFactory:createBox(vector(1,20,1));
 local rockShape = shapeFactory:createBox(vector(3,3,3));
 -------------------------------------------------------------------
@@ -129,7 +129,7 @@ NPC_catchIfDead = function(npc_raw)
 end
 
 -- Generate 50 NPCs
-for i = 0, 0 * DifficultyMultiplier, 1 do
+for i = 0, 15 * DifficultyMultiplier, 1 do
 	-- Create a GameObject and store the returned identifier
 	local npc_id = GameObject.create(GameObject.Types.NPC());
 
@@ -141,7 +141,7 @@ for i = 0, 0 * DifficultyMultiplier, 1 do
 	-- Configure the model, animator and scale
 	npc_gameObj_raw.model = resources.getModel("res/model/ClothedMan.gltf");
 	npc_gameObj_raw:anim_init();
-	npc_gameObj_raw.scale = vector(2, 2, 2);
+	npc_gameObj_raw.scale = vector(1, 1, 1);
 
 	-- Configure the NPC to be in a random position surrounding the player's spawning location
 	local position = vector(math.random(0 - npcSpawningRegion, npcSpawningRegion), 0, math.random(0 - npcSpawningRegion, npcSpawningRegion));
@@ -164,8 +164,8 @@ for i = 0, 0 * DifficultyMultiplier, 1 do
 	npc_gameObj_char:status_assign("Enemy", 1);
 
 	-- Assign the NPC's speed
-	--npc_gameObj_char:status_assign("Wander_WalkSpeed", 1.5);
-	--npc_gameObj_char:status_assign("Chase_RunSpeed", 4);
+	npc_gameObj_char:status_assign("Wander_WalkSpeed", 4);
+	npc_gameObj_char:status_assign("Chase_RunSpeed",8);
 
 	-- Set up the NPC's initial AI FSM States
 	local npc_ai = FSM.get(npc_gameObj_npc.context);
