@@ -44,7 +44,7 @@ void State_Chase::run(std::shared_ptr<GameObj_Base> context, double t [[maybe_un
 	npc_phys->SetOrientation(rotationToPlayer);
 
 	// The NPC is running, move it forward
-	glm::vec3 new_position = npc_phys->GetPosition() + (npc_phys->GetOrientation() * (glm::vec3(0.0f, 0.0f, 4.0f * npc->status_get("Wander_WalkSpeed"))));
+	glm::vec3 new_position = npc_phys->GetPosition() + (npc_phys->GetOrientation() * (glm::vec3(0.0f, 0.0f, npc->status_get("Chase_RunSpeed") * float(dt))));
 	new_position.y = Controller::TerrainFactory::LuaBLHeight(new_position.x, new_position.z) + 0.1f;
 	npc_phys->SetPosition(new_position);
 
