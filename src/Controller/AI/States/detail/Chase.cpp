@@ -21,6 +21,10 @@ void State_Chase::start(std::shared_ptr<GameObj_Base> context) {
 		// Assign the critical status
 		npc->status_assign("Chase_RunSpeed", 4.0f);
 	}
+	if (!npc->status_has("NPC_RangeScale")) {
+		// Assign the critical status
+		npc->status_assign("NPC_RangeScale", 1.0f);
+	}
 }
 
 void State_Chase::run(std::shared_ptr<GameObj_Base> context, double t [[maybe_unused]], double dt) {
@@ -50,12 +54,12 @@ void State_Chase::run(std::shared_ptr<GameObj_Base> context, double t [[maybe_un
 
 	// Catch if the NPC has got far away enough from the player
 	new_position.y = 0.0f;
-	if (glm::length(new_position - player_pos) > 40.0f) {
+	if (glm::length(new_position - player_pos) > 40.0f * npc->status_get("NPC_RangeScale")) {
 		// Switch this NPC's state to chase the player
 		FSM_Manager::get(npc->contextID)->local_set(FSM_Manager::regular_state(State_Type::Wander));
 	}
 	// Catch if the NPC has got close enough to the player
-	else if (glm::length(new_position - player_pos) < 2.0f) {
+	else if (glm::length(new_position - player_pos) < 2.0f * npc->status_get("NPC_RangeScale")) {
 		// Switch this NPC's state to attack the player
 		FSM_Manager::get(npc->contextID)->local_set(FSM_Manager::regular_state(State_Type::Attack));
 	}
