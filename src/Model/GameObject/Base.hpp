@@ -12,10 +12,10 @@
 #include "View/Renderer/Shader.hpp"
 #include "Types.hpp"
 
-	/*!
-	 * @brief The parent class for all child GameObjects.
-	 * @note Acts as the base polymorphic structure for use with all derived GameObjects.
-	 */
+/*!
+ * @brief The parent class for all child GameObjects.
+ * @note Acts as the base polymorphic structure for use with all derived GameObjects.
+ */
 class GameObj_Base {
 public:
 		/*!
