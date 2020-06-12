@@ -422,14 +422,14 @@ GUI = function()
 
 	--Death
 	if(Health == 0) then
-		GUIFunctions.SetNextWindowPos(windowSize.x/2 - 180,windowSize.y/2 - 50, true);
+		GUIFunctions.SetNextWindowPos(windowSize.x/2 - 180,0, true);
 		GUIFunctions.BeginWindow("DEAD");
 		GUIFunctions.SetFontSize(6);
 
 		GUIFunctions.Text("YOU DEAD");
-		GUIFunctions.SameLine();
-		if(GUIFunctions.Button("Exit")) then
-			EndGame();
+		if(HasOpenedExitScreen == false) then
+			toggleGUIWindow("exit");
+			HasOpenedExitScreen = true;
 		end
 		GUIFunctions.EndWindow();
 	end
@@ -459,15 +459,16 @@ GUI = function()
 		GUIFunctions.EndWindow();
 
 		if(EnemiesLeft < 1) then
-			GUIFunctions.SetNextWindowPos(windowSize.x/2 - 250,windowSize.y/2 - 50, true);
+			GUIFunctions.SetNextWindowPos(windowSize.x/2 - 270,0, true);
 			GUIFunctions.BeginWindow("WIN");
 			GUIFunctions.SetFontSize(3);
 
 			GUIFunctions.Text("Congratulations, You WIN!");
-			GUIFunctions.SameLine();
-			if(GUIFunctions.Button("Exit")) then
-				EndGame();
+			if(HasOpenedExitScreen == false) then
+				toggleGUIWindow("exit");
+				HasOpenedExitScreen = true;
 			end
+
 			GUIFunctions.EndWindow();
 		end
 end

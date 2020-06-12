@@ -2,7 +2,7 @@
 ---------Variables
 EnemiesLeft = 0;
 DifficultyMultiplier = 1;
-
+HasOpenedExitScreen = false;
 
 
 
