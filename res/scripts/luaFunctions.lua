@@ -278,6 +278,7 @@ handleInput = function(inputData)
 	        end 
 	--Keyboard button press
 	elseif(inputData.inputType == "KeyPress") then
+		if(HasOpenedExitScreen == false) then
 			if(inputData.action == "Jump") then
 
 				if(gameObj_charData:status_get("UseDynamics") == 0 or playerRigidBody:GetPosition().y < 105) then
@@ -337,6 +338,7 @@ handleInput = function(inputData)
 
 			
 	        end 
+		end
 	--Mous button press
 	elseif(inputData.inputType == "MouseButtonPress") then
 		if(inputData.action == "Mouse Left") then
