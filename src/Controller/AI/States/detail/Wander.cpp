@@ -54,7 +54,7 @@ void State_Wander::run(std::shared_ptr<GameObj_Base> context, double t [[maybe_u
 	// Determine the behaviour to apply for the wandering
 	if (npc->status_get("Wander_ActionIsIdle") < 0.5f) {
 		// The NPC is walking, move it forward
-		glm::vec3 new_position = npc_phys->GetPosition() + (npc_phys->GetOrientation() * (glm::vec3(0.0f, 0.0f, 1.5f * npc->status_get("Wander_WalkSpeed"))));
+		glm::vec3 new_position = npc_phys->GetPosition() + (npc_phys->GetOrientation() * (glm::vec3(0.0f, 0.0f, npc->status_get("Wander_WalkSpeed") * float(dt))));
 		new_position.y = Controller::TerrainFactory::LuaBLHeight(new_position.x, new_position.z) + 0.1f;
 		npc_phys->SetPosition(new_position);
 
