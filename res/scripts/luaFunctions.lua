@@ -47,6 +47,7 @@ catchPlayer = function()
 
 end
 
+--- Check Collisions between projectiles and npcs
 checkCollisions = function()
 		local id_list = GameObject.listNPCs();
 		damage = BulletCharData:status_get("Damage");
@@ -89,6 +90,7 @@ createProjectile = function (position, force)
 	rigidBody:ApplyForceToCentre(math.vectorMultiplyScalar(force, 50000));
 end
 
+--- Configures the jetpack
 useJetpack = function(deltaTime)
 	local gameObj_charData = GameObject.to_character(player);
 	local playerRigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(player.physBody));
@@ -369,6 +371,7 @@ handleInput = function(inputData)
 	
 end
 
+--Updates oxygen values
 UpdateOxygen = function()
 	local gameObj_charData = GameObject.to_character(player);
 	local oxygenLevel = gameObj_charData:status_get("Oxygen");
@@ -386,6 +389,7 @@ UpdateOxygen = function()
 	end
 end
 
+---Handles all lua gui stuff
 GUI = function() 
 	local windowSize = GUIFunctions.GetWindowSize();
 	local gameObj_charData = GameObject.to_character(player);
