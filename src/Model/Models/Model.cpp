@@ -327,5 +327,8 @@ Animation* Model::Model::getAnimation(const string &animName) {
     if (idle != nullptr) {
         return idle;
     }
+    if (!animation.empty()) {
+        return &animation.at(0);
+    }
     return nullptr;
 }
