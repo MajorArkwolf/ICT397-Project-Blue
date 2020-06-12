@@ -9,6 +9,9 @@ layout (location = 5) in ivec4 aJointID;
 layout (location = 6) in vec4 aJointWeights;
 
 out vec2 TexCoords;
+out vec3 Normals;
+out vec3 FragPos;
+
 uniform bool isAnimated;
 uniform mat4 model;
 uniform mat4 view;
@@ -29,6 +32,8 @@ void main()
 	    boned_position = vec4(aPos, 1.0);
 	}
 
+    Normals = mat3(transpose(inverse(model))) * aNormal;
+    FragPos = vec3(model * boned_position);
     TexCoords = aTexCoords;
     gl_Position = projection * view * model * boned_position;
 
