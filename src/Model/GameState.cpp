@@ -1,10 +1,22 @@
 #include "GameState.hpp"
+#include "Controller/Engine/LuaManager.hpp"
 
-Model::GameState::GameState() {
-    //Place all constructors needed in here.
+int Model::GameState::gameDifficulty() {
+    auto df = Model::GameState::getInstance().getDifficulty();
+    return static_cast<int>(df);
 }
 
-Model::GameState Model::GameState::getInstance() {
+Model::GameState::GameState() {
+
+}
+
+Model::GameState& Model::GameState::getInstance() {
     static auto instance = GameState{};
     return instance;
+}
+Model::Difficulty Model::GameState::getDifficulty() const {
+    return difficulty;
+}
+void Model::GameState::setDifficulty(Model::Difficulty newDifficulty) {
+    difficulty = newDifficulty;
 }

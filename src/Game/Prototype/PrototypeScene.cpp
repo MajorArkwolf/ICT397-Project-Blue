@@ -3,6 +3,7 @@
 #include "Controller/PhysicsManager.hpp"
 #include "Controller/AI/Manager.hpp"
 #include "Model/GameObject/Manager.hpp"
+#include "Model/GameState.hpp"
 
 using Controller::Input::BLUE_InputAction;
 using Controller::Input::BLUE_InputType;
@@ -25,8 +26,10 @@ PrototypeScene::PrototypeScene() {
         .addFunction("getCamera", &getCamera)
         .addFunction("toggleWireframe", &toggleWireframe)
         .addFunction("getHeightAt", &Controller::TerrainFactory::LuaBLHeight)
-        .addFunction("EndGame", &EndGame)
-        .addFunction("getMapSize", &Controller::TerrainFactory::LuaMapSize);
+        .addFunction("getMapSize", &Controller::TerrainFactory::LuaMapSize)
+        .addFunction("getDifficulty", &Model::GameState::gameDifficulty)
+        .addFunction("EndGame", &EndGame);
+
 
     PrototypeScene::Init();
     View::Camera::LuaInit();
@@ -273,6 +276,4 @@ void PrototypeScene::GUIStart() {
 void PrototypeScene::GUIEnd() {
     GUIManager::endWindowFrame();
 }
-void PrototypeScene::SetDifficulty(Difficulty newDifficulty) {
-    this->currentDifficulty = newDifficulty;
-}
+
