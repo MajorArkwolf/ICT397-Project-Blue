@@ -1,6 +1,7 @@
 
----------Difficulty 
-local DifficultyMultiplier = 1;
+---------Variables
+EnemiesLeft = 0;
+DifficultyMultiplier = 1;
 
 
 
@@ -16,6 +17,8 @@ local capsuleShape = shapeFactory:createCapsule(1.5,3);
 local bulletShape = shapeFactory:createSphere(0.4);
 local bulletShapeCollision = shapeFactory:createSphere(1);
 local capsuleShape_npc = shapeFactory:createCapsule(0.5,1);
+local treeShape = shapeFactory:createBox(vector(1,20,1));
+local rockShape = shapeFactory:createBox(vector(3,3,3));
 -------------------------------------------------------------------
 
 ---------------------Player Setup------------------------------------------
@@ -48,7 +51,7 @@ gameObj_charData:status_assign("UsingJetpack", 0);
 
 ----------------Misc Object setup-------------------------------------------------------
 
-for i = 0, 1000, 1 do
+for i = 0, 100, 1 do
 	identifier = GameObject.create(GameObject.Types.Static());
 	new_game_object = GameObject.get(identifier);
 	local name = "res/model/vikings/SM_Env_Rock_01.fbx";
@@ -60,7 +63,31 @@ for i = 0, 1000, 1 do
 
 	local objectRigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(new_game_object.physBody));
 	objectRigidBody:SetPosition(vector(x, y, z));
+	objectRigidBody:AddCollisionShape(shapeFactory:GetShape(rockShape), vector(0,0,0), quaternion(1,0,0,0), 5);
 
+end
+
+local sandHeight = 110;
+local dirtHeight = 150;
+for i = 0, 1000, 1 do
+	identifier = GameObject.create(GameObject.Types.Static());
+	new_game_object = GameObject.get(identifier);
+	local name = "res/model/vikings/SM_Env_Tree_Pine_0" .. math.random(1, 4) .. ".fbx";
+	new_game_object.model = resources.getModel(name);
+	local x = math.random(TerrainFactory.chunkSize * -1, TerrainFactory.chunkSize);
+	local z = math.random(TerrainFactory.chunkSize * -1, TerrainFactory.chunkSize);
+	local y = 0;
+	while ( y < sandHeight or y > dirtHeight)
+	do
+		x = math.random(TerrainFactory.chunkSize * -1, TerrainFactory.chunkSize);
+		z = math.random(TerrainFactory.chunkSize * -1, TerrainFactory.chunkSize);
+		y = TerrainFactory.heightAt(x, z);
+	end
+	local objectRigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(new_game_object.physBody));
+	objectRigidBody:SetPosition(vector(x, y - 3, z));
+	objectRigidBody:AddCollisionShape(shapeFactory:GetShape(treeShape), vector(0,0,0), quaternion(1,0,0,0), 5);
+	local scale = 0.1;
+	new_game_object.scale = vector(scale, scale, scale);
 end
 
 ------------------------Bullet setup-------------------------------------------
@@ -102,7 +129,7 @@ NPC_catchIfDead = function(npc_raw)
 end
 
 -- Generate 50 NPCs
-for i = 0, 15 * DifficultyMultiplier, 1 do
+for i = 0, 0 * DifficultyMultiplier, 1 do
 	-- Create a GameObject and store the returned identifier
 	local npc_id = GameObject.create(GameObject.Types.NPC());
 
@@ -114,7 +141,7 @@ for i = 0, 15 * DifficultyMultiplier, 1 do
 	-- Configure the model, animator and scale
 	npc_gameObj_raw.model = resources.getModel("res/model/ClothedMan.gltf");
 	npc_gameObj_raw:anim_init();
-	npc_gameObj_raw.scale = vector(0.3, 0.3, 0.3);
+	npc_gameObj_raw.scale = vector(2, 2, 2);
 
 	-- Configure the NPC to be in a random position surrounding the player's spawning location
 	local position = vector(math.random(0 - npcSpawningRegion, npcSpawningRegion), 0, math.random(0 - npcSpawningRegion, npcSpawningRegion));

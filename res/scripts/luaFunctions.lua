@@ -52,11 +52,16 @@ checkCollisions = function()
 		damage = BulletCharData:status_get("Damage");
 		for iterator, npcID in pairs(id_list) do
 			local npcObject = GameObject.get(npcID);
-
 			local charData = GameObject.to_character(npcObject);
 
 			if(charData:status_has("Projectile") == false) then
+				local npc = getReactRigidBody(dynamicsWorld:GetRigidBody(npcObject.physBody));
+					if(npc:GetPosition().y < 105) then
+						charData:status_assign("Health", 0);
+					end
 				if(collisionWorld:TestOverlap(BulletObject.physBody, npcObject.physBody)== true) then
+
+
 					local npcObjectHealth = charData:status_get("Health");
 					charData:status_assign("Health", npcObjectHealth - damage);
 					print("NPC ID:" .. npcID .. " Old Health: " .. npcObjectHealth .. " New Health: " .. charData:status_get("Health"))
@@ -422,6 +427,10 @@ GUI = function()
 		GUIFunctions.SetFontSize(6);
 
 		GUIFunctions.Text("YOU DEAD");
+		GUIFunctions.SameLine();
+		if(GUIFunctions.Button("Exit")) then
+			EndGame();
+		end
 		GUIFunctions.EndWindow();
 	end
 
@@ -445,8 +454,21 @@ GUI = function()
 			end
 
 		end
+		EnemiesLeft = EnemyCount;
 		GUIFunctions.Text("Enemies Left: " .. EnemyCount );
 		GUIFunctions.EndWindow();
 
+		if(EnemiesLeft < 1) then
+			GUIFunctions.SetNextWindowPos(windowSize.x/2 - 250,windowSize.y/2 - 50, true);
+			GUIFunctions.BeginWindow("WIN");
+			GUIFunctions.SetFontSize(3);
+
+			GUIFunctions.Text("Congratulations, You WIN!");
+			GUIFunctions.SameLine();
+			if(GUIFunctions.Button("Exit")) then
+				EndGame();
+			end
+			GUIFunctions.EndWindow();
+		end
 end
 	

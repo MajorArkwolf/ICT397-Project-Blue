@@ -13,6 +13,10 @@ void LuaGUIWrapper::SameLine() {
     ImGui::SameLine();
 }
 
+bool LuaGUIWrapper::Button(const std::string &text) {
+    return ImGui::Button(text.c_str());
+}
+
 void LuaGUIWrapper::SetFontSize(float scale) {
     ImGui::SetWindowFontScale(scale);
 }
@@ -50,5 +54,6 @@ void LuaGUIWrapper::RegisterWithLua() {
         .addFunction("EndWindow", &LuaGUIWrapper::EndWindow)
         .addFunction("SetNextWindowPos", &LuaGUIWrapper::SetNextWindowPos)
         .addFunction("GetWindowSize", &LuaGUIWrapper::GetWindowSize)
+        .addFunction("Button", &LuaGUIWrapper::Button)
         .addFunction("SetFontSize", &LuaGUIWrapper::SetFontSize);
 }
