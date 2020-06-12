@@ -69,7 +69,7 @@ namespace Controller {
          * load the model based of the models id.
          * @param modelID
          */
-        void LinkToModel(unsigned modelID);
+        void LinkToModel(size_t modelID);
 
         /**
          * Reset the animation time back to zero.
