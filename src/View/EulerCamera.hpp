@@ -9,11 +9,11 @@
 enum class Camera_Movement { FORWARD, BACKWARD, LEFT, RIGHT };
 
 /// Default values used to initialise a camera.
-constexpr double YAW         = 0.0;
-constexpr double PITCH       = 0.0;
-constexpr double SPEED       = 0.05;
-constexpr double SENSITIVITY = 0.1;
-constexpr double ZOOM        = 45.0;
+constexpr float YAW         = 0.0;
+constexpr float PITCH        = 0.0;
+constexpr float SPEED        = 0.05;
+constexpr float SENSITIVITY  = 0.1;
+constexpr float ZOOM         = 45.0;
 namespace View {
 /**
  * Euler Camera designed to interact in a 3D environment.
@@ -21,17 +21,17 @@ namespace View {
     class Camera {
     public:
         /// Camera Attributes
-        glm::dvec3 Position = {};
-        glm::dvec3 Front = {};
-        glm::dvec3 Up = {};
-        glm::dvec3 Right = {};
-        glm::dvec3 WorldUp = {};
+        glm::vec3 Position = {};
+        glm::vec3 Front = {};
+        glm::vec3 Up = {};
+        glm::vec3 Right = {};
+        glm::vec3 WorldUp = {};
         /// Euler Angles
-        double Yaw = {};
-        double Pitch = {};
+        float Yaw = {};
+        float Pitch = {};
         /// Camera options
         float MovementSpeed = {};
-        double MouseSensitivity = {};
+        float MouseSensitivity = {};
         double Zoom = {};
 
         /**
@@ -61,7 +61,7 @@ namespace View {
 
         /**
          * Calculates the view matrix used for shaders and the rendering engine.
-         * @return
+         * @return Gets the view matrix
          */
         glm::mat4 GetViewMatrix();
 
@@ -94,12 +94,17 @@ namespace View {
          */
         glm::ivec2 getLocation() const;
 
-        glm::dvec3 GetRightVector();
+        glm::vec3 GetRightVector();
 
-    private:
+        void ProcessKeyboardInput(bool forward, bool backward, bool left, bool right, double deltaTime);
+        static void LuaInit();
         /**
          * Calculates the front vector from the Camera's (updated) Euler Angles
          */
         void updateCameraVectors();
+
+    private:
+
+
     };
 }

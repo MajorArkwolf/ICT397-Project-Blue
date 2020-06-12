@@ -15,12 +15,12 @@ namespace Physics {
     class DynamicsWorld {
       public:
         /// Constructor
-        DynamicsWorld(){};
+        DynamicsWorld(){}
         /// Desttructor
-        virtual ~DynamicsWorld(){};
+        virtual ~DynamicsWorld(){}
         /**
          * @brief Used to intialise a dynamics world with a certain gravity level
-         * @param gravity
+         * @param gravity The gravity of the world
          */
         virtual void InitialiseWorld(glm::vec3 gravity) = 0;
 
@@ -34,9 +34,9 @@ namespace Physics {
          * @brief Creates a rigid body in the dyanmics world and returns the id needed to access it
          * @param position The starting position of the rigid body
          * @param rotation The starting rotation of the rigid body
-         * @return The ID of the created rigid body
+         * @param gameObjectID The id of the object to create
          */
-        virtual RigidBodyID CreateRigidBody(glm::vec3 position, glm::quat rotation) = 0;
+        virtual void CreateRigidBody(glm::vec3 position, glm::quat rotation, size_t gameObjectID) = 0;
 
         /**
          * @brief Returns a rigid body with the id given

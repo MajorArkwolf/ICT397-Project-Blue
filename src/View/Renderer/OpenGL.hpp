@@ -43,6 +43,11 @@ namespace View {
          */
         void AddToQue(View::Data::DrawItem& drawItem);
         /**
+         * Adds an item to the draw que.
+         * @param drawItem Passes DrawItem into the que to be used for rendering purposes.
+         */
+        void AddToQueTransparent(View::Data::DrawItem& drawItem);
+        /**
          * Setups a general mesh for the renderer in the OpenGL Context.
          * @param VAO buffer identity
          * @param VBO buffer identity
@@ -55,7 +60,7 @@ namespace View {
         /**
          * The Resize window function for OpenGL
          */
-        static void ResizeWindow();
+        void ResizeWindow();
         /**
          * Load a texture from file and store it.
          * @param path The path to the image.
@@ -98,12 +103,22 @@ namespace View {
         void DrawTerrain(unsigned int &VAO, const std::vector<unsigned int> &textures,
                          const unsigned int& ebo_size);
 
+        /**
+         * Updates the viewport.
+         * @param bl Bottom left, should be 0.
+         * @param br Bottom right, should be 0.
+         * @param tl The width of the screen.
+         * @param tr The height of the screen.
+         */
+        void UpdateViewPort(int bl, int br, int tl, int tr) override;
 
     private:
         /// Decides if the renderer should be in wire frame mode or not.
         bool wireFrame = false;
         /// DrawQue of objects that need to be rendered by the renderer.
         std::vector<View::Data::DrawItem> drawQue = {};
+        /// A draw que only for transparent objects.
+        std::vector<View::Data::DrawItem> drawQueTransparent = {};
         /// The active camera on the draw pass.
         Camera *camera = nullptr;
         /// The sky box for the scene.

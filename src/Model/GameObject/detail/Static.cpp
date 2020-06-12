@@ -3,73 +3,64 @@
 
 	/// Internal Dependencies
 #include "Controller/Engine/Engine.hpp"
-#include "View/Renderer/Renderer.hpp"
-#include "../GameObject.hpp"
+#include "Controller/PhysicsManager.hpp"
+#include "../Types.hpp"
 
-GameObj_Static::GameObj_Static()
-	: GameObj_Base() {
-	// Configure the initial Shader
-	gameObj_shader = std::make_shared<Shader>(Shader("res/shader/vertshader.vs", "res/shader/fragshader.fs"));
+GameObj_Static::GameObj_Static(BlueEngine::ID model_in, BlueEngine::ID physBody_in)
+	: GameObj_Base(model_in, physBody_in) {
+	// GameObj_Static has no unique construction procedure yet.
 }
 
-GameObj_Static::GameObj_Static(std::string path, unsigned long int physBody, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale)
-	: GameObj_Base(path, physBody, position, rotation, scale) {
-	// Configure the initial Shader
-	gameObj_shader = std::make_shared<Shader>(Shader("res/shader/vertshader.vs", "res/shader/fragshader.fs"));
+GameObj_Type GameObj_Static::type() const {
+	// Return the GameObject's type
+	return GameObj_Type::Static;
 }
 
-GameObj_Static::~GameObj_Static() {
-	// GameObj_Static has no unique destruction procedure yet.
-}
-
-GameObjType GameObj_Static::gameObj_getTypeID() const {
-	// Return a copy of the class's unique type identifier
-	return _gameObj_getTypeID();
-}
-
-GameObjType GameObj_Static::_gameObj_getTypeID() {
-	// Always return error indicator GAMEOBJ_STATIC, never return anything else.
-	return GAMEOBJ_STATIC;
-}
-
-void GameObj_Static::gameObj_addToDraw() {
+void GameObj_Static::addToDraw() {
 	// Create a function pointer of the GameObject's draw call for the DrawItem
-	std::function<void(const glm::mat4 &projection, const glm::mat4 &view, const glm::dvec3 &cameraPos)> e = [&](const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos) {
-		this->Draw(projection, view, cameraPos);
+	std::function<void(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos)> e = [&](const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos) {
+		this->draw(projection, view, cameraPos);
 	};
 
 	// Here the DrawItem for the GameObject is generated and configured
 	View::Data::DrawItem drawItem = {};
 	drawItem.drawPointer = e;
-	drawItem.pos = gameObj_pos;
+	drawItem.pos = Physics::PhysicsManager::GetInstance().GetCollisionWorld()->GetCollisionBody(physBody)->GetPosition();
 
 	// Finally the DrawItem is added to the renderer queue
 	auto& renderer = BlueEngine::Engine::get().renderer;
 	renderer.AddToQue(drawItem);
 }
 
-void GameObj_Static::Draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos) {
-	// Catch attempting to render the GameObject with an invalid shader
-	if (gameObj_shader == nullptr) {
-		std::cerr << "Cannot render GameObj_Static " << gameObj_getUniqueID() << " (with Model " << gameObj_getModelID() << ") as it's shader is invalid!\n";
-		return;
-	}
+void GameObj_Static::draw(const glm::mat4& projection, const glm::mat4& view, const glm::dvec3& cameraPos[[maybe_unused]]) {
+	// Attempt to gather the Game Object's physics body
+	auto phys_world = Physics::PhysicsManager::GetInstance().GetCollisionWorld();
+	auto phys_body = phys_world->GetCollisionBody(physBody);
 
 	// Generate and configure the GameObject's model matrix
-	glm::mat4 model = glm::mat4(1.0f);
-	model = glm::translate(model, gameObj_pos);
-	model = glm::rotate(model, glm::radians(gameObj_rotation[0]), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::rotate(model, glm::radians(gameObj_rotation[1]), glm::vec3(1.0f, 0.0f, 0.0f));
-	model = glm::rotate(model, glm::radians(gameObj_rotation[2]), glm::vec3(0.0f, 0.0f, 1.0f));
-	model = glm::scale(model, gameObj_scale);
+	glm::mat4 model_matrix = glm::mat4(1.0f);
+	model_matrix = glm::translate(model_matrix, phys_body->GetPosition());
+	model_matrix = glm::scale(model_matrix, scale);
+	model_matrix = model_matrix * glm::mat4_cast(phys_body->GetOrientation());
 
 	// Enable the shader and pass it the values for its uniforms
-	gameObj_shader->use();
-	gameObj_shader->setMat4("projection", projection);
-	gameObj_shader->setMat4("view", view);
-	gameObj_shader->setMat4("model", model);
+	program->use();
+	program->setMat4("projection", projection);
+	program->setMat4("view", view);
+	program->setMat4("model", model_matrix);
+
+	// Apply additional shader uniform variables for the GameObject's animation
+	if (animator != nullptr) {
+		// Pass the animation critical data to the shader program
+		program->setBool("isAnimated", true);
+		program->setMat4Array("jointTransforms", animator->Transforms);
+	}
+	else {
+		// Indicate to the shader program that the GameObject model doesn't need to be updated
+		program->setBool("isAnimated", false);
+	}
 
 	// Get the resource manager and call for it to draw the model
 	auto& res_manager = ResourceManager::getInstance();
-	res_manager.drawModel(gameObj_modelId, gameObj_shader.get());
+	res_manager.drawModel(model, program.get());
 }

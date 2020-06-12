@@ -12,8 +12,8 @@ namespace Physics {
     */
     class RigidBody {
       public:
-        RigidBody(){};
-        virtual ~RigidBody(){};
+        RigidBody(){}
+        virtual ~RigidBody(){}
         /**
          * @brief Sets the position of the rigid body
          * @param position THe position to set the rigid body to
@@ -61,6 +61,8 @@ namespace Physics {
          * @param point The point to apply the force
          */
         virtual void ApplyForce(glm::vec3 force, glm::vec3 point)                         = 0;
+
+        virtual void SetAngularDamping(double damping)                                        = 0;
         /**
          * @brief Destroys the rigid body when no longer needed
          */

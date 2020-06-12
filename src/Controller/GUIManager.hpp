@@ -30,7 +30,7 @@ class GUIManager {
      * @brief Initialises ImGUI stuff
      * @param window The SDL window to draw the gui in
      */
-    void initialiseImGUI(GLFWwindow *window);
+    static void initialiseImGUI(GLFWwindow *window);
 
     /**
      * @brief Displays the input rebind menu that allows inputs to be rebound on the fly
@@ -80,7 +80,7 @@ class GUIManager {
     /**
      * @brief Toggles a window given its name in the map
      */
-    void toggleWindow(std::string windowName);
+    void toggleWindow(const std::string &windowName);
 
     /**
      * @brief Sets the terrain manager to use by the terrain texture manager
@@ -96,5 +96,7 @@ class GUIManager {
     void initialiseWindowOpenMap();
 
     /// Pointer to the current terrain manager
-    Controller::TerrainManager *terrainManager;
+    Controller::TerrainManager *terrainManager{};
+
+    static void luaToggleWindow(std::string window);
 };

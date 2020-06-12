@@ -34,7 +34,58 @@ void Controller::TerrainFactory::Init() {
     } else {
         maxKeySize = ((height / 2) / ChunkSize) - 1;
     }
+    AddWallBoundary();
     GenerateHeightOffSet();
+
+    luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
+        .beginNamespace("TerrainFactory")
+        .addProperty("chunkSize", &Controller::TerrainFactory::LuaMapSize)
+        .addFunction("heightAt", &Controller::TerrainFactory::LuaBLHeight)
+        .endNamespace();
+}
+
+void Controller::TerrainFactory::AddWallBoundary() {
+    size_t maxXSize = fValues.size();
+    size_t maxZSize = fValues.at(0).size();
+    auto playArea   = maxKeySize * static_cast<unsigned>(ChunkSize) * 2;
+    auto depth      = (maxXSize - playArea) / 2;
+    // South
+    for (auto &x : fValues) {
+        auto newheight = 300.f;
+        for (size_t y = 0; y <= 50; ++y) {
+            newheight -= 1.0f;
+            x.at(depth + y).height = newheight;
+        }
+    }
+    // North
+    auto oppDepth = maxXSize - depth;
+    for (auto &x : fValues) {
+        auto newheight = 300.f;
+        for (size_t y = 0; y <= 50; ++y) {
+            newheight -= 1.0f;
+            x.at(oppDepth - y).height = newheight;
+        }
+    }
+
+    // East
+    for (size_t z = 0; z < maxZSize; ++z) {
+        auto newheight = 300.f;
+        for (size_t y = 0; y <= 50; ++y) {
+            newheight -= 1.0f;
+            fValues.at(depth + y).at(z).height = newheight;
+        }
+        fValues.at(depth).at(z).height = 300.f;
+    }
+
+    // West
+    for (size_t z = 0; z < maxZSize; ++z) {
+        auto newheight = 300.f;
+        for (size_t y = 0; y <= 50; ++y) {
+            newheight -= 1.0f;
+            fValues.at(maxZSize - depth - y).at(z).height = newheight;
+        }
+        fValues.at(depth).at(z).height = 300.f;
+    }
 }
 
 void Controller::TerrainFactory::LoadLua() {
@@ -137,7 +188,6 @@ void Controller::TerrainFactory::GenerateWater(Model::Water &lake, const Blue::K
     for (auto &v : vertices) {
         v.normals = glm::vec3(0.0f, 1.0f, 0.0f);
     }
-    // GenerateNormals(vertices, lake.indicies);
     lake.SetTexture(waterTextureID);
     lake.SetupModel(vertices, indicies);
 }
@@ -571,11 +621,9 @@ float Controller::TerrainFactory::GetBLHeight(Blue::Key currentKey, glm::vec2 cu
     float x             = currentCord.x - floor(currentCord.x);
     float y             = currentCord.y - floor(currentCord.y);
 
-    float R1 = ((1.0f - x) / (1.0f - 0.0f)) * hBL + ((x - 0.0f) / (1.0f - 0.0f)) * hBR;
-    // ((x2 – x)/(x2 – x1))*Q12 + ((x – x1)/(x2 – x1))*Q22
-    float R2 = ((1.0f - x) / (1.0f - 0.0f)) * hTL + ((x - 0.0f) / (1.0f - 0.0f)) * hTR;
-    // ((y2 – y)/(y2 – y1))*R1 + ((y – y1)/(y2 – y1))*R2
-    result_height = (((1.0f - y) / (1 - 0.0f)) * R1) + (((y - 0.0f) / (1.0f - 0.0f)) * R2);
+    auto y1       = glm::mix(hBL, hTL, x);
+    auto y2       = glm::mix(hBR, hTR, x);
+    result_height = glm::mix(y1, y2, y);
     return result_height;
 }
 

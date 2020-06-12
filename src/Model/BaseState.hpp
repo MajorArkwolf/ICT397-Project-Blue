@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Controller/InputManager.hpp"
+#include "View/EulerCamera.hpp"
 
 /**
  * @class BaseState
@@ -38,8 +39,9 @@ class BaseState {
      * @brief Virtual function for handling input events encased within a a custom Input Event
      * All input events will be sent to the current game state at the top of the stack
      * @param inputData The InputData event that contains the user input
+     * @param deltaTime time since last frame
      */
-    virtual void handleInputData(Controller::Input::InputData inputData) = 0;
+    virtual void handleInputData(Controller::Input::InputData inputData, double deltaTime) = 0;
 
     /**
      * @brief Virtual update function for updating physics within a game state
@@ -47,5 +49,18 @@ class BaseState {
      * @param t The time since the program was started
      */
     virtual void update(double t, double dt) = 0;
+
+    /// Camera required for renderer.
+    View::Camera camera;
+
+    /**
+     * Starts the GUI menu.
+     */
+    virtual void GUIStart() = 0;
+
+    /**
+     * Ends the GUI menu.
+     */
+    virtual void GUIEnd() = 0;
 
 };

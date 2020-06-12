@@ -11,17 +11,7 @@ void View::OpenGL::Draw() {
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        auto& guiManager = engine.getGuiManager();
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        GUIManager::startWindowFrame();
-        guiManager.displayInputRebindWindow();
-        guiManager.displayEscapeMenu();
-        guiManager.displayInstructionMenu();
-        guiManager.displayQuitScreen();
-        guiManager.displayDevScreen(*camera);
-        guiManager.displayTextureManager();
-        guiManager.displayTerrainSettings();
+        engine.gameStack.getTop()->GUIStart();
         int width = 0, height = 0;
         glfwGetWindowSize(engine.window, &width, &height);
 
@@ -41,12 +31,16 @@ void View::OpenGL::Draw() {
         for (auto &m : drawQue) {
             m.drawPointer(projection, view, camera->Position);
         }
+        for (auto &m : drawQueTransparent) {
+            m.drawPointer(projection, view, camera->Position);
+        }
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         skyBox.draw(skyboxView, projection);
+        engine.gameStack.getTop()->GUIEnd();
     }
-    GUIManager::endWindowFrame();
     glfwSwapBuffers(engine.window);
     drawQue.clear();
+    drawQueTransparent.clear();
 }
 void View::OpenGL::Init() {
     int width  = 0;
@@ -143,6 +137,14 @@ void View::OpenGL::SetupMesh(unsigned int &VAO, unsigned int &VBO, unsigned int 
     glEnableVertexAttribArray(4);
     glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                           reinterpret_cast<void *>(offsetof(Vertex, Bitangent)));
+    // BoneID's
+    glEnableVertexAttribArray(5);
+    glVertexAttribIPointer(5, 4, GL_INT, sizeof(Vertex),
+                           reinterpret_cast<void *>(offsetof(Vertex, BoneIDs)));
+    //Bone Weights
+    glEnableVertexAttribArray(6);
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                          reinterpret_cast<void *>(offsetof(Vertex, BoneWeight)));
 
     glBindVertexArray(0);
 }
@@ -151,7 +153,9 @@ void View::OpenGL::ResizeWindow() {
     auto &engine = BlueEngine::Engine::get();
     int width = 0, height = 0;
     glfwGetWindowSize(engine.window, &width, &height);
-    glViewport(0, 0, width, height);
+    engine.setLastWindowXSize(width);
+    engine.setLastWindowYSize(height);
+    UpdateViewPort(0, 0, width, height);
 }
 
 void View::OpenGL::AddToQue(View::Data::DrawItem& drawItem) {
@@ -214,7 +218,7 @@ void View::OpenGL::sortDrawDistance() {
     for (auto &e : drawQue) {
         e.distance = glm::distance(e.pos, cpos);
     }
-    sort(drawQue.begin(), drawQue.end(),
+    sort(drawQueTransparent.begin(), drawQueTransparent.end(),
          [](const View::Data::DrawItem& lhs, const View::Data::DrawItem& rhs)->bool {
              return lhs.distance > rhs.distance;
          });
@@ -271,8 +275,13 @@ bool View::OpenGL::windowMinimized() {
     auto &engine = BlueEngine::Engine::get();
     int width = 0, height = 0;
     glfwGetWindowSize(engine.window, &width, &height);
-    if (width == 0 || height == 0) {
-        return true;
-    }
-    return false;
+    return width == 0 || height == 0;
+}
+
+void View::OpenGL::UpdateViewPort(int bl, int br, int tl, int tr) {
+    glViewport(bl, br, tl, tr);
+}
+
+void View::OpenGL::AddToQueTransparent(View::Data::DrawItem &drawItem) {
+    drawQueTransparent.push_back(drawItem);
 }

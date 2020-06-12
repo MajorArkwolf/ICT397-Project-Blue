@@ -21,7 +21,7 @@ void Physics::ReactRigidBody::SetPosition(glm::vec3 position) {
 
 void Physics::ReactRigidBody::SetOrientation(glm::quat orientation) {
 
-    rp3d::Transform currentTransform = rigidBody->getTransform();
+    const rp3d::Transform currentTransform = rigidBody->getTransform();
 
     rp3d::Transform newTransform;
     rp3d::Quaternion newOrientation = ReactHelper::ConvertQuaternion(orientation);
@@ -83,21 +83,39 @@ void Physics::ReactRigidBody::AddCollisionShape(ReactCollisionShape shape, glm::
     rigidBody->addCollisionShape(shape.GetShape().get(), newTransform, mass);
 }
 
-void Physics::ReactRigidBody::SetBodyType(int type) {
+void Physics::ReactRigidBody::SetBodyType(RigidBodyType type) {
     switch (type) {
-        case 0: {
+        case RigidBodyType::KINEMATIC: {
             rigidBody->setType(rp3d::BodyType::KINEMATIC);
         } break;
-        case 1: {
+        case RigidBodyType::DYNAMIC: {
             rigidBody->setType(rp3d::BodyType::DYNAMIC);
         } break;
-        case 2: {
+        case RigidBodyType::STATIC: {
             rigidBody->setType(rp3d::BodyType::STATIC);
         } break;
-        default: break;
     }
 }
 
 void Physics::ReactRigidBody::SetMass(float mass) {
     rigidBody->setMass(mass);
 }
+
+void Physics::ReactRigidBody::SetAngularDamping(double damping) {
+    rigidBody->setAngularDamping(damping);
+}
+
+void Physics::ReactRigidBody::SetBounciness(float bounciness) {
+    rigidBody->getMaterial().setBounciness(bounciness);
+
+}
+
+void Physics::ReactRigidBody::SetFrictionCoefficient(float friction) {
+
+        rigidBody->getMaterial().setFrictionCoefficient(friction);
+}
+
+void Physics::ReactRigidBody::SetRollingResistance(float resistance) {
+    rigidBody->getMaterial().setRollingResistance(resistance);
+}
+

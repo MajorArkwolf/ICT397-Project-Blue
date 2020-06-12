@@ -4,11 +4,6 @@
 #include <vector>
 
 #include "Controller/InputManager.hpp"
-#include "Controller/Physics/BeAbstractPhysicsFactory.hpp"
-#include "Controller/Physics/BeAbstractPhysicsLibrary.hpp"
-#include "Controller/Physics/BeConfig.hpp"
-#include "Controller/Physics/BeDynamicWorld.hpp"
-#include "Controller/Physics/BeMaterial.hpp"
 #include "Controller/TerrainManager.hpp"
 #include "Model/BaseState.hpp"
 #include "View/EulerCamera.hpp"
@@ -49,10 +44,23 @@ class PrototypeScene : public BaseState {
      * @brief Handles input data using a passed in InputData struct from the engine
      * @param inputData The input event to read from
      */
-    void handleInputData(Controller::Input::InputData inputData) override;
+    void handleInputData(Controller::Input::InputData inputData, double deltatime) override;
 
-    ///The camera of the scene
-    View::Camera camera;
+    /**
+     * Get the height at a given terrain chunk.
+     * @return the height at the X and Z values.
+     */
+    float GetHeightAt(glm::vec2);
+
+    /**
+     * Start GUI
+     */
+    void GUIStart() override;
+
+    /**
+     * End GUI
+     */
+    void GUIEnd() override;
 
   private:
       ///The terrain manager for the prototype scene
@@ -67,10 +75,4 @@ class PrototypeScene : public BaseState {
     bool moveBackward = false;
     bool moveLeft = false;
     bool moveRight = false;
-    float curremtRot = 0;
-    float currentDist = 10;
-
-    double getDeltaTime();
-    Physics::ReactDynamicsWorld dynWorld;
-    Physics::ReactShapes shapes;
 };

@@ -1,123 +1,128 @@
 #pragma once
 
 	/// System Dependencies
-#include <string>
+#include <memory>
 
-	/// External Dependencies
-#include <glm/glm.hpp>
+	/// System Dependencies
+#include "glm/glm.hpp"
 
 	/// Internal Dependencies
+#include "Controller/Animator.hpp"
 #include "Controller/Engine/IDTracker.hpp"
+#include "View/Renderer/Shader.hpp"
+#include "Types.hpp"
 
-	/*!
-	 * @brief Declaration of the type for identifying different GameObject classes.
-	 * @warning 0 is reserved for invalid identifiers and error reporting.
-	 */
-using GameObjType = unsigned int;
-
-	//! The parent class for all child GameObjects.
-class GameObj_Base
-{
+/*!
+ * @brief The parent class for all child GameObjects.
+ * @note Acts as the base polymorphic structure for use with all derived GameObjects.
+ */
+class GameObj_Base {
 public:
-		//! Initialises class attributes to their defaults.
-	GameObj_Base();
-
 		/*!
 		 * @brief Initialises class attributes to custom values.
-		 * @param [in] path The path to a target external model file for this GameObject.
-		 * @param [in] physBody The identifier for the physical body for this GameObject.
-		 * @param [in] position The position of the GameObject in the 3D environment.
-		 * @param [in] rotation The GameObject's rotation, in degrees, for the pitch, yaw, and roll.
-		 * @param [in] scale The scale of the GameObject for its x, y, and z co-ordinates.
+		 * @param [in] model_in The identifier for a model loaded into the engine.
+		 * @param [in] physBody_in The identifier for a physics body loaded into the engine.
 		 */
-	GameObj_Base(std::string path, unsigned long int physBody, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
+	GameObj_Base(size_t model_in, BlueEngine::ID physBody_in);
 
-		//! Virtual destructor.
-	virtual ~GameObj_Base() = 0;
+		//! Virtual destructor
+	virtual ~GameObj_Base() {}
 
 		/*!
 		 * @brief Returns a copy of this GameObject's unique identifier.
-		 * @return An identifier value.
+		 * @return A copy of GameObj_Base::uniqueID.
 		 */
-	BlueEngine::ID gameObj_getUniqueID();
+	BlueEngine::ID id();
 
 		/*!
 		 * @brief Identifies the GameObject's type.
-		 * @return Always returns GAMEOBJ_INVALID for GameObj_Base.
+		 * @return Always returns GameObj_Type::Invalid for GameObj_Base.
 		 * @warning Must be implemented by inheritors!
 		 */
-	virtual GameObjType gameObj_getTypeID() const = 0;
+	virtual GameObj_Type type() const = 0;
 
 		/*!
 		 * @brief Adds the GameObject to the draw queue.
 		 * @warning Behaviour must be implemented by inheritors!
 		 */
-	virtual void gameObj_addToDraw() = 0;
-
-		/*!
-		 * @brief Tracks and calls for the loading of an external model file.
-		 * @param [in] path The path to a target external model file for this GameObject.
-		 * @see gameObj_modelId
-		 * @see gameObj_modelPath
-		 */
-	void gameObj_setModel(std::string path);
-
-		/*!
-		 * @brief Returns the model for this GameObject.
-		 * @return The ID of the tracked model.
-		 * @see gameObj_modelId
-		 */
-	std::size_t gameObj_getModelID();
-
-		/*!
-		 * @brief Returns the model for this GameObject.
-		 * @return The ID of the tracked model.
-		 * @see gameObj_modelPath
-		 */
-	std::string gameObj_getModelPath();
-
-	void setPos(glm::vec3 &pos);
-
-		/*!
-		 * @brief Stores the current position of the GameObject in a 3D space.
-		 * @note Default value of { 0.0f, 0.0f, 0.0f }.
-		 */
-	glm::vec3 gameObj_pos;
-
-		/*!
-		 * @brief The GameObject's rotation, in degrees, for the pitch, yaw, and roll.
-		 * @note Default value of { 0.0f, 0.0f, 0.0f }.
-		 */
-	glm::vec3 gameObj_rotation;
-
-		/*!
-		 * @brief Stores the scale of the GameObject in all 3 coordinates.
-		 * @brief Default value of { 0.0f, 0.0f, 0.0f }.
-		 */
-	glm::vec3 gameObj_scale;
+	virtual void addToDraw() = 0;
 
 		/*!
 		 * @brief Stores the identifier for the GameObject's physics body.
-		 * @note Default value of 0ul.
+		 * @note A value of 0 indicates the GameObject has no physics body.
 		 */
-	long unsigned int gameObj_physBody;
+	BlueEngine::ID physBody;
+
+		/*!
+		 * @brief Stores the identifier for the GameObject's model.
+		 */
+	size_t model;
+
+		/*!
+		 * @brief Performs animation preperation pertaining to the GameObject's model.
+		 * @return True if the GameObject's model had animation initialised and loaded, False otherwise.
+		 * @note If the model has no animations, no change to the GameObject's animator will be made.
+		 */
+	bool animator_add();
+
+		/*!
+		 * @brief Updates the GameObject's current animation, relative to the delta time passed.
+		 * @param [in] t The amount of time that the engine has been running.
+		 * @param [in] dt The delta amount of time since the engine loop called the subsystems' update functions.
+		 */
+	void animator_update(double t, double dt);
+
+		/*!
+		 * @brief Changes the current animation of the GameObject.
+		 * @param [in] animToLoad The name of the animation to load and apply to the GameObject.
+		 * @param [in] stopOnEnd True to stop animation after it ends, False to loop the animation.
+		 * @note Has no effect if the GameObject has not had its animation initialised.
+		 */
+	void animator_changeAnimation(const std::string& animToLoad, bool stopOnEnd);
+
+		/*!
+		 * @brief Checks if the GameObject has an initialised and configured animator.
+		 * @return True if it does, False otherwise.
+		 */
+	bool animator_has();
+
+		/*!
+		 * @brief Checks if the GameObject's animation has ended.
+		 * @return True if the animation hase ended, False otherwise.
+		 * @note If an error occurred, True will be returned.
+		 * @warning A check should be made for the GameObject having an initialised and configured animator first!
+		 */
+	bool animator_animationHasEnded();
+
+		/*!
+		 * @brief The GameObject's scale along all 3D axises.
+		 * @note Defaults to { 0.0f, 0.0f, 0.0f }.
+		 */
+	glm::vec3 scale;
+
+		/*!
+		 * @brief Registers this GameObject class to the Lua subscripting system.
+		 * @note Called in the constructor, constructor is responsible for only calling once.
+		 */
+	static void lua_init_register();
 
 protected:
 		/*!
-		 * @brief Stores the identifier of the model for the GameObject.
-		 * @note Defaults to the lowest possible value for the ID type.
+		 * @brief Manages the shader program to be used for all GameObject rendering.
+		 * @note Shared across all types and instances of Game Objects.
 		 */
-	std::size_t gameObj_modelId;
+	std::shared_ptr<Shader> program = nullptr;
 
 		/*!
-		 * @brief Stores the external path to the model on the disk for the GameObject.
-		 * @note Defaults to "".
+		 * @brief Stores the GameObject's individual animation properties.
+		 * @note Internal to the GameObject itself, and must be updated relative to delta time passed.
 		 */
-	std::string gameObj_modelPath;
+	std::shared_ptr<Controller::Animator> animator = nullptr;
 
+private:
 		/*!
-		 * @brief Stores the unique Identifier for the GameObject.
+		 * @brief Stores the GameObject's unique identifier.
 		 * @note Defaults to BlueEngine::IDTracker.getID().
 		 */
-	BlueEngine::ID gameObj_uniqueId;
+	BlueEngine::ID uniqueID;
 };

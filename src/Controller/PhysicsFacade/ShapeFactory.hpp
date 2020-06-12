@@ -11,9 +11,9 @@ namespace Physics {
     class ShapeFactory {
       public:
         /// DEfault constructor
-        ShapeFactory(){};
+        ShapeFactory(){}
         /// Default destructor
-        ~ShapeFactory(){};
+        virtual ~ShapeFactory(){}
         /**
          * @brief Creates a spherical collision shape with the given radius
          * @param radius The radius of the sphere to create
@@ -43,7 +43,7 @@ namespace Physics {
          * @param terrainData The float array containing the array of height values for the terrain
          * @return The id of the created shape
          */
-        virtual size_t createHeightfield(int columns, int rows, float minHeight, float maxHeight,
+        virtual size_t createHeightField(int columns, int rows, float minHeight, float maxHeight,
                                          float *terrainData) = 0;
     };
 }

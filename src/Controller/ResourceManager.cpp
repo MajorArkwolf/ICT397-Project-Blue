@@ -28,39 +28,42 @@ void ResourceManager::loadResources() {
     auto *L        = LuaManager::getInstance().getLuaState();
     auto &basePath = BlueEngine::Engine::get().basepath;
 
-    auto scriptPath = basePath + "res/scripts/LoadResources.lua";
-    getGlobalNamespace(L).beginNamespace("resources").addFunction("loadString", &loadString).endNamespace();
-    getGlobalNamespace(L).beginNamespace("resources").addFunction("loadModel", &loadModel).endNamespace();
-    getGlobalNamespace(L).beginNamespace("resources").addFunction("loadTexture", &loadTexture).endNamespace();
+    const auto scriptPath = basePath + "res/scripts/LoadResources.lua";
+    getGlobalNamespace(L)
+        .beginNamespace("resources")
+        .addFunction("loadString", &loadString)
+        .addFunction("loadModel", &loadModel)
+        .addFunction("loadTexture", &loadTexture)
+        .addFunction("getModel", &getModelId)
+        .endNamespace();
     luaL_dofile(L, scriptPath.c_str());
     lua_pcall(L, 0, 0, 0);
-
 }
 
-auto ResourceManager::insertString(std::string key, std::string value) -> void {
+auto ResourceManager::insertString(const std::string& key, const std::string& value) -> void {
     TextManager::InsertString(key, value);
 }
 
-auto ResourceManager::getString(std::string key) -> std::string {
+auto ResourceManager::getString(const std::string& key) -> std::string {
     return TextManager::GetString(key);
 }
 
-auto ResourceManager::getModelID(std::string filename) -> size_t {
-    return ModelManager::GetModelID(filename);
+auto ResourceManager::getModelID(const std::string& filename) -> size_t {
+    return modelManager.GetModelID(filename);
 }
 
 auto ResourceManager::drawModel(size_t id, Shader *ourshader) -> void {
-    ModelManager::Draw(id, ourshader);
+    modelManager.Draw(id, ourshader);
 }
 
 void ResourceManager::loadModel(const std::string &filePath) {
-    ModelManager::GetModelID(filePath);
+    ResourceManager::getInstance().modelManager.GetModelID(filePath);
 }
 
-void ResourceManager::loadString(const std::string key) {
+void ResourceManager::loadString(const std::string& key) {
     using namespace luabridge;
 
-    auto *L     = LuaManager::getInstance().getLuaState();
+    auto *L = LuaManager::getInstance().getLuaState();
     static luabridge::LuaRef stringTable(L);
 
     if (stringTable.isNil()) {
@@ -69,7 +72,6 @@ void ResourceManager::loadString(const std::string key) {
             std::cout << "Failed to load 'Strings' table from LoadResources.lua\n";
             assert(!stringTable.isNil());
         }
-
     }
 
     LuaRef text = stringTable[key.c_str()];
@@ -81,6 +83,14 @@ void ResourceManager::loadString(const std::string key) {
     }
 }
 
-auto ResourceManager::loadTexture(const std::string filePath, const std::string textureName) -> void {
+auto ResourceManager::loadTexture(const std::string& filePath, const std::string& textureName) -> void {
     getInstance().textureManager.loadTextureFromFile(filePath, textureName);
+}
+
+auto ResourceManager::getModelId(const std::string& key) -> size_t {
+
+    return getInstance().getModelID(key);
+}
+auto ResourceManager::getModel(const size_t modelID) -> Model::Model* {
+    return getInstance().modelManager.getModel(modelID);
 }

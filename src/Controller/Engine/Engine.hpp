@@ -10,18 +10,12 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include "Model/BaseState.hpp"
-#include "Controller/Physics/BeRP3DFactory.hpp"
-#include "Controller/Physics/BePhysicsLibrary.hpp"
 #include "Controller/GUIManager.hpp"
 #include "Controller/ResourceManager.hpp"
 #include "GameStack.hpp"
 #include "Controller/PhysicsFacade/React/ReactDynamicsWorld.hpp"
 
 #include "View/Renderer/OpenGL.hpp"
-
-constexpr unsigned int SCR_WIDTH  = 800;
-constexpr unsigned int SCR_HEIGHT = 600;
-
 namespace BlueEngine {
 
     /**
@@ -46,9 +40,12 @@ namespace BlueEngine {
         /// Base path to the program.
         std::string basepath = "";
 
-      private:
         /// The game stack to allow to switch between scenes.
+        ///
         GameStack<std::shared_ptr<BaseState>> gameStack;
+      private:
+
+
         /// GUI Manager for our GUI interface.
         GUIManager guiManager;
         /// Flag used to determine if the engine should shutdown.
@@ -63,15 +60,15 @@ namespace BlueEngine {
         Engine();
 
         /// Testing values
-        float lastX     = SCR_WIDTH / 2.0f;
-        float lastY     = SCR_HEIGHT / 2.0f;
+        int lastWindowXSize     = 800;
+        int lastWindowYSize     = 600;
         bool firstMouse = true;
 
-        //Testing physics delete after
-        static inline double factor = 0.00;
-        static inline uint64_t prevTime = 0;
-        static inline double timeStep = 1.0 / 60.0;
-        static inline double acc = 0.0;
+        double t  = 0.0;
+        double dt = 0.01;
+        double EngineFrameTime   = 0.0;
+        std::string glsl_version = "";
+
 
       public:
         /**
@@ -130,7 +127,7 @@ namespace BlueEngine {
         /**
          * Process the input from our 3rd party library.
          */
-        void processInput();
+        void processInput(double deltaTime);
 
         /**
          * Checks to see what type of mouse mode the engine has set.
@@ -143,5 +140,25 @@ namespace BlueEngine {
          * @param mode sets the mouse mode.
          */
         void setMouseMode(bool mode);
+
+
+        void SettingMenu();
+
+        ///Engine Variables
+
+        float gammaCorrection = 1.f;
+        bool showSettingsMenu = false;
+
+        int getLastWindowXSize() const;
+
+        void setLastWindowXSize(int lastWindowXSize);
+
+        int getLastWindowYSize() const;
+
+        void setLastWindowYSize(int lastWindowYSize);
+
+        double getT() const;
+        double getDt() const;
+        double getFrameTime() const;
     };
 }

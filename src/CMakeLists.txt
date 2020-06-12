@@ -9,23 +9,6 @@ target_sources(${PROJECT_NAME} PRIVATE
     Controller/Engine/LuaManager.cpp
     Controller/InputManager.cpp
 
-    Controller/Physics/BeCollisionWorld.cpp
-    Controller/Physics/BeQuaternion.cpp
-    Controller/Physics/BeTransform.cpp
-    Controller/Physics/BeVector3.cpp
-    Controller/Physics/BeBoxBody.cpp
-    Controller/Physics/BeHeightBody.cpp
-    Controller/Physics/BeRP3DFactory.cpp
-    Controller/Physics/BePhysicsLibrary.cpp
-    Controller/Physics/BeCapsuleBody.cpp
-    Controller/Physics/BeSphereBody.cpp
-    Controller/Physics/BeDynamicWorld.cpp
-    Controller/Physics/BeBoxPhysics.cpp
-    Controller/Physics/BeCapsulePhysics.cpp
-    Controller/Physics/BeHeightPhysics.cpp
-    Controller/Physics/BeSpherePhysics.cpp
-    Controller/Physics/BeMaterial.cpp
-
     Controller/GUIManager.cpp
     Controller/ResourceManager.cpp
     Controller/TerrainManager.cpp
@@ -37,6 +20,22 @@ target_sources(${PROJECT_NAME} PRIVATE
     Controller/PhysicsFacade/React/ReactShapes.cpp
     Controller/TextureManager.cpp
     Controller/PhysicsFacade/React/ReactCollisionShape.cpp
+    Controller/PhysicsFacade/React/ReactCollisionBody.cpp
+    Controller/PhysicsFacade/React/ReactCollisionWorld.cpp
+    Controller/PhysicsManager.cpp
+    Controller/Animator.cpp
+
+        # Finite State Machine
+    Controller/AI/detail/FSM.cpp
+    Controller/AI/detail/Manager.cpp
+    Controller/AI/detail/Message.cpp
+    Controller/AI/States/detail/Chase.cpp
+    Controller/AI/States/detail/Flee.cpp
+    Controller/AI/States/detail/Wander.cpp
+    Controller/AI/States/detail/Attack.cpp
+    Controller/AI/States/detail/Die.cpp
+    Controller/AI/States/detail/Revive.cpp
+    Controller/AI/States/detail/Custom.cpp
     
     # Model
     Model/Models/Mesh.cpp
@@ -45,13 +44,24 @@ target_sources(${PROJECT_NAME} PRIVATE
     Model/TerrainModel.cpp
     Model/WaterModel.cpp
     Model/TextManager.cpp
+    Model/TerrainModel.cpp
+    Model/Models/Animation.cpp
+    Model/PlayerCanvas.cpp
 
+    Model/LuaGuiWrapper.cpp
+
+        # Game Objects
     Model/GameObject/detail/Base.cpp
     Model/GameObject/detail/Static.cpp
+    Model/GameObject/detail/Item.cpp
+    Model/GameObject/detail/Character.cpp
     Model/GameObject/detail/Player.cpp
     Model/GameObject/detail/NPC.cpp
     Model/GameObject/detail/Manager.cpp
-    Model/GameObject/detail/LuaHelper.cpp
+    Model/GameObject/detail/LuaAssist.cpp
+
+
+    Model/GameState.cpp
 
     # View
     View/Renderer/Shader.cpp
@@ -61,6 +71,8 @@ target_sources(${PROJECT_NAME} PRIVATE
 
     # Game
     Game/Prototype/PrototypeScene.cpp
+    Game/MainMenu/MainMenu.cpp
+    Game/MainMenu/StaticModel.cpp
 
 
 

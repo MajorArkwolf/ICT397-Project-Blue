@@ -1,28 +1,51 @@
 #pragma once
-#include <glm/vec3.hpp>
 #include <map>
-#include "Controller/PhysicsFacade/ShapeFactory.hpp"
 #include <reactphysics3d.h>
+
+#include <glm/vec3.hpp>
+
 #include "Controller/PhysicsFacade/React/ReactCollisionShape.hpp"
+#include "Controller/PhysicsFacade/ShapeFactory.hpp"
 
 namespace Physics {
-    class ReactShapes : ShapeFactory{
+
+    /**
+     *@class ReactShapes
+     *@brief A class used to make and store shapes used in React collision bodies
+     */
+    class ReactShapes final : public ShapeFactory {
       public:
-        ReactShapes(){};
-        ~ReactShapes();
-        size_t createSphere(float radius);
-        size_t createBox(glm::vec3 halfExtents);
-        size_t createCapsule(float radius, float height);
-        size_t createHeightfield(int columns, int rows, float minHeight, float maxHeight,
-                                  float *terrainData);
-        ReactCollisionShape& GetShape(size_t id);
+        ReactShapes()  = default;
+        ~ReactShapes() = default;
+
+        /**
+         *@see ShapeFactory::createSphere
+         */
+        size_t createSphere(float radius) override;
+
+        /**
+         *@see ShapeFactory::createBox
+         */
+        size_t createBox(glm::vec3 halfExtents) override;
+
+        /**
+         *@see ShapeFactory::createCapsule
+         */
+        size_t createCapsule(float radius, float height) override;
+
+        /**
+         *@see ShapeFactory::createHeightField
+         */
+        size_t createHeightField(int columns, int rows, float minHeight, float maxHeight,
+                                 float *terrainData) override;
+
+        /**
+         *@brief Returns the shape at the given ID
+         */
+        ReactCollisionShape &GetShape(size_t id);
 
       private:
-
         std::map<size_t, ReactCollisionShape> shapeMap;
-        size_t generateID();
-
-
-        
+        size_t GenerateId();
     };
 }

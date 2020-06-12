@@ -1,140 +1,169 @@
 #include "PrototypeScene.hpp"
-
-#include <glm/glm.hpp>
-
-#include "Controller/Engine/Engine.hpp"
-#include "Controller/Engine/LuaManager.hpp"
 #include "Controller/Factory/GameAssetFactory.hpp"
-#include "Controller/TextureManager.hpp"
+#include "Controller/PhysicsManager.hpp"
+#include "Controller/AI/Manager.hpp"
 #include "Model/GameObject/Manager.hpp"
-#include "Model/Models/Model.hpp"
-#include "Model/Models/ModelManager.hpp"
-#include "View/Renderer/OpenGL.hpp"
-#include "View/Renderer/Renderer.hpp"
+#include "Model/GameState.hpp"
 
 using Controller::Input::BLUE_InputAction;
 using Controller::Input::BLUE_InputType;
 
-PrototypeScene::PrototypeScene() : dynWorld(glm::vec3(0, -9.8f, 0)) {
-    Init();
+View::Camera *getCamera() {
+    return &(BlueEngine::Engine::get().gameStack.getTop()->camera);
 }
 
-PrototypeScene::~PrototypeScene() {}
+void toggleWireframe() {
+    auto &render = BlueEngine::Engine::get().renderer;
+    render.ToggleWireFrame();
+}
 
-auto PrototypeScene::update([[maybe_unused]] double t, double dt) -> void {
-    double scalar = 100.0;
-    auto &engine  = BlueEngine::Engine::get();
-    auto sphere   = dynWorld.GetRigidBody(1);
+void EndGame() {
+    BlueEngine::Engine::get().endEngine();
+}
 
+PrototypeScene::PrototypeScene() {
+    luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
+        .addFunction("getCamera", &getCamera)
+        .addFunction("toggleWireframe", &toggleWireframe)
+        .addFunction("getHeightAt", &Controller::TerrainFactory::LuaBLHeight)
+        .addFunction("getMapSize", &Controller::TerrainFactory::LuaMapSize)
+        .addFunction("getDifficulty", &Model::GameState::gameDifficulty)
+        .addFunction("EndGame", &EndGame);
+
+
+    PrototypeScene::Init();
+    View::Camera::LuaInit();
+    auto &window = BlueEngine::Engine::get().window;
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+}
+
+PrototypeScene::~PrototypeScene() {
+    /*terrain.DeInit();
+    GameObj_Manager::clear();
+    BlueEngine::IDTracker::getInstance().clear();
+    Physics::PhysicsManager::GetInstance().clear();*/
+}
+
+auto PrototypeScene::update(double t, double dt) -> void {
+    // Update the terrain
     terrain.Update(camera.getLocation());
-    dynWorld.Update(dt);
+    
+    // Update the GameObject animations
+    //GameObj_Manager::animation_update(t, dt);
 
-    camera.Position = sphere->GetPosition() + glm::vec3(10, 10, 10);
-
-    auto radians      = curremtRot * ((std::atan(1) * 4) / 180);
-    camera.Position.x = std::cos(radians) * 15;
-    camera.Position.z = std::sin(radians) * 15;
-
-    camera.Position += sphere->GetPosition();
-    camera.Position.y = sphere->GetPosition().y + currentDist;
-    camera.Front = glm::normalize(static_cast<glm::dvec3>(sphere->GetPosition()) - camera.Position);
-    camera.Position.y += 5;
-
-    if (moveForward) {
-        sphere->ApplyForceToCentre(camera.Front * scalar);
-        // camera.ProcessKeyboard(Camera_Movement::FORWARD, dt);
+    // Read and call the lua update function, this allows runtime change of the script
+    try {
+        // Run the script, and catch and Lua errors that are thrown
+        luaL_dofile(LuaManager::getInstance().getLuaState(), "./res/scripts/luaFunctions.lua");
     }
-    if (moveBackward) {
-        sphere->ApplyForceToCentre(-camera.Front * scalar);
-        // camera.ProcessKeyboard(Camera_Movement::BACKWARD, dt);
+    catch (luabridge::LuaException const& err) {
+        // Print out the error that had occured when running the script
+        std::cerr << "Scene Update Lua Functions Script Error: \"" << err.what() << "\"\n";
     }
-    if (moveLeft) {
-        sphere->ApplyForceToCentre(-camera.GetRightVector() * scalar);
-        // camera.ProcessKeyboard(Camera_Movement::LEFT, dt);
-    }
-    if (moveRight) {
-        sphere->ApplyForceToCentre(camera.GetRightVector() * scalar);
-        // camera.ProcessKeyboard(Camera_Movement::RIGHT, dt);
-    }
+    luabridge::LuaRef Update =
+        luabridge::LuaRef::getGlobal(LuaManager::getInstance().getLuaState(), "Update");
 
-    std::function updateObjects = [&](std::shared_ptr<GameObj_Base> object) {
-        if (object->gameObj_getTypeID() == 1u || object->gameObj_getTypeID() == 3u) {
-            auto id             = object->gameObj_physBody;
-            auto pos            = dynWorld.GetRigidBody(id)->GetPosition();
-            auto rot            = dynWorld.GetRigidBody(id)->GetOrientation();
-            object->gameObj_pos = pos;
-            // object->gameObj_rotation = glm::rotate(rot, object->gameObj_rotation);
-            // glm::rotate()
+    // Catch if an Lua scripted update function has been provided
+    if (!Update.isNil()) {
+        // Catch any errors thrown when running the Lua scripted Update() function
+        try {
+            Update(dt);
         }
-    };
+        catch (luabridge::LuaException const& err) {
+            // Print out the error that had occured when running the Lua function
+            std::cerr << "Scene Lua Update Function Error: \"" << err.what() << "\"\n";
+        }
+    }
+    else {
+        // Report no scripted update function has been provided
+        std::cerr << "No scripted Update() function was provided to call!\n";
+    }
 
-    GameObj_Manager::process_all(updateObjects);
+    // Call the AI System's update function
+    FSM_Manager::update(t, dt);
+
+    // Update the Dynamic Physics world
+    Physics::PhysicsManager::GetInstance().GetDynamicsWorld()->Update(dt);
+
+    // Sync the GameObject physics bodies
+    GameObj_Manager::syncPhys();
 }
 
 void PrototypeScene::Init() {
     auto &engine = BlueEngine::Engine::get();
     camera       = View::Camera(glm::vec3(0.0f, 150.0f, 3.0f));
 
-    // Temporarily hard-code the external Lua script file while a proper implementation of Lua integration is on hold
-    GameObj_Manager::init();
-    luaL_dofile(LuaManager::getInstance().getLuaState(), "res/scripts/gameobjsSet.lua");
+    // Initialise the Physics system
+    auto phys_sys = &(Physics::PhysicsManager::GetInstance());
+    phys_sys->InitialiseCollisionWorld();
+    phys_sys->InitialiseDynamicsWorld();
+    phys_sys->InitialiseShapeFactory();
 
-    auto sphereID     = shapes.createSphere(1);
-    auto sphereBodyID = dynWorld.CreateRigidBody(glm::vec3{20, 170, 20}, glm::quat(1, 0, 0, 0));
-    auto *reactBodySphere =
-        dynamic_cast<Physics::ReactRigidBody *>(dynWorld.GetRigidBody(sphereBodyID));
-    reactBodySphere->AddCollisionShape(shapes.GetShape(sphereID), glm::vec3{0, 0, 0},
-                                       glm::quat(1, 0, 0, 0), 1.f);
-    reactBodySphere->SetMass(10.f);
+    // Initialise the GameObject system
+    GameObj_Manager::init();
+
+    // Initialise the FSM AI system
+    FSM_Manager::lua_init();
+
+    // Run the GameObject initialisation script
+    try {
+        // Run the script, and catch and Lua errors that are thrown
+        if (luaL_dofile(LuaManager::getInstance().getLuaState(), "./res/scripts/gameObjsInit.lua")) {
+            printf("Scene Initialisation Script (Non-Thrown) Error: ");
+            printf("\"%s\"\n", lua_tostring(LuaManager::getInstance().getLuaState(), -1));
+        }
+    }
+    catch (luabridge::LuaException const& err) {
+        // Print out the error that had occured when running the script
+        std::cerr << "Scene Initialisation Script Error: \"" << err.what() << "\"\n";
+    }
+
+    auto *phys_world_dynamics = phys_sys->GetDynamicsWorld();
+    auto *phys_world_collision = phys_sys->GetCollisionWorld();
 
     Blue::HeightMap heightMap;
-
+    auto id_assigner = BlueEngine::IDTracker::getInstance();
     terrain.GenerateHeightMap(heightMap);
-    auto terrainID =
-        shapes.createHeightfield(heightMap.width, heightMap.height, heightMap.heightRange.min,
-                                 heightMap.heightRange.max, heightMap.terrain);
-    auto heightbodyID = dynWorld.CreateRigidBody(heightMap.position, heightMap.rotation);
-    auto *reactBodyheights =
-        dynamic_cast<Physics::ReactRigidBody *>(dynWorld.GetRigidBody(heightbodyID));
-    reactBodyheights->AddCollisionShape(shapes.GetShape(terrainID), glm::vec3{0, 0, 0},
-                                        glm::quat(1, 0, 0, 0), 1.f);
-    reactBodyheights->SetBodyType(2);
+    const auto terrainID = phys_sys->GetShapeFactory()->createHeightField(
+        heightMap.width, heightMap.height, heightMap.heightRange.min, heightMap.heightRange.max,
+        heightMap.terrain);
+    const auto terrainPhysID = 9999999;
 
-    auto TreeShapeID = shapes.createBox(glm::vec3(2, 10, 2));
-    auto RockShapeID = shapes.createBox(glm::vec3(3, 2, 3));
 
-    std::function<void(std::shared_ptr<GameObj_Base>)> PhysicsOp =
-        [&](std::shared_ptr<GameObj_Base> object) -> void {
-        auto gameObjBodyID =
-            dynWorld.CreateRigidBody(object->gameObj_pos, glm::quat(object->gameObj_rotation));
-        auto *reactBody =
-            dynamic_cast<Physics::ReactRigidBody *>(dynWorld.GetRigidBody(gameObjBodyID));
-        if (object->gameObj_getTypeID() == 1u) {
-            if (object->gameObj_getModelPath().find("Tree") != std::string::npos) {
-                reactBody->AddCollisionShape(shapes.GetShape(TreeShapeID), glm::vec3{0, 0, 0},
-                                             glm::quat(1, 0, 0, 0), 1.f);
-            } else {
-                reactBody->AddCollisionShape(shapes.GetShape(RockShapeID), glm::vec3{0, 0, 0},
-                                             glm::quat(1, 0, 0, 0), 1.f);
-            }
-            reactBody->SetBodyType(2);
-        } else {
-            reactBody->AddCollisionShape(shapes.GetShape(sphereID), glm::vec3{0, 0, 0},
-                                         glm::quat(1, 0, 0, 0), 1.f);
-            reactBody->SetBodyType(3);
-        }
+    phys_world_dynamics->CreateRigidBody(heightMap.position, heightMap.rotation, terrainPhysID);
+    auto *reactBodyHeights =
+        dynamic_cast<Physics::ReactRigidBody *>(phys_world_dynamics->GetRigidBody(terrainPhysID));
+    reactBodyHeights->AddCollisionShape(
+        dynamic_cast<Physics::ReactShapes *>(phys_sys->GetShapeFactory())->GetShape(terrainID),
+        glm::vec3{0, 0, 0}, glm::quat(1, 0, 0, 0), 1.f);
+    reactBodyHeights->SetBodyType(Physics::ReactRigidBody::RigidBodyType::STATIC);
 
-        object->gameObj_physBody = static_cast<unsigned long long>(gameObjBodyID);
-    };
-    GameObj_Manager::process_all(PhysicsOp);
+    phys_world_collision->CreateCollisionBody(heightMap.position, heightMap.rotation, terrainPhysID);
+    auto *reactCollisionBodyHeights =
+        dynamic_cast<Physics::ReactCollisionBody *>(phys_world_collision->GetCollisionBody(terrainPhysID));
+    reactCollisionBodyHeights->AddCollisionShape(
+        dynamic_cast<Physics::ReactShapes *>(phys_sys->GetShapeFactory())->GetShape(terrainID),
+        glm::vec3{0, 0, 0}, glm::quat(1, 0, 0, 0));
+
     engine.getGuiManager().setTerrainManager(&terrain);
 }
 
 void PrototypeScene::handleWindowEvent() {
-    View::OpenGL::ResizeWindow();
+    auto &engine = BlueEngine::Engine::get();
+    engine.renderer.ResizeWindow();
 }
 
-void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
+void PrototypeScene::handleInputData(Controller::Input::InputData inputData, double deltaTime) {
+
+    if (luaL_dofile(LuaManager::getInstance().getLuaState(), "./res/scripts/luaFunctions.lua")) {
+        printf("%s\n", lua_tostring(LuaManager::getInstance().getLuaState(), -1));
+    }
+    luabridge::LuaRef luaInput =
+        luabridge::LuaRef::getGlobal(LuaManager::getInstance().getLuaState(), "handleInput");
+    if (!luaInput.isNil()) {
+        luaInput(inputData, deltaTime);
+    }
+
     auto &engine      = BlueEngine::Engine::get();
     auto &guiManager  = engine.getGuiManager();
     auto handledMouse = false;
@@ -144,69 +173,47 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
 
             switch (inputData.inputAction) {
                 case BLUE_InputAction::INPUT_MOVE_FORWARD: {
-                    moveForward = true;
                 } break;
                 case BLUE_InputAction::INPUT_MOVE_BACKWARD: {
-                    moveBackward = true;
                 } break;
                 case BLUE_InputAction::INPUT_MOVE_LEFT: {
-                    moveLeft = true;
                 } break;
                 case BLUE_InputAction::INPUT_MOVE_RIGHT: {
-                    moveRight = true;
                 } break;
-                case BLUE_InputAction::INPUT_ESCAPE: {
-                    guiManager.toggleWindow("menu");
-                } break;
-
                 default: break;
             }
-
         } break;
         case BLUE_InputType::KEY_RELEASE: { // Key Release events
             switch (inputData.inputAction) {
                 case BLUE_InputAction::INPUT_MOVE_FORWARD: {
-                    moveForward = false;
                 } break;
                 case BLUE_InputAction::INPUT_MOVE_BACKWARD: {
-                    moveBackward = false;
                 } break;
                 case BLUE_InputAction::INPUT_MOVE_LEFT: {
-                    moveLeft = false;
                 } break;
                 case BLUE_InputAction::INPUT_MOVE_RIGHT: {
-                    moveRight = false;
+                } break;
+                case BLUE_InputAction::INPUT_JUMP: {
+                } break;
+                case BLUE_InputAction::INPUT_CROUCH: {
                 } break;
                 case BLUE_InputAction::INPUT_ACTION_2: {
-                    auto &renderer = BlueEngine::Engine::get().renderer;
-                    renderer.ToggleWireFrame();
                 } break;
                 case BLUE_InputAction::INPUT_ACTION_3: {
-                    guiManager.toggleWindow("instructions");
                 } break;
                 case BLUE_InputAction::INPUT_ACTION_4: {
-                    guiManager.toggleWindow("exit");
                 } break;
                 default: break;
             }
         } break;
         case BLUE_InputType::MOUSE_MOTION: { // Mouse motion event
             if (!engine.getMouseMode()) {
-                auto x = static_cast<double>(inputData.mouseMotionRelative.x);
-                auto y = static_cast<double>(inputData.mouseMotionRelative.y);
-                y      = y * -1.0;
-                curremtRot += x * 0.5;
-                currentDist += y *0.5;
-                if (currentDist < 5) {
-                    currentDist = 5;
-                }
-                if (currentDist > 40) {
-                    currentDist = 40;
-                    }
-                // camera.ProcessMouseMovement(x, y);
-                handledMouse = true;
+                /* auto x = static_cast<double>(inputData.mouseMotionRelative.x);
+                 auto y = static_cast<double>(inputData.mouseMotionRelative.y);
+                 y      = y * -1.0;
+                 camera.ProcessMouseMovement(x, y);
+                 handledMouse = true;*/
             }
-
         } break;
         case BLUE_InputType::MOUSE_WHEEL: { // Mouse Wheel event
             double amountScrolledY = static_cast<double>(inputData.mouseWheelMotion);
@@ -222,17 +229,51 @@ void PrototypeScene::handleInputData(Controller::Input::InputData inputData) {
     }
 }
 
+float PrototypeScene::GetHeightAt(glm::vec2 coord) {
+    return terrain.GetBLHeight(coord);
+}
+
 auto PrototypeScene::display() -> void {
     auto &engine   = BlueEngine::Engine::get();
     auto &renderer = BlueEngine::Engine::get().renderer;
     renderer.SetCameraOnRender(camera);
     terrain.AddToDraw();
+    // Update the GameObject animations
+    GameObj_Manager::animation_update(0.0, engine.getFrameTime());
     GameObj_Manager::addAllToDraw();
-    auto sphere = dynWorld.GetRigidBody(1)->GetPosition();
-    GameObj_Manager::get(3)->setPos(sphere);
-
-    // glm::vec3 orientation(engine.dynWorld.GetRigidBody(1)->GetOrientation());
-    // GameObj_Manager::get(3)
 }
 
-void PrototypeScene::unInit() {}
+void PrototypeScene::unInit() {
+    //terrain.DeInit();
+}
+
+void PrototypeScene::GUIStart() {
+    auto &engine = BlueEngine::Engine::get();
+    auto& guiManager = engine.getGuiManager();
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    GUIManager::startWindowFrame();
+    guiManager.displayInputRebindWindow();
+    guiManager.displayEscapeMenu();
+    guiManager.displayInstructionMenu();
+    guiManager.displayQuitScreen();
+    guiManager.displayDevScreen(camera);
+    guiManager.displayTextureManager();
+    guiManager.displayTerrainSettings();
+    if (engine.showSettingsMenu) {
+        engine.SettingMenu();
+    }
+    if (luaL_dofile(LuaManager::getInstance().getLuaState(), "./res/scripts/luaFunctions.lua")) {
+        printf("%s\n", lua_tostring(LuaManager::getInstance().getLuaState(), -1));
+    }
+    luabridge::LuaRef LuaGui =
+        luabridge::LuaRef::getGlobal(LuaManager::getInstance().getLuaState(), "GUI");
+    if (!LuaGui.isNil()) {
+        LuaGui();
+    }
+}
+
+void PrototypeScene::GUIEnd() {
+    GUIManager::endWindowFrame();
+}
+
