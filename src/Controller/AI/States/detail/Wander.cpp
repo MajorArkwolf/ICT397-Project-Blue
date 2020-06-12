@@ -26,6 +26,10 @@ void State_Wander::start(std::shared_ptr<GameObj_Base> context) {
 		// Assign the critical status
 		npc->status_assign("Wander_WalkSpeed", 1.5f);
 	}
+	if (!npc->status_has("NPC_RangeScale")) {
+		// Assign the critical status
+		npc->status_assign("NPC_RangeScale", 1.0f);
+	}
 
 	// Configure the runtime status for the NPC
 	npc->status_assign("Wander_ActionTime", 0.0f);
@@ -86,7 +90,7 @@ void State_Wander::run(std::shared_ptr<GameObj_Base> context, double t [[maybe_u
 	// Catch if the NPC has got close enough to the player
 	glm::vec3 npc_pos = glm::vec3(npc_phys->GetPosition().x, 0.0f, npc_phys->GetPosition().z);
 	glm::vec3 player_pos = glm::vec3(player_phys->GetPosition().x, 0.0f, player_phys->GetPosition().z);
-	if (glm::length(npc_pos - player_pos) < 30.0f) {
+	if (glm::length(npc_pos - player_pos) < 30.0f * npc->status_get("NPC_RangeScale")) {
 		// Switch this NPC's state to chase the player
 		FSM_Manager::get(npc->contextID)->local_set(FSM_Manager::regular_state(State_Type::Chase));
 	}

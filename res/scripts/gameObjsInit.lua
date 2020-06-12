@@ -166,6 +166,7 @@ for i = 0, 0 * DifficultyMultiplier, 1 do
 	-- Assign the NPC's speed
 	--npc_gameObj_char:status_assign("Wander_WalkSpeed", 1.5);
 	--npc_gameObj_char:status_assign("Chase_RunSpeed", 4);
+	--npc_gameObj_char:status_assign("NPC_RangeScale", 1);
 
 	-- Set up the NPC's initial AI FSM States
 	local npc_ai = FSM.get(npc_gameObj_npc.context);
