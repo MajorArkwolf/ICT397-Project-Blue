@@ -54,7 +54,10 @@ namespace Controller::Input {
         ///The action type
         BLUE_InputType inputType = BLUE_InputType::DEFAULT_TYPE;
 
+        ///String used for LUA
         std::string actionString = "DEFAULT";
+
+        ///String used for LUA
         std::string typeString = "DEFAULT";
 
     };

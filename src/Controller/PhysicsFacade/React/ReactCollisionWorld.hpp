@@ -14,6 +14,7 @@ namespace Physics {
         CollisionBody *GetCollisionBody(CollisionBodyID bodyID) override;
         bool TestOverlap(CollisionBodyID first, CollisionBodyID seconds) override;
         bool TestAABBOverlap(CollisionBodyID first, CollisionBodyID second) override;
+        void DestroyBody(CollisionBodyID id);
 
       private:
         std::map<size_t, ReactCollisionBody> collisionBodies;

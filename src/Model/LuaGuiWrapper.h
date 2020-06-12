@@ -12,6 +12,8 @@ private:
 
     static void SameLine();
 
+    static bool Button(const std::string& text);
+
     static void SetFontSize(float scale);
 
     static void Text(const std::string &text);

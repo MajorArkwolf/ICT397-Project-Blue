@@ -137,6 +137,7 @@ BlueEngine::ID GameObj_Manager::lua_create(GameObj_Type type) {
 	// Catch if the Factory output is valid
 	if (temp == nullptr) {
 		// Return 0u in cases where the GameObject would not be valid
+        assert(0);
 		return BlueEngine::ID(0u);
 	}
 
@@ -163,10 +164,10 @@ std::vector<BlueEngine::ID> GameObj_Manager::lua_listNPCs() {
 	std::vector<BlueEngine::ID> identifierList;
 
 	// Process all of the GameObjects
-	for (auto i = managed_objs.begin(); i != managed_objs.end(); ++i) {
+	for (auto & managed_obj : managed_objs) {
 		// Catch if the GameObject is an NPC
-		if (i->second->type() == GameObj_Type::NPC)
-			identifierList.push_back(i->second->id());
+		if (managed_obj.second->type() == GameObj_Type::NPC)
+			identifierList.push_back(managed_obj.second->id());
 	}
 
 	// Return the generated list

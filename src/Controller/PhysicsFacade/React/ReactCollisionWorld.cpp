@@ -37,3 +37,9 @@ bool Physics::ReactCollisionWorld::TestAABBOverlap(CollisionBodyID first, Collis
     return collisionWorld.testAABBOverlap(collisionBodies.at(first).collisionBody,
                                           collisionBodies.at(second).collisionBody);
 }
+
+void Physics::ReactCollisionWorld::DestroyBody(CollisionBodyID id) {
+
+    collisionWorld.destroyCollisionBody(collisionBodies.at(id).collisionBody);
+    collisionBodies.erase(id);
+}

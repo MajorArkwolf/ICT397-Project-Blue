@@ -17,13 +17,19 @@ void toggleWireframe() {
     render.ToggleWireFrame();
 }
 
+void EndGame() {
+    BlueEngine::Engine::get().endEngine();
+}
+
 PrototypeScene::PrototypeScene() {
     luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
         .addFunction("getCamera", &getCamera)
         .addFunction("toggleWireframe", &toggleWireframe)
         .addFunction("getHeightAt", &Controller::TerrainFactory::LuaBLHeight)
         .addFunction("getMapSize", &Controller::TerrainFactory::LuaMapSize)
-        .addFunction("getDifficulty", &Model::GameState::gameDifficulty);
+        .addFunction("getDifficulty", &Model::GameState::gameDifficulty)
+        .addFunction("EndGame", &EndGame);
+
 
     PrototypeScene::Init();
     View::Camera::LuaInit();

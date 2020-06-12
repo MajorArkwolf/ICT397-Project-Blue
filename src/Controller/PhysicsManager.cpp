@@ -84,6 +84,9 @@ void printVector(glm::vec3 vec) {
 glm::vec3 addVector(glm::vec3 vec1, glm::vec3 vec2) {
     return vec1 + vec2;
 }
+glm::vec3 subtractVector(glm::vec3 vec1, glm::vec3 vec2) {
+    return vec1 - vec2;
+}
 
 void Physics::PhysicsManager::LuaInit() {
 
@@ -98,6 +101,7 @@ void Physics::PhysicsManager::LuaInit() {
         .addFunction("vectorDot", &dotProduct)
         .addFunction("vectorMultiplyScalar", &vectorMultiplyScalar)
         .addFunction("vectorAdd", &addVector)
+        .addFunction("vectorSubtract", &subtractVector)
         .endNamespace();
 
     // Add glm vectors to lua
@@ -233,13 +237,12 @@ Physics::ReactCollisionBody *Physics::PhysicsManager::getReactCollision(Collisio
 
 Physics::PhysicsManager::PhysicsManager() {
     LuaInit();
-
 }
 
 void Physics::PhysicsManager::clear() {
-//    InitialiseCollisionWorld();
-//    InitialiseDynamicsWorld();
-//    InitialiseShapeFactory();
+    //    InitialiseCollisionWorld();
+    //    InitialiseDynamicsWorld();
+    //    InitialiseShapeFactory();
     dynamicsWorld.reset();
     shapeFactory.reset();
     collisionWorld.reset();

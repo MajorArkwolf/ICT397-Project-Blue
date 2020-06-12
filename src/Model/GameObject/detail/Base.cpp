@@ -86,7 +86,7 @@ bool GameObj_Base::animator_add() {
 
 void GameObj_Base::animator_update(double t [[maybe_unused]], double dt) {
 	// Catch an invalid animator
-	if (animator) {
+	if (animator_has()) {
 		// Update the model's animation through a delta bone transform
 		animator->BoneTransform(dt);
 	}
@@ -94,7 +94,7 @@ void GameObj_Base::animator_update(double t [[maybe_unused]], double dt) {
 
 void GameObj_Base::animator_changeAnimation(const std::string& animToLoad, bool stopOnEnd) {
 	// Catch an invalid animator
-	if (animator) {
+	if (animator_has()) {
 		// Load the animation
 		animator->LoadAnimation(animToLoad, stopOnEnd);
 	}

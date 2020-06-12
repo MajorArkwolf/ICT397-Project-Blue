@@ -17,6 +17,10 @@ void State_Attack::start(std::shared_ptr<GameObj_Base> context) {
 		// Assign the critical status
 		npc->status_assign("Attack_Damage", 10.0f);
 	}
+	if (!npc->status_has("NPC_RangeScale")) {
+		// Assign the critical status
+		npc->status_assign("NPC_RangeScale", 1.0f);
+	}
 
 	// Configure the runtime status for the NPC
 	npc->status_assign("Attack_Time", 0.0f);
@@ -52,7 +56,7 @@ void State_Attack::run(std::shared_ptr<GameObj_Base> context, double t [[maybe_u
 	// Catch if damage should be applied to the player
 	if ((npc->status_get("Attack_Time") > 0.7f) && (npc->status_get("Attack_Performed") < 0.5f)) {
 		// Catch if the NPC is within a close enough range to damage the player
-		if (glm::length(npc_pos - player_pos) < 3.0f) {
+		if (glm::length(npc_pos - player_pos) < 3.0f * npc->status_get("NPC_RangeScale")) {
 			// Do damage to the player
 			player_raw->status_assign("Health", player_raw->status_get("Health") - npc->status_get("Attack_Damage"));
 		}

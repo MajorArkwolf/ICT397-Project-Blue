@@ -31,3 +31,9 @@ void Physics::ReactDynamicsWorld::CreateRigidBody(glm::vec3 position, glm::quat 
 Physics::RigidBody* Physics::ReactDynamicsWorld::GetRigidBody(RigidBodyID bodyID) {
     return &rigidBodies.at(bodyID);
 }
+
+void Physics::ReactDynamicsWorld::DestroyBody(RigidBodyID id) {
+    rigidBodies.at(id).Destroy();
+    rigidBodies.erase(id);
+
+}

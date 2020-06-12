@@ -14,11 +14,25 @@ void State_Chase::start(std::shared_ptr<GameObj_Base> context) {
 	// Set the GameObject's animation
 	if (context->animator_has())
 		context->animator_changeAnimation("RUN", false);
+
+	// Register the GameObject's status for this state
+	std::shared_ptr<GameObj_NPC> npc = std::dynamic_pointer_cast<GameObj_NPC>(context);
+	if (!npc->status_has("Chase_RunSpeed")) {
+		// Assign the critical status
+		npc->status_assign("Chase_RunSpeed", 4.0f);
+	}
+	if (!npc->status_has("NPC_RangeScale")) {
+		// Assign the critical status
+		npc->status_assign("NPC_RangeScale", 1.0f);
+	}
 }
 
 void State_Chase::run(std::shared_ptr<GameObj_Base> context, double t [[maybe_unused]], double dt) {
 	// Get the NPC's collision body
 	auto npc_phys = Physics::PhysicsManager::GetInstance().GetDynamicsWorld()->GetRigidBody(context->physBody);
+
+	// Get the entirety of the contextual NPC's properties
+	std::shared_ptr<GameObj_NPC> npc = std::dynamic_pointer_cast<GameObj_NPC>(context);
 
 	// Get the Player's GameObject and collision body
 	std::shared_ptr<GameObj_Base> player_obj = Controller::Factory::get().GameObject(GameObj_Type::Player);
@@ -34,21 +48,18 @@ void State_Chase::run(std::shared_ptr<GameObj_Base> context, double t [[maybe_un
 	npc_phys->SetOrientation(rotationToPlayer);
 
 	// The NPC is running, move it forward
-	glm::vec3 new_position = npc_phys->GetPosition() + (npc_phys->GetOrientation() * (glm::vec3(0.0f, 0.0f, 4.0f * float(dt))));
+	glm::vec3 new_position = npc_phys->GetPosition() + (npc_phys->GetOrientation() * (glm::vec3(0.0f, 0.0f, npc->status_get("Chase_RunSpeed") * float(dt))));
 	new_position.y = Controller::TerrainFactory::LuaBLHeight(new_position.x, new_position.z) + 0.1f;
 	npc_phys->SetPosition(new_position);
 
-	// Get the entirety of the contextual NPC's properties
-	std::shared_ptr<GameObj_NPC> npc = std::dynamic_pointer_cast<GameObj_NPC>(context);
-
 	// Catch if the NPC has got far away enough from the player
 	new_position.y = 0.0f;
-	if (glm::length(new_position - player_pos) > 40.0f) {
+	if (glm::length(new_position - player_pos) > 40.0f * npc->status_get("NPC_RangeScale")) {
 		// Switch this NPC's state to chase the player
 		FSM_Manager::get(npc->contextID)->local_set(FSM_Manager::regular_state(State_Type::Wander));
 	}
 	// Catch if the NPC has got close enough to the player
-	else if (glm::length(new_position - player_pos) < 2.0f) {
+	else if (glm::length(new_position - player_pos) < 2.0f * npc->status_get("NPC_RangeScale")) {
 		// Switch this NPC's state to attack the player
 		FSM_Manager::get(npc->contextID)->local_set(FSM_Manager::regular_state(State_Type::Attack));
 	}

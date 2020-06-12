@@ -16,16 +16,18 @@ Update = function(deltaTime)
 	
 	movePlayer(deltaTime);
 
-	 if(gameObj_charData:status_get("FreeCam") == 0) then
+	if(gameObj_charData:status_get("FreeCam") == 0) then
 
 		if(gameObj_charData:status_get("UseDynamics") == 0) then
 			updatePlayerHeight();
-		 end
-		 if(gameObj_charData:status_get("UseDynamics") == 1) then
+		end
+		if(gameObj_charData:status_get("UseDynamics") == 1) then
 			catchPlayer();
-		 end
-	 end
+		end
+	end
+
 	 UpdateOxygen();
+	 checkCollisions();
 	
 end
 
@@ -45,18 +47,65 @@ catchPlayer = function()
 
 end
 
+checkCollisions = function()
+		local id_list = GameObject.listNPCs();
+		damage = BulletCharData:status_get("Damage");
+		for iterator, npcID in pairs(id_list) do
+			local npcObject = GameObject.get(npcID);
+			local charData = GameObject.to_character(npcObject);
+
+			if(charData:status_has("Projectile") == false) then
+				local npc = getReactRigidBody(dynamicsWorld:GetRigidBody(npcObject.physBody));
+					if(npc:GetPosition().y < 105) then
+						charData:status_assign("Health", 0);
+					end
+				if(collisionWorld:TestOverlap(BulletObject.physBody, npcObject.physBody)== true) then
+
+
+					local npcObjectHealth = charData:status_get("Health");
+					charData:status_assign("Health", npcObjectHealth - damage);
+					--print("NPC ID:" .. npcID .. " Old Health: " .. npcObjectHealth .. " New Health: " .. charData:status_get("Health"))
+					BulletRigidBody:SetPosition(vector(0,0,0));
+				end
+			end
+
+		end
+
+end
+
 --Creates a projectile with the given position and force, takes vector as parameters
 createProjectile = function (position, force)
 	physicsManager = PhysicsManager:GetInstance();
 	dynamicsWorld = physManager:GetDynamicsWorld();
 	collisionWorld = physManager:GetCollisionWorld();
-	gameObj_id = GameObject.create(GameObject.Types.NPC());
-	gameObj_raw = GameObject.get(gameObj_id);
-	gameObj_raw.model = resources.getModel("res/model/ball.fbx");
-	dynamicsWorld:GetRigidBody(gameObj_raw.physBody):SetPosition(position);
+	gameObj_raw = GameObject.get(BulletID);
+	gameobj_char = GameObject.to_character(gameObj_raw);
 	rigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(gameObj_raw.physBody));
-	rigidBody:AddCollisionShape(shapeFactory:GetShape(0), vector(0,0,0), quaternion(1,0,0,0), 5);
-	rigidBody:ApplyForceToCentre(math.vectorMultiplyScalar(force, 80000));
+	rigidBody:SetSleeping(true);
+	rigidBody:SetPosition(position);
+	rigidBody:SetOrientation(quaternion(1,0,0,0));
+
+
+	rigidBody:ApplyForceToCentre(math.vectorMultiplyScalar(force, 50000));
+end
+
+useJetpack = function(deltaTime)
+	local gameObj_charData = GameObject.to_character(player);
+	local playerRigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(player.physBody));
+
+	jetpackThrust = vector(0,15000,0);
+	jetpackThrust = math.vectorMultiplyScalar(jetpackThrust, deltaTime);
+
+	jetpackAmount = gameObj_charData:status_get("Jetpack");
+
+	if(jetpackAmount > 0)	then
+		playerRigidBody:ApplyForceToCentre(jetpackThrust);
+	end	
+	gameObj_charData:status_assign("Jetpack", jetpackAmount - 1);
+	if(jetpackAmount < 1)	then
+		gameObj_charData:status_assign("Jetpack", 0);
+	end
+
 end
 
 --Creates a static object at the given position
@@ -122,6 +171,9 @@ movePlayer = function(deltaTime)
 	if(gameObj_charData:status_get("FreeCam") == 0) then
 		if(gameObj_charData:status_get("UseDynamics") == 1) then
 			playerRigidBody:SetSleeping(false);
+			if(gameObj_charData:status_get("UsingJetpack") == 1) then
+				useJetpack(deltaTime)
+			end
 
 			if(	gameObj_charData:status_get("MoveForward") == 1) then 
 				local force = math.vectorMultiplyScalar(cameraFrontVector, movementMult );
@@ -145,6 +197,10 @@ movePlayer = function(deltaTime)
 				playerRigidBody:ApplyForceToCentre(force);
 			end
 		elseif(gameObj_charData:status_get("UseDynamics") == 0) then
+
+			if(gameObj_charData:status_get("Jetpack") < 500) then
+				gameObj_charData:status_assign("Jetpack", gameObj_charData:status_get("Jetpack") + 1)
+			end
 			playerRigidBody:SetSleeping(true);
 			local frontVec = vector(cameraFrontVector.x, 0, cameraFrontVector.z);
 			local rightVec = vector(cameraRightVector.x, 0, cameraRightVector.z);
@@ -177,7 +233,7 @@ movePlayer = function(deltaTime)
 end
 
 -- Called every time that there is an input from the user, goes through all input cases and does the appropriate action
-handleInput = function(inputData, deltaTime)
+handleInput = function(inputData)
 
 	local camera = getCamera();
 	local player = GameObject.getPlayer();
@@ -289,7 +345,8 @@ handleInput = function(inputData, deltaTime)
 		elseif(inputData.action == "Mouse Middle") then
 
 		elseif(inputData.action == "Mouse Right") then
-			createStatic(math.vectorAdd(playerRigidBody:GetPosition(), math.vectorMultiplyScalar(cameraFrontVector, 5)));
+				gameObj_charData:status_assign("UsingJetpack", 1);
+			--createStatic(math.vectorAdd(playerRigidBody:GetPosition(), math.vectorMultiplyScalar(cameraFrontVector, 5)));
 		end
 	--Mouse Button Release
 	elseif(inputData.inputType == "MouseButtonRelease") then
@@ -298,7 +355,7 @@ handleInput = function(inputData, deltaTime)
 		elseif(inputData.action == "Mouse Middle") then
 
 		elseif(inputData.action == "Mouse Right") then
-		
+				gameObj_charData:status_assign("UsingJetpack", 0);
 		end
 	-- Mouse movement
 	elseif(inputData.inputType == "MouseMotion") then
@@ -314,14 +371,15 @@ UpdateOxygen = function()
 	local gameObj_charData = GameObject.to_character(player);
 	local oxygenLevel = gameObj_charData:status_get("Oxygen");
 	local playerRigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(player.physBody));
-	if(playerRigidBody:GetPosition().y < 100) then
+	if(playerRigidBody:GetPosition().y < 105) then
 		gameObj_charData:status_assign("Oxygen", oxygenLevel - 1);
 	else
 		gameObj_charData:status_assign("Oxygen", 1000);
 	end
-	if (oxygenLevel < 0) then
+	if (gameObj_charData:status_get("Oxygen") < 1) then
 		local health = gameObj_charData:status_get("Health");
-		gameObj_charData:status_assign("Health", health - 1);
+		gameObj_charData:status_assign("Health", health - 0.1);
+		gameObj_charData:status_assign("Oxygen", 0);
 	
 	end
 end
@@ -330,35 +388,88 @@ GUI = function()
 	local windowSize = GUIFunctions.GetWindowSize();
 	local gameObj_charData = GameObject.to_character(player);
 	local oxygenLevel = gameObj_charData:status_get("Oxygen");
+	local jetpackLevel = gameObj_charData:status_get("Jetpack");
 	local Health = gameObj_charData:status_get("Health");
 
-	GUIFunctions.SetNextWindowPos(0,windowSize.y - 50, true);
-	GUIFunctions.BeginWindow("Oxygen");
-	GUIFunctions.SetFontSize(3);
 
-	GUIFunctions.Text("Oxygen: " .. oxygenLevel)
+	--Oxygen
+	if(oxygenLevel < 1000) then
+		GUIFunctions.SetNextWindowPos(windowSize.x/2 - 150,windowSize.y - 50, true);
+
+		GUIFunctions.BeginWindow("Oxygen");
+		GUIFunctions.SetFontSize(3);
+		GUIFunctions.Text("Oxygen: " .. oxygenLevel)
+		GUIFunctions.EndWindow();
+	end
+	--Jetpack
+			GUIFunctions.SetNextWindowPos(0,windowSize.y - 50, true);
+	GUIFunctions.BeginWindow("Jetpack");
+	GUIFunctions.SetFontSize(3);
+	GUIFunctions.Text("Jetpack: " .. jetpackLevel)
 	GUIFunctions.EndWindow();
 
 
-	
+	--Health
 	GUIFunctions.SetNextWindowPos(windowSize.x - 300 ,windowSize.y - 50, true);
 	GUIFunctions.BeginWindow("Health");
 	GUIFunctions.SetFontSize(3);
-
 	if(Health < 0 ) then
 		Health = 0;
 	end
-
 	GUIFunctions.Text("Health: " .. Health)
 	GUIFunctions.EndWindow();
 
+
+	--Death
 	if(Health == 0) then
-		GUIFunctions.SetNextWindowPos(windowSize.x/2 - 180,windowSize.y/2 - 50, true);
+		GUIFunctions.SetNextWindowPos(windowSize.x/2 - 180,0, true);
 		GUIFunctions.BeginWindow("DEAD");
 		GUIFunctions.SetFontSize(6);
 
 		GUIFunctions.Text("YOU DEAD");
+		if(HasOpenedExitScreen == false) then
+			toggleGUIWindow("exit");
+			HasOpenedExitScreen = true;
+		end
 		GUIFunctions.EndWindow();
 	end
+
+	--Enemy Count
+
+		GUIFunctions.SetNextWindowPos(0,0, true);
+		GUIFunctions.BeginWindow("Enemies");
+		GUIFunctions.SetFontSize(3);
+		local EnemyCount = 0;
+		local id_list = GameObject.listNPCs();
+	
+		for iterator, npcID in pairs(id_list) do
+			local npcObject = GameObject.get(npcID);
+
+			local charData = GameObject.to_character(npcObject);
+
+			if(charData:status_has("Enemy") == true and charData:status_has("Health")) then
+				if(charData:status_get("Health") > 0) then
+					EnemyCount = EnemyCount + 1;
+				end
+			end
+
+		end
+		EnemiesLeft = EnemyCount;
+		GUIFunctions.Text("Enemies Left: " .. EnemyCount );
+		GUIFunctions.EndWindow();
+
+		if(EnemiesLeft < 1) then
+			GUIFunctions.SetNextWindowPos(windowSize.x/2 - 270,0, true);
+			GUIFunctions.BeginWindow("WIN");
+			GUIFunctions.SetFontSize(3);
+
+			GUIFunctions.Text("Congratulations, You WIN!");
+			if(HasOpenedExitScreen == false) then
+				toggleGUIWindow("exit");
+				HasOpenedExitScreen = true;
+			end
+
+			GUIFunctions.EndWindow();
+		end
 end
 	

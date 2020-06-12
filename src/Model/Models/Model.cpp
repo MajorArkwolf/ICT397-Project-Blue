@@ -53,7 +53,8 @@ void Model::Model::loadModel(string const &path) {
 
     // retrieve the directory path of the filepath
     name = path;
-    isAnimated = /**scene->HasAnimations() &&**/ CheckFileType(path);
+    isAnimated = CheckFileType(path);
+    isAnimated = isAnimated && scene->HasAnimations();
     globalInverseTransform = glm::inverse(mat4_cast(scene->mRootNode->mTransformation));
     // process ASSIMP's root node recursively
     processNode(scene->mRootNode, scene);
@@ -325,6 +326,9 @@ Animation* Model::Model::getAnimation(const string &animName) {
     }
     if (idle != nullptr) {
         return idle;
+    }
+    if (!animation.empty()) {
+        return &animation.at(0);
     }
     return nullptr;
 }

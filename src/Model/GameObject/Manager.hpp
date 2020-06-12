@@ -10,11 +10,10 @@
 	/// Internal Dependencies
 #include "detail/LuaAssist.hpp"
 
-	/*!
-	 * @brief Type declaration for a function pointer used by the GameObj_Manager.
-	 * @param [in] GameObj_In A smart pointer to a GameObject.
-	 * @return Never returns anything.
-	 */
+/*!
+ * @brief Type declaration for a function pointer used by the GameObj_Manager.
+ * @param [in] GameObj_In A smart pointer to a GameObject.
+ */
 using GameObj_ProcessFunc = std::function<void(std::shared_ptr<GameObj_Base> GameObj_In)> ;
 
 	//! A manager class for GameObject's creation and storage.

@@ -36,14 +36,20 @@ void Controller::TerrainFactory::Init() {
     }
     AddWallBoundary();
     GenerateHeightOffSet();
+
+    luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
+        .beginNamespace("TerrainFactory")
+        .addProperty("chunkSize", &Controller::TerrainFactory::LuaMapSize)
+        .addFunction("heightAt", &Controller::TerrainFactory::LuaBLHeight)
+        .endNamespace();
 }
 
 void Controller::TerrainFactory::AddWallBoundary() {
     size_t maxXSize = fValues.size();
     size_t maxZSize = fValues.at(0).size();
-    auto playArea = maxKeySize * static_cast<unsigned>(ChunkSize) * 2;
-    auto depth = (maxXSize - playArea) / 2;
-    //South
+    auto playArea   = maxKeySize * static_cast<unsigned>(ChunkSize) * 2;
+    auto depth      = (maxXSize - playArea) / 2;
+    // South
     for (auto &x : fValues) {
         auto newheight = 300.f;
         for (size_t y = 0; y <= 50; ++y) {
@@ -51,7 +57,7 @@ void Controller::TerrainFactory::AddWallBoundary() {
             x.at(depth + y).height = newheight;
         }
     }
-    //North
+    // North
     auto oppDepth = maxXSize - depth;
     for (auto &x : fValues) {
         auto newheight = 300.f;
@@ -61,7 +67,7 @@ void Controller::TerrainFactory::AddWallBoundary() {
         }
     }
 
-    //East
+    // East
     for (size_t z = 0; z < maxZSize; ++z) {
         auto newheight = 300.f;
         for (size_t y = 0; y <= 50; ++y) {
@@ -71,7 +77,7 @@ void Controller::TerrainFactory::AddWallBoundary() {
         fValues.at(depth).at(z).height = 300.f;
     }
 
-    //West
+    // West
     for (size_t z = 0; z < maxZSize; ++z) {
         auto newheight = 300.f;
         for (size_t y = 0; y <= 50; ++y) {
@@ -615,8 +621,8 @@ float Controller::TerrainFactory::GetBLHeight(Blue::Key currentKey, glm::vec2 cu
     float x             = currentCord.x - floor(currentCord.x);
     float y             = currentCord.y - floor(currentCord.y);
 
-    auto y1 = glm::mix(hBL, hTL, x);
-    auto y2 = glm::mix(hBR, hTR, x);
+    auto y1       = glm::mix(hBL, hTL, x);
+    auto y2       = glm::mix(hBR, hTR, x);
     result_height = glm::mix(y1, y2, y);
     return result_height;
 }

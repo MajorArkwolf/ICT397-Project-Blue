@@ -34,5 +34,5 @@ namespace GameObj_LuaHelper {
 // Registratiion of Enum GameObj_Type
 namespace luabridge {
 	template <>
-	struct luabridge::Stack <GameObj_Type> : EnumWrapper <GameObj_Type> {};
+	struct Stack <GameObj_Type> : EnumWrapper <GameObj_Type> {};
 }

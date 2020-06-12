@@ -12,10 +12,10 @@
 #include "View/Renderer/Shader.hpp"
 #include "Types.hpp"
 
-	/*!
-	 * @brief The parent class for all child GameObjects.
-	 * @note Acts as the base polymorphic structure for use with all derived GameObjects.
-	 */
+/*!
+ * @brief The parent class for all child GameObjects.
+ * @note Acts as the base polymorphic structure for use with all derived GameObjects.
+ */
 class GameObj_Base {
 public:
 		/*!
@@ -111,13 +111,13 @@ protected:
 		 * @brief Manages the shader program to be used for all GameObject rendering.
 		 * @note Shared across all types and instances of Game Objects.
 		 */
-	std::shared_ptr<Shader> program;
+	std::shared_ptr<Shader> program = nullptr;
 
 		/*!
 		 * @brief Stores the GameObject's individual animation properties.
 		 * @note Internal to the GameObject itself, and must be updated relative to delta time passed.
 		 */
-	std::shared_ptr<Controller::Animator> animator;
+	std::shared_ptr<Controller::Animator> animator = nullptr;
 
 private:
 		/*!
