@@ -113,7 +113,9 @@ Engine::Engine(){
     }
 
     this->guiManager.initialiseImGUI(window);
-
+    // This is a bandaid fix for gameobject animation, error model just like source.
+    // Are we industry pros yet?
+    ResourceManager::getInstance().getModelID("res/model/error.fbx");
 }
 
 Engine::~Engine() {

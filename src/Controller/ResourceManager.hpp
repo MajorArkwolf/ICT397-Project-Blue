@@ -68,7 +68,7 @@ class ResourceManager {
      * @param modelID the id of where the model exists.
      * @return a pointer to the model type.
      */
-    static auto getModel(unsigned modelID) -> Model::Model*;
+    static auto getModel(size_t modelID) -> Model::Model*;
 
   private:
     /// A manager for all text elements in the program

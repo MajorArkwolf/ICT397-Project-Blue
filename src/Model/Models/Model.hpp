@@ -19,6 +19,7 @@
 namespace Model {
     class Model {
       public:
+        Model() = default;
         /// Textures IDs that have been loaded.
         std::vector<TextureB> textures_loaded = {}; // Stores all textures, needs to be global
         /// Meshes of models.
@@ -113,7 +114,7 @@ namespace Model {
         /// root joint.
         JointsName rootJoint;
         /// Is the model animation
-        bool isAnimated = true;
+        bool isAnimated = false;
         /// Name of the model
         std::string name = "";
     };

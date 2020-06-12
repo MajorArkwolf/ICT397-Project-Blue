@@ -12,25 +12,22 @@ void Controller::Animator::BoneTransform(double TimeInSeconds) {
     Transforms.resize(100);
     animationTime += TimeInSeconds;
     if (animatedModel != nullptr) {
-        if (animatedModel->isAnimated && loadedAnimation != nullptr) {
-            double TicksPerSecond = loadedAnimation->getTicksPerSecond();
-            double TimeInTicks    = animationTime * static_cast<float>(TicksPerSecond);
-            if (endWhenCompleted) {
-                if (TimeInTicks >= loadedAnimation->getDuration()) {
-                    clipEnded = true;
-                    return;
+        if (loadedAnimation != nullptr) {
+            if (animatedModel->isAnimated) {
+                double TicksPerSecond = loadedAnimation->getTicksPerSecond();
+                double TimeInTicks    = animationTime * TicksPerSecond;
+                if (endWhenCompleted) {
+                    if (TimeInTicks >= loadedAnimation->getDuration()) {
+                        clipEnded = true;
+                        return;
+                    }
                 }
+                glm::mat4 Identity(1.0f);
+
+                double AnimationTime = fmod(TimeInTicks, loadedAnimation->getDuration());
+
+                ReadNodeHeirarchy(AnimationTime, animatedModel->rootJoint, Identity);
             }
-            glm::mat4 Identity(1.0f);
-
-            double AnimationTime  = fmod(TimeInTicks, loadedAnimation->getDuration());
-
-            ReadNodeHeirarchy(AnimationTime, animatedModel->rootJoint, Identity);
-//            Transforms.resize(animatedModel->numBones);
-
-//            for (unsigned i = 0; i < animatedModel->numBones; i++) {
-//                Transforms[i] = animatedModel->boneInfo[i].FinalTransformation;
-//            }
         } else {
             for (unsigned i = 0; i < 100; i++) {
                 Transforms[i] = glm::mat4(1.0f);
@@ -105,7 +102,7 @@ glm::vec3 Controller::Animator::CalcInterpolatedPosition(double AnimationTime, c
     unsigned NextPositionIndex = (PositionIndex + 1);
     assert(NextPositionIndex < pNodeAnim->numPosKeys);
     double DeltaTime = pNodeAnim->posKey[NextPositionIndex].first - pNodeAnim->posKey[PositionIndex].first;
-    double Factor = (AnimationTime - static_cast<float>(pNodeAnim->posKey[PositionIndex].first)) / DeltaTime;
+    double Factor = (AnimationTime - pNodeAnim->posKey[PositionIndex].first) / DeltaTime;
     //assert(Factor >= 0.0f && Factor <= 1.0f);
     const glm::vec3& Start = pNodeAnim->posKey[PositionIndex].second;
     const glm::vec3& End = pNodeAnim->posKey[NextPositionIndex].second;
@@ -136,6 +133,6 @@ void Controller::Animator::ResetAnimationTime() {
 bool Controller::Animator::IsAnimationedEnded() const {
     return clipEnded;
 }
-void Controller::Animator::LinkToModel(unsigned int modelID) {
+void Controller::Animator::LinkToModel(size_t modelID) {
     animatedModel = ResourceManager::getInstance().getModel(modelID);
 }

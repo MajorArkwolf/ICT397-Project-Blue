@@ -22,6 +22,14 @@ void State_Wander::start(std::shared_ptr<GameObj_Base> context) {
 		// Assign the critical status
 		npc->status_assign("Wander_WalkTimeMax", 15.0f);
 	}
+	if (!npc->status_has("Wander_WalkSpeed")) {
+		// Assign the critical status
+		npc->status_assign("Wander_WalkSpeed", 1.5f);
+	}
+	if (!npc->status_has("NPC_RangeScale")) {
+		// Assign the critical status
+		npc->status_assign("NPC_RangeScale", 1.0f);
+	}
 
 	// Configure the runtime status for the NPC
 	npc->status_assign("Wander_ActionTime", 0.0f);
@@ -50,7 +58,7 @@ void State_Wander::run(std::shared_ptr<GameObj_Base> context, double t [[maybe_u
 	// Determine the behaviour to apply for the wandering
 	if (npc->status_get("Wander_ActionIsIdle") < 0.5f) {
 		// The NPC is walking, move it forward
-		glm::vec3 new_position = npc_phys->GetPosition() + (npc_phys->GetOrientation() * (glm::vec3(0.0f, 0.0f, 1.5f * float(dt))));
+		glm::vec3 new_position = npc_phys->GetPosition() + (npc_phys->GetOrientation() * (glm::vec3(0.0f, 0.0f, npc->status_get("Wander_WalkSpeed") * float(dt))));
 		new_position.y = Controller::TerrainFactory::LuaBLHeight(new_position.x, new_position.z) + 0.1f;
 		npc_phys->SetPosition(new_position);
 
@@ -82,7 +90,7 @@ void State_Wander::run(std::shared_ptr<GameObj_Base> context, double t [[maybe_u
 	// Catch if the NPC has got close enough to the player
 	glm::vec3 npc_pos = glm::vec3(npc_phys->GetPosition().x, 0.0f, npc_phys->GetPosition().z);
 	glm::vec3 player_pos = glm::vec3(player_phys->GetPosition().x, 0.0f, player_phys->GetPosition().z);
-	if (glm::length(npc_pos - player_pos) < 30.0f) {
+	if (glm::length(npc_pos - player_pos) < 30.0f * npc->status_get("NPC_RangeScale")) {
 		// Switch this NPC's state to chase the player
 		FSM_Manager::get(npc->contextID)->local_set(FSM_Manager::regular_state(State_Type::Chase));
 	}
