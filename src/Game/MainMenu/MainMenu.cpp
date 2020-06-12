@@ -21,13 +21,13 @@ void MainMenu::Init() {
     sModels.at(0).position.x = 20.0f;
     sModels.at(0).position.z = 2.0f;
     sModels.at(0).animator = std::make_shared<Controller::Animator>();
-    sModels.at(0).animator->LinkToModel(sModels.at(0).getModel());
+    sModels.at(0).animator->LinkToModel(static_cast<unsigned>(sModels.at(0).getModel()));
     sModels.at(0).animator->LoadAnimation("PUNCH");
     sModels.at(0).rotation = glm::quat(glm::vec3(0.0f, glm::radians(180.0f) ,0.0f));
     sModels.at(1).position.x = 20.5f;
     sModels.at(1).position.z = -2.0f;
     sModels.at(1).animator = std::make_shared<Controller::Animator>();
-    sModels.at(1).animator->LinkToModel(sModels.at(1).getModel());
+    sModels.at(1).animator->LinkToModel(static_cast<unsigned>(sModels.at(1).getModel()));
     sModels.at(1).animator->LoadAnimation("PUNCH");
     sModels.at(1).rotation = glm::quat(glm::vec3(0.0f, 0.0f ,0.0f));
     camera.Pitch -= 20.0f;
@@ -112,7 +112,7 @@ void MainMenu::handleInputData(Controller::Input::InputData inputData, double de
         } break;
         case BLUE_InputType::MOUSE_WHEEL: { // Mouse Wheel event
             auto amountScrolledY = static_cast<double>(inputData.mouseWheelMotion);
-            camera.ProcessMouseScroll(amountScrolledY);
+            //camera.ProcessMouseScroll(amountScrolledY);
         } break;
         case BLUE_InputType::WINDOW_RESIZE: {
             this->handleWindowEvent();
@@ -124,15 +124,23 @@ void MainMenu::handleInputData(Controller::Input::InputData inputData, double de
     }
 }
 
-void MainMenu::startGame() {
+void MainMenu::startGame(Difficulty newDifficulty) {
     auto &engine = BlueEngine::Engine::get();
     engine.gameStack.AddToStack(std::make_shared<PrototypeScene>());
+    dynamic_cast<PrototypeScene*>(engine.gameStack.getTop().get())->SetDifficulty(newDifficulty);
 }
 
 void MainMenu::GUIStart() {
     auto &engine  = BlueEngine::Engine::get();
     GUIManager::startWindowFrame();
+    MainMenuGUI();
+    if (displayDifficultyMenu) {
+        DifficultyMenu();
+    }
+}
 
+void MainMenu::MainMenuGUI() {
+    auto &engine = BlueEngine::Engine::get();
     ImGui::SetNextWindowSize(ImVec2(300, 500), 1);
     //ImGui::SetNextWindowPosCenter(1);
 
@@ -142,7 +150,8 @@ void MainMenu::GUIStart() {
     ImGui::SetNextItemWidth(ImGui::GetWindowWidth());
     ImGui::Text("Project Blue: Run and Gun");
     if (ImGui::Button("Play Game", ImVec2(285, 40))) {
-        startGame();
+        //startGame(Difficulty::easy);
+        displayDifficultyMenu = true;
     }
     ImGui::Separator();
 
@@ -158,6 +167,33 @@ void MainMenu::GUIStart() {
         engine.SettingMenu();
     }
 
+    ImGui::End();
+}
+
+void MainMenu::DifficultyMenu() {
+    auto &engine = BlueEngine::Engine::get();
+    ImVec2 buttonSize(150, 30);
+    ImGui::SetNextWindowFocus();
+    ImGui::SetNextWindowSize(ImVec2(500, 100), 1);
+    ImGui::Begin("Difficulty", &displayDifficultyMenu,
+                 ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
+    ImGui::Separator();
+    ImGui::SetNextItemWidth(ImGui::GetWindowWidth());
+    ImGui::Text("Select Difficulty");
+    if (ImGui::Button("Easy", buttonSize)) {
+        startGame(Difficulty::easy);
+        displayDifficultyMenu = false;
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Medium", buttonSize)) {
+        startGame(Difficulty::medium);
+        displayDifficultyMenu = false;
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Hard", buttonSize)) {
+        startGame(Difficulty::hard);
+        displayDifficultyMenu = false;
+    }
     ImGui::End();
 }
 
