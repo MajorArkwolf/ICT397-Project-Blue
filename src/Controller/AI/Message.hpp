@@ -21,8 +21,7 @@ enum class Message_Type {
 
 // Registratiion of Enum Message_Type
 namespace luabridge {
-	template <>
-	struct luabridge::Stack <Message_Type> : EnumWrapper <Message_Type> {};
+	template<> struct Stack <Message_Type> : EnumWrapper <Message_Type> {};
 }
 
 	/*!

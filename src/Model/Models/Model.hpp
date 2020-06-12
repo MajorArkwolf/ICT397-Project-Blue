@@ -113,7 +113,7 @@ namespace Model {
         /// root joint.
         JointsName rootJoint;
         /// Is the model animation
-        bool isAnimated = true;
+        bool isAnimated = false;
         /// Name of the model
         std::string name = "";
     };
