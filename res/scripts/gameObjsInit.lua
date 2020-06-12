@@ -1,12 +1,8 @@
-
--- Debugging
-print("difficulty " .. getDifficulty());
-
 -- Initialise the physics system, and prepare it for use
 
 ---------Variables
 EnemiesLeft = 0;
-DifficultyMultiplier = 1;
+DifficultyMultiplier = getDifficulty() + 1;
 HasOpenedExitScreen = false;
 
 
