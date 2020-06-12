@@ -46,6 +46,23 @@ gameObj_charData:status_assign("Jetpack", 500);
 gameObj_charData:status_assign("UsingJetpack", 0);
 ------------------------------------------------------------------
 
+----------------Misc Object setup-------------------------------------------------------
+
+for i = 0, 1000, 1 do
+	identifier = GameObject.create(GameObject.Types.Static());
+	new_game_object = GameObject.get(identifier);
+	local name = "res/model/vikings/SM_Env_Rock_01.fbx";
+	new_game_object.model = resources.getModel(name);
+	new_game_object.scale = vector(0.05, 0.05, 0.05);
+	local x = math.random(TerrainFactory.chunkSize * -1, TerrainFactory.chunkSize);
+	local z = math.random(TerrainFactory.chunkSize * -1, TerrainFactory.chunkSize);
+	local y = TerrainFactory.heightAt(x, z);
+
+	local objectRigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(new_game_object.physBody));
+	objectRigidBody:SetPosition(vector(x, y, z));
+
+end
+
 ------------------------Bullet setup-------------------------------------------
 BulletID = GameObject.create(GameObject.Types.NPC());
 BulletObject = GameObject.get(BulletID);
@@ -151,22 +168,7 @@ BoundingWallRigidBody:AddCollisionShape(shapeFactory:GetShape(wallZShape), vecto
 
 
 
-----------------Misc Object setup-------------------------------------------------------
 
-for i = 0, 100, 1 do
-	identifier = GameObject.create(GameObject.Types.Static());
-	new_game_object = GameObject.get(identifier);
-	local name = "res/model/vikings/SM_Env_Rock_01.fbx";
-	new_game_object.model = resources.getModel(name);
-	new_game_object.scale = vector(0.05, 0.05, 0.05);
-	local x = math.random(TerrainFactory.chunkSize * -1, TerrainFactory.chunkSize);
-	local z = math.random(TerrainFactory.chunkSize * -1, TerrainFactory.chunkSize);
-	local y = TerrainFactory.heightAt(x, z);
-
-	local objectRigidBody = getReactRigidBody(dynamicsWorld:GetRigidBody(new_game_object.physBody));
-	objectRigidBody:SetPosition(vector(x, y, z));
-
-end
 -- Syncronise the physics of the GameObjects after configuring them
 GameObject.syncPhys();
 player = GameObject.getPlayer();
