@@ -111,13 +111,13 @@ protected:
 		 * @brief Manages the shader program to be used for all GameObject rendering.
 		 * @note Shared across all types and instances of Game Objects.
 		 */
-	std::shared_ptr<Shader> program;
+	std::shared_ptr<Shader> program = nullptr;
 
 		/*!
 		 * @brief Stores the GameObject's individual animation properties.
 		 * @note Internal to the GameObject itself, and must be updated relative to delta time passed.
 		 */
-	std::shared_ptr<Controller::Animator> animator;
+	std::shared_ptr<Controller::Animator> animator = nullptr;
 
 private:
 		/*!

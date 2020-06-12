@@ -49,15 +49,15 @@ auto ResourceManager::getString(const std::string& key) -> std::string {
 }
 
 auto ResourceManager::getModelID(const std::string& filename) -> size_t {
-    return ModelManager::GetModelID(filename);
+    return modelManager.GetModelID(filename);
 }
 
 auto ResourceManager::drawModel(size_t id, Shader *ourshader) -> void {
-    ModelManager::Draw(id, ourshader);
+    modelManager.Draw(id, ourshader);
 }
 
 void ResourceManager::loadModel(const std::string &filePath) {
-    ModelManager::GetModelID(filePath);
+    ResourceManager::getInstance().modelManager.GetModelID(filePath);
 }
 
 void ResourceManager::loadString(const std::string& key) {
@@ -91,6 +91,6 @@ auto ResourceManager::getModelId(const std::string& key) -> size_t {
 
     return getInstance().getModelID(key);
 }
-auto ResourceManager::getModel(const unsigned int modelID) -> Model::Model* {
-    return &ModelManager::ModelRepo().at(modelID);
+auto ResourceManager::getModel(const size_t modelID) -> Model::Model* {
+    return getInstance().modelManager.getModel(modelID);
 }
