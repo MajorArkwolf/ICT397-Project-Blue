@@ -17,7 +17,7 @@ void State_Chase::start(std::shared_ptr<GameObj_Base> context) {
 
 	// Register the GameObject's status for this state
 	std::shared_ptr<GameObj_NPC> npc = std::dynamic_pointer_cast<GameObj_NPC>(context);
-	if (!npc->status_has("Wander_IdleTimeMax")) {
+	if (!npc->status_has("Chase_RunSpeed")) {
 		// Assign the critical status
 		npc->status_assign("Chase_RunSpeed", 4.0f);
 	}
