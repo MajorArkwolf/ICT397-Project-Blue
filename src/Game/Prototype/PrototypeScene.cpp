@@ -272,3 +272,6 @@ void PrototypeScene::GUIStart() {
 void PrototypeScene::GUIEnd() {
     GUIManager::endWindowFrame();
 }
+void PrototypeScene::SetDifficulty(Difficulty newDifficulty) {
+    this->currentDifficulty = newDifficulty;
+}

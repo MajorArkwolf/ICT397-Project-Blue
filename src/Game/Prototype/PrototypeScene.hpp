@@ -10,6 +10,12 @@
 #include "View/Renderer/Renderer.hpp"
 #include "View/Renderer/Skybox.hpp"
 
+enum class Difficulty {
+    easy,
+    medium,
+    hard
+};
+
 /**
  * @class PrototypeScene
  */
@@ -46,11 +52,23 @@ class PrototypeScene : public BaseState {
      */
     void handleInputData(Controller::Input::InputData inputData, double deltatime) override;
 
+    /**
+     * Get the height at a given terrain chunk.
+     * @return the height at the X and Z values.
+     */
     float GetHeightAt(glm::vec2);
 
+    /**
+     * Start GUI
+     */
     void GUIStart() override;
 
+    /**
+     * End GUI
+     */
     void GUIEnd() override;
+
+    void SetDifficulty(Difficulty newDifficulty);
 
   private:
       ///The terrain manager for the prototype scene
@@ -65,4 +83,5 @@ class PrototypeScene : public BaseState {
     bool moveBackward = false;
     bool moveLeft = false;
     bool moveRight = false;
+    Difficulty currentDifficulty = Difficulty::easy;
 };

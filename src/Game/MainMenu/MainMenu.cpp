@@ -21,13 +21,13 @@ void MainMenu::Init() {
     sModels.at(0).position.x = 20.0f;
     sModels.at(0).position.z = 2.0f;
     sModels.at(0).animator = std::make_shared<Controller::Animator>();
-    sModels.at(0).animator->LinkToModel(sModels.at(0).getModel());
+    sModels.at(0).animator->LinkToModel(static_cast<unsigned>(sModels.at(0).getModel()));
     sModels.at(0).animator->LoadAnimation("PUNCH");
     sModels.at(0).rotation = glm::quat(glm::vec3(0.0f, glm::radians(180.0f) ,0.0f));
     sModels.at(1).position.x = 20.5f;
     sModels.at(1).position.z = -2.0f;
     sModels.at(1).animator = std::make_shared<Controller::Animator>();
-    sModels.at(1).animator->LinkToModel(sModels.at(1).getModel());
+    sModels.at(1).animator->LinkToModel(static_cast<unsigned>(sModels.at(1).getModel()));
     sModels.at(1).animator->LoadAnimation("PUNCH");
     sModels.at(1).rotation = glm::quat(glm::vec3(0.0f, 0.0f ,0.0f));
     camera.Pitch -= 20.0f;
@@ -112,7 +112,7 @@ void MainMenu::handleInputData(Controller::Input::InputData inputData, double de
         } break;
         case BLUE_InputType::MOUSE_WHEEL: { // Mouse Wheel event
             auto amountScrolledY = static_cast<double>(inputData.mouseWheelMotion);
-            camera.ProcessMouseScroll(amountScrolledY);
+            //camera.ProcessMouseScroll(amountScrolledY);
         } break;
         case BLUE_InputType::WINDOW_RESIZE: {
             this->handleWindowEvent();
