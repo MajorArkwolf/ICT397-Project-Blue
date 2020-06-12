@@ -64,7 +64,7 @@ checkCollisions = function()
 
 					local npcObjectHealth = charData:status_get("Health");
 					charData:status_assign("Health", npcObjectHealth - damage);
-					print("NPC ID:" .. npcID .. " Old Health: " .. npcObjectHealth .. " New Health: " .. charData:status_get("Health"))
+					--print("NPC ID:" .. npcID .. " Old Health: " .. npcObjectHealth .. " New Health: " .. charData:status_get("Health"))
 					BulletRigidBody:SetPosition(vector(0,0,0));
 				end
 			end
