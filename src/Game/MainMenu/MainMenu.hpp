@@ -71,6 +71,9 @@ private:
 
     /// models used inside of the scene.
     std::vector<MainMenuObject::StaticModel> sModels = {};
+    void MainMenuGUI();
+    void DifficultyMenu();
+    bool displayDifficultyMenu = false;
 };
 
 

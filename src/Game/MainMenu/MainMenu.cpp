@@ -127,12 +127,22 @@ void MainMenu::handleInputData(Controller::Input::InputData inputData, double de
 void MainMenu::startGame() {
     auto &engine = BlueEngine::Engine::get();
     engine.gameStack.AddToStack(std::make_shared<PrototypeScene>());
+    PrototypeScene* scene = dynamic_cast<PrototypeScene*>(engine.gameStack.getTop().get());
+    //TODO: Make this dynamic
+    scene->SetDifficulty(Difficulty::hard);
 }
 
 void MainMenu::GUIStart() {
     auto &engine  = BlueEngine::Engine::get();
     GUIManager::startWindowFrame();
+    MainMenuGUI();
+    if (displayDifficultyMenu) {
+        DifficultyMenu();
+    }
+}
 
+void MainMenu::MainMenuGUI() {
+    auto &engine = BlueEngine::Engine::get();
     ImGui::SetNextWindowSize(ImVec2(300, 500), 1);
     //ImGui::SetNextWindowPosCenter(1);
 
@@ -142,7 +152,7 @@ void MainMenu::GUIStart() {
     ImGui::SetNextItemWidth(ImGui::GetWindowWidth());
     ImGui::Text("Project Blue: Run and Gun");
     if (ImGui::Button("Play Game", ImVec2(285, 40))) {
-        startGame();
+        displayDifficultyMenu = true;
     }
     ImGui::Separator();
 
@@ -159,6 +169,17 @@ void MainMenu::GUIStart() {
     }
 
     ImGui::End();
+}
+
+void MainMenu::DifficultyMenu() {
+    ImGui::Begin("Menu", nullptr,
+                 ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
+    ImGui::Separator();
+    ImGui::SetNextItemWidth(ImGui::GetWindowWidth());
+    ImGui::Text("Select Difficulty");
+    if (ImGui::Button("Play Game", ImVec2(285, 40))) {
+        displayDifficultyMenu = true;
+    }
 }
 
 void MainMenu::GUIEnd() {
