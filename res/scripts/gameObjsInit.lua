@@ -95,7 +95,7 @@ for i = 0, 15 * DifficultyMultiplier, 1 do
 	local npc_gameObj_npc = GameObject.to_npc(npc_gameObj_char);
 
 	-- Configure the model, animator and scale
-	npc_gameObj_raw.model = resources.getModel("res/model/ClothedMan.gltf");
+	--npc_gameObj_raw.model = resources.getModel("res/model/ClothedMan.gltf");
 	npc_gameObj_raw:anim_init();
 	npc_gameObj_raw.scale = vector(0.3, 0.3, 0.3);
 

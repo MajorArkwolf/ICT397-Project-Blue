@@ -228,7 +228,7 @@ movePlayer = function(deltaTime)
 end
 
 -- Called every time that there is an input from the user, goes through all input cases and does the appropriate action
-handleInput = function(inputData, deltaTime)
+handleInput = function(inputData)
 
 	local camera = getCamera();
 	local player = GameObject.getPlayer();
