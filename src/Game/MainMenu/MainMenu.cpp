@@ -124,12 +124,10 @@ void MainMenu::handleInputData(Controller::Input::InputData inputData, double de
     }
 }
 
-void MainMenu::startGame() {
+void MainMenu::startGame(Difficulty newDifficulty) {
     auto &engine = BlueEngine::Engine::get();
     engine.gameStack.AddToStack(std::make_shared<PrototypeScene>());
-    PrototypeScene* scene = dynamic_cast<PrototypeScene*>(engine.gameStack.getTop().get());
-    //TODO: Make this dynamic
-    scene->SetDifficulty(Difficulty::hard);
+    dynamic_cast<PrototypeScene*>(engine.gameStack.getTop().get())->SetDifficulty(newDifficulty);
 }
 
 void MainMenu::GUIStart() {
@@ -152,6 +150,7 @@ void MainMenu::MainMenuGUI() {
     ImGui::SetNextItemWidth(ImGui::GetWindowWidth());
     ImGui::Text("Project Blue: Run and Gun");
     if (ImGui::Button("Play Game", ImVec2(285, 40))) {
+        //startGame(Difficulty::easy);
         displayDifficultyMenu = true;
     }
     ImGui::Separator();
@@ -172,14 +171,30 @@ void MainMenu::MainMenuGUI() {
 }
 
 void MainMenu::DifficultyMenu() {
-    ImGui::Begin("Menu", nullptr,
+    auto &engine = BlueEngine::Engine::get();
+    ImVec2 buttonSize(150, 30);
+    ImGui::SetNextWindowFocus();
+    ImGui::SetNextWindowSize(ImVec2(500, 100), 1);
+    ImGui::Begin("Difficulty", &displayDifficultyMenu,
                  ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
     ImGui::Separator();
     ImGui::SetNextItemWidth(ImGui::GetWindowWidth());
     ImGui::Text("Select Difficulty");
-    if (ImGui::Button("Play Game", ImVec2(285, 40))) {
-        displayDifficultyMenu = true;
+    if (ImGui::Button("Easy", buttonSize)) {
+        startGame(Difficulty::easy);
+        displayDifficultyMenu = false;
     }
+    ImGui::SameLine();
+    if (ImGui::Button("Medium", buttonSize)) {
+        startGame(Difficulty::medium);
+        displayDifficultyMenu = false;
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Hard", buttonSize)) {
+        startGame(Difficulty::hard);
+        displayDifficultyMenu = false;
+    }
+    ImGui::End();
 }
 
 void MainMenu::GUIEnd() {

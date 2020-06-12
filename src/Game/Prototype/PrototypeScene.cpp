@@ -16,15 +16,11 @@ void toggleWireframe() {
     render.ToggleWireFrame();
 }
 
-static float getHeight(float x, float y) {
-     return dynamic_cast<PrototypeScene*>(BlueEngine::Engine::get().gameStack.getTop().get())->GetHeightAt(glm::vec2(x,y));
-}
-
 PrototypeScene::PrototypeScene() {
     luabridge::getGlobalNamespace(LuaManager::getInstance().getLuaState())
         .addFunction("getCamera", &getCamera)
         .addFunction("toggleWireframe", &toggleWireframe)
-        .addFunction("getHeightAt", &getHeight)
+        .addFunction("getHeightAt", &Controller::TerrainFactory::LuaBLHeight)
         .addFunction("getMapSize", &Controller::TerrainFactory::LuaMapSize);
 
     PrototypeScene::Init();
