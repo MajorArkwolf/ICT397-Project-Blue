@@ -130,7 +130,7 @@ NPC_catchIfDead = function(npc_raw)
 end
 
 -- Generate 50 NPCs
-for i = 0, 15 * DifficultyMultiplier, 1 do
+for i = 0, 25 * DifficultyMultiplier, 1 do
 	-- Create a GameObject and store the returned identifier
 	local npc_id = GameObject.create(GameObject.Types.NPC());
 
