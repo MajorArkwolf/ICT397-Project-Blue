@@ -1,6 +1,6 @@
-# ICT397-Project-Blue
+# Project-Blue-Engine
 <p align=center>
-  <b> ICT397 Project Blue </b>
+  <b> Project Blue </b>
 </p>
 <p align="center">
   <a href="#building">Building</a> •
@@ -8,6 +8,8 @@
   <a href="#license">License</a>
 </p>
 
+## Basic Info
+This is a new iteration of Project Red Engine and is a proof of concept. Design decisions were made knowing full well that we only had 4 months to develop it. Certain best practices were ignored in some situations due to deadlines and we were aware of this short comings. 
 
 ## Building
 ### Tools
