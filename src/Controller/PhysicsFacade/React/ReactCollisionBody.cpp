@@ -5,6 +5,12 @@ Physics::ReactCollisionBody::ReactCollisionBody(rp3d::CollisionBody * body) {
     collisionBody = body;
 }
 
+Physics::ReactCollisionBody::~ReactCollisionBody() {
+    for (size_t i = 0; i < collisionBody->getNbColliders(); ++i) {
+        collisionBody->removeCollider(collisionBody->getCollider(i));
+    }
+}
+
 void Physics::ReactCollisionBody::SetPosition(glm::vec3 position) {
     rp3d::Transform currentTransform = collisionBody->getTransform();
     rp3d::Transform newTransform;
@@ -58,6 +64,6 @@ void Physics::ReactCollisionBody::AddCollisionShape(ReactCollisionShape shape, g
     rp3d::Vector3 newPosition       = ReactHelper::ConvertVec3(position);
     rp3d::Quaternion newOrientation = ReactHelper::ConvertQuaternion(orientation);
     rp3d::Transform newTransform(newPosition, newOrientation);
-    collisionBody->addCollisionShape(shape.GetShape().get(), newTransform);
+    collisionBody->addCollider(shape.GetShape().get(), newTransform);
 }
 

@@ -1,6 +1,6 @@
 #pragma once
 #include <map>
-#include <reactphysics3d.h>
+#include <reactphysics3d/reactphysics3d.h>
 
 #include <glm/vec3.hpp>
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <reactphysics3d.h>
+#include <reactphysics3d/reactphysics3d.h>
 #include <vector>
 
 #include "Controller/InputManager.hpp"

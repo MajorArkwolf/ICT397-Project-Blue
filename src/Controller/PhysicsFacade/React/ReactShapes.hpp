@@ -1,6 +1,6 @@
 #pragma once
 #include <map>
-#include <reactphysics3d.h>
+#include <reactphysics3d/reactphysics3d.h>
 
 #include <glm/vec3.hpp>
 
@@ -16,7 +16,8 @@ namespace Physics {
     class ReactShapes final : public ShapeFactory {
       public:
         ReactShapes()  = default;
-        ~ReactShapes() = default;
+
+        ~ReactShapes() override;
 
         /**
          *@see ShapeFactory::createSphere

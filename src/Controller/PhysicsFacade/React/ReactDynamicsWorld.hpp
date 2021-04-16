@@ -1,5 +1,5 @@
 #pragma once
-#include <reactphysics3d.h>
+#include <reactphysics3d/reactphysics3d.h>
 
 #include "Controller/PhysicsFacade/DynamicsWorld.hpp"
 #include "ReactRigidBody.hpp"
@@ -17,6 +17,8 @@ namespace Physics {
          *@param gravity The gravity to set the world to
          */
         ReactDynamicsWorld(glm::vec3 gravity);
+
+        ~ReactDynamicsWorld() override;
 
         /**
          *@brief Initialises the world with the given gravity
@@ -51,6 +53,6 @@ namespace Physics {
 
       private:
         std::map<size_t, ReactRigidBody> rigidBodies;
-        rp3d::DynamicsWorld dynamicsWorld;
+        reactphysics3d::PhysicsWorld* dynamicsWorld;
     };
 }
