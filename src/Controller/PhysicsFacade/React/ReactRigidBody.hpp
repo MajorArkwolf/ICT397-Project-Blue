@@ -1,5 +1,5 @@
 #pragma once
-#include <reactphysics3d.h>
+#include <reactphysics3d/reactphysics3d.h>
 
 #include "Controller/PhysicsFacade/React/ReactShapes.hpp"
 #include "Controller/PhysicsFacade/RigidBody.hpp"

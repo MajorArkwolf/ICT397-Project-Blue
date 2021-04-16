@@ -2,6 +2,8 @@
 option(ASSIMP_BUILD_TESTS OFF)
 option(ASSIMP_BUILD_ASSIMP_TOOLS OFF)
 option(OPTION_BUILD_TESTS OFF)
+option(RP3D_COMPILE_TESTBED OFF)
+option(RP3D_COMPILE_TESTS OFF)
 
 # Build libraries.
 string(REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
@@ -28,8 +30,8 @@ add_subdirectory(glfw)
 add_subdirectory(imgui)
 
 # DLL's were a mistake.
-set_target_properties(reactphysics3d PROPERTIES ENABLE_EXPORTS ON)
-set_target_properties(reactphysics3d PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+# set_target_properties(reactphysics3d PROPERTIES ENABLE_EXPORTS ON)
+# set_target_properties(reactphysics3d PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 # Puts a stop to the endlessly irritating practise postfixing 'd' onto debug libraries.
 set_target_properties(assimp PROPERTIES DEBUG_POSTFIX "")

@@ -1,10 +1,16 @@
 #include "ReactCollisionWorld.hpp"
-
+#include "PhysicsSingleton.hpp"
 #include "ReactHelper.hpp"
 
-Physics::ReactCollisionWorld::ReactCollisionWorld() {}
+Physics::ReactCollisionWorld::ReactCollisionWorld() {
+    auto& physicsCommon = PhysicsSingleton::getInstance().getPhysicsCommon();
+    collisionWorld = physicsCommon.createPhysicsWorld();
+}
 
-Physics::ReactCollisionWorld::~ReactCollisionWorld() {}
+Physics::ReactCollisionWorld::~ReactCollisionWorld() {
+    auto& physicsCommon = PhysicsSingleton::getInstance().getPhysicsCommon();
+    physicsCommon.destroyPhysicsWorld(collisionWorld);
+}
 
 void Physics::ReactCollisionWorld::InitialiseWorld() {}
 
@@ -16,7 +22,8 @@ void Physics::ReactCollisionWorld::CreateCollisionBody(glm::vec3 position, glm::
     rp3d::CollisionBody *body;
 
     // Creates a react rigid body in this dynamics world
-    body = collisionWorld.createCollisionBody(transform);
+    auto& physicsCommon = PhysicsSingleton::getInstance().getPhysicsCommon();
+    body = collisionWorld->createCollisionBody(transform);
 
     ReactCollisionBody reactCollisionBody = ReactCollisionBody(body);
 
@@ -29,17 +36,16 @@ Physics::CollisionBody *Physics::ReactCollisionWorld::GetCollisionBody(Collision
 }
 
 bool Physics::ReactCollisionWorld::TestOverlap(CollisionBodyID first, CollisionBodyID seconds) {
-    return collisionWorld.testOverlap(collisionBodies.at(first).collisionBody,
+    return collisionWorld->testOverlap(collisionBodies.at(first).collisionBody,
                                       collisionBodies.at(seconds).collisionBody);
 }
 
 bool Physics::ReactCollisionWorld::TestAABBOverlap(CollisionBodyID first, CollisionBodyID second) {
-    return collisionWorld.testAABBOverlap(collisionBodies.at(first).collisionBody,
+    return collisionWorld->testOverlap(collisionBodies.at(first).collisionBody,
                                           collisionBodies.at(second).collisionBody);
 }
 
 void Physics::ReactCollisionWorld::DestroyBody(CollisionBodyID id) {
-
-    collisionWorld.destroyCollisionBody(collisionBodies.at(id).collisionBody);
+    collisionWorld->destroyCollisionBody(collisionBodies.at(id).collisionBody);
     collisionBodies.erase(id);
 }

@@ -5,7 +5,11 @@ Physics::ReactRigidBody::ReactRigidBody(rp3d::RigidBody * body) {
     rigidBody = body;
 }
 
-Physics::ReactRigidBody::~ReactRigidBody() {}
+Physics::ReactRigidBody::~ReactRigidBody() {
+    for (size_t i = 0; i < rigidBody->getNbColliders(); ++i) {
+        rigidBody->removeCollider(rigidBody->getCollider(i));
+    }
+}
 
 void Physics::ReactRigidBody::SetPosition(glm::vec3 position) {
     rp3d::Transform currentTransform = rigidBody->getTransform();
@@ -54,7 +58,7 @@ glm::quat Physics::ReactRigidBody::GetOrientation() {
 }
 
 void Physics::ReactRigidBody::SetSleeping(bool sleeping) {
-    rigidBody->setIsSleeping(sleeping);
+    rigidBody->setIsAllowedToSleep(sleeping);
 }
 
 bool Physics::ReactRigidBody::GetSleeping() {
@@ -70,7 +74,7 @@ void Physics::ReactRigidBody::ApplyForce(glm::vec3 force, glm::vec3 point) {
 
     rp3d::Vector3 addedForce = ReactHelper::ConvertVec3(force);
     rp3d::Vector3 pointForce = ReactHelper::ConvertVec3(point);
-    rigidBody->applyForce(addedForce, pointForce);
+    rigidBody->applyForceAtLocalPosition(addedForce, pointForce);
 }
 
 void Physics::ReactRigidBody::Destroy() {}
@@ -80,7 +84,10 @@ void Physics::ReactRigidBody::AddCollisionShape(ReactCollisionShape shape, glm::
     rp3d::Vector3 newPosition       = ReactHelper::ConvertVec3(position);
     rp3d::Quaternion newOrientation = ReactHelper::ConvertQuaternion(orientation);
     rp3d::Transform newTransform(newPosition, newOrientation);
-    rigidBody->addCollisionShape(shape.GetShape().get(), newTransform, mass);
+    auto collider = rigidBody->addCollider(shape.GetShape().get(), newTransform);
+    auto& mat = collider->getMaterial();
+    mat.setMassDensity(mass);
+    //rigidBody->addCollisionShape(shape.GetShape().get(), newTransform, mass);
 }
 
 void Physics::ReactRigidBody::SetBodyType(RigidBodyType type) {
@@ -106,16 +113,20 @@ void Physics::ReactRigidBody::SetAngularDamping(double damping) {
 }
 
 void Physics::ReactRigidBody::SetBounciness(float bounciness) {
-    rigidBody->getMaterial().setBounciness(bounciness);
-
+    auto collider = rigidBody->getCollider(0);
+    auto &mat = collider->getMaterial();
+    mat.setBounciness(bounciness);
 }
 
 void Physics::ReactRigidBody::SetFrictionCoefficient(float friction) {
-
-        rigidBody->getMaterial().setFrictionCoefficient(friction);
+    auto collider = rigidBody->getCollider(0);
+    auto &mat = collider->getMaterial();
+    mat.setFrictionCoefficient(friction);
 }
 
 void Physics::ReactRigidBody::SetRollingResistance(float resistance) {
-    rigidBody->getMaterial().setRollingResistance(resistance);
+    auto collider = rigidBody->getCollider(0);
+    auto &mat = collider->getMaterial();
+    mat.setRollingResistance(resistance);
 }
 

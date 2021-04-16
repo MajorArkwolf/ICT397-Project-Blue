@@ -1,7 +1,7 @@
 #pragma once
 #include <glm/vec3.hpp>
 #include <glm/gtc/quaternion.hpp>
-#include <reactphysics3d.h>
+#include <reactphysics3d/reactphysics3d.h>
 
 namespace Physics {
     /**
